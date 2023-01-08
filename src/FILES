@@ -1,0 +1,47 @@
+Cairo 1.16.0
+
+Drawing
+
+  cairo_t — The cairo drawing context
+  Paths — Creating paths and manipulating path data
+  cairo_pattern_t — Sources for drawing
+  Regions — Representing a pixel-aligned area
+  Transformations — Manipulating the current transformation matrix
+  text — Rendering text and glyphs
+  Raster Sources — Supplying arbitrary image data
+  Tags and Links — Hyperlinks and document structure
+
+Fonts
+
+  cairo_font_face_t — Base class for font faces
+  cairo_scaled_font_t — Font face at particular size and options
+  cairo_font_options_t — How a font should be rendered
+  FreeType Fonts — Font support for FreeType
+  Win32 Fonts — Font support for Microsoft Windows
+  Quartz (CGFont) Fonts — Font support via CGFont on OS X
+  User Fonts — Font support with font data provided by the user
+
+Surfaces
+
+  cairo_device_t — interface to underlying rendering system
+  cairo_surface_t — Base class for surfaces
+  Image Surfaces — Rendering to memory buffers
+  PDF Surfaces — Rendering PDF documents
+  PNG Support — Reading and writing PNG images
+  PostScript Surfaces — Rendering PostScript documents
+  Recording Surfaces — Records all drawing operations
+  Win32 Surfaces — Microsoft Windows surface support
+  SVG Surfaces — Rendering SVG documents
+  Quartz Surfaces — Rendering to Quartz surfaces
+  XCB Surfaces — X Window System rendering using the XCB library
+  XLib Surfaces — X Window System rendering using XLib
+  XLib-XRender Backend — X Window System rendering using XLib
+  Script Surfaces — Rendering to replayable scripts
+
+Utilities
+
+  cairo_matrix_t — Generic matrix operations
+  Error handling — Decoding cairo's status
+  Version Information — Compile-time and run-time version checks.
+  Types — Generic data types
+

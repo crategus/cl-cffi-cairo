@@ -149,7 +149,7 @@
 (setf (liber:alias-for-symbol 'pdf-outline-flags-t)
       "Bitfield"
       (liber:symbol-documentation 'pdf-outline-flags-t)
- "@version{#2020-12-17}
+ "@version{2023-1-9}
   @begin{short}
     The @sym{cairo:pdf-outline-flags-t} flags is used by the
     @fun{cairo:pdf-surface-add-outline} function to specify the attributes of
@@ -188,12 +188,22 @@
 (setf (liber:alias-for-symbol 'pdf-metadata-t)
       "CEnum"
       (liber:symbol-documentation 'pdf-metadata-t)
- "@version{#2020-12-17}
+ "@version{2023-1-9}
   @begin{short}
     The @sym{cairo:pdf-metadata-t} enumeration is used by the
     @fun{cairo:pdf-surface-set-metadata} function to specify the metadata to
     set.
   @end{short}
+  @begin{pre}
+(defcenum pdf-metadata-t
+  :title
+  :author
+  :subject
+  :keywords
+  :creator
+  :create-date
+  :mod-date)
+  @end{pre}
   @begin[code]{table}
     @entry[:title]{The document title.}
     @entry[:author]{The document author.}
@@ -209,22 +219,31 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; enum cairo_pdf_version_t
-;;;
-;;; cairo_pdf_version_t is used to describe the version number of the PDF
-;;; specification that a generated PDF file will conform to.
-;;;
-;;; CAIRO_PDF_VERSION_1_4
-;;;     The version 1.4 of the PDF specification. (Since 1.10)
-;;;
-;;; CAIRO_PDF_VERSION_1_5
-;;;     The version 1.5 of the PDF specification. (Since 1.10)
-;;;
-;;; Since 1.10
 ;;; ----------------------------------------------------------------------------
 
 (defcenum pdf-version-t
   :version-1-4
   :version-1-5)
+
+#+liber-documentation
+(setf (liber:alias-for-symbol 'pdf-version-t)
+      "CEnum"
+      (liber:symbol-documentation 'pdf-version-t)
+ "@version{2023-1-9}
+  @begin{short}
+    The @sym{cairo:pdf-version-t} enumeration is used to describe the version
+    number of the PDF specification that a generated PDF file will conform to.
+  @end{short}
+  @begin{pre}
+(defcenum pdf-version-t
+  :version-1-4
+  :version-1-5)
+  @end{pre}
+  @begin[code]{table}
+    @entry[:version-1-4]{The version 1.4 of the PDF specification.}
+    @entry[:version-1-5]{The version 1.5 of the PDF specification.}
+  @end{table}
+  @see-function{cairo:pdf-version-to-string}")
 
 (export 'pdf-version-t)
 
@@ -235,24 +254,23 @@
 (defcfun ("cairo_pdf_surface_create" %pdf-surface-create)
     (:pointer (:struct surface-t))
   (filename :string)
-  (width-in-points :double)
-  (height-in-points :double))
+  (width :double)
+  (height :double))
 
-(defun pdf-surface-create (filename width-in-points height-in-points)
+(defun pdf-surface-create (filename width height)
  #+liber-documentation
- "@version{#2020-12-27}
+ "@version{2023-1-9}
   @argument[filename]{a string with a filename for the PDF output (must be
     writable), @code{nil} may be used to specify no output, this will generate
     a PDF surface that may be queried and used as a source, without generating
     a temporary file}
-  @argument[width-in-points]{a double float with the width of the surface,
-    in points (1 point == 1/72.0 inch)}
-  @argument[height-in-points]{a double float with the height of the surface,
-    in points (1 point == 1/72.0 inch)}
+  @argument[width]{a double float with the width of the surface, in points
+    (1 point == 1/72.0 inch)}
+  @argument[height]{a double float with the height of the surface, in points
+    (1 point == 1/72.0 inch)}
   @begin{return}
     A pointer to the newly created surface. The caller owns the surface and
     should call the @fun{cairo:surface-destroy} function when done with it.
-
     This function always returns a valid pointer, but it will return a pointer
     to a \"nil\" surface if an error such as out of memory occurs. You can use
     the @fun{cairo:surface-status} function to check for this.
@@ -265,8 +283,8 @@
   @see-function{cairo:surface-destroy}
   @see-function{cairo:surface-status}"
   (%pdf-surface-create filename
-                       (coerce width-in-points 'double-float)
-                       (coerce height-in-points 'double-float)))
+                       (coerce width 'double-float)
+                       (coerce height 'double-float)))
 
 (export 'pdf-surface-create)
 
@@ -309,29 +327,23 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_pdf_surface_restrict_to_version ()
-;;;
-;;; void
-;;; cairo_pdf_surface_restrict_to_version (cairo_surface_t *surface,
-;;;                                        cairo_pdf_version_t version);
-;;;
-;;; Restricts the generated PDF file to version . See cairo_pdf_get_versions()
-;;; for a list of available version values that can be used here.
-;;;
-;;; This function should only be called before any drawing operations have been
-;;; performed on the given surface. The simplest way to do this is to call this
-;;; function immediately after creating the surface.
-;;;
-;;; surface :
-;;;     a PDF cairo_surface_t
-;;;
-;;; version :
-;;;     PDF version
-;;;
-;;; Since 1.10
 ;;; ----------------------------------------------------------------------------
 
 (defcfun ("cairo_pdf_surface_restrict_to_version"
            pdf-surface-restrict-to-version) :void
+ #+liber-documentation
+ "@version{2023-1-9}
+  @argument[surface]{a PDF @symbol{cairo:surface-t} instance}
+  @argument[version]{a @symbol{cairo:pdf-version-t} value}
+  @begin{short}
+    Restricts the generated PDF file to the given @arg{version}.
+  @end{short}
+  See the @fun{cairo:pdf-versions} function for a list of available version
+  values that can be used here. This function should only be called before any
+  drawing operations have been performed on the given surface. The simplest way
+  to do this is to call this function immediately after creating the surface.
+  @see-symbol{cairo:surface-t}
+  @see-symbol{cairo:pdf-version-t}"
   (surface (:pointer (:struct surface-t)))
   (version pdf-version-t))
 
@@ -339,22 +351,6 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_pdf_get_versions ()
-;;;
-;;; void
-;;; cairo_pdf_get_versions (cairo_pdf_version_t
-;;;                         const **versions,
-;;;                         int *num_versions);
-;;;
-;;; Used to retrieve the list of supported versions. See
-;;; cairo_pdf_surface_restrict_to_version().
-;;;
-;;; versions :
-;;;     supported version list
-;;;
-;;; num_versions :
-;;;     list length
-;;;
-;;; Since 1.10
 ;;; ----------------------------------------------------------------------------
 
 (defcfun ("cairo_pdf_get_versions" %pdf-versions) :void
@@ -362,6 +358,16 @@
   (num :pointer))
 
 (defun pdf-versions ()
+ #+liber-documentation
+ "@version{2023-1-9}
+  @return{A list of @symbol{cairo:pdf-version-t} values with the supported
+    versions}
+  @begin{short}
+    Used to retrieve the list of supported versions.
+  @end{short}
+  See the @fun{cairo:pdf-surface-restrict-to-version} function.
+  @see-symbol{cairo:pdf-version-t}
+  @see-function{cairo:pdf-surface-restrict-to-version}"
   (with-foreign-objects ((ptr :pointer) (num :int))
     (%pdf-versions ptr num)
     (loop with versions = (cffi:mem-ref ptr :pointer)
@@ -372,128 +378,115 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_pdf_version_to_string ()
-;;;
-;;; const char *
-;;; cairo_pdf_version_to_string (cairo_pdf_version_t version);
-;;;
-;;; Get the string representation of the given version id. This function will
-;;; return NULL if version isn't valid. See cairo_pdf_get_versions() for a way
-;;; to get the list of valid version ids.
-;;;
-;;; version :
-;;;     a version id
-;;;
-;;; Returns :
-;;;     the string associated to given version.
-;;;
-;;; Since 1.10
 ;;; ----------------------------------------------------------------------------
 
 (defcfun ("cairo_pdf_version_to_string" pdf-version-to-string) :string
+ #+liber-documentation
+ "@version{2023-1-9}
+  @argument[verion]{a @symbol{cairo:pdf-version-t} value}
+  @return{The string with the given @arg{version}.}
+  @begin{short}
+    Gets the string representation of the given version ID.
+  @end{short}
+  This function will return @code{nil} if @arg{version} is not valid. See the
+  @fun{cairo:pdf-versions} function for a way to get the list of valid version
+  IDs.
+  @see-symbol{cairo:pdf-version-t}
+  @see-function{cairo:pdf-versions}"
   (version pdf-version-t))
 
 (export 'pdf-version-to-string)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_pdf_surface_set_size ()
-;;;
-;;; void
-;;; cairo_pdf_surface_set_size (cairo_surface_t *surface,
-;;;                             double width_in_points,
-;;;                             double height_in_points);
-;;;
-;;; Changes the size of a PDF surface for the current (and subsequent) pages.
-;;;
-;;; This function should only be called before any drawing operations have been
-;;; performed on the current page. The simplest way to do this is to call this
-;;; function immediately after creating the surface or immediately after
-;;; completing a page with either cairo_show_page() or cairo_copy_page().
-;;;
-;;; surface :
-;;;     a PDF cairo_surface_t
-;;;
-;;; width_in_points :
-;;;     new surface width, in points (1 point == 1/72.0 inch)
-;;;
-;;; height_in_points :
-;;;     new surface height, in points (1 point == 1/72.0 inch)
-;;;
-;;; Since 1.2
 ;;; ----------------------------------------------------------------------------
+
+(defun pdf-surface-set-size (surface width height)
+ #+liber-documentation
+ "@version{2023-1-9}
+  @argument[surface]{a @symbol{cairo:surface-t} instance}
+  @argument[width]{a number coerced to a double float with the new surface
+    width, in points (1 point == 1/72.0 inch)}
+  @argument[height]{a number coerced to a double float with the new surface
+    height, in points (1 point == 1/72.0 inch)}
+  @begin{short}
+    Changes the size of a PDF surface for the current (and subsequent) pages.
+  @end{short}
+  This function should only be called before any drawing operations have been
+  performed on the current page. The simplest way to do this is to call this
+  function immediately after creating the surface or immediately after
+  completing a page with either the @fun{cairo:show-page} or
+  @fun{cairo:copy-page} functions.
+  @see-symbol{cairo:surface-t}
+  @see-function{cairo:show-page}
+  @see-function{cairo:copy-page}"
+  (cffi:foreign-funcall "cairo_pdf_surface_set_size"
+                        (:pointer (:struct surface-t)) surface
+                        :double (coerce width 'double-float)
+                        :double (coerce height 'double-float)
+                        :void))
+
+(export 'pdf-surface-set-size)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_pdf_surface_add_outline ()
-;;;
-;;; int
-;;; cairo_pdf_surface_add_outline (cairo_surface_t *surface,
-;;;                                int parent_id,
-;;;                                const char *utf8,
-;;;                                const char *link_attribs,
-;;;                                cairo_pdf_outline_flags_t flags);
-;;;
-;;; Add an item to the document outline hierarchy with the name utf8 that links
-;;; to the location specified by link_attribs . Link attributes have the same
-;;; keys and values as the Link Tag, excluding the "rect" attribute. The item
-;;; will be a child of the item with id parent_id . Use CAIRO_PDF_OUTLINE_ROOT
-;;; as the parent id of toplevel items.
-;;;
-;;; surface :
-;;;     a PDF cairo_surface_t
-;;;
-;;; parent_id :
-;;;     the id of the parent item or CAIRO_PDF_OUTLINE_ROOT if this is a top
-;;;     level item.
-;;;
-;;; utf8 :
-;;;     the name of the outline
-;;;
-;;; link_attribs :
-;;;     the link attributes specifying where this outline links to
-;;;
-;;; flags :
-;;;     outline item flags
-;;;
-;;; Returns :
-;;;     the id for the added item.
-;;;
-;;; Since 1.16
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("cairo_pdf_surface_add_outline" pdf-surface-add-outline) :int
+ #+liber-documentation
+ "@version{2023-1-9}
+  @argument[surface]{a @symbol{cairo:surface-t} instance}
+  @argument[parent]{an integer with the ID of the parent item of 0 if this is a
+    top level item}
+  @argument[utf8]{a string with the name of the outline}
+  @argument[link]{a string with the link attributes specifying where this
+    outline links to}
+  @argument[flags]{a @symbol{cairo:pdf-outline-flgs-t} value with the outline
+    flags}
+  @return{An integer with the ID for the added item.}
+  @begin{short}
+    Add an item to the document outline hierarchy with the name @arg{utf8}
+    that links to the location specified by @arg{link}.
+  @end{short}
+  Link attributes have the same keys and values as the Link Tag, excluding the
+  \"rect\" attribute. The item will be a child of the item with ID
+  @arg{parent}. Use the 0 value as the parent ID of toplevel items.
+  @see-symbol{cairo:surface-t}
+  @see-symbol{cairo:pdf-outline-flags-t}"
+  (surface (:pointer (:struct surface-t)))
+  (parent :int)
+  (utf8 :string)
+  (link :string)
+  (flags pdf-outline-flags-t))
+
+(export 'pdf-surface-add-outline)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_pdf_surface_set_metadata ()
-;;;
-;;; void
-;;; cairo_pdf_surface_set_metadata (cairo_surface_t *surface,
-;;;                                 cairo_pdf_metadata_t metadata,
-;;;                                 const char *utf8);
-;;;
-;;; Set document metadata. The CAIRO_PDF_METADATA_CREATE_DATE and
-;;; CAIRO_PDF_METADATA_MOD_DATE values must be in ISO-8601 format:
-;;; YYYY-MM-DDThh:mm:ss. An optional timezone of the form "[+/-]hh:mm" or "Z"
-;;; for UTC time can be appended. All other metadata values can be any UTF-8
-;;; string.
-;;;
-;;; For example:
-;;;
-;;; cairo_pdf_surface_set_metadata (surface,
-;;;                                 CAIRO_PDF_METADATA_TITLE, "My Document");
-;;; cairo_pdf_surface_set_metadata (surface,
-;;;                                 CAIRO_PDF_METADATA_CREATE_DATE,
-;;;                                 "2015-12-31T23:59+02:00");
-;;;
-;;; surface :
-;;;     a PDF cairo_surface_t
-;;;
-;;; metadata :
-;;;     The metadata item to set.
-;;;
-;;; utf8 :
-;;;     metadata value
-;;;
-;;; Since 1.16
 ;;; ----------------------------------------------------------------------------
 
 (defcfun ("cairo_pdf_surface_set_metadata" pdf-surface-set-metadata) :void
+ #+liber-documentation
+ "@version{2023-1-9}
+  @argument[surface]{a @symbol{cairo:surface-t} instance}
+  @argument[metadata]{a @symbol{cairo:pdf-metadata-t} value with the metadata
+    item to set}
+  @argument[utf8]{a string with the metadata}
+  @begin{short}
+    Set document metadata.
+  @end{short}
+  The @code{:create-date} and @code{:mod-date} values must be in ISO-8601
+  format: @code{YYYY-MM-DDThh:mm:ss}. An optional timezone of the form
+  \"[+/-]hh:mm@}\" or \"Z\" for UTC time can be appended. All other metadata
+  values can be any UTF-8 string.
+  @begin[Examples]{dictionary}
+     @begin{pre}
+(cairo:pdf-surface-set-metadata surface :title \"My Document\")
+(cairo:pdf-surface-set-metadata surface :create-datea \"2015-12-31T23:59+02:00\")
+    @end{pre}
+  @end{dictionary}
+  @see-symbol{cairo:surface-t}
+  @see-symbol{cairo:pdf-metadata-t}"
   (surface (:pointer (:struct surface-t)))
   (metadata pdf-metadata-t)
   (utf8 :string))
@@ -502,23 +495,17 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_pdf_surface_set_page_label ()
-;;;
-;;; void
-;;; cairo_pdf_surface_set_page_label (cairo_surface_t *surface,
-;;;                                   const char *utf8);
-;;;
-;;; Set page label for the current page.
-;;;
-;;; surface :
-;;;     a PDF cairo_surface_t
-;;;
-;;; utf8 :
-;;;     The page label.
-;;;
-;;; Since 1.16
 ;;; ----------------------------------------------------------------------------
 
 (defcfun ("cairo_pdf_surface_set_page_label" pdf-surface-set-page-label) :void
+ #+liber-documentation
+ "@version{2023-1-9}
+  @argument[surface]{a @symbol{cairo:surface-t} instance}
+  @argument[utf8]{a string with the page label}
+  @begin{short}
+    Sets the page label for the current page.
+  @end{short}
+  @see-symbol{cairo:surface-t}"
   (surface (:pointer (:struct surface-t)))
   (utf8 :string))
 
@@ -526,30 +513,21 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_pdf_surface_set_thumbnail_size ()
-;;;
-;;; void
-;;; cairo_pdf_surface_set_thumbnail_size (cairo_surface_t *surface,
-;;;                                       int width,
-;;;                                       int height);
-;;;
-;;; Set the thumbnail image size for the current and all subsequent pages.
-;;; Setting a width or height of 0 disables thumbnails for the current and
-;;; subsequent pages.
-;;;
-;;; surface :
-;;;     a PDF cairo_surface_t
-;;;
-;;; width :
-;;;     Thumbnail width.
-;;;
-;;; height :
-;;;     Thumbnail height
-;;;
-;;; Since 1.16
 ;;; ----------------------------------------------------------------------------
 
 (defcfun ("cairo_pdf_surface_set_thumbnail_size" pdf-surface-set-thumbnail-size)
     :void
+ #+liber-documentation
+ "@version{2023-1-9}
+  @argument[surface]{a @symbol{cairo:surface-t} instance}
+  @argument[width]{an integer with the thumbnail width}
+  @argument[height]{an integer with the thumbnail height}
+  @begin{short}
+    Set the thumbnail image size for the current and all subsequent pages.
+  @end{short}
+  Setting a width or height of 0 disables thumbnails for the current and
+  subsequent pages.
+  @see-symbol{cairo:surface-t}"
   (surface (:pointer (:struct surface-t)))
   (width :int)
   (height :int))

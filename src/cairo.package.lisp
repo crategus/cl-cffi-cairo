@@ -2,11 +2,11 @@
 ;;; cairo.package.lisp
 ;;;
 ;;; The documentation of this file is taken from the Cairo Reference Manual
-;;; Version 1.12.2 and modified to document the Lisp binding to the Cairo
+;;; Version 1.16 and modified to document the Lisp binding to the Cairo
 ;;; library. See <http://cairographics.org>. The API documentation of the Lisp
 ;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk/>.
 ;;;
-;;; Copyright (C) 2012 - 2022 Dieter Kaiser
+;;; Copyright (C) 2012 - 2023 Dieter Kaiser
 ;;;
 ;;; This program is free software: you can redistribute it and/or modify
 ;;; it under the terms of the GNU Lesser General Public License for Lisp
@@ -531,7 +531,70 @@
       @about-function{image-surface-stride}
     @end{subsection}
     @begin[PDF Surfaces]{subsection}
-      Rendering PDF documents
+      The PDF surface is used to render Cairo graphics to Adobe PDF files and
+      is a multi-page vector surface backend.
+
+      The following mime types are supported: @code{CAIRO_MIME_TYPE_JPEG},
+      @code{CAIRO_MIME_TYPE_JP2}, @code{CAIRO_MIME_TYPE_UNIQUE_ID},
+      @code{CAIRO_MIME_TYPE_JBIG2}, @code{CAIRO_MIME_TYPE_JBIG2_GLOBAL},
+      @code{CAIRO_MIME_TYPE_JBIG2_GLOBAL_ID}, @code{CAIRO_MIME_TYPE_CCITT_FAX},
+      @code{CAIRO_MIME_TYPE_CCITT_FAX_PARAMS}.
+
+      JBIG2 Images
+
+      JBIG2 data in PDF must be in the embedded format as described in ISO/IEC
+      11544. Image specific JBIG2 data must be in @code{CAIRO_MIME_TYPE_JBIG2}.
+      Any global segments in the JBIG2 data (segments with page association
+      field set to 0) must be in @code{CAIRO_MIME_TYPE_JBIG2_GLOBAL}. The global
+      data may be shared by multiple images. All images sharing the same global
+      data must set @code{CAIRO_MIME_TYPE_JBIG2_GLOBAL_ID} to a unique
+      identifier. At least one of the images must provide the global data using
+      @code{CAIRO_MIME_TYPE_JBIG2_GLOBAL}. The global data will only be embedded
+      once and shared by all JBIG2 images with the same
+      @code{CAIRO_MIME_TYPE_JBIG2_GLOBAL_ID}.
+
+      CCITT Fax Images
+
+      The @code{CAIRO_MIME_TYPE_CCITT_FAX} mime data requires a number of
+      decoding parameters These parameters are specified using
+      @code{CAIRO_MIME_TYPE_CCITT_FAX_PARAMS}.
+
+      @code{CAIRO_MIME_TYPE_CCITT_FAX_PARAMS} mime data must contain a string of
+      the form \"param1=value1 param2=value2 ...\".
+
+      Columns : [required] An integer specifying the width of the image in
+      pixels.
+
+      Rows : [required] An integer specifying the height of the image in scan
+      lines.
+
+      K : [optional] An integer identifying the encoding scheme used. < 0 is 2
+      dimensional Group 4, = 0 is Group3 1 dimensional, > 0 is mixed 1 and 2
+      dimensional encoding. Default is 0.
+
+      EndOfLine : [optional] If true end-of-line bit patterns are present.
+      Default is false.
+
+      EncodedByteAlign : [optional] If true the end of line is padded with 0
+      bits so the next line begins on a byte boundary. Default is false.
+
+      EndOfBlock : [optional] If true the data contains an end-of-block pattern.
+      Default is true.
+
+      BlackIs1 : [optional] If true 1 bits are black pixels. Default is false.
+
+      DamagedRowsBeforeError : [optional] An integer specifying the number of
+      damages rows tolerated before an error occurs. Default is 0.
+
+      Boolean values may be \"true\" or \"false\", or 1 or 0.
+
+      These parameters are the same as the CCITTFaxDecode parameters in the
+      PostScript Language Reference and Portable Document Format (PDF). Refer
+      to these documents for further details.
+
+      An example @code{CAIRO_MIME_TYPE_CCITT_FAX_PARAMS} string is:
+      \"Columns=10230 Rows=40000 K=1 EndOfLine=true EncodedByteAlign=1
+      BlackIs1=false\"
       @about-symbol{CAIRO_HAS_PDF_SURFACE}
       @about-symbol{CAIRO_PDF_OUTLINE_ROOT}
       @about-symbol{pdf-outline-flags-t}
@@ -568,7 +631,51 @@
       @about-function{surface-write-to-png-stream}
     @end{subsection}
     @begin[PostScript Surfaces]{subsection}
-      Rendering PostScript documents
+      The PostScript surface is used to render cairo graphics to Adobe
+      PostScript files and is a multi-page vector surface backend.
+
+      The following mime types are supported: @code{CAIRO_MIME_TYPE_JPEG},
+      @code{CAIRO_MIME_TYPE_UNIQUE_ID}, @code{CAIRO_MIME_TYPE_CCITT_FAX},
+      @code{CAIRO_MIME_TYPE_CCITT_FAX_PARAMS}, @code{CAIRO_MIME_TYPE_CCITT_FAX},
+      @code{CAIRO_MIME_TYPE_CCITT_FAX_PARAMS}, @code{CAIRO_MIME_TYPE_EPS},
+      @code{CAIRO_MIME_TYPE_EPS_PARAMS}.
+
+      Source surfaces used by the PostScript surface that have a
+      @code{CAIRO_MIME_TYPE_UNIQUE_ID} mime type will be stored in PostScript
+      printer memory for the duration of the print job.
+      @code{CAIRO_MIME_TYPE_UNIQUE_ID} should only be used for small frequently
+      used sources.
+
+      The @code{CAIRO_MIME_TYPE_CCITT_FAX} and
+      @code{CAIRO_MIME_TYPE_CCITT_FAX_PARAMS} mime types are documented in
+      CCITT Fax Images.
+
+      Embedding EPS files
+
+      Encapsulated PostScript files can be embedded in the PS output by setting
+      the CAIRO_MIME_TYPE_EPS mime data on a surface to the EPS data and
+      painting the surface. The EPS will be scaled and translated to the extents
+      of the surface the EPS data is attached to.
+
+      The CAIRO_MIME_TYPE_EPS mime type requires the
+      @code{CAIRO_MIME_TYPE_EPS_PARAMS} mime data to also be provided in order
+      to specify the embeddding parameters. @code{CAIRO_MIME_TYPE_EPS_PARAMS}
+      mime data must contain a string of the form \"bbox=[llx lly urx ury]\"
+      that specifies the bounding box (in PS coordinates) of the EPS graphics.
+      The parameters are: lower left x, lower left y, upper right x, upper
+      right y. Normally the bbox data is identical to the %%BoundingBox data in
+      the EPS file.
+      @about-symbol{ps-level-t}
+      @about-function{ps-surface-create}
+      @about-function{ps-surface-create-for-stream}
+      @about-function{ps-surface-restrict-to-level}
+      @about-function{ps-levels}
+      @about-function{ps-level-to-string}
+      @about-function{ps-surface-eps}
+      @about-function{ps-surface-set-size}
+      @about-function{ps-surface-dsc-begin-setup}
+      @about-function{ps-surface-dsc-begin-page-setup}
+      @about-function{ps-surface-dsc-comment}
     @end{subsection}
     @begin[Recording Surfaces]{subsection}
       Records all drawing operations
@@ -577,13 +684,15 @@
       Microsoft Windows surface support
     @end{subsection}
     @begin[SVG Surfaces]{subsection}
-      Rendering SVG documents.
+      The SVG surface is used to render Cairo graphics to SVG files and is a
+      multi-page vector surface backend.
+      @about-symbol{svg-version-t}
+      @about-symbol{svg-unit-t}
       @about-function{svg-surface-create}
       @about-function{svg-surface-create-for-stream}
-      @about-function{svg-surface-get-document-unit}
-      @about-function{svg-set-document-unit}
+      @about-function{svg-surface-document-unit}
       @about-function{svg-surface-restrict-to-version}
-      @about-function{svg-get-versions}
+      @about-function{svg-versions}
       @about-function{svg-version-to-string}
     @end{subsection}
     @begin[Quartz Surfaces]{subsection}
@@ -599,7 +708,18 @@
       X Window System rendering using the X Render extension
     @end{subsection}
     @begin[Script Surfaces]{subsection}
-      Rendering to replayable scripts
+      The script surface provides the ability to render to a native script that
+      matches the cairo drawing model. The scripts can be replayed using tools
+      under the @file{util/cairo-script} directory, or with
+      @code{cairo-perf-trace}.
+      @about-symbol{script-mode-t}
+      @about-function{script-create}
+      @about-function{script-create-for-stream}
+      @about-function{script-from-recording-surface}
+      @about-function{script-mode}
+      @about-function{script-surface-create}
+      @about-function{script-surface-create-for-target}
+      @about-function{script-write-comment}
     @end{subsection}
   @end{section}
   @begin[Utilities]{section}

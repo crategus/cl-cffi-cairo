@@ -93,8 +93,6 @@
 ;;;
 ;;; Defined if the PostScript surface backend is available. This macro can be
 ;;; used to conditionally compile backend-specific code.
-;;;
-;;; Since 1.2
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -104,13 +102,17 @@
 ;;; Language Reference that a generated PostScript file will conform to.
 ;;;
 ;;; CAIRO_PS_LEVEL_2 :
-;;;     The language level 2 of the PostScript specification. (Since 1.6)
+;;;     The language level 2 of the PostScript specification.
 ;;;
 ;;; CAIRO_PS_LEVEL_3 :
-;;;     The language level 3 of the PostScript specification. (Since 1.6)
-;;;
-;;; Since 1.6
+;;;     The language level 3 of the PostScript specification.
 ;;; ----------------------------------------------------------------------------
+
+(defcenum ps-level-t
+  :level-2
+  :level-3)
+
+(export 'ps-level-t)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_ps_surface_create ()
@@ -146,152 +148,218 @@
 ;;;     This function always returns a valid pointer, but it will return a
 ;;;     pointer to a "nil" surface if an error such as out of memory occurs.
 ;;;     You can use cairo_surface_status() to check for this.
-;;;
-;;; Since 1.2
 ;;; ----------------------------------------------------------------------------
 
-;;;cairo_ps_surface_create_for_stream ()
-;;;cairo_surface_t *
-;;;cairo_ps_surface_create_for_stream (cairo_write_func_t write_func,
-;;;                                    void *closure,
-;;;                                    double width_in_points,
-;;;                                    double height_in_points);
-;;;Creates a PostScript surface of the specified size in points to be written incrementally to the stream represented by write_func and closure . See cairo_ps_surface_create() for a more convenient way to simply direct the PostScript output to a named file.
+(defun ps-surface-create (filename width height)
+  (cffi:foreign-funcall "cairo_ps_surface_create"
+                        :string filename
+                        :double (coerce width 'double-float)
+                        :double (coerce height 'double-float)))
 
-;;;Note that the size of individual pages of the PostScript output can vary. See cairo_ps_surface_set_size().
+(export 'ps-surface-create)
 
-;;;Parameters
-;;;write_func
+;;; ----------------------------------------------------------------------------
+;;; cairo_ps_surface_create_for_stream ()
+;;;
+;;; cairo_surface_t *
+;;; cairo_ps_surface_create_for_stream (cairo_write_func_t write_func,
+;;;                                     void *closure,
+;;;                                     double width_in_points,
+;;;                                     double height_in_points);
+;;;
+;;; Creates a PostScript surface of the specified size in points to be written
+;;; incrementally to the stream represented by write_func and closure . See
+;;; cairo_ps_surface_create() for a more convenient way to simply direct the
+;;; PostScript output to a named file.
+;;;
+;;; Note that the size of individual pages of the PostScript output can vary.
+;;; See cairo_ps_surface_set_size().
+;;;
+;;; write_func :
+;;;     a cairo_write_func_t to accept the output data, may be NULL to indicate
+;;;     a no-op write_func . With a no-op write_func , the surface may be
+;;;     queried or used as a source without generating any temporary files.
+;;;
+;;; closure :
+;;;     the closure argument for write_func
+;;;
+;;; width_in_points :
+;;;     width of the surface, in points (1 point == 1/72.0 inch)
+;;;
+;;; height_in_points :
+;;;     height of the surface, in points (1 point == 1/72.0 inch)
+;;;
+;;; Returns :
+;;;     a pointer to the newly created surface. The caller owns the surface and
+;;;     should call cairo_surface_destroy() when done with it.
+;;;
+;;;     This function always returns a valid pointer, but it will return a
+;;;     pointer to a "nil" surface if an error such as out of memory occurs.
+;;;     You can use cairo_surface_status() to check for this.
+;;; ----------------------------------------------------------------------------
 
-;;;a cairo_write_func_t to accept the output data, may be NULL to indicate a no-op write_func . With a no-op write_func , the surface may be queried or used as a source without generating any temporary files.
+;;; ----------------------------------------------------------------------------
+;;; cairo_ps_surface_restrict_to_level ()
+;;;
+;;; void
+;;; cairo_ps_surface_restrict_to_level (cairo_surface_t *surface,
+;;;                                     cairo_ps_level_t level);
+;;;
+;;; Restricts the generated PostSript file to level . See cairo_ps_get_levels()
+;;; for a list of available level values that can be used here.
+;;;
+;;; This function should only be called before any drawing operations have been
+;;; performed on the given surface. The simplest way to do this is to call this
+;;; function immediately after creating the surface.
+;;;
+;;; surface :
+;;;     a PostScript cairo_surface_t
+;;;
+;;; level :
+;;;     PostScript level
+;;; ----------------------------------------------------------------------------
 
-;;;closure
+(defcfun ("cairo_ps_surface_restrict_to_level" ps-surface-restrict-to-level)
+    :void
+  (surface (:pointer (:struct surface-t)))
+  (level ps-level-t))
 
-;;;the closure argument for write_func
+(export 'ps-surface-restrict-to-level)
 
-;;;width_in_points
+;;; ----------------------------------------------------------------------------
+;;; cairo_ps_get_levels ()
+;;;
+;;; void
+;;; cairo_ps_get_levels (cairo_ps_level_t const **levels,
+;;;                      int *num_levels);
+;;;
+;;; Used to retrieve the list of supported levels. See
+;;; cairo_ps_surface_restrict_to_level().
+;;;
+;;; levels :
+;;;     supported level list
+;;;
+;;; num_levels :
+;;;     list length
+;;; ----------------------------------------------------------------------------
 
-;;;width of the surface, in points (1 point == 1/72.0 inch)
+(defcfun ("cairo_ps_get_levels" %ps-levels) :void
+  (levels :pointer)
+  (num :pointer))
 
-;;;height_in_points
+(defun ps-levels ()
+  (with-foreign-objects ((ptr :pointer) (num :int))
+    (%ps-levels ptr num)
+    (loop with levels = (cffi:mem-ref ptr :pointer)
+          for count from 0 below (cffi:mem-ref num :int)
+          collect (cffi:mem-aref levels 'ps-level-t count))))
 
-;;;height of the surface, in points (1 point == 1/72.0 inch)
+(export 'ps-levels)
 
-;;;Returns
-;;;a pointer to the newly created surface. The caller owns the surface and should call cairo_surface_destroy() when done with it.
+;;; ----------------------------------------------------------------------------
+;;; cairo_ps_level_to_string ()
+;;;
+;;; const char *
+;;; cairo_ps_level_to_string (cairo_ps_level_t level);
+;;;
+;;; Get the string representation of the given level id. This function will
+;;; return NULL if level id isn't valid. See cairo_ps_get_levels() for a way to
+;;; get the list of valid level ids.
+;;;
+;;; level :
+;;;     a level id
+;;;
+;;; Returns :
+;;;     the string associated to given level.
+;;; ----------------------------------------------------------------------------
 
-;;;This function always returns a valid pointer, but it will return a pointer to a "nil" surface if an error such as out of memory occurs. You can use cairo_surface_status() to check for this.
+(defcfun ("cairo_ps_level_to_string" ps-level-to-string) :string
+  (level ps-level-t))
 
-;;;Since: 1.2
+(export 'ps-level-to-string)
 
-;;;cairo_ps_surface_restrict_to_level ()
-;;;void
-;;;cairo_ps_surface_restrict_to_level (cairo_surface_t *surface,
-;;;                                    cairo_ps_level_t level);
-;;;Restricts the generated PostSript file to level . See cairo_ps_get_levels() for a list of available level values that can be used here.
+;;; ----------------------------------------------------------------------------
+;;; cairo_ps_surface_set_eps ()
+;;;
+;;; void
+;;; cairo_ps_surface_set_eps (cairo_surface_t *surface,
+;;;                           cairo_bool_t eps);
+;;;
+;;; If eps is TRUE, the PostScript surface will output Encapsulated PostScript.
+;;;
+;;; This function should only be called before any drawing operations have been
+;;; performed on the current page. The simplest way to do this is to call this
+;;; function immediately after creating the surface. An Encapsulated PostScript
+;;; file should never contain more than one page.
+;;;
+;;; surface :
+;;;     a PostScript cairo_surface_t
+;;;
+;;; eps :
+;;;     TRUE to output EPS format PostScript
+;;; ----------------------------------------------------------------------------
 
-;;;This function should only be called before any drawing operations have been performed on the given surface. The simplest way to do this is to call this function immediately after creating the surface.
+(defun (setf ps-surface-eps) (eps surface )
+  (cffi:foreign-funcall "cairo_ps_surface_set_eps"
+                        (:pointer (:struct surface-t)) surface
+                        :bool eps
+                        :void)
+  eps)
 
-;;;Parameters
-;;;surface
+;;; ----------------------------------------------------------------------------
+;;; cairo_ps_surface_get_eps ()
+;;;
+;;; cairo_bool_t
+;;; cairo_ps_surface_get_eps (cairo_surface_t *surface);
+;;;
+;;; Check whether the PostScript surface will output Encapsulated PostScript.
+;;;
+;;; surface :
+;;;     a PostScript cairo_surface_t
+;;;
+;;; Returns :
+;;;     TRUE if the surface will output Encapsulated PostScript.
+;;; ----------------------------------------------------------------------------
 
-;;;a PostScript cairo_surface_t
+(defcfun ("cairo_ps_surface_get_eps" ps-surface-eps) :bool
+  (surface (:pointer (:struct surface-t))))
 
-;;;level
+(export 'ps-surface-eps)
 
-;;;PostScript level
+;;; ----------------------------------------------------------------------------
+;;; cairo_ps_surface_set_size ()
+;;;
+;;; void
+;;; cairo_ps_surface_set_size (cairo_surface_t *surface,
+;;;                            double width_in_points,
+;;;                            double height_in_points);
+;;;
+;;; Changes the size of a PostScript surface for the current (and subsequent)
+;;; pages.
+;;;
+;;; This function should only be called before any drawing operations have been
+;;; performed on the current page. The simplest way to do this is to call this
+;;; function immediately after creating the surface or immediately after
+;;; completing a page with either cairo_show_page() or cairo_copy_page().
+;;;
+;;; surface :
+;;;     a PostScript cairo_surface_t
+;;;
+;;; width_in_points :
+;;;     new surface width, in points (1 point == 1/72.0 inch)
+;;;
+;;; height_in_points :
+;;;     new surface height, in points (1 point == 1/72.0 inch)
+;;; ----------------------------------------------------------------------------
 
-;;;Since: 1.6
+(defun ps-surface-set-size (surface width height)
+  (cffi:foreign-funcall "cairo_ps_surface_set_size"
+                        (:pointer (:struct surface-t)) surface
+                        :double (coerce width 'double-float)
+                        :double (coerce height 'double-float)
+                        :void))
 
-;;;cairo_ps_get_levels ()
-;;;void
-;;;cairo_ps_get_levels (cairo_ps_level_t const **levels,
-;;;                     int *num_levels);
-;;;Used to retrieve the list of supported levels. See cairo_ps_surface_restrict_to_level().
-
-;;;Parameters
-;;;levels
-
-;;;supported level list
-
-;;;num_levels
-
-;;;list length
-
-;;;Since: 1.6
-
-;;;cairo_ps_level_to_string ()
-;;;const char *
-;;;cairo_ps_level_to_string (cairo_ps_level_t level);
-;;;Get the string representation of the given level id. This function will return NULL if level id isn't valid. See cairo_ps_get_levels() for a way to get the list of valid level ids.
-
-;;;Parameters
-;;;level
-
-;;;a level id
-
-;;;Returns
-;;;the string associated to given level.
-
-;;;Since: 1.6
-
-;;;cairo_ps_surface_set_eps ()
-;;;void
-;;;cairo_ps_surface_set_eps (cairo_surface_t *surface,
-;;;                          cairo_bool_t eps);
-;;;If eps is TRUE, the PostScript surface will output Encapsulated PostScript.
-
-;;;This function should only be called before any drawing operations have been performed on the current page. The simplest way to do this is to call this function immediately after creating the surface. An Encapsulated PostScript file should never contain more than one page.
-
-;;;Parameters
-;;;surface
-
-;;;a PostScript cairo_surface_t
-
-;;;eps
-
-;;;TRUE to output EPS format PostScript
-
-;;;Since: 1.6
-
-;;;cairo_ps_surface_get_eps ()
-;;;cairo_bool_t
-;;;cairo_ps_surface_get_eps (cairo_surface_t *surface);
-;;;Check whether the PostScript surface will output Encapsulated PostScript.
-
-;;;Parameters
-;;;surface
-
-;;;a PostScript cairo_surface_t
-
-;;;Returns
-;;;TRUE if the surface will output Encapsulated PostScript.
-
-;;;Since: 1.6
-
-;;;cairo_ps_surface_set_size ()
-;;;void
-;;;cairo_ps_surface_set_size (cairo_surface_t *surface,
-;;;                           double width_in_points,
-;;;                           double height_in_points);
-;;;Changes the size of a PostScript surface for the current (and subsequent) pages.
-
-;;;This function should only be called before any drawing operations have been performed on the current page. The simplest way to do this is to call this function immediately after creating the surface or immediately after completing a page with either cairo_show_page() or cairo_copy_page().
-
-;;;Parameters
-;;;surface
-
-;;;a PostScript cairo_surface_t
-
-;;;width_in_points
-
-;;;new surface width, in points (1 point == 1/72.0 inch)
-
-;;;height_in_points
-
-;;;new surface height, in points (1 point == 1/72.0 inch)
-
-;;;Since: 1.2
+(export 'ps-surface-set-size)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_ps_surface_dsc_begin_setup ()
@@ -311,9 +379,12 @@
 ;;;
 ;;; surface :
 ;;;     a PostScript cairo_surface_t
-;;;
-;;; Since: 1.2
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("cairo_ps_surface_dsc_begin_setup" ps-surface-dsc-begin-setup) :void
+  (surface (:pointer (:struct surface-t))))
+
+(export 'ps-surface-dsc-begin-setup)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_ps_surface_dsc_begin_page_setup ()
@@ -333,9 +404,13 @@
 ;;;
 ;;; surface :
 ;;;     a PostScript cairo_surface_t
-;;;
-;;; Since 1.2
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("cairo_ps_surface_dsc_begin_page_setup"
+           ps-surface-dsc-begin-page-setup) :void
+  (surface (:pointer (:struct surface-t))))
+
+(export 'ps-surface-dsc-begin-page-setup)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_ps_surface_dsc_comment ()
@@ -425,8 +500,11 @@
 ;;;
 ;;; comment :
 ;;;     a comment string to be emitted into the PostScript output
-;;;
-;;; Since 1.2
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("cairo_ps_surface_dsc_comment" ps-surface-dsc-comment) :void
+  (surface (:pointer (:struct surface-t))))
+
+(export 'ps-surface-dsc-comment)
 
 ;;; --- End of file cairo.ps-surface.lisp --------------------------------------

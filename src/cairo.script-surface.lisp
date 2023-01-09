@@ -72,13 +72,17 @@
 ;;; A set of script output variants.
 ;;;
 ;;; CAIRO_SCRIPT_MODE_ASCII
-;;;     the output will be in readable text (default). (Since 1.12)
+;;;     the output will be in readable text (default).
 ;;;
 ;;; CAIRO_SCRIPT_MODE_BINARY
-;;;     the output will use byte codes. (Since 1.12)
-;;;
-;;; Since 1.12
+;;;     the output will use byte codes.
 ;;; ----------------------------------------------------------------------------
+
+(defcenum script-mode-t
+  :ascii
+  :binary)
+
+(export 'script-mode-t)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_script_create ()
@@ -99,9 +103,12 @@
 ;;;     This function always returns a valid pointer, but it will return a
 ;;;     pointer to a "nil" device if an error such as out of memory occurs. You
 ;;;     can use cairo_device_status() to check for this.
-;;;
-;;; Since 1.12
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("cairo_script_create" script-create) device-t
+  (filename :string))
+
+(export 'script-create)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_script_create_for_stream ()
@@ -151,6 +158,13 @@
 ;;; Since 1.12
 ;;; ----------------------------------------------------------------------------
 
+(defcfun ("cairo_script_from_recording_surface" script-from-recording-surface)
+    status-t
+  (script (:pointer (:struct device-t)))
+  (surface (:pointer (:struct surface-t))))
+
+(export 'script-from-recording-surface)
+
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_script_get_mode ()
 ;;;
@@ -167,7 +181,6 @@
 ;;;
 ;;; Since 1.12
 ;;; ----------------------------------------------------------------------------
-
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_script_set_mode ()
 ;;;
@@ -185,6 +198,18 @@
 ;;;
 ;;; Since 1.12
 ;;; ----------------------------------------------------------------------------
+
+(defun (setf script-mode) (mode script)
+  (cffi:foreign-funcall "cairo_script_set_mode"
+                        (:pointer (:struct device-t)) script
+                        script-mode-t mode
+                        :void)
+  mode)
+
+(defcfun ("cairo_script_get_mode" script-mode) script-mode-t
+  (script (:pointer (:struct device-t))))
+
+(export 'script-mode)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_script_surface_create ()
@@ -216,9 +241,17 @@
 ;;;     This function always returns a valid pointer, but it will return a
 ;;;     pointer to a "nil" surface if an error such as out of memory occurs.
 ;;;     You can use cairo_surface_status() to check for this.
-;;;
-;;; Since 1.12
 ;;; ----------------------------------------------------------------------------
+
+(defun script-surface-create (script content width height)
+  (cffi:foreign-funcall "cairo_script_surface_create"
+                        (:pointer (:struct device-t)) script
+                        content-t content
+                        :double (coerce width 'double-float)
+                        :double (coerce height 'double-float)
+                        (:pointer (:struct surface-t))))
+
+(export 'script-surface-create)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_script_surface_create_for_target ()
@@ -244,9 +277,14 @@
 ;;;     This function always returns a valid pointer, but it will return a
 ;;;     pointer to a "nil" surface if an error such as out of memory occurs.
 ;;;     You can use cairo_surface_status() to check for this.
-;;;
-;;; Since 1.12
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("cairo_script_surface_create_for_target"
+           script-surface-create-for-target) (:pointer (:struct surface-t))
+  (script (:pointer (:struct device-t)))
+  (target (:pointer (:struct surface-t))))
+
+(export 'script-surface-create-for-target)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_script_write_comment ()
@@ -266,8 +304,14 @@
 ;;;
 ;;; len :
 ;;;     the length of the sting to write, or -1 to use strlen()
-;;;
-;;; Since 1.12
 ;;; ----------------------------------------------------------------------------
+
+(defun script-write-comment (script comment)
+  (cffi:foreign-funcall "cairo_script_write_comment"
+                        (:pointer (:struct device-t)) script
+                        :string comment
+                        :int -1))
+
+(export 'script-write-comment)
 
 ;;; --- End of file cairo.script-surface.lisp ----------------------------------

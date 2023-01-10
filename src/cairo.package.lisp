@@ -411,31 +411,75 @@
     @end{subsection}
   @end{section}
   @begin[Surfaces]{section}
-    @begin[cairo_device_t]{subsection}
-        Interface to underlying rendering system.
-        @about-symbol{device-t}
-        @about-symbol{device-type-t}
-        @about-function{device-reference}
-        @about-function{device-destroy}
-        @about-function{device-status}
-        @about-function{device-finish}
-        @about-function{device-flush}
-        @about-function{device-type}
-        @about-function{device-reference-count}
-        @about-function{device-user-data}
-        @about-function{device-acquire}
-        @about-function{device-release}
-        @about-function{device-observer-elapsed}
-        @about-function{device-observer-fill-elapsed}
-        @about-function{device-observer-glyphs-elapsed}
-        @about-function{device-observer-mask-elapsed}
-        @about-function{device-observer-paint-elapsed}
-        @about-function{device-observer-print}
-        @about-function{device-observer-stroke-elapsed}
-    @end{subsection}
-    @begin[Cairo surfaces]{subsection}
-      Base class for surfaces.
+    @begin[Cairo Devices]{subsection}
+      Devices are the abstraction Cairo employs for the rendering system used by
+      a @symbol{cairo:surface-t} instance. You can get the device of a surface
+      using the @fun{cairo:surface-device} function.
 
+      Devices are created using custom functions specific to the rendering
+      system you want to use. See the documentation for the surface types for
+      those functions.
+
+      An important function that devices fulfill is sharing access to the
+      rendering system between Cairo and your application. If you want to access
+      a device directly that you used to draw to with Cairo, you must first call
+      the @fun{cairo:device-flush} function to ensure that Cairo finishes all
+      operations on the device and resets it to a clean state.
+
+      Cairo also provides the @fun{cairo:device-acquire} and
+      @fun{cairo:device-release} functions to synchronize access to the
+      rendering system in a multithreaded environment. This is done internally,
+      but can also be used by applications.
+
+      Putting this all together, a function that works with devices should look
+      something like this:
+      @begin{pre}
+void
+my_device_modifying_function (cairo_device_t *device)
+{
+  cairo_status_t status;
+
+  // Ensure the device is properly reset
+  cairo_device_flush (device);
+  // Try to acquire the device
+  status = cairo_device_acquire (device);
+  if (status != CAIRO_STATUS_SUCCESS) {
+    printf (\"Failed to acquire the device: %s\n\",
+            cairo_status_to_string (status));
+    return;
+  @}
+
+  // Do the custom operations on the device here.
+  // But do not call any Cairo functions that might acquire devices.
+
+  // Release the device when done.
+  cairo_device_release (device);
+@}
+      @end{pre}
+      @b{Note:} Please refer to the documentation of each backend for additional
+      usage requirements, guarantees provided, and interactions with existing
+      surface API of the device functions for surfaces of that type.
+      @about-symbol{device-t}
+      @about-symbol{device-type-t}
+      @about-function{device-reference}
+      @about-function{device-destroy}
+      @about-function{device-status}
+      @about-function{device-finish}
+      @about-function{device-flush}
+      @about-function{device-type}
+      @about-function{device-reference-count}
+      @about-function{device-user-data}
+      @about-function{device-acquire}
+      @about-function{device-release}
+      @about-function{device-observer-elapsed}
+      @about-function{device-observer-fill-elapsed}
+      @about-function{device-observer-glyphs-elapsed}
+      @about-function{device-observer-mask-elapsed}
+      @about-function{device-observer-paint-elapsed}
+      @about-function{device-observer-print}
+      @about-function{device-observer-stroke-elapsed}
+    @end{subsection}
+    @begin[Cairo Surfaces]{subsection}
       A @symbol{cairo:surface-t} structure is the abstract type representing all
       different drawing targets that cairo can render to. The actual drawings
       are performed using a Cairo context.
@@ -474,7 +518,6 @@
       Note that for other surface types it might be necessary to acquire the
       surface's device first. See the @fun{cairo:device-acquire} function for a
       discussion of devices.
-
       @about-symbol{CAIRO_HAS_MIME_SURFACE}
       @about-symbol{CAIRO_MIME_TYPE_JP2}
       @about-symbol{CAIRO_MIME_TYPE_JPEG}
@@ -513,8 +556,6 @@
       @about-function{surface-unmap-image}
     @end{subsection}
     @begin[Image Surfaces]{subsection}
-      Rendering to memory buffers.
-
       Image surfaces provide the ability to render to memory buffers either
       allocated by Cairo or by the calling code. The supported image formats
       are those defined in the @symbol{cairo:format-t} enumeration.
@@ -612,8 +653,6 @@
       @about-function{pdf-surface-set-thumbnail-size}
     @end{subsection}
     @begin[PNG Support]{subsection}
-      Reading and writing PNG images.
-
       The PNG functions allow reading PNG images into image surfaces, and
       writing any surface to a PNG file.
 
@@ -678,7 +717,39 @@
       @about-function{ps-surface-dsc-comment}
     @end{subsection}
     @begin[Recording Surfaces]{subsection}
-      Records all drawing operations
+      A recording surface is a surface that records all drawing operations at
+      the highest level of the surface backend interface, that is, the level
+      of paint, mask, stroke, fill, and show_text_glyphs. The recording surface
+      can then be \"replayed\" against any target surface by using it as a
+      source surface.
+
+      If you want to replay a surface so that the results in target will be
+      identical to the results that would have been obtained if the original
+      operations applied to the recording surface had instead been applied to
+      the target surface, you can use code like this:
+      @begin{pre}
+cairo_t *cr;
+
+cr = cairo_create (target);
+cairo_set_source_surface (cr, recording_surface, 0.0, 0.0);
+cairo_paint (cr);
+cairo_destroy (cr);
+      @end{pre}
+      A recording surface is logically unbounded, i.e. it has no implicit
+      constraint on the size of the drawing surface. However, in practice this
+      is rarely useful as you wish to replay against a particular target surface
+      with known bounds. For this case, it is more efficient to specify the
+      target extents to the recording surface upon creation.
+
+      The recording phase of the recording surface is careful to snapshot all
+      necessary objects, paths, patterns, etc., in order to achieve accurate
+      replay. The efficiency of the recording surface could be improved by
+      improving the implementation of snapshot for the various objects. For
+      example, it would be nice to have a copy-on-write implementation for
+      @code{_cairo_surface_snapshot}.
+      @about-function{recording-surface-create}
+      @about-function{recording-surface-ink-extents}
+      @about-function{recording-surface-extents}
     @end{subsection}
     @begin[Win32 Surfaces]{subsection}
       Microsoft Windows surface support

@@ -163,8 +163,8 @@
       (liber:symbol-documentation 'device-type-t)
  "@version{#2020-12-16}
   @begin{short}
-    The @sym{cairo:device-type-t} enumeration is used to describe the type of a given
-    device.
+    The @sym{cairo:device-type-t} enumeration is used to describe the type of a
+    given device.
   @end{short}
   The devices types are also known as \"backends\" within Cairo. The device
   type can be queried with the function @fun{cairo:device-type}.
@@ -255,61 +255,72 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_device_status ()
-;;;
-;;; cairo_status_t cairo_device_status (cairo_device_t *device);
-;;;
-;;; Checks whether an error has previously occurred for this device.
-;;;
-;;; device :
-;;;     a cairo_device_t
-;;;
-;;; Returns :
-;;;     CAIRO_STATUS_SUCCESS on success or an error code if the device is in an
-;;;     error state.
-;;;
-;;; Since 1.10
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("cairo_device_status" device-status) status-t
+ #+liber-documentation
+ "@version{#2023-1-10}
+  @argument[device]{a @symbol{cairo:device-t} instance}
+  @return{A @symbol{cairo:status-t} value with an error code if the device is
+    in an error state.}
+  @begin{short}
+    Checks whether an error has previously occurred for this device.
+  @end{short}
+  @see-symbol{cairo:device-t}
+  @see-symbol{cairo:status-t}"
+  (device (:pointer (:struct device-t))))
+
+(export 'device-status)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_device_finish ()
-;;;
-;;; void cairo_device_finish (cairo_device_t *device);
-;;;
-;;; This function finishes the device and drops all references to external
-;;; resources. All surfaces, fonts and other objects created for this device
-;;; will be finished, too. Further operations on the device will not affect the
-;;; device but will instead trigger a CAIRO_STATUS_DEVICE_FINISHED error.
-;;;
-;;; When the last call to cairo_device_destroy() decreases the reference count
-;;; to zero, cairo will call cairo_device_finish() if it hasn't been called
-;;; already, before freeing the resources associated with the device.
-;;;
-;;; This function may acquire devices.
-;;;
-;;; device :
-;;;     the cairo_device_t to finish
-;;;
-;;; Since 1.10
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("cairo_device_finish" device-finish) :void
+ #+liber-documentation
+ "@version{#2023-1-10}
+  @argument[device]{a @symbol{cairo:device-t} instance to finish}
+  @begin{short}
+    This function finishes the device and drops all references to external
+    resources.
+  @end{short}
+  All surfaces, fonts and other objects created for this device will be
+  finished, too. Further operations on the device will not affect the device
+  but will instead trigger a @code{:device-finished} error.
+
+  When the last call to the @fun{cairo:device-destroy} function decreases the
+  reference count to zero, cairo will call the @sym{cairo:device-finish}
+  function if it has not been called already, before freeing the resources
+  associated with the device.
+
+  This function may acquire devices.
+  @see-symbol{cairo:device-t}
+  @see-function{cairo:device-destroy}"
+  (device (:pointer (:struct device-t))))
+
+(export 'device-finish)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_device_flush ()
-;;;
-;;; void cairo_device_flush (cairo_device_t *device);
-;;;
-;;; Finish any pending operations for the device and also restore any temporary
-;;; modifications cairo has made to the device's state. This function must be
-;;; called before switching from using the device with Cairo to operating on it
-;;; directly with native APIs. If the device does not support direct access,
-;;; then this function does nothing.
-;;;
-;;; This function may acquire devices.
-;;;
-;;; device :
-;;;     a cairo_device_t
-;;;
-;;; Since 1.10
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("cairo_device_flush" device-flush) :void
+ #+liber-documentation
+ "@version{#2023-1-10}
+  @argument[device]{a @symbol{cairo:device-t} instance}
+  @begin{short}
+    Finish any pending operations for the device and also restore any temporary
+    modifications Cairo has made to the device's state.
+  @end{short}
+  This function must be called before switching from using the device with Cairo
+  to operating on it directly with native APIs. If the device does not support
+  direct access, then this function does nothing.
+
+  This function may acquire devices.
+  @see-symbol{cairo:device-t}"
+  (device (:pointer (:struct device-t))))
+
+(export 'device-flush)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_device_get_type ()

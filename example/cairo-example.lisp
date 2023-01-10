@@ -36,7 +36,7 @@
 (in-package :cairo-example)
 
 (defun sys-path (filename)
-  (let ((system-path (asdf:system-source-directory :cl-cffi-cairo-example)))
+  (let ((system-path (asdf:system-source-directory :cl-cffi-cairo)))
     (princ-to-string (merge-pathnames filename system-path))))
 
  ;; A wrapper to run an example
@@ -66,4 +66,4 @@
     ;; Run the application
     (g:application-run app nil)))
 
-;;; 2022-12-20
+;;; --- 2023-1-8 ---------------------------------------------------------------

@@ -312,20 +312,6 @@
 
 (defun (setf svg-surface-document-unit) (unit surface)
   (cffi:foreign-funcall "cairo_svg_surface_set_document_unit"
-                        (:pointer (:struct surface-t))
-                        svg-uni-t unit
-                        :void)
-  unit)
-
-(defcfun ("cairo_svg_surface_get_document_unit" svg-surface-document-unit)
-    svg-unit-t
-  (surface (:pointer (:struct surface-t))))
-
-(export 'svg-surface-document-unit)
-
-
-(defun (setf svg-surface-document-unit) (unit surface)
-  (cffi:foreign-funcall "cairo_svg_surface_set_document_unit"
                         (:pointer (:struct surface-t)) surface
                         svg-unit-t unit
                         :void)
@@ -333,7 +319,6 @@
 
 (defcfun ("cairo_svg_surface_get_document_unit"
            svg-surface-document-unit) svg-unit-t
-
  #+liber-documentation
  "@version{#2023-1-9}
   @syntax[]{(svg-surface-document-unit surface) => unit}

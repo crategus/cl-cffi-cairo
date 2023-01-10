@@ -105,7 +105,7 @@
 ;;;     can use cairo_device_status() to check for this.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_script_create" script-create) device-t
+(defcfun ("cairo_script_create" script-create) (:pointer (:struct device-t))
   (filename :string))
 
 (export 'script-create)

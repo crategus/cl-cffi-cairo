@@ -1,7 +1,7 @@
 ;;; ----------------------------------------------------------------------------
 ;;; cl-cffi-cairo.asd
 ;;;
-;;; Copyright (C) 2012 - 2022 Dieter Kaiser
+;;; Copyright (C) 2012 - 2023 Dieter Kaiser
 ;;;
 ;;; This program is free software: you can redistribute it and/or modify
 ;;; it under the terms of the GNU Lesser General Public License for Lisp
@@ -23,7 +23,7 @@
 
 (defsystem :cl-cffi-cairo
   :name "cl-cffi-cairo"
-  :version "0.9.0"
+  :version "0.1.0"
   :author  "Dieter Kaiser"
   :license "LLGPL"
   :components
@@ -35,13 +35,26 @@
 
      ;; Utilities
      (:file "cairo.version")                ; Version checks
-     (:file "cairo.status")                 ; Decoding cairo's status
+     (:file "cairo.status")                 ; Decoding Cairo's status
      (:file "cairo.matrix")                 ; Generic matrix operations
      (:file "cairo.types")                  ; Generic data types
 
+     ;; Enumerations
+     (:file "cairo.enumerations")           ; Enumerations for Cairo
+
+     ;; Fonts
+     (:file "cairo.font-options")           ; How a font should be rendered
+     (:file "cairo.font-face")              ; Base class for font faces
+     (:file "cairo.scaled-font")            ; Font face at particular size
+
+     (:file "cairo.freetype-font")          ; Font support for FreeType
+     (:file "cairo.win32-font")             ; Font support for Windows
+     (:file "cairo.quartz-font")            ; Font support on OS X
+     (:file "cairo.user-font")              ; Font support for user font
+
      ;; Surfaces
      (:file "cairo.device")                 ; interface to rendering system
-     (:file "cairo.surface")
+     (:file "cairo.surface")                ; Base class for surfaces
      (:file "cairo.image-surface")          ; Rendering to memory buffers
      (:file "cairo.png-surface")            ; Reading and writing PNG images
      (:file "cairo.pdf-surface")            ; Rendering PDF documents
@@ -63,16 +76,6 @@
      (:file "cairo.raster-source")          ; Supplying arbitrary image data
      (:file "cairo.tag")                    ; Hyperlinks, document structure
 
-     ;; Fonts
-     (:file "cairo.font-options")           ; How a font should be rendered
-     (:file "cairo.font-face")              ; Base class for font faces
-     (:file "cairo.scaled-font")            ; Font face at particular size
-
-     (:file "cairo.freetype-font")          ; Font support for FreeType
-     (:file "cairo.win32-font")             ; Font support for Windows
-     (:file "cairo.quartz-font")            ; Font support on OS X
-     (:file "cairo.user-font")              ; Font support for user font
-
      ;; More Drawing
      (:file "cairo.text")                   ; Rendering text and glyphs
      (:file "cairo.path")                   ; Creating paths
@@ -89,6 +92,7 @@
   :components ((:file "rtest-cairo")
                (:file "rtest-cairo-utils")
                (:file "rtest-cairo-context")
+               (:file "rtest-cairo-device")
                (:file "rtest-cairo-font-options")
                (:file "rtest-cairo-image-surface")
                (:file "rtest-cairo-matrix")
@@ -106,7 +110,7 @@
                       (uiop:find-symbol* :cairo-suite :cairo-test)))
   :depends-on (:cl-cffi-cairo :fiveam))
 
-;; Compile examples for the library
+;; Examples for the Cairo library
 
 (asdf:defsystem :cl-cffi-cairo/example
   :name "cl-cffi-cairo/example"
@@ -132,7 +136,6 @@
                (:file "text-gradient")
                (:file "text-glyph")
                (:file "cairo-clock")
-               (:file "cairo-demo")
-))
+               (:file "cairo-demo")))
 
 ;;; --- End of file cl-cffi-cairo.asd ------------------------------------------

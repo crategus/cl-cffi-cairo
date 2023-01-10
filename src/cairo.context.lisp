@@ -34,14 +34,14 @@
 ;;;
 ;;;     cairo_t
 ;;;
-;;;     cairo_antialias_t
+;;;     cairo_antialias_t                        --> cairo.enumerations.lisp
 ;;;     cairo_fill_rule_t
 ;;;     cairo_line_cap_t
 ;;;     cairo_line_join_t
 ;;;     cairo_operator_t
 ;;;
-;;;     cairo_rectangle_t
-;;;     cairo_rectangle_list_t
+;;;     cairo_rectangle_t                        --> cairo.types.lisp
+;;;     cairo_rectangle_list_t                   --> cairo.types.lisp
 ;;;
 ;;; Functions
 ;;;
@@ -122,72 +122,6 @@
        (destroy ,context))))
 
 (export 'with-cairo-context)
-
-;;; ----------------------------------------------------------------------------
-;;; enum cairo_antialias_t
-;;; ----------------------------------------------------------------------------
-
-(defcenum antialias-t
-  :default
-  :none
-  :gray
-  :subpixel
-  :fast
-  :good
-  :best)
-
-#+liber-documentation
-(setf (liber:alias-for-symbol 'antialias-t)
-      "CEnum"
-      (liber:symbol-documentation 'antialias-t)
- "@version{#2022-12-19}
-  @begin{short}
-    The @sym{cairo:antialias-t} enumeration specifies the type of antialiasing
-    to do when rendering text or shapes.
-  @end{short}
-  As it is not necessarily clear from the above what advantages a particular
-  antialias method provides, since version 1.12, there is also a set of hints:
-  @begin[code]{table}
-    @entry[:fast]{Allow the backend to degrade raster quality for speed.}
-    @entry[:good·]{A balance between speed and quality.}
-    @entry[:best]{A high-fidelity, but potentially slow, raster mode.}
-  @end{table}
-  These make no guarantee on how the backend will perform its rasterisation
-  (if it even rasterises!), nor that they have any differing effect other
-  than to enable some form of antialiasing. In the case of glyph rendering,
-  @code{:fast} and @code{:good} will be mapped to @code{:gray}, with
-  @code{:best} being equivalent to @code{:subpixel}.
-
-  The interpretation of @code{:default} is left entirely up to the backend,
-  typically this will be similar to @code{:good}.
-  @begin{pre}
-(defcenum antialias-t
-  :default
-  :none
-  :gray
-  :subpixel
-  :fast
-  :good
-  :best)
-  @end{pre}
-  @begin[code]{table}
-    @entry[:default]{Use the default antialiasing for the subsystem and target
-      device.}
-    @entry[:none]{Use a bilevel alpha mask.}
-    @entry[:gray]{Perform single-color antialiasing, using shades of gray for
-      black text on a white background, for example.}
-    @entry[:subpixel]{Perform antialiasing by taking advantage of the order of
-      subpixel elements on devices such as LCD panels.}
-    @entry[:fast]{Hint that the backend should perform some antialiasing but
-      prefer speed over quality.}
-    @entry[:good]{The backend should balance quality against performance.}
-    @entry[:best]{Hint that the backend should render at the highest quality,
-      sacrificing speed if necessary.}
-  @end{table}
-  @see-symbol{cairo:context-t}
-  @see-function{cairo:antialias}")
-
-(export 'antialias-t)
 
 ;;; ----------------------------------------------------------------------------
 ;;; enum cairo_fill_rule_t
@@ -454,75 +388,6 @@
   @see-function{cairo:operator}")
 
 (export 'operator-t)
-
-;;; ----------------------------------------------------------------------------
-;;; cairo_rectangle_t
-;;; ----------------------------------------------------------------------------
-
-(defcstruct rectangle-t
-  (x :double)
-  (y :double)
-  (width :double)
-  (height :double))
-
-#+liber-documentation
-(setf (liber:alias-for-symbol 'rectangle-t)
-      "CStruct"
-      (liber:symbol-documentation 'rectangle-t)
- "@version{#2022-12-19}
-  @begin{short}
-    The @sym{cairo:rectangle-t} structure is a data structure for holding a
-    rectangle.
-  @end{short}
-  @begin{pre}
-(defcstruct rectangle-t
-  (x :double)
-  (y :double)
-  (width :double)
-  (height :double))
-  @end{pre}
-  @begin[code]{table}
-    @entry[x]{The x coordinate of the left side of the rectangle.}
-    @entry[y]{The y coordinate of the top side of the rectangle.}
-    @entry[width]{The width of the rectangle.}
-    @entry[height]{The height of the rectangle.}
-  @end{table}
-  @see-symbol{cairo:rectangle-list-t}")
-
-(export 'rectangle-t)
-
-;;; ----------------------------------------------------------------------------
-;;; cairo_rectangle_list_t
-;;; ----------------------------------------------------------------------------
-
-(defcstruct rectangle-list-t
-  (status status-t)
-  (rectangles (:pointer (:pointer (:struct rectangle-t))))
-  (num-rectangles :int))
-
-#+liber-documentation
-(setf (liber:alias-for-symbol 'rectangle-list-t)
-      "CStruct"
-      (liber:symbol-documentation 'rectangle-list-t)
- "@version{#2022-12-19}
-  @begin{short}
-    The @sym{cairo:rectangle-list-t} structure is a data structure for holding
-    a dynamically allocated array of rectangles.
-  @end{short}
-  @begin{pre}
-(defcstruct rectangle-list-t
-  (status status-t)
-  (rectangles (:pointer (:pointer (:struct rectangle-t))))
-  (num-rectangles :int))
-  @end{pre}
-  @begin[code]{table}
-    @entry[status]{Error status of the rectangle list.}
-    @entry[rectangles]{Array containing the rectangles.}
-    @entry[num-rectangles]{The number of rectangles in this list.}
-  @end{table}
-  @see-symbol{cairo:rectangle-t}")
-
-(export 'rectangle-list-t)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_t

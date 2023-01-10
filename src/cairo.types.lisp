@@ -34,6 +34,9 @@
 ;;;
 ;;;     cairo_bool_t
 ;;;     cairo_user_data_key_t
+;;;
+;;;     cairo_rectangle_t                        <-- cairo.context.lisp
+;;;     cairo_rectangle_list_t                   <-- cairo.context.lisp
 ;;;     cairo_rectangle_int_t
 ;;;
 ;;; Functions
@@ -81,6 +84,75 @@
 ;;;
 ;;; Since 1.0
 ;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; cairo_rectangle_t
+;;; ----------------------------------------------------------------------------
+
+(defcstruct rectangle-t
+  (x :double)
+  (y :double)
+  (width :double)
+  (height :double))
+
+#+liber-documentation
+(setf (liber:alias-for-symbol 'rectangle-t)
+      "CStruct"
+      (liber:symbol-documentation 'rectangle-t)
+ "@version{#2022-12-19}
+  @begin{short}
+    The @sym{cairo:rectangle-t} structure is a data structure for holding a
+    rectangle.
+  @end{short}
+  @begin{pre}
+(defcstruct rectangle-t
+  (x :double)
+  (y :double)
+  (width :double)
+  (height :double))
+  @end{pre}
+  @begin[code]{table}
+    @entry[x]{The x coordinate of the left side of the rectangle.}
+    @entry[y]{The y coordinate of the top side of the rectangle.}
+    @entry[width]{The width of the rectangle.}
+    @entry[height]{The height of the rectangle.}
+  @end{table}
+  @see-symbol{cairo:rectangle-list-t}")
+
+(export 'rectangle-t)
+
+;;; ----------------------------------------------------------------------------
+;;; cairo_rectangle_list_t
+;;; ----------------------------------------------------------------------------
+
+(defcstruct rectangle-list-t
+  (status status-t)
+  (rectangles (:pointer (:pointer (:struct rectangle-t))))
+  (num-rectangles :int))
+
+#+liber-documentation
+(setf (liber:alias-for-symbol 'rectangle-list-t)
+      "CStruct"
+      (liber:symbol-documentation 'rectangle-list-t)
+ "@version{#2022-12-19}
+  @begin{short}
+    The @sym{cairo:rectangle-list-t} structure is a data structure for holding
+    a dynamically allocated array of rectangles.
+  @end{short}
+  @begin{pre}
+(defcstruct rectangle-list-t
+  (status status-t)
+  (rectangles (:pointer (:pointer (:struct rectangle-t))))
+  (num-rectangles :int))
+  @end{pre}
+  @begin[code]{table}
+    @entry[status]{Error status of the rectangle list.}
+    @entry[rectangles]{Array containing the rectangles.}
+    @entry[num-rectangles]{The number of rectangles in this list.}
+  @end{table}
+  @see-symbol{cairo:rectangle-t}")
+
+(export 'rectangle-list-t)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_rectangle_int_t

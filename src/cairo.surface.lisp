@@ -799,9 +799,13 @@
 ;;; Returns :
 ;;;     The device for surface or NULL if the surface does not have an
 ;;;     associated device.
-;;;
-;;; Since 1.10
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("cairo_surface_get_device" surface-device)
+    (:pointer (:struct device-t))
+  (surface (:pointer (:struct surface-t))))
+
+(export 'surface-device)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_surface_get_font_options ()
@@ -820,9 +824,13 @@
 ;;; options :
 ;;;     a cairo_font_options_t object into which to store the retrieved options.
 ;;;     All existing values are overwritten
-;;;
-;;; Since 1.0
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("cairo_surface_get_font_options" surface-font-options) :void
+  (surface (:pointer (:struct surface-t)))
+  (options (:pointer (:struct font-options-t))))
+
+(export 'surface-font-options)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_surface_get_content ()
@@ -837,9 +845,12 @@
 ;;;
 ;;; Returns :
 ;;;     The content type of surface.
-;;;
-;;; Since 1.2
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("cairo_surface_get_content" surface-content) content-t
+  (surface (:pointer (:struct surface-t))))
+
+(export 'surface-content)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_surface_mark_dirty ()
@@ -891,16 +902,23 @@
 ;;;
 ;;; height :
 ;;;     height of dirty rectangle
-;;;
-;;; Since 1.0
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("cairo_surface_mark_dirty_rectangle" surface-mark-dirty-rectangle)
+    :void
+  (surface (:pointer (:struct surface-t)))
+  (x :int)
+  (y :int)
+  (width :int)
+  (height :int))
+
+(export 'surface-mark-dirty-rectangle)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_surface_set_device_offset ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_surface_set_device_offset" surface-set-device-offset)
-    :void
+(defcfun ("cairo_surface_set_device_offset" surface-set-device-offset) :void
  #+liber-documentation
  "@version{#2020-12-16}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
@@ -946,9 +964,20 @@
 ;;;
 ;;; y_offset :
 ;;;     the offset in the Y direction, in device units
-;;;
-;;; Since 1.2
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("cairo_surface_get_device_offset" %surface-device-offset) :void
+  (surface (:pointer (:struct surface-t)))
+  (x-offset (:pointer :double))
+  (y-offset (:pointer :double)))
+
+(defun surface-device-offset (surface)
+  (with-foreign-objects ((x-offset :double) (y-offset :double))
+    (%surface-device-offset surface x-offset y-offset)
+    (values (cffi:mem-ref x-offset :double)
+            (cffi:mem-ref y-offset :double))))
+
+(export 'surface-device-offset)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_surface_get_device_scale ()

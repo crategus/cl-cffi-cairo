@@ -117,6 +117,13 @@
 ;;; Since 1.10
 ;;; ----------------------------------------------------------------------------
 
+(defcfun ("cairo_recording_surface_create" recording-surface-create)
+    (:pointer (:struct surface-t))
+  (content content-t)
+  (extents (:pointer (:struct rectangle-t))))
+
+(export 'recording-surface-create)
+
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_recording_surface_ink_extents ()
 ;;;
@@ -149,6 +156,25 @@
 ;;; Since 1.10
 ;;; ----------------------------------------------------------------------------
 
+(defcfun ("cairo_recording_surface_ink_extents" %recording-surface-ink-extents)
+    :void
+  (surface (:pointer (:struct surface-t)))
+  (x0 (:pointer :double))
+  (y0 (:pointer :double))
+  (width (:pointer :double))
+  (height (:pointer :double)))
+
+(defun recording-surface-ink-extents (surface)
+  (with-foreign-objects ((x0 :double) (y0 :double)
+                         (width :double) (height :double))
+    (%recording-surface-ink-extents surface x0 y0 width height)
+    (values (cffi:mem-ref x0 :double)
+            (cffi:mem-ref y0 :double)
+            (cffi:mem-ref width :double)
+            (cffi:mem-ref height :double))))
+
+(export 'recording-surface-ink-extents)
+
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_recording_surface_get_extents ()
 ;;;
@@ -170,5 +196,11 @@
 ;;;
 ;;; Since 1.12
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("cairo_recording_surface_get_extents" recording-surface-extents) :bool
+  (surface (:pointer (:struct surface-t)))
+  (extents (:pointer (:struct rectangle-t))))
+
+(export 'recording-surface-extents)
 
 ;;; --- End of file cairo.recording-surface.lisp -------------------------------

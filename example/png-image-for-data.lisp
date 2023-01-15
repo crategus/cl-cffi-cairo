@@ -7,27 +7,28 @@
          (width 500)
          (stride (cairo:format-stride-for-width :argb32 width))
          (data (g:malloc (* height stride)))
+         (pathname (sys-path "example/out/image-for-data.png"))
          ;; Create an image surface for data and a Cairo context.
          (surface (cairo:image-surface-create-for-data data
                                                        :argb32
                                                        width height stride))
-         (cr (cairo:create surface)))
+         (context (cairo:create surface)))
     ;; Clear surface
-    (cairo:set-source-rgb cr 1.0 1.0 1.0)
-    (cairo:paint cr)
-    ;; Draw in black ink.
-    (cairo:set-source-rgba cr 0.0 0.0 0.0 1.0)
-    ;; Choose a font type and set its size.
-    (cairo:select-font-face cr "Sans")
-    (cairo:set-font-size cr 20.0)
-    ;; Move to a position within the image and draw the text.
-    (cairo:move-to cr 10.0 50.0)
-    (cairo:show-text cr "Cario drawing to an image surface for data.")
-    ;; Create and save the PNG image.
-    (cairo:surface-write-to-png surface (sys-path "image-for-data.png"))
-    ;; Clean the resources.
-    (cairo:destroy cr)
+    (cairo:set-source-rgb context 1.0 1.0 1.0)
+    (cairo:paint context)
+    ;; Draw in black ink
+    (cairo:set-source-rgba context 0.0 0.0 0.0 1.0)
+    ;; Choose a font type and set its size
+    (cairo:select-font-face context "Sans")
+    (cairo:set-font-size context 20.0)
+    ;; Move to a position within the image and draw the text
+    (cairo:move-to context 10.0 50.0)
+    (cairo:show-text context "Cario drawing to an image surface for data.")
+    ;; Create and save the PNG image
+    (cairo:surface-write-to-png surface pathname)
+    ;; Free the resources
+    (cairo:destroy context)
     (cairo:surface-destroy surface)
     (g:free data)))
 
-;;; 2021-1-25
+;;; --- 2023-1-14 --------------------------------------------------------------

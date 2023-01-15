@@ -52,9 +52,9 @@
       drawing with Cairo. To draw with Cairo, you create a
       @symbol{cairo:context-t} instance, set the target surface, and drawing
       options for the @symbol{cairo:context-t} instance, create shapes with
-      functions like the @fun{cairo:path-move-to} and @fun{cairo:path-line-to}
-      functions, and then draw shapes with the @fun{cairo:stroke} or
-      @fun{cairo:fill} functions.
+      functions like the @fun{cairo:move-to} and @fun{cairo:line-to} functions,
+      and then draw shapes with the @fun{cairo:stroke} or @fun{cairo:fill}
+      functions.
 
       The @symbol{cairo:context-t} instance can be pushed to a stack via the
       @fun{cairo:save} function. They may then safely be changed, without
@@ -65,12 +65,11 @@
       @about-symbol{line-cap-t}
       @about-symbol{line-join-t}
       @about-symbol{operator-t}
-      @about-symbol{rectangle-t}
-      @about-symbol{rectangle-list-t}
       @about-symbol{context-t}
       @about-macro{with-cairo-context}
       @about-function{create}
       @about-function{reference}
+      @about-function{reference-count}
       @about-function{destroy}
       @about-function{status}
       @about-function{save}
@@ -116,7 +115,6 @@
       @about-function{in-stroke}
       @about-function{copy-page}
       @about-function{show-page}
-      @about-function{reference-count}
       @about-function{user-data}
     @end{subsection}
     @begin[Paths]{subsection}
@@ -128,6 +126,8 @@
       @about-function{path-data-point}
       @about-function{header-data-type}
       @about-function{header-length}
+      @about-function{point-x}
+      @about-function{point-y}
       @about-symbol{path-t}
       @about-function{path-status}
       @about-function{path-data}
@@ -248,8 +248,6 @@
       @about-function{device-to-user-distance}
     @end{subsection}
     @begin[Text]{subsection}
-      Rendering text and glyphs.
-
       The functions with text in their name form Cairo's toy text API. The toy
       API takes UTF-8 encoded text and is limited in its functionality to
       rendering simple left-to-right text with no advanced features. That means
@@ -337,24 +335,11 @@
       @about-function{font-face-user-data}
     @end{subsection}
     @begin[Scaled Fonts]{subsection}
-      Font face at particular size and options.
-
       The @symbol{cairo:scaled-font-t} structure represents a realization of a
       font face at a particular size and transformation and a certain set of
       font options.
       @about-symbol{font-extents-t}
-      @about-function{font-extents-ascent}
-      @about-function{font-extents-descent}
-      @about-function{font-extents-height}
-      @about-function{font-extents-max-x-advance}
-      @about-function{font-extents-max-y-advance}
       @about-symbol{text-extents-t}
-      @about-function{text-extents-x-bearing}
-      @about-function{text-extents-y-bearing}
-      @about-function{text-extents-width}
-      @about-function{text-extents-height}
-      @about-function{text-extents-x-advance}
-      @about-function{text-extents-y-advance}
       @about-symbol{scaled-font-t}
       @about-function{scaled-font-create}
       @about-function{scaled-font-reference}
@@ -374,8 +359,6 @@
       @about-function{scaled-font-user-data}
     @end{subsection}
     @begin[Font Options]{subsection}
-      How a font should be rendered.
-
       The font options specify how fonts should be rendered. Most of the time
       the font options implied by a surface are just right and do not need any
       changes, but for pixel-based targets tweaking font options may result in
@@ -812,8 +795,6 @@ cairo_destroy (cr);
       @about-function{matrix-transform-point}
     @end{subsection}
     @begin[Error handling]{subsection}
-      Decoding Cairo's status.
-
       Cairo uses a single status type to represent all kinds of errors. A
       status value of @code{:success} represents no error and has an integer
       value of zero. All other status values represent an error.
@@ -824,7 +805,6 @@ cairo_destroy (cr);
       it is safe to call all Cairo functions normally even if the underlying
       object is in an error status. This means that no error handling code is
       required before or after each individual Cairo function call.
-
       @about-symbol{status-t}
       @about-function{status-to-string}
       @about-function{debug-reset-static-data}
@@ -839,9 +819,11 @@ cairo_destroy (cr);
       @about-function{version-string}
     @end{subsection}
     @begin[Types]{subsection}
-      This section lists generic data types used in the cairo API.
+      This section lists generic data types used in the Cairo API.
       @about-symbol{bool-t}
       @about-symbol{user-data-key-t}
+      @about-symbol{rectangle-t}
+      @about-symbol{rectangle-list-t}
       @about-symbol{rectangle-int-t}
     @end{subsection}
   @end{section}")

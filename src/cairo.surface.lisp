@@ -966,18 +966,18 @@
 ;;;     the offset in the Y direction, in device units
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_surface_get_device_offset" %surface-device-offset) :void
+(defcfun ("cairo_surface_get_device_offset" %surface-get-device-offset) :void
   (surface (:pointer (:struct surface-t)))
   (x-offset (:pointer :double))
   (y-offset (:pointer :double)))
 
-(defun surface-device-offset (surface)
+(defun surface-get-device-offset (surface)
   (with-foreign-objects ((x-offset :double) (y-offset :double))
-    (%surface-device-offset surface x-offset y-offset)
+    (%surface-get-device-offset surface x-offset y-offset)
     (values (cffi:mem-ref x-offset :double)
             (cffi:mem-ref y-offset :double))))
 
-(export 'surface-device-offset)
+(export 'surface-get-device-offset)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_surface_get_device_scale ()

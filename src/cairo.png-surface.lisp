@@ -61,11 +61,11 @@
 ;;; cairo_image_surface_create_from_png ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_image_surface_create_from_png" image-surface-create-from-png)
-    (:pointer (:struct surface-t))
+(defun image-surface-create-from-png (path)
  #+liber-documentation
- "@version{#2020-12-21}
-  @argument[filename]{a string with the name of PNG file to load}
+ "@version{2023-1-14}
+  @argument[path]{a namestring or pathname with the path of the PNG file to
+    load}
   @begin{return}
     A new @symbol{cairo:surface-t} instance initialized with the contents of
     the PNG file, or a \"nil\" surface if any error occurred.
@@ -82,7 +82,9 @@
   @see-symbol{cairo:surface-t}
   @see-function{cairo:status}
   @see-function{cairo:surface-status}"
-  (filename :string))
+  (cffi:foreign-funcall "cairo_image_surface_create_from_png"
+                        :string (namestring path)
+                        (:pointer (:struct surface-t))))
 
 (export 'image-surface-create-from-png)
 
@@ -147,11 +149,11 @@
 ;;; cairo_surface_write_to_png ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_surface_write_to_png" surface-write-to-png) status-t
+(defun surface-write-to-png (surface path)
  #+liber-documentation
- "@version{#2020-12-21}
+ "@version{2023-1-14}
   @argument[surface]{a @symbol{cairo:surface-t} instance with pixel contents}
-  @argument[filename]{a string with the name of a file to write to}
+  @argument[path]{a namestring or pathname with the path of a file to write to}
   @begin{return}
     @code{:success} if the PNG file was written successfully. Otherwise,
     @code{:no-memory} if memory could not be allocated for the operation or
@@ -163,8 +165,10 @@
     Writes the contents of the image surface to a new file as a PNG image.
   @end{short}
   @see-symbol{cairo:surface-t}"
-  (surface (:pointer (:struct surface-t)))
-  (filename :string))
+  (cffi:foreign-funcall "cairo_surface_write_to_png"
+                        (:pointer (:struct surface-t)) surface
+                        :string (namestring path)
+                        status-t))
 
 (export 'surface-write-to-png)
 

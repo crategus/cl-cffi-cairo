@@ -143,27 +143,95 @@
 
 ;;;     cairo_set_fill_rule
 ;;;     cairo_get_fill_rule
-;;;
+
+(test fill-rule
+  (with-cairo-image-surface (surface :rgb24 100 150)
+    (with-cairo-context (context surface)
+      (is (eq :winding (cairo:fill-rule context)))
+      (is (eq :even-odd (setf (cairo:fill-rule context) :even-odd)))
+      (is (eq :even-odd (cairo:fill-rule context))))))
+
 ;;;     cairo_set_line_cap
 ;;;     cairo_get_line_cap
-;;;
+
+(test line-cap
+  (with-cairo-image-surface (surface :rgb24 100 150)
+    (with-cairo-context (context surface)
+      (is (eq :butt (cairo:line-cap context)))
+      (is (eq :round (setf (cairo:line-cap context) :round)))
+      (is (eq :round (cairo:line-cap context)))
+      (is (eq :square (setf (cairo:line-cap context) :square)))
+      (is (eq :square (cairo:line-cap context))))))
+
 ;;;     cairo_set_line_join
 ;;;     cairo_get_line_join
+
+(test line-join
+  (with-cairo-image-surface (surface :rgb24 100 150)
+    (with-cairo-context (context surface)
+      (is (eq :miter (cairo:line-join context)))
+      (is (eq :round (setf (cairo:line-join context) :round)))
+      (is (eq :round (cairo:line-join context)))
+      (is (eq :bevel (setf (cairo:line-join context) :bevel)))
+      (is (eq :bevel (cairo:line-join context))))))
+
 ;;;     cairo_set_line_width
 ;;;     cairo_get_line_width
+
+(test line-width.1
+  (with-cairo-image-surface (surface :rgb24 100 150)
+    (with-cairo-context (context surface)
+      (is (= 2.0d0 (cairo:line-width context)))
+      (is (= 1.0d0 (setf (cairo:line-width context) 1.0)))
+      (is (= 1.0d0 (cairo:line-width context))))))
+
+(test line-width.2
+  (with-cairo-image-surface (surface :rgb24 100 150)
+    (with-cairo-context (context surface)
+      (is (= 0.5d0 (setf (cairo:line-width context) 1/2)))
+      (is (= 0.5d0 (cairo:line-width context)))
+      (is (= 1.0d0 (setf (cairo:line-width context) 1)))
+      (is (= 1.0d0 (cairo:line-width context)))
+      (is (= 2.0d0 (setf (cairo:line-width context) 2.0)))
+      (is (= 2.0d0 (cairo:line-width context)))
+      (is (= 3.0d0 (setf (cairo:line-width context) 3.0d0)))
+      (is (= 3.0d0 (cairo:line-width context))))))
+
 ;;;     cairo_set_miter_limit
 ;;;     cairo_get_miter_limit
-;;;
+
+(test miter-limit
+  (with-cairo-image-surface (surface :rgb24 100 150)
+    (with-cairo-context (context surface)
+      (is (= 10.0d0 (cairo:miter-limit context)))
+      (is (= 15.0d0 (setf (cairo:miter-limit context) 15.0)))
+      (is (= 15.0d0 (cairo:miter-limit context))))))
+
 ;;;     cairo_set_operator
 ;;;     cairo_get_operator
+
+(test operator
+  (with-cairo-image-surface (surface :rgb24 100 150)
+    (with-cairo-context (context surface)
+      (is (eq :over (cairo:operator context)))
+      (is (eq :clear (setf (cairo:operator context) :clear)))
+      (is (eq :clear (cairo:operator context))))))
+
 ;;;     cairo_set_tolerance
 ;;;     cairo_get_tolerance
+
+(test tolerance
+  (with-cairo-image-surface (surface :rgb24 100 150)
+    (with-cairo-context (context surface)
+      (is (= 0.1d0 (cairo:tolerance context)))
+      (is (approx-equal 0.2d0 (setf (cairo:tolerance context) 0.2)))
+      (is (approx-equal 0.2d0 (cairo:tolerance context))))))
+
 ;;;     cairo_clip
 ;;;     cairo_clip_preserve
 ;;;     cairo_clip_extents
 ;;;     cairo_in_clip
 ;;;     cairo_reset_clip
-;;;
 ;;;     cairo_rectangle_list_destroy
 ;;;     cairo_copy_clip_rectangle_list
 ;;;     cairo_fill
@@ -197,4 +265,4 @@
 ;;;     cairo_set_user_data
 ;;;     cairo_get_user_data
 
-;;; --- 2023-1-7 ---------------------------------------------------------------
+;;; --- 2023-1-11 --------------------------------------------------------------

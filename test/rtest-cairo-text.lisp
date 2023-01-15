@@ -121,104 +121,53 @@
 
 ;;;     cairo_font_extents
 
-#-windows
 (test font-extents
   (with-cairo-context-for-image-surface (context :rgb24 400 300)
-    (let ((extents nil))
-      ;; Set a font and a font size
-      (cairo:select-font-face context "Sans")
-      (cairo:set-font-size context 18)
-      (setf extents (cairo:font-extents context))
-      ;; Check the slots of cairo:font-extents-t structure
-      (is (approx-equal 17.0 (cairo:font-extents-ascent extents)))
-      (is (approx-equal  5.0 (cairo:font-extents-descent extents)))
-      (is (approx-equal 21.0 (cairo:font-extents-height extents)))
-      (is (approx-equal 34.0 (cairo:font-extents-max-x-advance extents)))
-      (is (approx-equal  0.0 (cairo:font-extents-max-y-advance extents))))))
-
-#+windows
-(test font-extents
-  (with-cairo-context-for-image-surface (context :rgb24 400 300)
-    (let ((extents nil))
-      ;; Set a font and a font size
-      (is-false (cairo:select-font-face context "Sans"))
-      (is-false (cairo:set-font-size context 18))
-      (is (cffi:pointerp (setf extents (cairo:font-extents context))))
-      ;; Check the slots of cairo:font-extents-t structure
-      (is (approx-equal  16.3 (cairo:font-extents-ascent extents)))
-      (is (approx-equal   3.8 (cairo:font-extents-descent extents)))
-      (is (approx-equal  20.7 (cairo:font-extents-height extents)))
-      (is (approx-equal 252.0 (cairo:font-extents-max-x-advance extents)))
-      (is (approx-equal   0.0 (cairo:font-extents-max-y-advance extents))))))
+    ;; Set a font and a font size
+    (cairo:select-font-face context "Sans")
+    (cairo:set-font-size context 18)
+    (multiple-value-bind (ascent descent height max-x-advance max-y-advance)
+        (cairo:font-extents context)
+      ;; Check the values
+      (is (approx-equal 17.0 ascent))
+      (is (approx-equal  5.0 descent))
+      (is (approx-equal 21.0 height))
+      (is (approx-equal 34.0 max-x-advance))
+      (is (approx-equal  0.0 max-y-advance)))))
 
 ;;;     cairo_text_extents
 
-#-windows
 (test text-extents
   (with-cairo-context-for-image-surface (context :rgb24 400 300)
-    (let ((extents nil))
-      ;; Set a font and a font size
-      (cairo:select-font-face context "Sans")
-      (cairo:set-font-size context 18)
-      (setf extents (cairo:text-extents context "Crategus"))
-      ;; Check the slots of cairo:text-extents-t structure
-      (is (approx-equal   1.0 (cairo:text-extents-x-bearing extents)))
-      (is (approx-equal -13.0 (cairo:text-extents-y-bearing extents)))
-      (is (approx-equal  79.0 (cairo:text-extents-width extents)))
-      (is (approx-equal  17.0 (cairo:text-extents-height extents)))
-      (is (approx-equal  80.0 (cairo:text-extents-x-advance extents)))
-      (is (approx-equal   0.0 (cairo:text-extents-y-advance extents))))))
-
-#+windows
-(test text-extents
-  (with-cairo-context-for-image-surface (context :rgb24 400 300)
-    (let ((extents nil))
-      ;; Set a font and a font size
-      (is-false (cairo:select-font-face context "Sans"))
-      (is-false (cairo:set-font-size context 18))
-      (is (cffi:pointerp (setf extents (cairo:text-extents context "Crategus"))))
-      ;; Check the slots of cairo:text-extents-t instance
-      (is (approx-equal  -0.1 (cairo:text-extents-x-bearing extents)))
-      (is (approx-equal -13.0 (cairo:text-extents-y-bearing extents)))
-      (is (approx-equal  74.0 (cairo:text-extents-width extents)))
-      (is (approx-equal  17.0 (cairo:text-extents-height extents)))
-      (is (approx-equal  73.0 (cairo:text-extents-x-advance extents)))
-      (is (approx-equal   0.0 (cairo:text-extents-y-advance extents))))))
+    ;; Set a font and a font size
+    (cairo:select-font-face context "Sans")
+    (cairo:set-font-size context 18)
+    (multiple-value-bind (x-bearing y-bearing width height x-advance y-advance)
+        (cairo:text-extents context "Crategus")
+      ;; Check the returned values
+      (is (approx-equal   1.0 x-bearing))
+      (is (approx-equal -13.0 y-bearing))
+      (is (approx-equal  79.0 width))
+      (is (approx-equal  17.0 height))
+      (is (approx-equal  80.0 x-advance))
+      (is (approx-equal   0.0 y-advance)))))
 
 ;;;     cairo_glyph_extents
 
-#-windows
 (test glyph-extents
   (with-cairo-context-for-image-surface (context :rgb24 400 300)
-    (let ((extents nil))
-      ;; Set a font and a font size
-      (cairo:select-font-face context "Sans")
-      (cairo:set-font-size context 18)
-      (setf extents (cairo:glyph-extents context '((36 10 20))))
-      ;; Check the slots of cairo:text-extents-t structure
-      (is (approx-equal  -0.0 (cairo:text-extents-x-bearing extents)))
-      (is (approx-equal -13.0 (cairo:text-extents-y-bearing extents)))
-      (is (approx-equal  13.0 (cairo:text-extents-width extents)))
-      (is (approx-equal  13.0 (cairo:text-extents-height extents)))
-      (is (approx-equal  12.0 (cairo:text-extents-x-advance extents)))
-      (is (approx-equal   0.0 (cairo:text-extents-y-advance extents))))))
-
-#+windows
-(test glyph-extents
-  (with-cairo-context-for-image-surface (context :rgb24 400 300)
-    (let ((extents nil))
-      ;; Set a font and a font size
-      (is-false (cairo:select-font-face context "Sans"))
-      (is-false (cairo:set-font-size context 18))
-      (is (cffi:pointerp (setf extents
-                               (cairo:glyph-extents context '((36 10 20))))))
-      ;; Check the slots of cairo:text-extents-t structure
-      (is (approx-equal  -1.0 (cairo:text-extents-x-bearing extents)))
-      (is (approx-equal -13.0 (cairo:text-extents-y-bearing extents)))
-      (is (approx-equal  14.0 (cairo:text-extents-width extents)))
-      (is (approx-equal  13.0 (cairo:text-extents-height extents)))
-      (is (approx-equal  12.0 (cairo:text-extents-x-advance extents)))
-      (is (approx-equal   0.0 (cairo:text-extents-y-advance extents))))))
+    ;; Set a font and a font size
+    (cairo:select-font-face context "Sans")
+    (cairo:set-font-size context 18)
+    (multiple-value-bind (x-bearing y-bearing width height x-advance y-advance)
+        (cairo:glyph-extents context '((36 10 20)))
+    ;; Check the returned values
+    (is (approx-equal  -0.0 x-bearing))
+    (is (approx-equal -13.0 y-bearing))
+    (is (approx-equal  13.0 width))
+    (is (approx-equal  13.0 height))
+    (is (approx-equal  12.0 x-advance))
+    (is (approx-equal   0.0 y-advance)))))
 
 ;;;     cairo_toy_font_face_create
 ;;;     cairo_toy_font_face_get_family

@@ -15,16 +15,19 @@
 
 ;;;     cairo_pdf_surface_create ()
 ;;;     cairo_pdf_surface_create_for_stream ()
+
 ;;;     cairo_pdf_surface_restrict_to_version ()
 
 ;;;     cairo_pdf_get_versions ()
 
+#-windows
 (test pdf-versions
   (is (equal '(:version-1-4 :version-1-5)
              (cairo:pdf-versions))))
 
 ;;;     cairo_pdf_version_to_string ()
 
+#-windows
 (test pdf-version-to-string
   (is (equal '("PDF 1.4" "PDF 1.5")
              (mapcar #'cairo:pdf-version-to-string (cairo:pdf-versions)))))

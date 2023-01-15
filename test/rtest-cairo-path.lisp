@@ -3,173 +3,248 @@
 (def-suite cairo-path :in cairo-suite)
 (in-suite cairo-path)
 
+(defvar *verbose-cairo-path* nil)
+
 ;;; Types and Values
 
 ;;;     cairo_path_t
 ;;;     cairo_path_data_t
 ;;;     cairo_path_data_type_t
 
-;;; Functions
-
-;;;     cairo_copy_path
-
-;; TODO: More work is needed to show the code for iterating through the
-;; structures for a path
-
-#+nil
-(test path-copy
-  (with-cairo-image-surface (surface :rgb24 100 150)
-    (with-cairo-context (context surface)
-
-      (is-false (cairo:new-path context))
-      (is-false (cairo:move-to context 10 10))
-      (is-false (cairo:line-to context 20 20))
-      (is-false (cairo:close-path context))
-
-      (let* ((path-list nil)
-             (path (cairo:path-copy context))
-             (status (cairo:path-status path))
-             (data (cairo:path-data path))
-             (num-data (cairo:path-num-data path)))
-
-        (is (eq :success status))
-        (is (cffi:pointerp data))
-        (is (= 7 num-data))
-
-        (loop for count from 0 below num-data
-              for ptr = (cffi:mem-aptr data :pointer count)
-              for header = (cairo:path-data-header ptr)
-              for type = (cairo:path-data-header-data-type header)
-              for length = (cairo:path-data-header-length header)
-              for point = (cairo:path-data-point ptr)
-
-              do (format t "~%  count : ~a~%" count)
-                 (format t "~&    ptr : ~a~%" ptr)
-                 (format t "~& header : ~a~%" header)
-                 (format t "~&   type : ~a~%" type)
-                 (format t "~& length : ~a~%" length)
-                 (format t "~&  point : ~a~%" point)
-)))))
-
-#|
-
-      (loop for count from 0 below num-data
-            for header = (foreign-slot-pointer path
-                                               '(:struct cairo:path-data-t)
-                                               'cairo::header)
-            for data-type = (cffi:foreign-slot-value header
-                                               '(:struct cairo::header-t)
-                                               'cairo::data-type)
-            for length = (cffi:foreign-slot-value header
-                                             '(:struct cairo::header-t)
-                                              'cairo::length)
-            do (format t "~%     count : ~a~%" count)
-               (format t "~&    header : ~a~%" header)
-               (format t "~& data-type : ~a~%" data-type)
-               (format t "~&    length : ~a~%" length)
-               (format t "~&    offset : ~a~%" (* length (cffi:foreign-type-size :pointer)))
-
-
-               (incf-pointer data (* length (cffi:foreign-type-size :pointer)))
-
-
-      )
-)))
-|#
-
-#+nil
-(test copy-path.1
-  (let* ((surface (cairo:image-surface-create :rgb24 100 150))
-         (context (cairo:context-create surface)))
-
+(test path-structure.1
+  (with-cairo-context-for-image-surface (context :rgb24 400 300)
     (is-false (cairo:new-path context))
     (is-false (cairo:move-to context 10 10))
     (is-false (cairo:line-to context 20 20))
     (is-false (cairo:close-path context))
+    (let* ((path (cairo:copy-path context))
+           (status (cairo:path-status path))
+           (data (cairo:path-data path))
+           (numdata (cairo:path-numdata path)))
+      ;; Get the data array
+      (is (eq :success status))
+      (is (cffi:pointerp data))
+      (is (= 7 numdata))
+      (when *verbose-cairo-path*
+        (format t "~%")
+        (format t "          path : ~a~%" path)
+        (format t "      data-arr : ~a~%" data)
+        (format t "       numdata : ~a~%" numdata))
+      ;; First element
+      (setf data (cairo:path-data path))
+      (is (eq :move-to (cairo:header-data-type data)))
+      (is (= 2 (cairo:header-length data)))
+      (when *verbose-cairo-path*
+        (format t "          data : ~a~%" data)
+        (format t "   header-type : ~a~%" (cairo:header-data-type data))
+        (format t " header-length : ~a~%" (cairo:header-length data)))
+      ;; Second element
+      (setf data
+            (cffi:inc-pointer
+                data
+                (cffi:foreign-type-size '(:struct cairo:path-data-t))))
+      (is (= 10.0 (cairo:point-x data)))
+      (is (= 10.0 (cairo:point-y data)))
+      (when *verbose-cairo-path*
+        (format t "          data : ~a~%" data)
+        (format t "       point-x : ~a~%" (cairo:point-x data))
+        (format t "       point-y : ~a~%" (cairo:point-y data)))
+      ;; Third element
+      (setf data
+            (cffi:inc-pointer
+                data
+                (cffi:foreign-type-size '(:struct cairo:path-data-t))))
+      (is (eq :line-to (cairo:header-data-type data)))
+      (is (= 2 (cairo:header-length data)))
+      (when *verbose-cairo-path*
+        (format t "          data : ~a~%" data)
+        (format t "   header-type : ~a~%" (cairo:header-data-type data))
+        (format t " header-length : ~a~%" (cairo:header-length data)))
+      ;; Fourth element
+      (setf data
+            (cffi:inc-pointer
+                data
+                (cffi:foreign-type-size '(:struct cairo:path-data-t))))
+      (is (= 20.0 (cairo:point-x data)))
+      (is (= 20.0 (cairo:point-y data)))
+      (when *verbose-cairo-path*
+        (format t "          data : ~a~%" data)
+        (format t "       point-x : ~a~%" (cairo:point-x data))
+        (format t "       point-y : ~a~%" (cairo:point-y data)))
+      ;; Fifth element
+      (setf data
+            (cffi:inc-pointer
+                data
+                (cffi:foreign-type-size '(:struct cairo:path-data-t))))
+      (is (eq :close-path (cairo:header-data-type data)))
+      (is (= 1 (cairo:header-length data)))
+      (when *verbose-cairo-path*
+        (format t "          data : ~a~%" data)
+        (format t "   header-type : ~a~%" (cairo:header-data-type data))
+        (format t " header-length : ~a~%" (cairo:header-length data)))
+      ;; Sixth element
+      (setf data
+            (cffi:inc-pointer
+                data
+                (cffi:foreign-type-size '(:struct cairo:path-data-t))))
+      (is (eq :move-to (cairo:header-data-type data)))
+      (is (= 2 (cairo:header-length data)))
+      (when *verbose-cairo-path*
+        (format t "          data : ~a~%" data)
+        (format t "   header-type : ~a~%" (cairo:header-data-type data))
+        (format t " header-length : ~a~%" (cairo:header-length data)))
+      ;; Seventh element
+      (setf data
+            (cffi:inc-pointer
+                data
+                (cffi:foreign-type-size '(:struct cairo:path-data-t))))
+      (is (= 10.0 (cairo:point-x data)))
+      (is (= 10.0 (cairo:point-y data)))
+      (when *verbose-cairo-path*
+        (format t "          data : ~a~%" data)
+        (format t "       point-x : ~a~%" (cairo:point-x data))
+        (format t "       point-y : ~a~%" (cairo:point-y data)))
+      (is-false (cairo:path-destroy path)))))
 
-    (let* ((path-list nil)
-           (path (cairo:copy-path context))
-           (data (cffi:foreign-slot-value path
-                                          '(:struct cairo:path-t)
-                                          'cairo::data))
-           (num-data (cffi:foreign-slot-value path
-                                              '(:struct cairo:path-t)
-                                              'cairo::num-data)))
+(test path-structure.2
+  (with-cairo-context-for-image-surface (context :rgb24 400 300)
+    (is-false (cairo:new-path context))
+    (is-false (cairo:move-to context 10 10))
+    (is-false (cairo:line-to context 20 20))
+    (is-false (cairo:close-path context))
+    (let* ((path (cairo:copy-path context))
+           (numdata (cairo:path-numdata path)))
+      (when *verbose-cairo-path*
+        (format t "  path : ~a~%" path)
+        (format t "   num : ~a~%" numdata))
+      (loop with count = 0
+            with element = nil
+            with data = (cairo:path-data path)
+            with size = (cffi:foreign-type-size '(:struct cairo:path-data-t))
+            collect element
+            while (< count numdata)
+            do (cond ((eq :move-to (cairo:header-data-type data))
+                      (setf element (list :move-to))
+                      (when *verbose-cairo-path*
+                        (format t "move-to :~%")
+                        (format t "  data : ~a~%" data)
+                        (format t "  type : ~a~%" (cairo:header-data-type data))
+                        (format t "length : ~a~%" (cairo:header-length data)))
+                      (setf count (incf count (cairo:header-length data)))
+                      (setf data (cffi:inc-pointer data size))
+                      (when *verbose-cairo-path*
+                        (format t " x : ~a~%" (cairo:point-x data))
+                        (format t " y : ~a~%" (cairo:point-y data)))
+                      (setf data (cffi:inc-pointer data size)))
+                     ((eq :line-to (cairo:header-data-type data))
+                      (setf element (list :line-to))
+                      (when *verbose-cairo-path*
+                        (format t "move-to :~%")
+                        (format t "  data : ~a~%" data)
+                        (format t "  type : ~a~%" (cairo:header-data-type data))
+                        (format t "length : ~a~%" (cairo:header-length data)))
+                      (setf count (incf count (cairo:header-length data)))
+                      (setf data (cffi:inc-pointer data size))
+                      (when *verbose-cairo-path*
+                        (format t " x : ~a~%" (cairo:point-x data))
+                        (format t " y : ~a~%" (cairo:point-y data)))
+                      (setf data (cffi:inc-pointer data size)))
+                     ((eq :close-path (cairo:header-data-type data))
+                      (setf element (list :close-path))
+                      (when *verbose-cairo-path*
+                        (format t "move-to :~%")
+                        (format t "  data : ~a~%" data)
+                        (format t "  type : ~a~%" (cairo:header-data-type data))
+                        (format t "length : ~a~%" (cairo:header-length data)))
+                      (setf count (incf count (cairo:header-length data)))
+                      (setf data (cffi:inc-pointer data size)))
+                     (t (error "KEYWORD not known to PATH-DATA-TYPE-T"))))
+      (is-false (cairo:path-destroy path)))))
 
-      (is (eq :success
-              (cffi:foreign-slot-value path '(:struct cairo:path-t)
-                                            'cairo::status)))
-      (is (cffi:pointerp
-            (cffi:foreign-slot-value path '(:struct cairo:path-t) 'cairo::data)))
-      (is (= 7
-             (cffi:foreign-slot-value path '(:struct cairo:path-t)
-                                           'cairo::num-data)))
+;;; --- Functions --------------------------------------------------------------
 
-      (dotimes (count num-data)
-        (let* ((path-data (cffi:mem-aptr data
-                                         '(:struct cairo:path-data-t)
-                                         count))
-               (header (foreign-slot-pointer path-data
-                                             '(:struct cairo:path-data-t)
-                                             'cairo::header))
-               (points (foreign-slot-pointer path-data
-                                             '(:struct cairo:path-data-t)
-                                             'cairo::point)))
+(defun path-to-lisp (path)
+  (loop with count = 0
+        with numdata = (cairo:path-numdata path)
+        with element = :path
+        with data = (cairo:path-data path)
+        with size = (cffi:foreign-type-size '(:struct cairo:path-data-t))
+        collect element
+        while (< count numdata)
+        do (cond ((eq :move-to (cairo:header-data-type data))
+                  (setf element (list :move-to))
+                  (setf count (incf count (cairo:header-length data)))
+                  (setf data (cffi:inc-pointer data size))
+                  (push (cairo:point-x data) element)
+                  (push (cairo:point-y data) element)
+                  (setf element (reverse element))
+                  (setf data (cffi:inc-pointer data size)))
+                 ((eq :line-to (cairo:header-data-type data))
+                  (setf element (list :line-to))
+                  (setf count (incf count (cairo:header-length data)))
+                  (setf data (cffi:inc-pointer data size))
+                  (push (cairo:point-x data) element)
+                  (push (cairo:point-y data) element)
+                  (setf element (reverse element))
+                  (setf data (cffi:inc-pointer data size)))
+                 ((eq :curve-to (cairo:header-data-type data))
+                  (setf element (list :curve-to))
+                  (setf count (incf count (cairo:header-length data)))
+                  (setf data (cffi:inc-pointer data size))
+                  (push (cairo:point-x data) element)
+                  (push (cairo:point-y data) element)
+                  (setf data (cffi:inc-pointer data size))
+                  (push (cairo:point-x data) element)
+                  (push (cairo:point-y data) element)
+                  (setf data (cffi:inc-pointer data size))
+                  (push (cairo:point-x data) element)
+                  (push (cairo:point-y data) element)
+                  (setf element (reverse element))
+                  (setf data (cffi:inc-pointer data size)))
+                 ((eq :close-path (cairo:header-data-type data))
+                  (setf element (list :close-path))
+                  (setf count (incf count (cairo:header-length data)))
+                  (setf data (cffi:inc-pointer data size)))
+                 (t (error "KEYWORD ~a not known to PATH-DATA-TYPE-T"
+                           (cairo:header-data-type data))))))
 
-          (is (cffi:pointerp (cffi:mem-aptr data
-                                            '(:struct cairo:path-data-t) count)))
+;;;     cairo_copy_path
 
-          (is (cffi:pointerp header))
-          (is (cffi:pointerp points))
-
-          (let ((data-type (cffi:foreign-slot-value header
-                                               '(:struct cairo::header-t)
-                                               'cairo::data-type))
-                (length (cffi:foreign-slot-value header
-                                            '(:struct cairo::header-t)
-                                            'cairo::length)))
-
-          (format t "~& ~a ~a~%" data-type length)
-
-          (push (cffi:foreign-slot-value header
-                                        '(:struct cairo::header-t)
-                                        'cairo::data-type)
-                          path-list)
-
-          (push (cffi:foreign-slot-value header
-                                        '(:struct cairo::header-t)
-                                        'cairo::length)
-                          path-list)
-
-          (setf length (if (< length 10) length 10))
-
-          (dotimes (i length)
-            (let* ((point-ptr (cffi:mem-aptr points
-                                             '(:struct cairo::point-t) i)))
-
-              (is (cffi:pointerp point-ptr))
-
-              (push (cffi:foreign-slot-value point-ptr
-                                            '(:struct cairo::point-t)
-                                            'cairo::x)
-                    path-list)
-              (push (cffi:foreign-slot-value point-ptr
-                                            '(:struct cairo::point-t)
-                                            'cairo::y)
-                    path-list)
-
-
-          ))
-
-
-      )))
-
-      (is (equal '() (reverse path-list)))
-
-)))
+(test copy-path
+  (with-cairo-context-for-image-surface (context :rgb24 400 300)
+    (is-false (cairo:new-path context))
+    (is-false (cairo:move-to context 10 20))
+    (is-false (cairo:line-to context 30 40))
+    (is-false (cairo:curve-to context 50 60 70 80 90 100))
+    (is-false (cairo:close-path context))
+    (let ((path (cairo:copy-path context)))
+      (is (equal '(:PATH (:MOVE-TO 10.0d0 20.0d0)
+                         (:LINE-TO 30.0d0 40.0d0)
+                         (:CURVE-TO 50.0d0 60.0d0 70.0d0 80.0d0 90.0d0 100.0d0)
+                         (:CLOSE-PATH) (:MOVE-TO 10.0d0 20.0d0))
+                 (path-to-lisp path)))
+    (is-false (cairo:path-destroy path)))))
 
 ;;;     cairo_copy_path_flat
+
+(test copy-path-flat
+  (with-cairo-context-for-image-surface (context :rgb24 400 300)
+    (is-false (cairo:new-path context))
+    (is-false (cairo:move-to context 10 20))
+    (is-false (cairo:line-to context 30 40))
+    (is-false (cairo:curve-to context 50 60 70 80 90 100))
+    (is-false (cairo:close-path context))
+    (let ((path (cairo:copy-path-flat context)))
+      (is (equal '(:PATH (:MOVE-TO 10.0d0 20.0d0) 
+                         (:LINE-TO 30.0d0 40.0d0)
+                         (:LINE-TO 90.0d0 100.0d0) 
+                         (:CLOSE-PATH) 
+                         (:MOVE-TO 10.0d0 20.0d0))
+                 (path-to-lisp path)))
+      (is-false (cairo:path-destroy path)))))
+
 ;;;     cairo_path_destroy
+
 ;;;     cairo_append_path
 
 ;;;     cairo_has_current_point
@@ -204,4 +279,4 @@
 ;;;     cairo_rel_move_to
 ;;;     cairo_path_extents
 
-;;; --- 2023-1-3 ---------------------------------------------------------------
+;;; --- 2023-1-13 --------------------------------------------------------------

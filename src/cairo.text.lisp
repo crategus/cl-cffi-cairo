@@ -32,7 +32,7 @@
 ;;;
 ;;; Types and Values
 ;;;
-;;;     cairo_glyph_t
+;;;     cairo_glyph_t                            --> cairo.scaled-font.lisp
 ;;;     cairo_font_slant_t
 ;;;     cairo_font_weight_t
 ;;;     cairo_text_cluster_t
@@ -95,54 +95,6 @@
        (font-face-destroy ,face))))
 
 (export 'with-cairo-toy-font-face)
-
-;;; ----------------------------------------------------------------------------
-;;; cairo_glyph_t
-;;; ----------------------------------------------------------------------------
-
-(defcstruct glyph-t
-  (index :ulong)
-  (x :double)
-  (y :double))
-
-#+liber-documentation
-(setf (liber:alias-for-symbol 'glyph-t)
-      "CStruct"
-      (liber:symbol-documentation 'glyph-t)
- "@version{#2021-12-12}
-  @begin{short}
-    The @sym{cairo:glyph-t} structure holds information about a single glyph when
-    drawing or measuring text.
-  @end{short}
-  A font is (in simple terms) a collection of shapes used to draw text. A glyph
-  is one of these shapes. There can be multiple glyphs for a single character
-  (alternates to be used in different contexts, for example), or a glyph can be
-  a ligature of multiple characters. Cairo does not expose any way of converting
-  input text into glyphs, so in order to use the Cairo interfaces that take
-  arrays of glyphs, you must directly access the appropriate underlying font
-  system.
-
-  Note that the offsets given by x and y are not cumulative. When drawing or
-  measuring text, each glyph is individually positioned with respect to the
-  overall origin.
-  @begin{pre}
-(defcstruct glyph-t
-  (index :ulong)
-  (x :double)
-  (y :double))
-  @end{pre}
-  @begin[code]{table}
-    @entry[index]{Glyph index in the font. The exact interpretation of the
-      glyph index depends on the font technology being used.}
-    @entry[x]{The offset in the x direction between the origin used for drawing
-      or measuring the string and the origin of this glyph.}
-    @entry[y]{The offset in the y direction between the origin used for drawing
-      or measuring the string and the origin of this glyph.}
-  @end{table}
-  @see-function{cairo:glyph-path}
-  @see-function{cairo:show-glyphs}")
-
-(export 'glyph-t)
 
 ;;; ----------------------------------------------------------------------------
 ;;; enum cairo_font_slant_t
@@ -282,7 +234,7 @@
 
 (defun select-font-face (cr family &key (slant :normal) (weight :normal))
  #+liber-documentation
- "@version{#2021-12-12}
+ "@version{2023-1-14}
   @argument[cr]{a @symbol{cairo:context-t} context}
   @argument[family]{a string with the font family name, encoded in UTF-8}
   @argument[slant]{the slant of type @symbol{cairo:font-slant-t} for the font,
@@ -338,6 +290,8 @@
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:font-slant-t}
   @see-symbol{cairo:font-weight-t}
+  @see-function{cairo:scaled-font}
+  @see-function{cairo:scaled-font-create}
   @see-function{cairo:toy-font-face-create}
   @see-function{cairo:font-face}"
   (%select-font-face cr family slant weight))
@@ -354,7 +308,7 @@
 
 (defun set-font-size (cr size)
  #+liber-documentation
- "@version{#2021-12-12}
+ "@version{2023-1-14}
   @argument[cr]{a @symbol{cairo:context-t} context}
   @argument[size]{a number coerced to a double float with the new font size,
     in user space units}
@@ -576,7 +530,7 @@
 
 (defun show-text (cr utf8)
  #+liber-documentation
- "@version{#2021-12-12}
+ "@version{2023-1-15}
   @argument[cr]{a @symbol{cairo:context-t} context}
   @argument[utf8]{a string of text encoded in UTF-8, or @code{nil}}
   @begin{short}
@@ -619,7 +573,7 @@
 
 (defun show-glyphs (cr glyphs)
  #+liber-documentation
- "@version{#2021-12-12}
+ "@version{2023-1-15}
   @argument[cr]{a @symbol{cairo:context-t} context}
   @argument[glyphs]{a list of glyphs to show}
   @begin{short}
@@ -713,9 +667,12 @@
 
 (defun font-extents (cr)
  #+liber-documentation
- "@version{#2021-12-12}
+ "@version{2023-1-15}
+  @syntax[]{(cairo:font-extents cr) => ascent, descent, height, max-x-advance,
+    max-y-advance}
   @argument[cr]{a @symbol{cairo:context-t} context}
-  @return{The @symbol{cairo:font-extents-t} instance.}
+  @return{The double float values of the @symbol{cairo:font-extents-t}
+    instance.}
   @begin{short}
     Gets the font extents for the currently selected font.
   @end{short}
@@ -723,7 +680,12 @@
   @see-symbol{cairo:font-extents-t}"
   (with-foreign-object (extents '(:struct font-extents-t))
     (%font-extents cr extents)
-    extents))
+    (with-foreign-slots ((ascent
+                          descent
+                          height
+                          max-x-advance
+                          max-y-advance) extents (:struct font-extents-t))
+    (values ascent descent height max-x-advance max-y-advance))))
 
 (export 'font-extents)
 
@@ -738,32 +700,42 @@
 
 (defun text-extents (cr utf8)
  #+liber-documentation
- "@version{#2021-12-12}
+ "@version{2023-1-15}
+  @syntax[]{(cairo:text-extents cr utf8) => x-bearing, y-bearing, width, height
+    x-advance, y-advance}
   @argument[cr]{a @symbol{cairo:context-t} context}
   @argument[utf8]{a string of text encoded in UTF-8}
   @begin{return}
-    A @symbol{cairo:text-extents-t} instance with the extents of @arg{utf8}.
+    The double float values of the @symbol{cairo:text-extents-t} instance with
+    the extents of @arg{utf8}.
   @end{return}
   @begin{short}
     Gets the extents for a string of text.
   @end{short}
   The extents describe a user-space rectangle that encloses the \"inked\"
   portion of the text, as it would be drawn by the @fun{cairo:show-text}
-  function. Additionally, the @code{x-advance} and @code{y-advance} values
+  function. Additionally, the @arg{x-advance} and @arg{y-advance} values
   indicate the amount by which the current point would be advanced by the
   @fun{cairo:show-text} function.
 
   Note that whitespace characters do not directly contribute to the size of
-  the rectangle (@code{width} and @code{height}). They do contribute indirectly
-  by changing the position of non-whitespace characters. In particular, trailing
-  whitespace characters are likely to not affect the size of the rectangle,
-  though they will affect the @code{x-advance} and @code{y-advance} values.
+  the rectangle @arg{width} and @arg{height} values. They do contribute
+  indirectly by changing the position of non-whitespace characters. In
+  particular, trailing whitespace characters are likely to not affect the size
+  of the rectangle, though they will affect the @arg{x-advance} and
+  @arg{y-advance} values.
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:text-extents-t}
   @see-function{cairo:show-text}"
   (with-foreign-object (extents '(:struct text-extents-t))
     (%text-extents cr utf8 extents)
-    extents))
+    (with-foreign-slots ((x-bearing
+                          y-bearing
+                          width
+                          height
+                          x-advance
+                          y-advance) extents (:struct text-extents-t))
+    (values x-bearing y-bearing width height x-advance y-advance))))
 
 (export 'text-extents)
 
@@ -779,24 +751,27 @@
 
 (defun glyph-extents (cr glyphs)
  #+liber-documentation
- "@version{#2021-12-12}
+ "@version{2023-1-15}
+  @syntax[]{(cairo:glyph-extents cr glyphs) => x-bearing, y-bearing, width,
+    height, x-advance, y-advance}
   @argument[cr]{a @symbol{cairo:context-t} context}
   @argument[glyphs]{a list of glyphs of the form @code{'((index1 x1 y1)
     (index2 x2 y2) ...)}}
   @begin{return}
-    A @symbol{cairo:text-extents-t} instance with the extents of @arg{glyphs}.
+    The double float values of the @symbol{cairo:text-extents-t} instance with
+    the extents of @arg{glyphs}.
   @end{return}
   @begin{short}
     Gets the extents for a list of glyphs.
   @end{short}
   The extents describe a user-space rectangle that encloses the \"inked\"
   portion of the glyphs, as they would be drawn by the @fun{cairo:show-glyphs}
-  function. Additionally, the @code{x-advance} and @code{y-advance} values
+  function. Additionally, the @arg{x-advance} and @arg{y-advance} values
   indicate the amount by which the current point would be advanced by the
   @fun{cairo:show-glyphs} function.
 
   Note that whitespace glyphs do not contribute to the size of the rectangle
-  (@code{width} and @code{height}).
+  @arg{width} and @arg{height} values.
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:glyph-t}
   @see-symbol{cairo:text-extents-t}
@@ -820,7 +795,13 @@
                                               'cairo::y)
                      (coerce (third glyph) 'double-float)))
       (%glyph-extents cr glyphs-ptr num-glyphs extents)
-      extents)))
+      (with-foreign-slots ((x-bearing
+                            y-bearing
+                            width
+                            height
+                            x-advance
+                            y-advance) extents (:struct text-extents-t))
+      (values x-bearing y-bearing width height x-advance y-advance)))))
 
 (export 'glyph-extents)
 
@@ -924,7 +905,7 @@
 (defcfun ("cairo_glyph_allocate" glyph-allocate)
     (:pointer (:struct glyph-t))
  #+liber-documentation
- "@version{#2021-12-12}
+ "@version{#2023-1-15}
   @argument[num]{an integer with the number of glyphs to allocate}
   @begin{return}
     The newly allocated array of @symbol{cairo:glyph-t} glyphs that should be
@@ -934,9 +915,9 @@
     Allocates an array of @symbol{cairo:glyph-t} instances.
   @end{short}
   This function is only useful in implementations of
-  @code{user-scaled-font-text-to-glyphs-func-t} where the user needs to
-  allocate an array of glyphs that cairo will free. For all other uses, user
-  can use their own allocation method for glyphs.
+  @code{user-scaled-font-text-to-glyphs-func-t} function where the user needs
+  to a allocate an array of glyphs that Cairo will free. For all other uses,
+  user can use their own allocation method for glyphs.
 
   This function returns NULL if @arg{num} is not positive, or if out of
   memory. That means, the NULL return value signals out-of-memory only if
@@ -977,7 +958,7 @@
 (defcfun ("cairo_text_cluster_allocate" text-cluster-allocate)
     (:pointer (:struct text-cluster-t))
  #+liber-documentation
- "@version{#2021-12-12}
+ "@version{#2023-1-15}
   @argument[num]{an integer with the number of text clusters to allocate}
   @begin{return}
     The newly allocated array of @symbol{cairo:text-cluster-t} text clusters
@@ -986,8 +967,8 @@
   @begin{short}
     Allocates an array of @symbol{cairo:text-cluster-t} instances.
   @end{short}
-  This function is only useful in implementations of
-  @code{user-scaled-font-text-to-glyphs-func-t} where the user needs to
+  This function is only useful in implementations of a
+  @code{user-scaled-font-text-to-glyphs-func-t} function where the user needs to
   allocate an array of text clusters that Cairo will free. For all other uses,
   user can use their own allocation method for text clusters.
 

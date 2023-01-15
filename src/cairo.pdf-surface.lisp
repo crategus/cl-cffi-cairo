@@ -257,13 +257,13 @@
   (width :double)
   (height :double))
 
-(defun pdf-surface-create (filename width height)
+(defun pdf-surface-create (path width height)
  #+liber-documentation
- "@version{2023-1-9}
-  @argument[filename]{a string with a filename for the PDF output (must be
-    writable), @code{nil} may be used to specify no output, this will generate
-    a PDF surface that may be queried and used as a source, without generating
-    a temporary file}
+ "@version{2023-1-14}
+  @argument[path]{a namestring or pathname with a path for the PDF output
+    (must be writable), @code{nil} may be used to specify no output, this will
+    generate a PDF surface that may be queried and used as a source, without
+    generating a temporary file}
   @argument[width]{a double float with the width of the surface, in points
     (1 point == 1/72.0 inch)}
   @argument[height]{a double float with the height of the surface, in points
@@ -282,7 +282,7 @@
   @see-symbol{cairo:surface-t}
   @see-function{cairo:surface-destroy}
   @see-function{cairo:surface-status}"
-  (%pdf-surface-create filename
+  (%pdf-surface-create (if path (namestring path) (cffi:null-pointer))
                        (coerce width 'double-float)
                        (coerce height 'double-float)))
 

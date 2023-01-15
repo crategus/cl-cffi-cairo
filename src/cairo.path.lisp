@@ -155,10 +155,10 @@
   (i.e. length == 1 + # of points), and where the number of points for each
   element type is as follows:
   @begin{pre}
-%CAIRO_PATH_MOVE_TO:     1 point
-%CAIRO_PATH_LINE_TO:     1 point
-%CAIRO_PATH_CURVE_TO:    3 points
-%CAIRO_PATH_CLOSE_PATH:  0 points
+:move-to     1 point
+:line-to     1 point
+:curve-to    3 points
+:close-path  0 points
   @end{pre}
   The semantics and ordering of the coordinate values are consistent with
   the @fun{cairo:move-to}, @fun{cairo:line-to}, @fun{cairo:curve-to}, and
@@ -166,32 +166,50 @@
 
   Here is sample code for iterating through a @symbol{cairo:path-t} structure:
   @begin{pre}
-int i;
-cairo_path_t *path;
-cairo_path_data_t *data;
-
-path = cairo_copy_path (cr);
-
-for (i=0; i < path->num_data; i += path->data[i].header.length) {
-    data = &path->data[i];
-    switch (data->header.type) {
-    case CAIRO_PATH_MOVE_TO:
-        do_move_to_things (data[1].point.x, data[1].point.y);
-        break;
-    case CAIRO_PATH_LINE_TO:
-        do_line_to_things (data[1].point.x, data[1].point.y);
-        break;
-    case CAIRO_PATH_CURVE_TO:
-        do_curve_to_things (data[1].point.x, data[1].point.y,
-                            data[2].point.x, data[2].point.y,
-                            data[3].point.x, data[3].point.y);
-        break;
-    case CAIRO_PATH_CLOSE_PATH:
-        do_close_path_things ();
-        break;
-    @}
-@}
-cairo_path_destroy (path);
+(defun path-to-lisp (path)
+  (loop with count = 0
+        with numdata = (cairo:path-numdata path)
+        with element = :path
+        with data = (cairo:path-data path)
+        with size = (cffi:foreign-type-size '(:struct cairo:path-data-t))
+        collect element
+        while (< count numdata)
+        do (cond ((eq :move-to (cairo:header-data-type data))
+                  (setf element (list :move-to))
+                  (setf count (incf count (cairo:header-length data)))
+                  (setf data (cffi:inc-pointer data size))
+                  (push (cairo:point-x data) element)
+                  (push (cairo:point-y data) element)
+                  (setf element (reverse element))
+                  (setf data (cffi:inc-pointer data size)))
+                 ((eq :line-to (cairo:header-data-type data))
+                  (setf element (list :line-to))
+                  (setf count (incf count (cairo:header-length data)))
+                  (setf data (cffi:inc-pointer data size))
+                  (push (cairo:point-x data) element)
+                  (push (cairo:point-y data) element)
+                  (setf element (reverse element))
+                  (setf data (cffi:inc-pointer data size)))
+                 ((eq :curve-to (cairo:header-data-type data))
+                  (setf element (list :curve-to))
+                  (setf count (incf count (cairo:header-length data)))
+                  (setf data (cffi:inc-pointer data size))
+                  (push (cairo:point-x data) element)
+                  (push (cairo:point-y data) element)
+                  (setf data (cffi:inc-pointer data size))
+                  (push (cairo:point-x data) element)
+                  (push (cairo:point-y data) element)
+                  (setf data (cffi:inc-pointer data size))
+                  (push (cairo:point-x data) element)
+                  (push (cairo:point-y data) element)
+                  (setf element (reverse element))
+                  (setf data (cffi:inc-pointer data size)))
+                 ((eq :close-path (cairo:header-data-type data))
+                  (setf element (list :close-path))
+                  (setf count (incf count (cairo:header-length data)))
+                  (setf data (cffi:inc-pointer data size)))
+                 (t (error \"KEYWORD ~a not known to PATH-DATA-TYPE-T\"
+                           (cairo:header-data-type data))))))
   @end{pre}
   As of Cairo 1.4, Cairo does not mind if there are more elements in a portion
   of the path than needed. Such elements can be used by users of the Cairo API
@@ -257,7 +275,7 @@ cairo_path_destroy (path);
     structure.
   @end{short}
   @see-symbol{cairo:path-data-t}"
-  (cffi:foreign-slot-pointer header '(:struct header-t) 'data-type))
+  (cffi:foreign-slot-value header '(:struct header-t) 'data-type))
 
 #+liber-documentation
 (setf (liber:alias-for-function 'header-data-type) "Accessor")
@@ -276,12 +294,42 @@ cairo_path_destroy (path);
     structure.
   @end{short}
   @see-symbol{cairo:path-data-t}"
-  (cffi:foreign-slot-pointer header '(:struct header-t) 'length))
+  (cffi:foreign-slot-value header '(:struct header-t) 'length))
 
 #+liber-documentation
 (setf (liber:alias-for-function 'header-length) "Accessor")
 
 (export 'header-length)
+
+;;; ----------------------------------------------------------------------------
+
+(defun point-x (point)
+ #+liber-documentation
+ "@version{#2023-1-13}
+  @argument[header]{a @symbol{cairo:point-t} instance}
+  @return{A double float with the x coordinate of the point.}
+  @begin{short}
+    Accessor of the @code{x} slot of the @symbol{cairo:point-t} structure.
+  @end{short}
+  @see-symbol{cairo:path-data-t}"
+  (cffi:foreign-slot-value point '(:struct point-t) 'x))
+
+(export 'point-x)
+
+;;; ----------------------------------------------------------------------------
+
+(defun point-y (point)
+ #+liber-documentation
+ "@version{#2023-1-13}
+  @argument[header]{a @symbol{cairo:point-t} instance}
+  @return{A double float with the y coordinate of the point.}
+  @begin{short}
+    Accessor of the @code{y} slot of the @symbol{cairo:point-t} structure.
+  @end{short}
+  @see-symbol{cairo:path-data-t}"
+  (cffi:foreign-slot-value point '(:struct point-t) 'y))
+
+(export 'point-y)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_path_t
@@ -624,7 +672,7 @@ fill     stroke
 
 (defcfun ("cairo_new_sub_path" new-sub-path) :void
  #+liber-documentation
- "@version{#2021-12-12}
+ "@version{2023-1-14}
   @argument[cr]{a @symbol{cairo:context-t} context}
   @begin{short}
     Begin a new sub-path.
@@ -638,7 +686,8 @@ fill     stroke
   things easier as it is no longer necessary to manually compute the initial
   coordinates of the arc for a call to the @fun{cairo:move-to} function.
   @see-symbol{cairo:context-t}
-  @see-function{cairo:move-to}"
+  @see-function{cairo:move-to}
+  @see-function{cairo:arc}"
   (cr (:pointer (:struct context-t))))
 
 (export 'new-sub-path)
@@ -698,7 +747,7 @@ fill     stroke
 
 (defun arc (cr x y radius angle1 angle2)
  #+liber-documentation
- "@version{#2021-12-12}
+ "@version{2023-1-14}
   @argument[cr]{a @symbol{cairo:context-t} context}
   @argument[x]{a number with the x position of the center of the arc}
   @argument[y]{a number with the y position of the center of the arc}
@@ -716,7 +765,7 @@ fill     stroke
   If there is a current point, an initial line segment will be added to the
   path to connect the current point to the beginning of the arc. If this
   initial line is undesired, it can be avoided by calling the
-  @fun{cairo:new-sub-path} function before calling the @sym{arc} function.
+  @fun{cairo:new-sub-path} function before calling the @sym{cairo:arc} function.
 
   Angles are measured in radians. An angle of 0 is in the direction of the
   positive x axis (in user space). An angle of PI/2 radians (90 degrees) is in
@@ -815,7 +864,7 @@ fill     stroke
 
 (defun curve-to (cr x1 y1 x2 y2 x3 y3)
  #+liber-documentation
- "@version{#2021-12-12}
+ "@version{2023-1-14}
   @argument[cr]{a @symbol{cairo:context-t} context}
   @argument[x1]{a number with the x coordinate of the first control point}
   @argument[y1]{a number with the y coordinate of the first control point}
@@ -858,7 +907,7 @@ fill     stroke
 
 (defun line-to (cr x y)
  #+liber-documentation
- "@version{#2021-12-12}
+ "@version{2023-1-14}
   @argument[cr]{a @symbol{cairo:context-t} context}
   @argument[x]{a number coerced to a double float with the x coordinate of the
     end of the new line}
@@ -893,7 +942,7 @@ fill     stroke
 
 (defun move-to (cr x y)
  #+liber-documentation
- "@version{#2021-12-12}
+ "@version{2023-1-14}
   @argument[cr]{a @symbol{cairo:context-t} context}
   @argument[x]{a number coerced to a double float with the x coordinate of the
     new position}
@@ -923,7 +972,7 @@ fill     stroke
 
 (defun rectangle (cr x y width height)
  #+liber-documentation
- "@version{#2021-12-12}
+ "@version{2023-1-14}
   @argument[cr]{a @symbol{cairo:context-t} context}
   @argument[x]{a number with the x coordinate of the top left corner of the
     rectangle}
@@ -989,7 +1038,7 @@ fill     stroke
 
 (defcfun ("cairo_text_path" text-path) :void
  #+liber-documentation
- "@version{#2021-12-12}
+ "@version{2023-1-15}
   @argument[cr]{a @symbol{cairo:context-t} context}
   @argument[utf8]{a string of text encoded in UTF-8, or @code{nil}}
   @begin{short}
@@ -1090,7 +1139,7 @@ fill     stroke
 
 (defun rel-line-to (cr dx dy)
  #+liber-documentation
- "@version{#2021-12-12}
+ "@version{2023-1-14}
   @argument[cr]{a @symbol{cairo:context-t} context}
   @argument[dx]{a number with the x offset to the end of the new line}
   @argument[dy]{a number with the y offset to the end of the new line}

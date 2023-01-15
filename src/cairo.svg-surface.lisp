@@ -188,17 +188,17 @@
 
 (defcfun ("cairo_svg_surface_create" %svg-surface-create)
     (:pointer (:struct surface-t))
-  (filename :string)
+  (path :string)
   (width :double)
   (height :double))
 
-(defun svg-surface-create (filename width height)
+(defun svg-surface-create (path width height)
  #+liber-documentation
- "@version{#2023-1-9}
-  @argument[filename]{a string with a filename for the SVG output (must be
-    writable), @code{nil} may be used to specify no output, this will generate
-    a SVG surface that may be queried and used as a source, without generating
-    a temporary file}
+ "@version{2023-1-14}
+  @argument[path]{a namestring of pathname with a path for the SVG output (must
+    be writable), @code{nil} may be used to specify no output, this will
+    generate a SVG surface that may be queried and used as a source, without
+    generating a temporary file}
   @argument[width]{a number coerced to a double float with the width of the
     surface, in points (1 point == 1/72.0 inch)}
   @argument[height]{a number coerced to a double float with the height of the
@@ -210,9 +210,8 @@
     can use the @fun{cairo:surface-status} function to check for this.}
   @begin{short}
     Creates a SVG surface of the specified size in points to be written to
-    @arg{filename}.
+    @arg{path}.
   @end{short}
-
   The SVG surface backend recognizes the following MIME types for the data
   attached to a surface, see the @fun{cairo:surface-set-mime-data} function,
   when it is used as a source pattern for drawing on this surface:
@@ -234,7 +233,7 @@
   @see-symbol{cairo:surface-t}
   @see-function{cairo:surface-destroy}
   @see-function{cairo:surface-status}"
-  (%svg-surface-create (if filename filename (cffi:null-pointer))
+  (%svg-surface-create (if path (namestring path) (cffi:null-pointer))
                        (coerce width 'double-float)
                        (coerce height 'double-float)))
 

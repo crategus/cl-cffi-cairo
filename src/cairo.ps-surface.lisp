@@ -150,9 +150,9 @@
 ;;;     You can use cairo_surface_status() to check for this.
 ;;; ----------------------------------------------------------------------------
 
-(defun ps-surface-create (filename width height)
+(defun ps-surface-create (path width height)
   (cffi:foreign-funcall "cairo_ps_surface_create"
-                        :string filename
+                        :string (if path (namestring path) (cffi:null-pointer))
                         :double (coerce width 'double-float)
                         :double (coerce height 'double-float)))
 

@@ -60,7 +60,7 @@
 
 (defun translate (cr tx ty)
  #+liber-documentation
- "@version{#2020-12-15}
+ "@version{2023-1-14}
   @argument[cr]{a @symbol{cairo:context-t} context}
   @argument[tx]{a double float with the amount to translate in the x direction}
   @argument[ty]{a double float with the amount to translate in the y direction}
@@ -93,7 +93,7 @@
 
 (defun scale (cr sx sy)
  #+liber-documentation
- "@version{#2020-12-15}
+ "@version{2023-1-14}
   @argument[cr]{a @symbol{cairo:context-t} context}
   @argument[sx]{a double float with the scale factor for the x dimension}
   @argument[sy]{a double float with the scale factor for the y dimension}
@@ -118,7 +118,7 @@
 
 (defun rotate (cr angle)
  #+liber-documentation
- "@version{#2020-12-15}
+ "@version{2023-1-14}
   @argument[cr]{a @symbol{cairo:context-t} context}
   @argument[angle]{a double float with an angle in radians by which the
     user-space axes will be rotated}

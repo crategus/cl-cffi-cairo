@@ -45,7 +45,7 @@
 ;;;
 ;;; Description
 ;;;
-;;; This section lists generic data types used in the cairo API.
+;;;      This section lists generic data types used in the cairo API.
 ;;; ----------------------------------------------------------------------------
 
 (in-package :cairo)
@@ -58,13 +58,9 @@
 ;;; cairo_bool_t is used for boolean values. Returns of type cairo_bool_t will
 ;;; always be either 0 or 1, but testing against these values explicitly is not
 ;;; encouraged; just use the value as a boolean condition.
-;;;
-;;; if (cairo_in_stroke (cr, x, y)) {
-;;;     /* do something */
-;;; }
-;;;
-;;; Since 1.0
 ;;; ----------------------------------------------------------------------------
+
+;; This type is represented with the cffi :bool type.
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_user_data_key_t
@@ -81,8 +77,6 @@
 ;;;
 ;;; int unused;
 ;;;     not used; ignore.
-;;;
-;;; Since 1.0
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -99,7 +93,7 @@
 (setf (liber:alias-for-symbol 'rectangle-t)
       "CStruct"
       (liber:symbol-documentation 'rectangle-t)
- "@version{#2022-12-19}
+ "@version{#2023-1-11}
   @begin{short}
     The @sym{cairo:rectangle-t} structure is a data structure for holding a
     rectangle.
@@ -117,6 +111,7 @@
     @entry[width]{The width of the rectangle.}
     @entry[height]{The height of the rectangle.}
   @end{table}
+  @see-symbol{cairo:rectangle-int-t}
   @see-symbol{cairo:rectangle-list-t}")
 
 (export 'rectangle-t)
@@ -134,7 +129,7 @@
 (setf (liber:alias-for-symbol 'rectangle-list-t)
       "CStruct"
       (liber:symbol-documentation 'rectangle-list-t)
- "@version{#2022-12-19}
+ "@version{#2023-1-1}
   @begin{short}
     The @sym{cairo:rectangle-list-t} structure is a data structure for holding
     a dynamically allocated array of rectangles.
@@ -168,7 +163,7 @@
 (setf (liber:alias-for-symbol 'rectangle-int-t)
       "CStruct"
       (liber:symbol-documentation 'rectangle-int-t)
- "@version{#2020-12-5}
+ "@version{#2023-1-11}
   @begin{short}
     A data structure for holding a rectangle with integer coordinates.
   @end{short}
@@ -185,7 +180,7 @@
     @entry[width]{An integer with the width of the rectangle.}
     @entry[height]{An integer with the height of the rectangle.}
   @end{table}
-  @see-class{gdk:rectangle}")
+  @see-symbol{cairo:rectangle-t}")
 
 (export 'rectangle-int-t)
 
@@ -200,8 +195,6 @@
 ;;;
 ;;; data :
 ;;;     The data element being destroyed.
-;;;
-;;; Since 1.0
 ;;; ----------------------------------------------------------------------------
 
 ;;; --- End of file cairo.types.lisp -------------------------------------------

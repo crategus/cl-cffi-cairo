@@ -45,26 +45,24 @@
 (setf (liber:alias-for-symbol 'antialias-t)
       "CEnum"
       (liber:symbol-documentation 'antialias-t)
- "@version{#2022-12-19}
+ "@version{2023-1-11}
   @begin{short}
     The @sym{cairo:antialias-t} enumeration specifies the type of antialiasing
     to do when rendering text or shapes.
   @end{short}
   As it is not necessarily clear from the above what advantages a particular
-  antialias method provides, since version 1.12, there is also a set of hints:
+  antialias method provides, there is also a set of hints:
   @begin[code]{table}
     @entry[:fast]{Allow the backend to degrade raster quality for speed.}
     @entry[:good·]{A balance between speed and quality.}
     @entry[:best]{A high-fidelity, but potentially slow, raster mode.}
   @end{table}
-  These make no guarantee on how the backend will perform its rasterisation
-  (if it even rasterises!), nor that they have any differing effect other
-  than to enable some form of antialiasing. In the case of glyph rendering,
-  @code{:fast} and @code{:good} will be mapped to @code{:gray}, with
-  @code{:best} being equivalent to @code{:subpixel}.
-
-  The interpretation of @code{:default} is left entirely up to the backend,
-  typically this will be similar to @code{:good}.
+  These make no guarantee on how the backend will perform its rasterisation,
+  if it even rasterises, nor that they have any differing effect other than to
+  enable some form of antialiasing. In the case of glyph rendering, @code{:fast}
+  and @code{:good} will be mapped to @code{:gray}, with @code{:best} being
+  equivalent to @code{:subpixel}. The interpretation of @code{:default} is left
+  entirely up to the backend, typically this will be similar to @code{:good}.
   @begin{pre}
 (defcenum antialias-t
   :default
@@ -94,4 +92,4 @@
 
 (export 'antialias-t)
 
-;;; --- End of file cairo.enumeations.lisp -------------------------------------
+;;; --- End of file cairo.enumerations.lisp ------------------------------------

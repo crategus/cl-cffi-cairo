@@ -194,7 +194,7 @@
 
 #+liber-documentation
 (setf (liber:alias-for-symbol 'filter-t)
-      "Enum"
+      "CEnum"
       (liber:symbol-documentation 'filter-t)
  "@version{#2020-12-12}
   @begin{short}
@@ -243,7 +243,7 @@
 
 #+liber-documentation
 (setf (liber:alias-for-symbol 'pattern-type-t)
-      "Enum"
+      "CEnum"
       (liber:symbol-documentation 'pattern-type-t)
  "@version{#2020-12-12}
   @begin{short}
@@ -297,8 +297,7 @@
 ;;; cairo_pattern_add_color_stop_rgb ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pattern_add_color_stop_rgb" %pattern-add-color-stop-rgb)
-    :void
+(defcfun ("cairo_pattern_add_color_stop_rgb" %pattern-add-color-stop-rgb) :void
   (pattern (:pointer (:struct pattern-t)))
   (offset :double)
   (red :double)
@@ -307,12 +306,12 @@
 
 (defun pattern-add-color-stop-rgb (pattern offset red green blue)
  #+liber-documentation
- "@version{#2020-12-25}
+ "@version{2023-1-15}
   @argument[pattern]{a @symbol{cairo:pattern-t} instance}
-  @argument[offset]{a double float with an offset in the range [0.0 .. 1.0]}
-  @argument[red]{a double float red component of color}
-  @argument[green]{a double float green component of color}
-  @argument[blue]{a double float blue component of color}
+  @argument[offset]{a number with an offset in the range [0.0 .. 1.0]}
+  @argument[red]{a number with the red component of color}
+  @argument[green]{a number with the green component of color}
+  @argument[blue]{a number with the blue component of color}
   @begin{short}
     Adds an opaque color stop to a gradient pattern.
   @end{short}
@@ -333,6 +332,10 @@
     then @arg{pattern} will be put into an error status with a status of
     @code{:pattern-type-mismatch}.
   @end{dictionary}
+  @begin[Lisp implementation]{dictionary}
+    The arguments are coerced to the double-float type before being passed to
+    the C function.
+  @end{dictionary}
   @see-symbol{cairo:pattern-t}
   @see-function{cairo:set-source-rgb}"
   (%pattern-add-color-stop-rgb pattern
@@ -347,8 +350,8 @@
 ;;; cairo_pattern_add_color_stop_rgba ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pattern_add_color_stop_rgba"
-          %pattern-add-color-stop-rgba) :void
+(defcfun ("cairo_pattern_add_color_stop_rgba" %pattern-add-color-stop-rgba)
+    :void
   (pattern (:pointer (:struct pattern-t)))
   (offset :double)
   (red :double)
@@ -358,13 +361,13 @@
 
 (defun pattern-add-color-stop-rgba (pattern offset red green blue alpha)
  #+liber-documentation
- "@version{#2021-12-17}
+ "@version{2023-1-15}
   @argument[pattern]{a @symbol{cairo:pattern-t} instance}
-  @argument[offset]{a double float with an offset in the range [0.0 .. 1.0]}
-  @argument[red]{a double float red component of color}
-  @argument[green]{a double float green component of color}
-  @argument[blue]{a double float blue component of color}
-  @argument[alpha]{a double float alpha component of color}
+  @argument[offset]{a number with an offset in the range [0.0 .. 1.0]}
+  @argument[red]{a number with the red component of color}
+  @argument[green]{a number with the green component of color}
+  @argument[blue]{a number with the blue component of color}
+  @argument[alpha]{a number with the alpha component of color}
   @begin{short}
     Adds a translucent color stop to a gradient pattern.
   @end{short}
@@ -382,6 +385,10 @@
     If the @arg{pattern} argument is not a gradient pattern, e.g. a linear or
     radial pattern, then @arg{pattern} will be put into an error status with a
     @code{:pattern-type-mismatch} status.
+  @end{dictionary}
+  @begin[Lisp implementation]{dictionary}
+    The arguments are coerced to the double-float type before being passed to
+    the C function.
   @end{dictionary}
   @see-symbol{cairo:pattern-t}
   @see-function{cairo:set-source-rgba}"
@@ -672,11 +679,11 @@
 
 (defun pattern-create-linear (x0 y0 x1 y1)
  #+liber-documentation
- "@version{#2021-12-17}
-  @argument[x0]{a double float x coordinate of the start point}
-  @argument[y0]{a double float y coordinate of the start point}
-  @argument[x1]{a double float x coordinate of the end point}
-  @argument[y1]{a double float y coordinate of the end point}
+ "@version{2023-1-14}
+  @argument[x0]{a number with the x coordinate of the start point}
+  @argument[y0]{a number with the y coordinate of the start point}
+  @argument[x1]{a number with the x coordinate of the end point}
+  @argument[y1]{a number with the y coordinate of the end point}
   @begin{return}
     The newly created @symbol{cairo:pattern-t} instance if successful, or an
     error pattern in case of no memory. The caller owns the returned instance
@@ -696,6 +703,10 @@
     The coordinates here are in pattern space. For a new pattern, pattern
     space is identical to user space, but the relationship between the spaces
     can be changed with the @fun{cairo:pattern-matrix} function.
+  @end{dictionary}
+  @begin[Lisp implementation]{dictionary}
+    The arguments are coerced to the double-float type before being passed to
+    the C function.
   @end{dictionary}
   @see-symbol{cairo:pattern-t}
   @see-function{cairo:pattern-destroy}
@@ -764,13 +775,15 @@
 
 (defun pattern-create-radial (x0 y0 radius0 x1 y1 radius1)
  #+liber-documentation
- "@version{#2021-12-17}
-  @argument[x0]{a double float x coordinate for the center of the start circle}
-  @argument[y0]{a double float y coordinate for the center of the start circle}
-  @argument[radius0]{a double float  with the radius of the start circle}
-  @argument[x1]{a double float x coordinate for the center of the end circle}
-  @argument[y1]{a double float y coordinate for the center of the end circle}
-  @argument[radius1]{a double float radius of the end circle}
+ "@version{2023-1-14}
+  @argument[x0]{a number with the x coordinate for the center of the start
+    circle}
+  @argument[y0]{a number with the y coordinate for the center of the start
+    circle}
+  @argument[radius0]{a number with the radius of the start circle}
+  @argument[x1]{a number with the x coordinate for the center of the end circle}
+  @argument[y1]{a number with the y coordinate for the center of the end circle}
+  @argument[radius1]{a number with the radius of the end circle}
   @begin{return}
     The newly created @symbol{cairo:pattern-t} instance if successful, or an
     error pattern in case of no memory. The caller owns the returned object and
@@ -791,6 +804,10 @@
     The coordinates here are in pattern space. For a new pattern, pattern
     space is identical to user space, but the relationship between the spaces
     can be changed with the @fun{cairo:pattern-matrix} function.
+  @end{dictionary}
+  @begin[Lisp implementation]{dictionary}
+    The arguments are coerced to the double-float type before being passed to
+    the C function.
   @end{dictionary}
   @see-symbol{cairo:pattern-t}
   @see-function{cairo:pattern-destroy}
@@ -1520,7 +1537,7 @@ cairo_mesh_pattern_end_patch (pattern)
 
 (defcfun ("cairo_pattern_destroy" pattern-destroy) :void
  #+liber-documentation
- "@version{#2020-12-17}
+ "@version{2023-1-14}
   @argument[pattern]{a @symbol{cairo:pattern-t} instance}
   @begin{short}
     Decreases the reference count on @arg{pattern} by one.
@@ -1568,7 +1585,7 @@ cairo_mesh_pattern_end_patch (pattern)
 
 (defcfun ("cairo_pattern_get_extend" pattern-extend) extend-t
  #+liber-documentation
- "@version{#2020-12-13}
+ "@version{2023-1-15}
   @syntax[]{(pattern-extend pattern) => extend}
   @syntax[]{(setf pattern-extend pattern) extend)}
   @argument[pattern]{a @symbol{cairo:pattern-t} instance}

@@ -108,7 +108,7 @@
 (setf (liber:alias-for-symbol 'font-type-t)
       "CEnum"
       (liber:symbol-documentation 'font-type-t)
- "@version{#2022-10-18}
+ "@version{2023-1-16}
   @begin{short}
     The @sym{cairo:font-type-t} enumeration is used to describe the type of a
     given font face or scaled font.
@@ -145,11 +145,11 @@
   :user)
   @end{pre}
   @begin[code]{table}
-    @entry[:toy]{The font was created using Cairo's toy font api.}
+    @entry[:toy]{The font was created using Cairo's toy font API.}
     @entry[:ft]{The font is of type FreeType.}
     @entry[:win32]{The font is of type Win32.}
     @entry[:quartz]{The font is of type Quartz.}
-    @entry[:user]{The font was create using Cairo's user font api.}
+    @entry[:user]{The font was create using Cairo's user font API.}
   @end{table}
   @see-symbol{cairo:font-face-t}
   @see-function{cairo:font-face-type}

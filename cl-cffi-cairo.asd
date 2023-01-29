@@ -90,7 +90,6 @@
   :pathname "test/"
   :serial t
   :components ((:file "rtest-cairo")
-               (:file "rtest-cairo-utils")
                (:file "rtest-cairo-context")
                (:file "rtest-cairo-device")
                (:file "rtest-cairo-font-options")

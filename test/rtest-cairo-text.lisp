@@ -98,7 +98,7 @@
         (cairo::%show-glyphs context glyphs-ptr num-glyphs)
         ;; Create and save the PNG image.
         (cairo:surface-write-to-png (cairo:target context)
-                                    (sys-path "test/resources/image1.png"))))))
+                                    (sys-path "out/image1.png"))))))
 
 (test show-glyphs.2
   (with-cairo-context-for-image-surface (context :rgb24 400 300)
@@ -115,7 +115,7 @@
       (cairo:show-glyphs context glyphs)
       ;; Create and save the PNG image.
       (cairo:surface-write-to-png (cairo:target context)
-                                  (sys-path "test/resources/image2.png")))))
+                                  (sys-path "out/image2.png")))))
 
 ;;;     cairo_show_text_glyphs
 
@@ -185,4 +185,4 @@
 ;;;     cairo_text_cluster_allocate
 ;;;     cairo_text_cluster_free
 
-;;; --- 2023-1-3 ---------------------------------------------------------------
+;;; --- 2023-1-26 --------------------------------------------------------------

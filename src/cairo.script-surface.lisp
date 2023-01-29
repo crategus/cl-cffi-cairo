@@ -6,7 +6,7 @@
 ;;; library. See <http://cairographics.org>. The API documentation of the
 ;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk/>.
 ;;;
-;;; Copyright (C) 2020 Dieter Kaiser
+;;; Copyright (C) 2020 - 2023 Dieter Kaiser
 ;;;
 ;;; This program is free software: you can redistribute it and/or modify
 ;;; it under the terms of the GNU Lesser General Public License for Lisp
@@ -105,8 +105,11 @@
 ;;;     can use cairo_device_status() to check for this.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_script_create" script-create) (:pointer (:struct device-t))
+(defcfun ("cairo_script_create" %script-create) (:pointer (:struct device-t))
   (filename :string))
+
+(defun script-create (path)
+  (%script-create (namestring path)))
 
 (export 'script-create)
 

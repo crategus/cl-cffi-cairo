@@ -195,7 +195,7 @@
 (defun svg-surface-create (path width height)
  #+liber-documentation
  "@version{2023-1-14}
-  @argument[path]{a namestring of pathname with a path for the SVG output (must
+  @argument[path]{a namestring or pathname with a path for the SVG output (must
     be writable), @code{nil} may be used to specify no output, this will
     generate a SVG surface that may be queried and used as a source, without
     generating a temporary file}

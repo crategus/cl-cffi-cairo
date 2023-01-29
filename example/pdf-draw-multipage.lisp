@@ -3,7 +3,7 @@
 (defun demo-pdf-draw-multipage ()
   (let* (;; Create a PDF surface and a Cairo context.
          (id 0)
-         (pathname (sys-path "example/out/pdf-draw-multipage.pdf"))
+         (pathname (sys-path "out/pdf-draw-multipage.pdf"))
          (width 400)
          (height 400)
          (surface (cairo:pdf-surface-create pathname width height))
@@ -64,4 +64,4 @@
     (cairo:surface-destroy surface)
     (cairo:destroy context)))
 
-;;; --- 2023-1-14 --------------------------------------------------------------
+;;; --- 2023-1-26 --------------------------------------------------------------

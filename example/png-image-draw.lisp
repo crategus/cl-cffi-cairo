@@ -8,8 +8,8 @@
       (cairo:show-page context)
 
       ;; Create and save the PNG image
-      (format t "Write image to ~a~%" (sys-path "example/out/image-draw.png"))
+      (format t "Write image to ~a~%" (sys-path "out/image-draw.png"))
       (cairo:surface-write-to-png (cairo:target context)
-                                  (sys-path "example/out/image-draw.png")))))
+                                  (sys-path "out/image-draw.png")))))
 
-;;; --- 2023-1-14 --------------------------------------------------------------
+;;; --- 2023-1-26 --------------------------------------------------------------

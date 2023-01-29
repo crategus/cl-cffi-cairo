@@ -4,7 +4,7 @@
 
 (defun demo-pdf-simple ()
   (let* (;; Create a PDF surface and a Cairo context.
-         (pathname (sys-path "example/out/pdf-simple.pdf"))
+         (pathname (sys-path "out/pdf-simple.pdf"))
          (surface (cairo:pdf-surface-create pathname 504.0 648.0))
          (context (cairo:create surface)))
     ;; Draw in blue ink.
@@ -21,4 +21,4 @@
     (cairo:surface-destroy surface)
     (cairo:destroy context)))
 
-;;; --- 2023-1-14 --------------------------------------------------------------
+;;; --- 2023-1-26 --------------------------------------------------------------

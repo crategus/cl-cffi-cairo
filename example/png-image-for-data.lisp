@@ -7,7 +7,7 @@
          (width 500)
          (stride (cairo:format-stride-for-width :argb32 width))
          (data (g:malloc (* height stride)))
-         (pathname (sys-path "example/out/image-for-data.png"))
+         (pathname (sys-path "out/image-for-data.png"))
          ;; Create an image surface for data and a Cairo context.
          (surface (cairo:image-surface-create-for-data data
                                                        :argb32
@@ -31,4 +31,4 @@
     (cairo:surface-destroy surface)
     (g:free data)))
 
-;;; --- 2023-1-14 --------------------------------------------------------------
+;;; --- 2023-1-26 --------------------------------------------------------------

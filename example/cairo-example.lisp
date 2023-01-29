@@ -42,7 +42,14 @@
 
 (in-package :cairo-example)
 
-(defun sys-path (filename &optional (system :cl-cffi-cairo))
-  (asdf:system-relative-pathname system filename))
+;; Ensure directory for the output of test results
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (ensure-directories-exist
+      (asdf:system-relative-pathname :cl-cffi-cairo "example/out/")))
 
-;;; --- 2023-1-14 --------------------------------------------------------------
+;; Get the pathname for a file in the example directory
+(defun sys-path (filename &optional (system :cl-cffi-cairo))
+  (asdf:system-relative-pathname system
+                                 (concatenate 'string "example/" filename)))
+
+;;; --- 2023-1-26 --------------------------------------------------------------

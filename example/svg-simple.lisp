@@ -4,7 +4,7 @@
 
 (defun demo-svg-simple ()
   (let* (;; Create a SVG surface and a Cairo context
-         (pathname (sys-path "example/out/svg-simple.svg"))
+         (pathname (sys-path "out/svg-simple.svg"))
          (surface (cairo:svg-surface-create pathname 400 300))
          (context (cairo:create surface)))
     ;; Clear surface
@@ -22,4 +22,4 @@
     (cairo:surface-destroy surface)
     (cairo:destroy context)))
 
-;;; --- 2023-1-14 --------------------------------------------------------------
+;;; --- 2023-1-26 --------------------------------------------------------------

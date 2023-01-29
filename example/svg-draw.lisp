@@ -2,10 +2,10 @@
 
 (defun demo-svg-draw (&optional (drawfunc #'draw-stroke))
   (let* (;; Create a SVG surface and a Cairo context.
-         (pathname (sys-path "example/out/svg-draw.svg"))
+         (path (sys-path "out/svg-draw.svg"))
          (width 400)
          (height 400)
-         (surface (cairo:svg-surface-create pathname width height))
+         (surface (cairo:svg-surface-create path width height))
          (context (cairo:create surface)))
     (funcall drawfunc context width height)
     (cairo:surface-show-page surface)
@@ -13,4 +13,4 @@
     (cairo:surface-destroy surface)
     (cairo:destroy context)))
 
-;;; --- 2023-1-14 --------------------------------------------------------------
+;;; --- 2023-1-26 --------------------------------------------------------------

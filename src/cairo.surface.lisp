@@ -701,7 +701,7 @@
 
 (defcfun ("cairo_surface_destroy" surface-destroy) :void
  #+liber-documentation
- "@version{#2021-5-13}
+ "@version{2023-2-3}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
   @begin{short}
     Decreases the reference count on @arg{surface} by one.
@@ -1102,11 +1102,11 @@
 
 (defcfun ("cairo_surface_get_type" surface-type) surface-type-t
  #+liber-documentation
- "@version{#2020-12-16}
+ "@version{2023-2-3}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
   @return{A value of the @symbol{cairo:surface-type-t} enumeration.}
   @begin{short}
-    This function returns the type of the backend used to create a surface.
+    This function returns the type of the backend used to create the surface.
   @end{short}
   See the @symbol{cairo:surface-type-t} enumeration for available types.
   @see-symbol{cairo:surface-t}

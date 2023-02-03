@@ -1577,7 +1577,7 @@
 
 (defcfun ("cairo_reset_clip" reset-clip) :void
  #+liber-documentation
- "@version{#2023-1-11}
+ "@version{2023-2-3}
   @argument[cr]{a @symbol{cairo:context-t} context}
   @begin{short}
     Reset the current clip region to its original, unrestricted state.

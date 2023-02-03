@@ -131,16 +131,15 @@
 ;;; cairo_region_create ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_region_create" region-create)
-    (:pointer (:struct region-t))
+(defcfun ("cairo_region_create" region-create) (:pointer (:struct region-t))
  #+liber-documentation
- "@version{#2020-12-26}
+ "@version{2023-2-3}
   @begin{return}
-    A newly allocated @symbol{cairo:region-t} instance. Free with the function
-    @fun{cairo:region-destroy}. This function always returns a valid pointer;
-    if memory cannot be allocated, then a special error object is returned where
-    all operations on the object do nothing. You can check for this with
-    the function @fun{cairo:region-status}.
+    A newly allocated @symbol{cairo:region-t} instance. Free with the
+    @fun{cairo:region-destroy} function. This function always returns a valid
+    pointer. If memory cannot be allocated, then a special error object is
+    returned where all operations on the object do nothing. You can check for
+    this with the @fun{cairo:region-status} function.
   @end{return}
   @short{Allocates a new empty region instance.}
   @see-symbol{cairo:region-t}
@@ -259,12 +258,12 @@
 
 (defcfun ("cairo_region_destroy" region-destroy) :void
  #+liber-documentation
- "@version{#2020-12-14}
+ "@version{2023-2-3}
   @argument[region]{a @symbol{cairo:region-t} instance}
   @begin{short}
-    Destroys a @symbol{cairo:region-t} instance created with the functions
+    Destroys a @symbol{cairo:region-t} instance created with the
     @fun{cairo:region-create}, @fun{cairo:region-copy}, or
-    @fun{cairo:region-create-rectangle}.
+    @fun{cairo:region-create-rectangle} functions.
   @end{short}
   @see-symbol{cairo:region-t}
   @see-function{cairo:region-create}

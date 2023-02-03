@@ -56,7 +56,32 @@
 
 (in-package :cairo)
 
+;;; ----------------------------------------------------------------------------
+
 (defmacro with-cairo-image-surface ((surface &rest args) &body body)
+ #+liber-documentation
+ "@version{2023-2-3}
+  @syntax[]{(with-cairo-image-surface (surface format width height) body) =>
+    result}
+  @argument[surface]{a @symbol{cairo:surface-t} instance to create and
+    initialize}
+  @argument[format]{a @symbol{cairo:format-t} value with the format of pixels
+    in the surface to create}
+  @argument[width]{an integer with the width of the surface, in pixels}
+  @argument[height]{an integer with the height of the surface, in pixels}
+  @begin{short}
+    The @sym{with-cairo-image-surface} macro allocates a new
+    @symbol{cairo:surface-t} instance, initializes the Cairo surface with the
+    @arg{format}, @arg{width}, and @arg{height} values and executes the body
+    that uses the Cairo surface.
+  @end{short}
+  After execution of the body the allocated memory for the Cairo surface is
+  released. See the documentation of the @fun{cairo:image-surface-create}
+  function for more information about the initialization of the new Cairo
+  surface.
+  @see-symbol{cairo:surface-t}
+  @see-symbol{cairo:format-t}
+  @see-function{cairo:image-surface-create}"
   `(let ((,surface (image-surface-create ,@args)))
      (unwind-protect
        (progn ,@body)
@@ -64,7 +89,33 @@
 
 (export 'with-cairo-image-surface)
 
+;;; ----------------------------------------------------------------------------
+
 (defmacro with-cairo-context-for-image-surface ((context &rest args) &body body)
+ #+liber-documentation
+ "@version{2023-2-3}
+  @syntax[]{(with-cairo-context-for-image-surface (context format width height)
+    body) => result}
+  @argument[context]{a @symbol{cairo:context-t} instance to create and
+    initialize}
+  @argument[format]{a @symbol{cairo:format-t} value with the format of pixels
+    in the surface to create}
+  @argument[width]{an integer with the width of the surface, in pixels}
+  @argument[height]{an integer with the height of the surface, in pixels}
+  @begin{short}
+    The @sym{with-cairo-context-for-image-surface} macro allocates a new
+    @symbol{cairo:context-t} instance, initializes the Cairo context with the
+    @arg{format}, @arg{width}, and @arg{height} values and executes the body
+    that uses the Cairo context.
+  @end{short}
+  After execution of the body the allocated memory for the Cairo surface is
+  released. See the documentation of the @fun{cairo:image-surface-create} and
+  @fun{cairo:create} functions for more information about the initialization of
+  the new Cairo context.
+  @see-symbol{cairo:context-t}
+  @see-symbol{cairo:format-t}
+  @see-function{cairo:create}
+  @see-function{cairo:image-surface-create}"
   (let ((surface (gensym)))
     `(with-cairo-image-surface (,surface ,@args)
        (with-cairo-context (,context ,surface)
@@ -126,9 +177,9 @@
 (defcfun ("cairo_image_surface_create" image-surface-create)
     (:pointer (:struct surface-t))
  #+liber-documentation
- "@version{#2020-12-21}
-  @argument[format]{format of pixels of type @symbol{cairo:format-t} in the
-    surface to create}
+ "@version{#2023-2-3}
+  @argument[format]{a @symbol{cairo:format-t} value with the format of pixels
+    in the surface to create}
   @argument[width]{an integer with the width of the surface, in pixels}
   @argument[height]{an integer with the height of the surface, in pixels}
   @begin{return}
@@ -163,12 +214,12 @@
 (defcfun ("cairo_image_surface_create_for_data" image-surface-create-for-data)
     (:pointer (:struct surface-t))
  #+liber-documentation
- "@version{#2020-12-21}
+ "@version{#2023-2-3}
   @argument[data]{a pointer to a buffer supplied by the application in which to
     write contents, this pointer must be suitably aligned for any kind of
     variable, for example, a pointer returned by malloc}
-  @argument[format]{a value of the @symbol{cairo:format-t} enumeration for the
-    format of pixels in the buffer}
+  @argument[format]{a @symbol{cairo:format-t} value with the format of pixels
+    in the surface to create}
   @argument[width]{an integer with the width of the image to be stored in the
     buffer}
   @argument[height]{an integer with the height of the image to be stored in the

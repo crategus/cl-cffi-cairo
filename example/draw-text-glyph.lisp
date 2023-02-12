@@ -1,6 +1,6 @@
 (in-package :cairo-example)
 
-(defun draw-text-glyph (context width height)
+(defun cairo-draw-text-glyph (context width height)
   (let* ((font-size (min (truncate (- (/ height 20) 5))
                          (truncate (- (/ width 36) 5))))
          (glyphs nil)
@@ -31,4 +31,4 @@
     ;; Show the list of glyphs
     (cairo:show-glyphs context glyphs)))
 
-;;; --- 2023-1-15 --------------------------------------------------------------
+;;; --- 2023-2-12 --------------------------------------------------------------

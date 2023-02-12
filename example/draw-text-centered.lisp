@@ -1,6 +1,6 @@
 (in-package :cairo-example)
 
-(defun draw-text-centered (context width height)
+(defun cairo-draw-text-centered (context width height)
   ;; Paint a white background
   (cairo:set-source-rgb context 1.0 1.0 1.0)
   (cairo:paint context)
@@ -17,4 +17,4 @@
     (cairo:move-to context (- (/ width 2) (/ twidth 2)) (/ height 2))
     (cairo:show-text context "Crategus")))
 
-;;; --- 2023-1-15 --------------------------------------------------------------
+;;; --- 2023-2-12 --------------------------------------------------------------

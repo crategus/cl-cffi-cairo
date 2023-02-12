@@ -1,6 +1,6 @@
 (in-package :cairo-example)
 
-(defun demo-png-image-draw (&optional (drawfunc #'draw-stroke))
+(defun demo-png-image-draw (&optional (drawfunc #'cairo-draw-stroke))
   (let ((width 400) (height 300))
     (with-cairo-context-for-image-surface (context :argb32 width height)
 
@@ -12,4 +12,4 @@
       (cairo:surface-write-to-png (cairo:target context)
                                   (sys-path "out/image-draw.png")))))
 
-;;; --- 2023-1-26 --------------------------------------------------------------
+;;; --- 2023-2-12 --------------------------------------------------------------

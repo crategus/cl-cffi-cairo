@@ -1,6 +1,6 @@
 (in-package :cairo-example)
 
-(defun draw-fill (context width height)
+(defun cairo-draw-fill (context width height)
   (cairo:save context)
   ;; Clear surface
   (cairo:set-source-rgb context 1.0 1.0 1.0)
@@ -13,4 +13,4 @@
   (cairo:fill context)
   (cairo:restore context))
 
-;;; --- 2023-1-14 --------------------------------------------------------------
+;;; --- 2023-2-12 --------------------------------------------------------------

@@ -1,6 +1,6 @@
 (in-package :cairo-example)
 
-(defun draw-text-gradient (context width height)
+(defun cairo-draw-text-gradient (context width height)
   (let* ((font-size (truncate (/ height 5)))
          (pattern (cairo:pattern-create-linear 0 15 0 (* 0.8 font-size))))
     ;; Paint a dark background
@@ -24,4 +24,4 @@
       (setf (cairo:source context) pattern)
       (cairo:fill context))))
 
-;;; --- 2023-1-15 --------------------------------------------------------------
+;;; --- 2023-2-12 --------------------------------------------------------------

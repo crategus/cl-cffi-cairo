@@ -1,6 +1,6 @@
 (in-package :cairo-example)
 
-(defun draw-text-soulmate (context width height)
+(defun cairo-draw-text-soulmate (context width height)
   (declare (ignore width height))
   ;; Paint a white background
   (cairo:set-source-rgb context 1.0 1.0 1.0)
@@ -27,4 +27,4 @@
   (cairo:move-to context 20 210)
   (cairo:show-text context "If there's a soulmate for everyone"))
 
-;;; --- 2023-1-14 --------------------------------------------------------------
+;;; --- 2023-2-12 --------------------------------------------------------------

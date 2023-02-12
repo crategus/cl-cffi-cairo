@@ -1,6 +1,6 @@
 (in-package :cairo-example)
 
-(defun draw-mask (context width height)
+(defun cairo-draw-mask (context width height)
   (cairo:save context)
   ;; Clear surface
   (cairo:set-source-rgb context 1.0 1.0 1.0)
@@ -21,4 +21,4 @@
     (cairo:pattern-destroy radpat))
   (cairo:restore context))
 
-;;; --- 2023-1-14 --------------------------------------------------------------
+;;; --- 2023-2-12 --------------------------------------------------------------

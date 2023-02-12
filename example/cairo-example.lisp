@@ -5,27 +5,27 @@
                        #:with-cairo-image-surface)
   (:export #:run-example
 
-           #:draw-caps
-           #:draw-dashes
-           #:draw-joins
+           #:cairo-draw-caps
+           #:cairo-draw-dashes
+           #:cairo-draw-joins
 
-           #:draw-stroke
-           #:draw-fill
-           #:draw-text
-           #:draw-paint
-           #:draw-mask
-           #:draw-source-rgba
-           #:draw-source-gradient
-           #:draw-path
-           #:draw-dash
-           #:draw-logo
-           #:draw-logo-translate
+           #:cairo-draw-stroke
+           #:cairo-draw-fill
+           #:cairo-draw-text
+           #:cairo-draw-paint
+           #:cairo-draw-mask
+           #:cairo-draw-source-rgba
+           #:cairo-draw-source-gradient
+           #:cairo-draw-path
+           #:cairo-draw-dash
+           #:cairo-draw-logo
+           #:cairo-draw-logo-translate
 
-           #:draw-text-centered
-           #:draw-text-glyph
-           #:draw-text-gradient
-           #:draw-text-shaded
-           #:draw-text-soulmate
+           #:cairo-draw-text-centered
+           #:cairo-draw-text-glyph
+           #:cairo-draw-text-gradient
+           #:cairo-draw-text-shaded
+           #:cairo-draw-text-soulmate
 
            #:demo-png-image
            #:demo-png-image-draw
@@ -45,11 +45,10 @@
 ;; Ensure directory for the output of test results
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (ensure-directories-exist
-      (asdf:system-relative-pathname :cl-cffi-cairo "example/out/")))
+      (asdf:system-relative-pathname :cairo-example "out/")))
 
 ;; Get the pathname for a file in the example directory
-(defun sys-path (filename &optional (system :cl-cffi-cairo))
-  (asdf:system-relative-pathname system
-                                 (concatenate 'string "example/" filename)))
+(defun sys-path (filename &optional (system :cairo-example))
+  (asdf:system-relative-pathname system filename))
 
-;;; --- 2023-1-26 --------------------------------------------------------------
+;;; --- 2023-2-12 --------------------------------------------------------------

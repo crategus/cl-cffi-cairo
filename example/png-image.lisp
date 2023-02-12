@@ -16,8 +16,8 @@
     (cairo:move-to context 10.0 50.0)
     (cairo:show-text context "Cario drawing to an image surface.")
     ;; Create and save the PNG image
-    (format t "Write image to ~a~%" (sys-path "example/out/image.png"))
+    (format t "Write image to ~a~%" (sys-path "out/image.png"))
     (cairo:surface-write-to-png (cairo:target context)
                                 (sys-path "out/image.png"))))
 
-;;; --- 2023-1-26 --------------------------------------------------------------
+;;; --- 2023-2-12 --------------------------------------------------------------

@@ -2,7 +2,7 @@
 
 (in-package :cairo-example)
 
-(defun draw-caps (context width height)
+(defun cairo-draw-caps (context width height)
   (let* ((offset (truncate (/ height 4)))
          (border (truncate (/ width 5)))
          (line-width (truncate (/ height 10))))
@@ -47,4 +47,4 @@
     (cairo:stroke context)
     (cairo:restore context)))
 
-;;; --- 2023-1-14 --------------------------------------------------------------
+;;; --- 2023-2-12 --------------------------------------------------------------

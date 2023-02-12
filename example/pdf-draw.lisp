@@ -1,6 +1,6 @@
 (in-package :cairo-example)
 
-(defun demo-pdf-draw (&optional (drawfunc #'draw-stroke))
+(defun demo-pdf-draw (&optional (drawfunc #'cairo-draw-stroke))
   (let* (;; Create a PDF surface and a Cairo context.
          (pathname (sys-path "out/pdf-draw.pdf"))
          (width 504.0)
@@ -15,4 +15,4 @@
     (cairo:surface-destroy surface)
     (cairo:destroy context)))
 
-;;; --- 2023-1-26 --------------------------------------------------------------
+;;; --- 2023-2-12 --------------------------------------------------------------

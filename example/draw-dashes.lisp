@@ -11,7 +11,7 @@
 
 (in-package :cairo-example)
 
-(defun draw-dashes (context width height)
+(defun cairo-draw-dashes (context width height)
   (let* ((offset (truncate (/ height 4)))
          (border (truncate (/ width 10))))
     ;; Paint a white background
@@ -37,4 +37,4 @@
     (cairo:line-to context (- width border) (* 3 offset))
     (cairo:stroke context)))
 
-;;; --- 2023-1-14 --------------------------------------------------------------
+;;; --- 2023-2-12 --------------------------------------------------------------

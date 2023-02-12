@@ -2,7 +2,7 @@
 
 (in-package :cairo-example)
 
-(defun draw-joins (context width height)
+(defun cairo-draw-joins (context width height)
   (let* ((offset (truncate (/ height 5)))
          (border (truncate (/ width 10)))
          (line-width (truncate (/ height 10))))
@@ -32,4 +32,4 @@
     (cairo:line-to context (- width border) (+ border (* 2 offset)))
     (cairo:stroke context)))
 
-;;; --- 2023-1-14 --------------------------------------------------------------
+;;; --- 2023-2-12 --------------------------------------------------------------

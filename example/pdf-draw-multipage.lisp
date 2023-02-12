@@ -22,46 +22,46 @@
           (cairo:pdf-surface-add-outline surface id "Cairo Examples" "" :bold))
 
     (cairo:pdf-surface-set-page-label surface "Cairo stroke")
-    (funcall #'draw-stroke context width height)
+    (funcall #'cairo-draw-stroke context width height)
     (cairo:surface-show-page surface)
 
     (cairo:pdf-surface-set-page-label surface "Cairo fill")
-    (funcall #'draw-fill context width height)
+    (funcall #'cairo-draw-fill context width height)
     (cairo:surface-show-page surface)
 
     (cairo:pdf-surface-set-page-label surface "Cairo text")
-    (funcall #'draw-text context width height)
+    (funcall #'cairo-draw-text context width height)
     (cairo:show-page context)
 
     (cairo:pdf-surface-set-page-label surface "Cairo paint")
-    (funcall #'draw-paint context width height)
+    (funcall #'cairo-draw-paint context width height)
     (cairo:surface-show-page surface)
 
     (cairo:pdf-surface-set-page-label surface "Cairo mask")
-    (funcall #'draw-mask context width height)
+    (funcall #'cairo-draw-mask context width height)
     (cairo:surface-show-page surface)
 
     (cairo:pdf-surface-set-page-label surface "Cairo RGBA")
-    (funcall #'draw-source-rgba context width height)
+    (funcall #'cairo-draw-source-rgba context width height)
     (cairo:surface-show-page surface)
 
     (cairo:pdf-surface-set-page-label surface "Cairo gradient")
-    (funcall #'draw-source-gradient context width height)
+    (funcall #'cairo-draw-source-gradient context width height)
     (cairo:surface-show-page surface)
 
     (setf id
           (cairo:pdf-surface-add-outline surface id "Cairo Path" "" :bold))
 
     (cairo:pdf-surface-set-page-label surface "Cairo path")
-    (funcall #'draw-path context width height)
+    (funcall #'cairo-draw-path context width height)
     (cairo:surface-show-page surface)
 
     (cairo:pdf-surface-set-page-label surface "Cairo dash")
-    (funcall #'draw-dash context width height)
+    (funcall #'cairo-draw-dash context width height)
     (cairo:surface-show-page surface)
 
     ;; Destroy the resources
     (cairo:surface-destroy surface)
     (cairo:destroy context)))
 
-;;; --- 2023-1-26 --------------------------------------------------------------
+;;; --- 2023-2-12 --------------------------------------------------------------

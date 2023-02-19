@@ -3,8 +3,7 @@
 (defun cairo-draw-text-glyph (context width height)
   (let* ((font-size (min (truncate (- (/ height 20) 5))
                          (truncate (- (/ width 36) 5))))
-         (glyphs nil)
-         (extents nil))
+         (glyphs nil))
     ;; Paint a white background
     (cairo:set-source-rgb context 1.0 1.0 1.0)
     (cairo:paint context)
@@ -31,4 +30,4 @@
     ;; Show the list of glyphs
     (cairo:show-glyphs context glyphs)))
 
-;;; --- 2023-2-12 --------------------------------------------------------------
+;;; --- 2023-2-17 --------------------------------------------------------------

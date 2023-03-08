@@ -1,0 +1,22 @@
+cl-cffi-cairo is a Lisp binding to the Cairo library.
+
+Cairo is a 2D graphics library with support for multiple output devices.
+Currently supported output targets include the X Window System (via both Xlib
+and XCB), Quartz, Win32, image buffers, PostScript, PDF, and SVG file output.
+
+Cairo is designed to produce consistent output on all output media while taking
+advantage of display hardware acceleration when available (eg. through the X
+Render Extension).
+
+The cairo API provides operations similar to the drawing operators of PostScript
+and PDF. Operations in cairo including stroking and filling cubic Bézier
+splines, transforming and compositing translucent images, and antialiased text
+rendering. All drawing operations can be transformed by any affine
+transformation (scale, rotation, shear, etc.)
+
+This library is loaded from the cl-cffi-gtk3 library for a Lisp binding to
+GTK 3 and the cl-cffi-gtk4 library for a Lisp binding to GTK 4.
+
+The cl-cffi-gdk-pixbuf library was part of the cl-cffi-gtk library and was
+separated out to be used independently. The former cl-cffi-gtk library is
+replaced with the cl-cffi-gtk3 for GTK 3 and the cl-cffi-gtk4 library for GTK 4.

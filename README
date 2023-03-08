@@ -17,6 +17,6 @@ transformation (scale, rotation, shear, etc.)
 This library is loaded from the cl-cffi-gtk3 library for a Lisp binding to
 GTK 3 and the cl-cffi-gtk4 library for a Lisp binding to GTK 4.
 
-The cl-cffi-gdk-pixbuf library was part of the cl-cffi-gtk library and was
+The cl-cffi-cairo library was part of the cl-cffi-gtk library and was
 separated out to be used independently. The former cl-cffi-gtk library is
 replaced with the cl-cffi-gtk3 for GTK 3 and the cl-cffi-gtk4 library for GTK 4.

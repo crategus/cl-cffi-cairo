@@ -7,7 +7,7 @@
   ;; Select the font face
   (cairo:select-font-face context "Serif" :weight :bold)
   ;; Specify the font size
-  (cairo:set-font-size context (truncate (/ height 5)))
+  (cairo:set-font-size context (truncate (/ height 6)))
   (multiple-value-bind (xbearing ybearing twidth theight xadvance yadvance)
       (cairo:text-extents context "Crategus")
     (declare (ignore xbearing ybearing theight xadvance yadvance))

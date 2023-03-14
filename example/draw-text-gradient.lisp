@@ -1,7 +1,7 @@
 (in-package :cairo-example)
 
 (defun cairo-draw-text-gradient (context width height)
-  (let* ((font-size (truncate (/ height 5)))
+  (let* ((font-size (truncate (/ height 6)))
          (pattern (cairo:pattern-create-linear 0 15 0 (* 0.8 font-size))))
     ;; Paint a dark background
     (cairo:set-source-rgb context 0.2 0.2 0.2)

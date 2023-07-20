@@ -8,8 +8,8 @@
 ;;;     cairo_translate
 
 (test ctm-translate
-  (with-cairo-image-surface (surface :rgb24 150 100)
-    (with-cairo-context (context surface)
+  (cairo:with-cairo-image-surface (surface :rgb24 150 100)
+    (cairo:with-cairo-context (context surface)
 
       (is (cffi:pointer-eq context (cairo:translate context 10 20)))
 )))

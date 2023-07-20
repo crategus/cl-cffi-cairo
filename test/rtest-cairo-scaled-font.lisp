@@ -19,7 +19,7 @@
 ;;;     cairo_scaled_font_extents
 
 (test scaled-font-extents
-  (with-cairo-context-for-image-surface (context :rgb24 400 300)
+  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
     ;; Set a font and a font size
     (cairo:select-font-face context "Sans")
     (cairo:set-font-size context 18)
@@ -36,7 +36,7 @@
 ;;;     cairo_scaled_font_text_extents
 
 (test scaled-font-text-extents
-  (with-cairo-context-for-image-surface (context :rgb24 400 300)
+  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
     ;; Set a font and a font size
     (cairo:select-font-face context "Sans")
     (cairo:set-font-size context 18)
@@ -53,7 +53,7 @@
 ;;;     cairo_scaled_font_glyph_extents
 
 (test scaled-font-glyph-extents
-  (with-cairo-context-for-image-surface (context :rgb24 400 300)
+  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
     ;; Set a font and a font size
     (cairo:select-font-face context "Sans")
     (let ((font (cairo:scaled-font context)))
@@ -70,7 +70,7 @@
 ;;;     cairo_scaled_font_text_to_glyphs
 
 (test scaled-font-text-to-glyphs
-  (with-cairo-context-for-image-surface (context :rgb24 400 300)
+  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
     ;; Set a font and a font size
     (cairo:select-font-face context "Sans")
     (cairo:set-font-size context 18)

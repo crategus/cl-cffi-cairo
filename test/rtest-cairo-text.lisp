@@ -16,7 +16,7 @@
 ;;;     cairo_select_font_face
 
 (test select-font-face
-  (with-cairo-context-for-image-surface (context :rgb24 400 300)
+  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
     (is-false (cairo:select-font-face context "Courier" :weight :bold))
     (is (cffi:pointerp (cairo:font-face context)))
     (is (eq :success (cairo:font-face-status (cairo:font-face context))))
@@ -38,7 +38,7 @@
 ;;;     cairo_get_font_options
 
 (test font-options
-  (with-cairo-context-for-image-surface (context :rgb24 400 300)
+  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
     (let ((options (cairo:font-options context)))
       (is (cffi:pointerp options))
       (is (eq :default (cairo:font-options-antialias options)))
@@ -56,7 +56,7 @@
 ;;;     cairo_show_text
 
 (test show-text
-  (with-cairo-context-for-image-surface (context :rgb24 400 300)
+  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
     (is-false (cairo:show-text context ""))
     (is-false (cairo:show-text context "Ägypten"))
     (is-false (cairo:show-text context nil))
@@ -65,10 +65,10 @@
 ;;;     cairo_show_glyphs
 
 (test show-glyphs.1
-  (with-cairo-context-for-image-surface (context :rgb24 400 300)
+  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
     (let* ((glyphs '((35 10 30) (36 30 30) (37 50 30)))
            (num-glyphs (length glyphs)))
-      (with-foreign-object (glyphs-ptr '(:struct cairo:glyph-t) num-glyphs)
+      (cffi:with-foreign-object (glyphs-ptr '(:struct cairo:glyph-t) num-glyphs)
         (loop for count from 0 below num-glyphs
               for glyph in glyphs
               for glyph-ptr = (cffi:mem-aptr glyphs-ptr
@@ -101,7 +101,7 @@
                                     (sys-path "out/image1.png"))))))
 
 (test show-glyphs.2
-  (with-cairo-context-for-image-surface (context :rgb24 400 300)
+  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
     (let ((glyphs '((35 10 30) (36 30 30) (37 50 30))))
       ;; Clear surface
       (cairo:set-source-rgb context 1.0 1.0 1.0)
@@ -122,7 +122,7 @@
 ;;;     cairo_font_extents
 
 (test font-extents
-  (with-cairo-context-for-image-surface (context :rgb24 400 300)
+  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
     ;; Set a font and a font size
     (cairo:select-font-face context "Sans")
     (cairo:set-font-size context 18)
@@ -138,7 +138,7 @@
 ;;;     cairo_text_extents
 
 (test text-extents
-  (with-cairo-context-for-image-surface (context :rgb24 400 300)
+  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
     ;; Set a font and a font size
     (cairo:select-font-face context "Sans")
     (cairo:set-font-size context 18)
@@ -155,7 +155,7 @@
 ;;;     cairo_glyph_extents
 
 (test glyph-extents
-  (with-cairo-context-for-image-surface (context :rgb24 400 300)
+  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
     ;; Set a font and a font size
     (cairo:select-font-face context "Sans")
     (cairo:set-font-size context 18)
@@ -175,7 +175,7 @@
 ;;;     cairo_toy_font_face_get_weight
 
 (test toy-font-face-create
-  (with-cairo-toy-font-face (face "Sans" :italic :bold)
+  (cairo:with-cairo-toy-font-face (face "Sans" :italic :bold)
     (is (string= "Sans" (cairo:toy-font-face-family face)))
     (is (eq :italic (cairo:toy-font-face-slant face)))
     (is (eq :bold (cairo:toy-font-face-weight face)))))

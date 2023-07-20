@@ -1,11 +1,7 @@
 (defpackage :cairo-test
   (:use :fiveam :common-lisp)
-  (:import-from :cffi  #:with-foreign-object
-                       #:with-foreign-objects)
-  (:import-from :cairo #:with-cairo-context
-                       #:with-cairo-image-surface
-                       #:with-cairo-context-for-image-surface
-                       #:with-cairo-toy-font-face)
+  (:import-from :cffi)
+  (:import-from :cairo)
   (:export #:run!
            #:cairo-suite))
 

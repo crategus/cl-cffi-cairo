@@ -8,22 +8,23 @@
 ;;;
 ;;; Copyright (C) 2013 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+;;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; cairo_pattern_t
@@ -100,7 +101,7 @@
 ;;; cairo_pattern_t
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct pattern-t)
+(cffi:defcstruct pattern-t)
 
 #+liber-documentation
 (setf (liber:alias-for-symbol 'pattern-t)
@@ -137,7 +138,7 @@
 ;;; enum cairo_extend_t
 ;;; ----------------------------------------------------------------------------
 
-(defcenum extend-t
+(cffi:defcenum extend-t
   :none
   :repeat
   :reflect
@@ -162,7 +163,7 @@
 
   New entries may be added in future versions.
   @begin{pre}
-(defcenum extend-t
+(cffi:defcenum extend-t
   :none
   :repeat
   :reflect
@@ -184,7 +185,7 @@
 ;;; enum cairo_filter_t
 ;;; ----------------------------------------------------------------------------
 
-(defcenum filter-t
+(cffi:defcenum filter-t
   :fast
   :good
   :best
@@ -204,7 +205,7 @@
   See the @fun{cairo:pattern-filter} function for indicating the desired filter
   to be used with a particular pattern.
   @begin{pre}
-(defcenum filter-t
+(cffi:defcenum filter-t
   :fast
   :good
   :best
@@ -233,7 +234,7 @@
 ;;; enum cairo_pattern_type_t
 ;;; ----------------------------------------------------------------------------
 
-(defcenum pattern-type-t
+(cffi:defcenum pattern-type-t
   :solid
   :surface
   :linear
@@ -267,7 +268,7 @@
 
   New entries may be added in future versions.
   @begin{pre}
-(defcenum pattern-type-t
+(cffi:defcenum pattern-type-t
   :solid
   :surface
   :linear
@@ -297,7 +298,8 @@
 ;;; cairo_pattern_add_color_stop_rgb ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pattern_add_color_stop_rgb" %pattern-add-color-stop-rgb) :void
+(cffi:defcfun ("cairo_pattern_add_color_stop_rgb" %pattern-add-color-stop-rgb)
+    :void
   (pattern (:pointer (:struct pattern-t)))
   (offset :double)
   (red :double)
@@ -350,7 +352,7 @@
 ;;; cairo_pattern_add_color_stop_rgba ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pattern_add_color_stop_rgba" %pattern-add-color-stop-rgba)
+(cffi:defcfun ("cairo_pattern_add_color_stop_rgba" %pattern-add-color-stop-rgba)
     :void
   (pattern (:pointer (:struct pattern-t)))
   (offset :double)
@@ -405,7 +407,7 @@
 ;;; cairo_pattern_get_color_stop_count () -> pattern-color-stop-count
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pattern_get_color_stop_count" %pattern-color-stop-count)
+(cffi:defcfun ("cairo_pattern_get_color_stop_count" %pattern-color-stop-count)
     status-t
   (pattern (:pointer (:struct pattern-t)))
   (count (:pointer :int)))
@@ -423,7 +425,7 @@
     Gets the number of color stops specified in the given gradient pattern.
   @end{short}
   @see-symbol{cairo:pattern-t}"
-  (with-foreign-object (count :int)
+  (cffi:with-foreign-object (count :int)
     (let ((status (%pattern-color-stop-count cr count)))
       (values (cffi:mem-ref count :int))
               status)))
@@ -434,7 +436,8 @@
 ;;; cairo_pattern_get_color_stop_rgba () -> pattern-color-stop-rgba
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pattern_get_color_stop_rgba" %pattern-color-stop-rgba) status-t
+(cffi:defcfun ("cairo_pattern_get_color_stop_rgba" %pattern-color-stop-rgba)
+    status-t
   (pattern (:pointer (:struct pattern-t)))
   (index :int)
   (offset (:pointer :double))
@@ -466,11 +469,11 @@
   @fun{cairo:pattern-color-stop-count} function.
   @see-symbol{cairo:pattern-t}
   @see-function{cairo:pattern-color-stop-count}"
-  (with-foreign-objects ((offset :double)
-                         (red :double)
-                         (green :double)
-                         (blue :double)
-                         (alpha :double))
+  (cffi:with-foreign-objects ((offset :double)
+                              (red :double)
+                              (green :double)
+                              (blue :double)
+                              (alpha :double))
     (let ((status (%pattern-color-stop-rgba pattern
                                             index
                                             offset
@@ -488,7 +491,7 @@
 ;;; cairo_pattern_create_rgb ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pattern_create_rgb" %pattern-create-rgb)
+(cffi:defcfun ("cairo_pattern_create_rgb" %pattern-create-rgb)
     (:pointer (:struct pattern-t))
   (red :double)
   (green :double)
@@ -527,7 +530,7 @@
 ;;; cairo_pattern_create_rgba ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pattern_create_rgba" %pattern-create-rgba)
+(cffi:defcfun ("cairo_pattern_create_rgba" %pattern-create-rgba)
     (:pointer (:struct pattern-t))
   (red :double)
   (green :double)
@@ -569,7 +572,7 @@
 ;;; cairo_pattern_get_rgba () -> pattern-rgba
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pattern_get_rgba" %pattern-rgba) status-t
+(cffi:defcfun ("cairo_pattern_get_rgba" %pattern-rgba) status-t
   (pattern (:pointer (:struct pattern-t)))
   (red (:pointer :double))
   (green (:pointer :double))
@@ -592,10 +595,10 @@
     Gets the solid color for a solid color pattern.
   @end{short}
   @see-symbol{cairo:pattern-t}"
-  (with-foreign-objects ((red :double)
-                         (green :double)
-                         (blue :double)
-                         (alpha :double))
+  (cffi:with-foreign-objects ((red :double)
+                              (green :double)
+                              (blue :double)
+                              (alpha :double))
     (let ((status (%pattern-rgba pattern red green blue alpha)))
       (values (cffi:mem-ref red :double)
               (cffi:mem-ref green :double)
@@ -610,7 +613,7 @@
 ;;; cairo_pattern_create_for_surface ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pattern_create_for_surface" pattern-create-for-surface)
+(cffi:defcfun ("cairo_pattern_create_for_surface" pattern-create-for-surface)
     (:pointer (:struct pattern-t))
  #+liber-documentation
  "@version{#2020-12-12}
@@ -638,7 +641,7 @@
 ;;; cairo_pattern_get_surface () -> pattern-surface
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pattern_get_surface" %pattern-surface) status-t
+(cffi:defcfun ("cairo_pattern_get_surface" %pattern-surface) status-t
   (pattern (:pointer (:struct pattern-t)))
   (surface (:pointer (:pointer (:struct surface-t)))))
 
@@ -660,7 +663,7 @@
   @see-symbol{cairo:pattern-t}
   @see-symbol{cairo:surface-t}
   @see-function{cairo:surface-reference}"
-  (with-foreign-object (surface '(:pointer (:struct surface-t)))
+  (cffi:with-foreign-object (surface '(:pointer (:struct surface-t)))
     (let ((status (%pattern-surface pattern surface)))
       (values surface status))))
 
@@ -670,7 +673,7 @@
 ;;; cairo_pattern_create_linear ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pattern_create_linear" %pattern-create-linear)
+(cffi:defcfun ("cairo_pattern_create_linear" %pattern-create-linear)
     (:pointer (:struct pattern-t))
   (x0 :double)
   (y0 :double)
@@ -725,7 +728,7 @@
 ;;; cairo_pattern_get_linear_points () -> pattern-linear-points
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pattern_get_linear_points" %pattern-linear-points)
+(cffi:defcfun ("cairo_pattern_get_linear_points" %pattern-linear-points)
     status-t
   (pattern (:pointer (:struct pattern-t)))
   (x0 (:pointer :double))
@@ -750,7 +753,10 @@
   @end{short}
   @see-symbol{cairo:pattern-t}
   @see-symbol{cairo:status-t}"
-  (with-foreign-objects ((x0 :double) (y0 :double) (x1 :double) (y1 :double))
+  (cffi:with-foreign-objects ((x0 :double)
+                              (y0 :double)
+                              (x1 :double)
+                              (y1 :double))
     (let ((status (%pattern-linear-points pattern x0 y0 x1 y1)))
       (values (cffi:mem-ref x0 :double)
               (cffi:mem-ref y0 :double)
@@ -764,7 +770,7 @@
 ;;; cairo_pattern_create_radial ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pattern_create_radial" %pattern-create-radial)
+(cffi:defcfun ("cairo_pattern_create_radial" %pattern-create-radial)
     (:pointer (:struct pattern-t))
   (x0 :double)
   (y0 :double)
@@ -828,7 +834,7 @@
 ;;; cairo_pattern_get_radial_circles () -> pattern-radial-circles
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pattern_get_radial_circles" %pattern-radial-circles)
+(cffi:defcfun ("cairo_pattern_get_radial_circles" %pattern-radial-circles)
     status-t
   (pattern (:pointer (:struct pattern-t)))
   (x0 (:pointer :double))
@@ -862,8 +868,8 @@
   @end{short}
   @see-symbol{cairo:pattern-t}
   @see-symbol{cairo:status-t}"
-  (with-foreign-objects ((x0 :double) (y0 :double) (r0 :double)
-                         (x1 :double) (y1 :double) (r1 :double))
+  (cffi:with-foreign-objects ((x0 :double) (y0 :double) (r0 :double)
+                              (x1 :double) (y1 :double) (r1 :double))
     (let ((status (%pattern-radial-circles pattern x0 y0 r0 x1 y1 r1)))
       (values (cffi:mem-ref x0 :double)
               (cffi:mem-ref y0 :double)
@@ -879,7 +885,7 @@
 ;;; cairo_pattern_create_mesh ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pattern_create_mesh" pattern-create-mesh)
+(cffi:defcfun ("cairo_pattern_create_mesh" pattern-create-mesh)
     (:pointer (:struct pattern-t))
  #+liber-documentation
  "@version{#2020-12-12}
@@ -1033,7 +1039,7 @@ cairo_mesh_pattern_end_patch (pattern)
 ;;; cairo_mesh_pattern_begin_patch ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_mesh_pattern_begin_patch" mesh-pattern-begin-patch) :void
+(cffi:defcfun ("cairo_mesh_pattern_begin_patch" mesh-pattern-begin-patch) :void
  #+liber-documentation
  "@version{#2020-12-12}
   @argument[pattern]{a @symbol{cairo:pattern-t} instance}
@@ -1066,7 +1072,7 @@ cairo_mesh_pattern_end_patch (pattern)
 ;;; cairo_mesh_pattern_end_patch ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_mesh_pattern_end_patch" mesh-pattern-end-patch) :void
+(cffi:defcfun ("cairo_mesh_pattern_end_patch" mesh-pattern-end-patch) :void
  #+liber-documentation
  "@version{#2020-12-12}
   @argument[pattern]{a @symbol{cairo:pattern-t} instance}
@@ -1095,7 +1101,7 @@ cairo_mesh_pattern_end_patch (pattern)
 ;;; cairo_mesh_pattern_move_to ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_mesh_pattern_move_to" mesh-pattern-move-to) :void
+(cffi:defcfun ("cairo_mesh_pattern_move_to" mesh-pattern-move-to) :void
  #+liber-documentation
  "@version{#2020-12-13}
   @argument[pattern]{a @symbol{cairo:pattern-t} instance}
@@ -1124,7 +1130,7 @@ cairo_mesh_pattern_end_patch (pattern)
 ;;; cairo_mesh_pattern_line_to ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_mesh_pattern_line_to" mesh-pattern-line-to) :void
+(cffi:defcfun ("cairo_mesh_pattern_line_to" mesh-pattern-line-to) :void
  #+liber-documentation
  "@version{#2020-12-13}
   @argument[pattern]{a @symbol{cairo:pattern-t} instance}
@@ -1160,7 +1166,7 @@ cairo_mesh_pattern_end_patch (pattern)
 ;;; cairo_mesh_pattern_curve_to ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_mesh_pattern_curve_to" mesh-pattern-curve-to) :void
+(cffi:defcfun ("cairo_mesh_pattern_curve_to" mesh-pattern-curve-to) :void
  #+liber-documentation
  "@version{#2020-12-25}
   @argument[pattern]{a @symbol{cairo:pattern-t} instance}
@@ -1206,8 +1212,8 @@ cairo_mesh_pattern_end_patch (pattern)
 ;;; cairo_mesh_pattern_set_control_point ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_mesh_pattern_set_control_point"
-           mesh-pattern-set-control-point) :void
+(cffi:defcfun ("cairo_mesh_pattern_set_control_point"
+               mesh-pattern-set-control-point) :void
  #+liber-documentation
  "@version{#2020-12-13}
   @argument[pattern]{a @symbol{cairo:pattern-t} instance}
@@ -1242,8 +1248,8 @@ cairo_mesh_pattern_end_patch (pattern)
 ;;; cairo_mesh_pattern_set_corner_color_rgb ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_mesh_pattern_set_corner_color_rgb"
-           mesh-pattern-set-corner-color-rgb) :void
+(cffi:defcfun ("cairo_mesh_pattern_set_corner_color_rgb"
+               mesh-pattern-set-corner-color-rgb) :void
  #+liber-documentation
  "@version{#2020-12-13}
   @argument[pattern]{a @symbol{cairo:pattern-t} instance}
@@ -1284,8 +1290,8 @@ cairo_mesh_pattern_end_patch (pattern)
 ;;; cairo_mesh_pattern_set_corner_color_rgba ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_mesh_pattern_set_corner_color_rgba"
-           mesh-pattern-set-corner-color-rgba) :void
+(cffi:defcfun ("cairo_mesh_pattern_set_corner_color_rgba"
+               mesh-pattern-set-corner-color-rgba) :void
  #+liber-documentation
  "@version{#2020-12-13}
   @argument[pattern]{a @symbol{cairo:pattern-t} instance}
@@ -1328,7 +1334,7 @@ cairo_mesh_pattern_end_patch (pattern)
 ;;; cairo_mesh_pattern_get_patch_count () -> mesh-pattern-patch-count
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_mesh_pattern_get_patch_count" %mesh-pattern-patch-count)
+(cffi:defcfun ("cairo_mesh_pattern_get_patch_count" %mesh-pattern-patch-count)
     status-t
   (pattern (:pointer (:struct pattern-t)))
   (count (:pointer :uint)))
@@ -1351,7 +1357,7 @@ cairo_mesh_pattern_end_patch (pattern)
   the definition of the first patch.
   @see-symbol{cairo:pattern-t}
   @see-function{cairo:mesh-pattern-end-patch}"
-  (with-foreign-object (count :uint)
+  (cffi:with-foreign-object (count :uint)
     (let ((status (%mesh-pattern-patch-count pattern count)))
       (values (cffi:mem-ref count :uint)
               status))))
@@ -1365,7 +1371,7 @@ cairo_mesh_pattern_end_patch (pattern)
 ;; The return type is (:pointer (:struct path-t)), but at this point
 ;; we don't have the declaration path-t.
 
-(defcfun ("cairo_mesh_pattern_get_path" mesh-pattern-path) :pointer
+(cffi:defcfun ("cairo_mesh_pattern_get_path" mesh-pattern-path) :pointer
  #+liber-documentation
  "@version{#2020-12-13}
   @argument[pattern]{a @symbol{cairo:pattern-t} instance}
@@ -1394,8 +1400,8 @@ cairo_mesh_pattern_end_patch (pattern)
 ;;; cairo_mesh_pattern_get_control_point ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_mesh_pattern_get_control_point"
-          %mesh-pattern-get-control-point) status-t
+(cffi:defcfun ("cairo_mesh_pattern_get_control_point"
+               %mesh-pattern-get-control-point) status-t
   (pattern (:pointer (:struct pattern-t)))
   (patch-num :uint)
   (point-num :uint)
@@ -1431,7 +1437,7 @@ cairo_mesh_pattern_end_patch (pattern)
   @see-symbol{cairo:pattern-t}
   @see-function{cairo:mesh-pattern-patch-count}
   @see-function{cairo:pattern-create-mesh}"
-  (with-foreign-objects ((x :double) (y :double))
+  (cffi:with-foreign-objects ((x :double) (y :double))
     (let ((status (%mesh-pattern-get-control-point pattern
                                                    patch-num
                                                    point-num
@@ -1446,8 +1452,8 @@ cairo_mesh_pattern_end_patch (pattern)
 ;;; cairo_mesh_pattern_get_corner_color_rgba ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_mesh_pattern_get_corner_color_rgba"
-          %mesh-pattern-get-corner-color-rgba) status-t
+(cffi:defcfun ("cairo_mesh_pattern_get_corner_color_rgba"
+               %mesh-pattern-get-corner-color-rgba) status-t
   (pattern (:pointer (:struct pattern-t)))
   (patch-num :uint)
   (corner-num :uint)
@@ -1487,10 +1493,10 @@ cairo_mesh_pattern_end_patch (pattern)
   @see-symbol{cairo:pattern-t}
   @see-function{cairo:mesh-pattern-patch-count}
   @see-function{cairo:pattern-create-mesh}"
-  (with-foreign-objects ((red :double)
-                         (green :double)
-                         (blue :double)
-                         (alpha :double))
+  (cffi:with-foreign-objects ((red :double)
+                              (green :double)
+                              (blue :double)
+                              (alpha :double))
     (let ((status (%mesh-pattern-get-corner-color-rgba pattern
                                                        patch-num
                                                        corner-num
@@ -1510,7 +1516,7 @@ cairo_mesh_pattern_end_patch (pattern)
 ;;; cairo_pattern_reference ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pattern_reference" pattern-reference)
+(cffi:defcfun ("cairo_pattern_reference" pattern-reference)
     (:pointer (:struct pattern-t))
  #+liber-documentation
  "@version{#2020-12-13}
@@ -1535,7 +1541,7 @@ cairo_mesh_pattern_end_patch (pattern)
 ;;; cairo_pattern_destroy ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pattern_destroy" pattern-destroy) :void
+(cffi:defcfun ("cairo_pattern_destroy" pattern-destroy) :void
  #+liber-documentation
  "@version{2023-1-14}
   @argument[pattern]{a @symbol{cairo:pattern-t} instance}
@@ -1554,7 +1560,7 @@ cairo_mesh_pattern_end_patch (pattern)
 ;;; cairo_pattern_status ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pattern_status" pattern-status) status-t
+(cffi:defcfun ("cairo_pattern_status" pattern-status) status-t
  #+liber-documentation
  "@version{#2020-12-13}
   @argument[pattern]{a @symbol{cairo:pattern-t} instance}
@@ -1583,7 +1589,7 @@ cairo_mesh_pattern_end_patch (pattern)
                         :void)
   extend)
 
-(defcfun ("cairo_pattern_get_extend" pattern-extend) extend-t
+(cffi:defcfun ("cairo_pattern_get_extend" pattern-extend) extend-t
  #+liber-documentation
  "@version{2023-1-15}
   @syntax[]{(pattern-extend pattern) => extend}
@@ -1619,7 +1625,7 @@ cairo_mesh_pattern_end_patch (pattern)
                         :void)
   filter)
 
-(defcfun ("cairo_pattern_get_filter" pattern-filter) filter-t
+(cffi:defcfun ("cairo_pattern_get_filter" pattern-filter) filter-t
  #+liber-documentation
  "@version{#2020-12-13}
   @syntax[]{(pattern-filter pattern) => filter}
@@ -1712,7 +1718,7 @@ cairo_mesh_pattern_end_patch (pattern)
 ;;; cairo_pattern_get_type () -> pattern-type
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pattern_get_type" pattern-type) pattern-type-t
+(cffi:defcfun ("cairo_pattern_get_type" pattern-type) pattern-type-t
  #+liber-documentation
  "@version{#2020-12-13}
   @argument[pattern]{a @symbol{cairo:pattern-t} instance}
@@ -1731,7 +1737,8 @@ cairo_mesh_pattern_end_patch (pattern)
 ;;; cairo_pattern_get_reference_count () -> pattern-reference-count
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pattern_get_reference_count" pattern-reference-count) :uint
+(cffi:defcfun ("cairo_pattern_get_reference_count" pattern-reference-count)
+    :uint
  #+liber-documentation
  "@version{#2020-12-26}
   @argument[pattern]{a @symbol{cairo:pattern-t} instance}

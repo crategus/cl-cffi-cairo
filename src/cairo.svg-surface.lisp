@@ -8,22 +8,23 @@
 ;;;
 ;;; Copyright (C) 2020 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+;;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; SVG Surfaces
@@ -69,7 +70,7 @@
 ;;; enum cairo_svg_version_t
 ;;; ----------------------------------------------------------------------------
 
-(defcenum svg-version-t
+(cffi:defcenum svg-version-t
   :version-1-1
   :version-1-2)
 
@@ -83,7 +84,7 @@
     number of the SVG specification that a generated SVG file will conform to.
   @end{short}
   @begin{pre}
-(defcenum svg-version-t
+(cffi:defcenum svg-version-t
   :version-1-1
   :version-1-2)
   @end{pre}
@@ -129,7 +130,7 @@
 ;;; Since 1.16
 ;;; ----------------------------------------------------------------------------
 
-(defcenum svg-unit-t
+(cffi:defcenum svg-unit-t
   :user
   :em
   :ex
@@ -151,7 +152,7 @@
     for coordinates and lengths in the SVG specification.
   @end{short}
   @begin{pre}
-(defcenum svg-unit-t
+(cffi:defcenum svg-unit-t
   :user
   :em
   :ex
@@ -186,7 +187,7 @@
 ;;; cairo_svg_surface_create ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_svg_surface_create" %svg-surface-create)
+(cffi:defcfun ("cairo_svg_surface_create" %svg-surface-create)
     (:pointer (:struct surface-t))
   (path :string)
   (width :double)
@@ -316,8 +317,8 @@
                         :void)
   unit)
 
-(defcfun ("cairo_svg_surface_get_document_unit"
-           svg-surface-document-unit) svg-unit-t
+(cffi:defcfun ("cairo_svg_surface_get_document_unit"
+               svg-surface-document-unit) svg-unit-t
  #+liber-documentation
  "@version{#2023-1-9}
   @syntax[]{(svg-surface-document-unit surface) => unit}
@@ -357,8 +358,8 @@
 ;;; cairo_svg_surface_restrict_to_version ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_svg_surface_restrict_to_version"
-           svg-surface-restrict-to-version) :void
+(cffi:defcfun ("cairo_svg_surface_restrict_to_version"
+               svg-surface-restrict-to-version) :void
  #+liber-documentation
  "@version{#2023-1-9}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
@@ -382,7 +383,7 @@
 ;;; cairo_svg_get_versions ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_svg_get_versions" %svg-versions) :void
+(cffi:defcfun ("cairo_svg_get_versions" %svg-versions) :void
   (versions :pointer)
   (num :pointer))
 
@@ -397,7 +398,7 @@
   See the @fun{cairo:svg-surface-restrict-to-version} function.
   @see-symbol{cairo:svg-version-t}
   @see-function{cairo:svg-surface-restrict-to-version}"
-  (with-foreign-objects ((ptr :pointer) (num :int))
+  (cffi:with-foreign-objects ((ptr :pointer) (num :int))
     (%svg-versions ptr num)
     (loop with versions = (cffi:mem-ref ptr :pointer)
           for count from 0 below (cffi:mem-ref num :int)
@@ -409,7 +410,7 @@
 ;;; cairo_svg_version_to_string ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_svg_version_to_string" svg-version-to-string) :string
+(cffi:defcfun ("cairo_svg_version_to_string" svg-version-to-string) :string
  #+liber-documentation
  "@version{#2023-1-9}
   @argument[version]{a @symbol{cairo:svg-version-t} value}

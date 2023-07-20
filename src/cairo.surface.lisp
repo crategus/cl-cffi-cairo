@@ -8,22 +8,23 @@
 ;;;
 ;;; Copyright (C) 2012 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+;;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; cairo_surface_t
@@ -268,7 +269,7 @@
 ;;; cairo_surface_t
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct surface-t)
+(cffi:defcstruct surface-t)
 
 #+liber-documentation
 (setf (liber:alias-for-symbol 'surface-t)
@@ -314,7 +315,7 @@
 ;;; enum cairo_content_t
 ;;; ----------------------------------------------------------------------------
 
-(defcenum content-t
+(cffi:defcenum content-t
   (:color #x1000)
   (:alpha #x2000)
   (:color-alpha #x3000))
@@ -334,7 +335,7 @@
   distinct from @symbol{cairo:format-t} values so that the implementation can
   detect the error if users confuse the two types.
   @begin{pre}
-(defcenum content-t
+(cffi:defcenum content-t
   (:color #x1000)
   (:alpha #x2000)
   (:color-alpha #x3000))
@@ -352,7 +353,7 @@
 ;;; enum cairo_surface_type_t
 ;;; ----------------------------------------------------------------------------
 
-(defcenum surface-type-t
+(cffi:defcenum surface-type-t
   :image
   :pdf
   :ps
@@ -408,7 +409,7 @@
 
   New entries may be added in future versions.
   @begin{pre}
-(defcenum surface-type-t
+(cffi:defcenum surface-type-t
   :image
   :pdf
   :ps
@@ -475,7 +476,7 @@
 ;;; enum cairo_format_t
 ;;; ----------------------------------------------------------------------------
 
-(defcenum format-t
+(cffi:defcenum format-t
   (:invalid -1)
   (:argb32 0)
   (:rgb24 1)
@@ -495,7 +496,7 @@
   @end{short}
   New entries may be added in future versions.
   @begin{pre}
-(defcenum format-t
+(cffi:defcenum format-t
   (:invalid -1)
   (:argb32 0)
   (:rgb24 1)
@@ -531,7 +532,7 @@
 ;;; cairo_surface_create_similar ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_surface_create_similar" surface-create-similar)
+(cffi:defcfun ("cairo_surface_create_similar" surface-create-similar)
     (:pointer (:struct surface-t))
  #+liber-documentation
  "@version{#2020-12-16}
@@ -580,8 +581,8 @@
 ;;; cairo_surface_create_similar_image ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_surface_create_similar_image"
-           surface-create-similar-image) (:pointer (:struct surface-t))
+(cffi:defcfun ("cairo_surface_create_similar_image"
+               surface-create-similar-image) (:pointer (:struct surface-t))
  #+liber-documentation
  "@version{#2020-12-16}
   @argument[other]{an existing @symbol{cairo:surface-t} instance used to select
@@ -624,8 +625,8 @@
 ;;; cairo_surface_create_for_rectangle ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_surface_create_for_rectangle" surface-create-for-rectangle)
-    (:pointer (:struct surface-t))
+(cffi:defcfun ("cairo_surface_create_for_rectangle"
+               surface-create-for-rectangle) (:pointer (:struct surface-t))
  #+liber-documentation
  "@version{#2020-12-16}
   @argument[target]{an existing @symbol{cairo:surface-t} instance for which
@@ -674,7 +675,7 @@
 ;;; cairo_surface_reference ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_surface_reference" surface-reference)
+(cffi:defcfun ("cairo_surface_reference" surface-reference)
     (:pointer (:struct surface-t))
  #+liber-documentation
  "@version{#2020-12-16}
@@ -699,7 +700,7 @@
 ;;; cairo_surface_destroy ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_surface_destroy" surface-destroy) :void
+(cffi:defcfun ("cairo_surface_destroy" surface-destroy) :void
  #+liber-documentation
  "@version{2023-2-3}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
@@ -718,7 +719,7 @@
 ;;; cairo_surface_status ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_surface_status" surface-status) status-t
+(cffi:defcfun ("cairo_surface_status" surface-status) status-t
  #+liber-documentation
  "@version{#2020-12-16}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
@@ -740,7 +741,7 @@
 ;;; cairo_surface_finish ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_surface_finish" surface-finish) :void
+(cffi:defcfun ("cairo_surface_finish" surface-finish) :void
  #+liber-documentation
  "@version{#2020-12-21}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
@@ -770,7 +771,7 @@
 ;;; cairo_surface_flush ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_surface_flush" surface-flush) :void
+(cffi:defcfun ("cairo_surface_flush" surface-flush) :void
  #+liber-documentation
  "@version{#2020-12-16}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
@@ -801,7 +802,7 @@
 ;;;     associated device.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_surface_get_device" surface-device)
+(cffi:defcfun ("cairo_surface_get_device" surface-device)
     (:pointer (:struct device-t))
   (surface (:pointer (:struct surface-t))))
 
@@ -826,7 +827,7 @@
 ;;;     All existing values are overwritten
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_surface_get_font_options" surface-font-options) :void
+(cffi:defcfun ("cairo_surface_get_font_options" surface-font-options) :void
   (surface (:pointer (:struct surface-t)))
   (options (:pointer (:struct font-options-t))))
 
@@ -847,7 +848,7 @@
 ;;;     The content type of surface.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_surface_get_content" surface-content) content-t
+(cffi:defcfun ("cairo_surface_get_content" surface-content) content-t
   (surface (:pointer (:struct surface-t))))
 
 (export 'surface-content)
@@ -856,7 +857,7 @@
 ;;; cairo_surface_mark_dirty ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_surface_mark_dirty" surface-mark-dirty) :void
+(cffi:defcfun ("cairo_surface_mark_dirty" surface-mark-dirty) :void
  #+liber-documentation
  "@version{#2020-12-16}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
@@ -904,8 +905,8 @@
 ;;;     height of dirty rectangle
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_surface_mark_dirty_rectangle" surface-mark-dirty-rectangle)
-    :void
+(cffi:defcfun ("cairo_surface_mark_dirty_rectangle"
+               surface-mark-dirty-rectangle) :void
   (surface (:pointer (:struct surface-t)))
   (x :int)
   (y :int)
@@ -918,7 +919,8 @@
 ;;; cairo_surface_set_device_offset ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_surface_set_device_offset" surface-set-device-offset) :void
+(cffi:defcfun ("cairo_surface_set_device_offset" surface-set-device-offset)
+    :void
  #+liber-documentation
  "@version{#2020-12-16}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
@@ -966,13 +968,14 @@
 ;;;     the offset in the Y direction, in device units
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_surface_get_device_offset" %surface-get-device-offset) :void
+(cffi:defcfun ("cairo_surface_get_device_offset" %surface-get-device-offset)
+    :void
   (surface (:pointer (:struct surface-t)))
   (x-offset (:pointer :double))
   (y-offset (:pointer :double)))
 
 (defun surface-get-device-offset (surface)
-  (with-foreign-objects ((x-offset :double) (y-offset :double))
+  (cffi:with-foreign-objects ((x-offset :double) (y-offset :double))
     (%surface-get-device-offset surface x-offset y-offset)
     (values (cffi:mem-ref x-offset :double)
             (cffi:mem-ref y-offset :double))))
@@ -1100,7 +1103,7 @@
 ;;; cairo_surface_get_type ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_surface_get_type" surface-type) surface-type-t
+(cffi:defcfun ("cairo_surface_get_type" surface-type) surface-type-t
  #+liber-documentation
  "@version{2023-2-3}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
@@ -1119,7 +1122,7 @@
 ;;; cairo_surface_get_reference_count () -> surface-reference-count
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_surface_get_reference_count" surface-reference-count) :uint
+(cffi:defcfun ("cairo_surface_get_reference_count" surface-reference-count) :uint
  #+liber-documentation
  "@version{#2020-12-16}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
@@ -1193,7 +1196,7 @@
 ;;; cairo_surface_copy_page ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_surface_copy_page" surface-copy-page) :void
+(cffi:defcfun ("cairo_surface_copy_page" surface-copy-page) :void
  #+liber-documentation
  "@version{#2020-12-23}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
@@ -1219,7 +1222,7 @@
 ;;; cairo_surface_show_page ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_surface_show_page" surface-show-page) :void
+(cffi:defcfun ("cairo_surface_show_page" surface-show-page) :void
  #+liber-documentation
  "@version{#2020-12-23}
   @argument[surface]{a @symbol{cairo:surface-t} instance}

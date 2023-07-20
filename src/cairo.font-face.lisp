@@ -6,24 +6,25 @@
 ;;; library. See <http://cairographics.org>. The API documentation of the
 ;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk/>.
 ;;;
-;;; Copyright (C) 2014 - 2022 Dieter Kaiser
+;;; Copyright (C) 2014 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+;;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; cairo_font_face_t
@@ -63,7 +64,7 @@
 ;;; cairo_font_face_t
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct font-face-t)
+(cffi:defcstruct font-face-t)
 
 #+liber-documentation
 (setf (liber:alias-for-symbol 'font-face-t)
@@ -97,7 +98,7 @@
 ;;; enum cairo_font_type_t
 ;;; ----------------------------------------------------------------------------
 
-(defcenum font-type-t
+(cffi:defcenum font-type-t
   :toy
   :ft
   :win32
@@ -137,7 +138,7 @@
 
   New entries may be added in future versions.
   @begin{pre}
-(defcenum font-type-t
+(cffi:defcenum font-type-t
   :toy
   :ft
   :win32
@@ -162,7 +163,7 @@
 ;;; cairo_font_face_reference ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_font_face_reference" font-face-reference)
+(cffi:defcfun ("cairo_font_face_reference" font-face-reference)
     (:pointer (:struct font-face-t))
  #+liber-documentation
  "@version{#2020-12-28}
@@ -188,7 +189,7 @@
 ;;; cairo_font_face_destroy ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_font_face_destroy" font-face-destroy) :void
+(cffi:defcfun ("cairo_font_face_destroy" font-face-destroy) :void
   #+liber-documentation
   "@version{#2020-12-28}
   @argument[font-face]{a @symbol{cairo:font-face-t} instance}
@@ -207,7 +208,7 @@
 ;;; cairo_font_face_status ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_font_face_status" font-face-status) status-t
+(cffi:defcfun ("cairo_font_face_status" font-face-status) status-t
  #+liber-documentation
  "@version{#2020-12-28}
   @argument[font-face]{a @symbol{cairo:font-face-t} instance}
@@ -226,7 +227,7 @@
 ;;; cairo_font_face_get_type () -> font-face-type
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_font_face_get_type" font-face-type) font-type-t
+(cffi:defcfun ("cairo_font_face_get_type" font-face-type) font-type-t
  #+liber-documentation
  "@version{#2020-12-28}
   @argument[font-face]{a @symbol{cairo:font-face-t} font face}
@@ -244,7 +245,8 @@
 ;;; cairo_font_face_get_reference_count () -> font-face-reference-count
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_font_face_get_reference_count" font-face-reference-count) :uint
+(cffi:defcfun ("cairo_font_face_get_reference_count" font-face-reference-count)
+    :uint
  #+liber-documentation
  "@version{#2020-12-28}
   @argument[font-face]{a @symbol{cairo:font-face-t} instance}

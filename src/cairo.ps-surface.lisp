@@ -6,24 +6,25 @@
 ;;; library. See <http://cairographics.org>. The API documentation of the
 ;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk/>.
 ;;;
-;;; Copyright (C) 2020 Dieter Kaiser
+;;; Copyright (C) 2020 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+;;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; PostScript Surfaces
@@ -108,7 +109,7 @@
 ;;;     The language level 3 of the PostScript specification.
 ;;; ----------------------------------------------------------------------------
 
-(defcenum ps-level-t
+(cffi:defcenum ps-level-t
   :level-2
   :level-3)
 
@@ -219,8 +220,8 @@
 ;;;     PostScript level
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_ps_surface_restrict_to_level" ps-surface-restrict-to-level)
-    :void
+(cffi:defcfun ("cairo_ps_surface_restrict_to_level"
+               ps-surface-restrict-to-level) :void
   (surface (:pointer (:struct surface-t)))
   (level ps-level-t))
 
@@ -243,12 +244,12 @@
 ;;;     list length
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_ps_get_levels" %ps-levels) :void
+(cffi:defcfun ("cairo_ps_get_levels" %ps-levels) :void
   (levels :pointer)
   (num :pointer))
 
 (defun ps-levels ()
-  (with-foreign-objects ((ptr :pointer) (num :int))
+  (cffi:with-foreign-objects ((ptr :pointer) (num :int))
     (%ps-levels ptr num)
     (loop with levels = (cffi:mem-ref ptr :pointer)
           for count from 0 below (cffi:mem-ref num :int)
@@ -273,7 +274,7 @@
 ;;;     the string associated to given level.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_ps_level_to_string" ps-level-to-string) :string
+(cffi:defcfun ("cairo_ps_level_to_string" ps-level-to-string) :string
   (level ps-level-t))
 
 (export 'ps-level-to-string)
@@ -321,7 +322,7 @@
 ;;;     TRUE if the surface will output Encapsulated PostScript.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_ps_surface_get_eps" ps-surface-eps) :bool
+(cffi:defcfun ("cairo_ps_surface_get_eps" ps-surface-eps) :bool
   (surface (:pointer (:struct surface-t))))
 
 (export 'ps-surface-eps)
@@ -381,7 +382,8 @@
 ;;;     a PostScript cairo_surface_t
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_ps_surface_dsc_begin_setup" ps-surface-dsc-begin-setup) :void
+(cffi:defcfun ("cairo_ps_surface_dsc_begin_setup" ps-surface-dsc-begin-setup)
+    :void
   (surface (:pointer (:struct surface-t))))
 
 (export 'ps-surface-dsc-begin-setup)
@@ -406,8 +408,8 @@
 ;;;     a PostScript cairo_surface_t
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_ps_surface_dsc_begin_page_setup"
-           ps-surface-dsc-begin-page-setup) :void
+(cffi:defcfun ("cairo_ps_surface_dsc_begin_page_setup"
+               ps-surface-dsc-begin-page-setup) :void
   (surface (:pointer (:struct surface-t))))
 
 (export 'ps-surface-dsc-begin-page-setup)
@@ -502,7 +504,7 @@
 ;;;     a comment string to be emitted into the PostScript output
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_ps_surface_dsc_comment" ps-surface-dsc-comment) :void
+(cffi:defcfun ("cairo_ps_surface_dsc_comment" ps-surface-dsc-comment) :void
   (surface (:pointer (:struct surface-t))))
 
 (export 'ps-surface-dsc-comment)

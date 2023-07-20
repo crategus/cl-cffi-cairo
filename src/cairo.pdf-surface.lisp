@@ -8,22 +8,23 @@
 ;;;
 ;;; Copyright (C) 2020 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+;;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; PDF Surfaces
@@ -140,7 +141,7 @@
 ;;; enum cairo_pdf_outline_flags_t
 ;;; ----------------------------------------------------------------------------
 
-(defbitfield pdf-outline-flags-t
+(cffi:defbitfield pdf-outline-flags-t
   (:open 1)
   (:bold 2)
   (:italic 4))
@@ -157,7 +158,7 @@
   @end{short}
   These flags may be bitwise-or'd to produce any combination of flags.
   @begin{pre}
-(defbitfield pdf-outline-flags-t
+(cffi:defbitfield pdf-outline-flags-t
   (:open 1)
   (:bold 2)
   (:italic 4))
@@ -175,7 +176,7 @@
 ;;; enum cairo_pdf_metadata_t
 ;;; ----------------------------------------------------------------------------
 
-(defcenum pdf-metadata-t
+(cffi:defcenum pdf-metadata-t
   :title
   :author
   :subject
@@ -195,7 +196,7 @@
     set.
   @end{short}
   @begin{pre}
-(defcenum pdf-metadata-t
+(cffi:defcenum pdf-metadata-t
   :title
   :author
   :subject
@@ -221,7 +222,7 @@
 ;;; enum cairo_pdf_version_t
 ;;; ----------------------------------------------------------------------------
 
-(defcenum pdf-version-t
+(cffi:defcenum pdf-version-t
   :version-1-4
   :version-1-5)
 
@@ -235,7 +236,7 @@
     number of the PDF specification that a generated PDF file will conform to.
   @end{short}
   @begin{pre}
-(defcenum pdf-version-t
+(cffi:defcenum pdf-version-t
   :version-1-4
   :version-1-5)
   @end{pre}
@@ -251,7 +252,7 @@
 ;;; cairo_pdf_surface_create ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pdf_surface_create" %pdf-surface-create)
+(cffi:defcfun ("cairo_pdf_surface_create" %pdf-surface-create)
     (:pointer (:struct surface-t))
   (filename :string)
   (width :double)
@@ -329,8 +330,8 @@
 ;;; cairo_pdf_surface_restrict_to_version ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pdf_surface_restrict_to_version"
-           pdf-surface-restrict-to-version) :void
+(cffi:defcfun ("cairo_pdf_surface_restrict_to_version"
+               pdf-surface-restrict-to-version) :void
  #+liber-documentation
  "@version{2023-1-9}
   @argument[surface]{a PDF @symbol{cairo:surface-t} instance}
@@ -353,7 +354,7 @@
 ;;; cairo_pdf_get_versions ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pdf_get_versions" %pdf-versions) :void
+(cffi:defcfun ("cairo_pdf_get_versions" %pdf-versions) :void
   (versions :pointer)
   (num :pointer))
 
@@ -368,7 +369,7 @@
   See the @fun{cairo:pdf-surface-restrict-to-version} function.
   @see-symbol{cairo:pdf-version-t}
   @see-function{cairo:pdf-surface-restrict-to-version}"
-  (with-foreign-objects ((ptr :pointer) (num :int))
+  (cffi:with-foreign-objects ((ptr :pointer) (num :int))
     (%pdf-versions ptr num)
     (loop with versions = (cffi:mem-ref ptr :pointer)
           for count from 0 below (cffi:mem-ref num :int)
@@ -380,7 +381,7 @@
 ;;; cairo_pdf_version_to_string ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pdf_version_to_string" pdf-version-to-string) :string
+(cffi:defcfun ("cairo_pdf_version_to_string" pdf-version-to-string) :string
  #+liber-documentation
  "@version{2023-1-9}
   @argument[verion]{a @symbol{cairo:pdf-version-t} value}
@@ -432,7 +433,7 @@
 ;;; cairo_pdf_surface_add_outline ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pdf_surface_add_outline" pdf-surface-add-outline) :int
+(cffi:defcfun ("cairo_pdf_surface_add_outline" pdf-surface-add-outline) :int
  #+liber-documentation
  "@version{2023-1-9}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
@@ -465,7 +466,7 @@
 ;;; cairo_pdf_surface_set_metadata ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pdf_surface_set_metadata" pdf-surface-set-metadata) :void
+(cffi:defcfun ("cairo_pdf_surface_set_metadata" pdf-surface-set-metadata) :void
  #+liber-documentation
  "@version{2023-1-9}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
@@ -497,7 +498,8 @@
 ;;; cairo_pdf_surface_set_page_label ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pdf_surface_set_page_label" pdf-surface-set-page-label) :void
+(cffi:defcfun ("cairo_pdf_surface_set_page_label" pdf-surface-set-page-label)
+    :void
  #+liber-documentation
  "@version{2023-1-9}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
@@ -515,8 +517,8 @@
 ;;; cairo_pdf_surface_set_thumbnail_size ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pdf_surface_set_thumbnail_size" pdf-surface-set-thumbnail-size)
-    :void
+(cffi:defcfun ("cairo_pdf_surface_set_thumbnail_size"
+               pdf-surface-set-thumbnail-size) :void
  #+liber-documentation
  "@version{2023-1-9}
   @argument[surface]{a @symbol{cairo:surface-t} instance}

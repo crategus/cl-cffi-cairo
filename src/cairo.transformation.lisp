@@ -8,22 +8,23 @@
 ;;;
 ;;; Copyright (C) 2013 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+;;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; Transformations
@@ -86,7 +87,7 @@
 ;;; cairo_scale () -> scale
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_scale" %scale) :void
+(cffi:defcfun ("cairo_scale" %scale) :void
   (cr (:pointer (:struct context-t)))
   (sx :double)
   (sy :double))
@@ -112,7 +113,7 @@
 ;;; cairo_rotate () -> rotate
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_rotate" %rotate) :void
+(cffi:defcfun ("cairo_rotate" %rotate) :void
   (cr (:pointer (:struct context-t)))
   (angle :double))
 
@@ -138,7 +139,7 @@
 ;;; cairo_transform () -> transform
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_transform" transform) :void
+(cffi:defcfun ("cairo_transform" transform) :void
  #+liber-documentation
  "@version{#2020-12-15}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -197,7 +198,7 @@
 ;;; cairo_identity_matrix () -> identity-matrix
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_identity_matrix" identity-matrix) :void
+(cffi:defcfun ("cairo_identity_matrix" identity-matrix) :void
  #+liber-documentation
  "@version{#2020-12-15}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -216,7 +217,7 @@
 ;;; cairo_user_to_device () -> user-to-device
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_user_to_device" %user-to-device) :void
+(cffi:defcfun ("cairo_user_to_device" %user-to-device) :void
   (cr (:pointer (:struct context-t)))
   (x (:pointer :double))
   (y (:pointer :double)))
@@ -235,7 +236,7 @@
   @end{short}
   @see-symbol{cairo:context-t}
   @see-function{cairo:device-to-user}"
-  (with-foreign-objects ((x-new :double) (y-new :double))
+  (cffi:with-foreign-objects ((x-new :double) (y-new :double))
     (setf (cffi:mem-ref x-new :double)
           (coerce x 'double-float)
           (cffi:mem-ref y-new :double)
@@ -250,7 +251,7 @@
 ;;; cairo_user_to_device_distance () -> user-to-device-distance
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_user_to_device_distance" %user-to-device-distance) :void
+(cffi:defcfun ("cairo_user_to_device_distance" %user-to-device-distance) :void
   (cr (:pointer (:struct context-t)))
   (dx (:pointer :double))
   (dy (:pointer :double)))
@@ -273,7 +274,7 @@
   (@code{dx}, @code{dy}).
   @see-symbol{cairo:context-t}
   @see-function{cairo:user-to-device}"
-  (with-foreign-objects ((dx-new :double) (dy-new :double))
+  (cffi:with-foreign-objects ((dx-new :double) (dy-new :double))
     (setf (cffi:mem-ref dx-new :double)
           (coerce dx 'double-float)
           (cffi:mem-ref dy-new :double)
@@ -288,7 +289,7 @@
 ;;; cairo_device_to_user () -> device-to-user
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_device_to_user" %device-to-user) :void
+(cffi:defcfun ("cairo_device_to_user" %device-to-user) :void
   (cr (:pointer (:struct context-t)))
   (x (:pointer :double))
   (y (:pointer :double)))
@@ -307,7 +308,7 @@
   @end{short}
   @see-symbol{cairo:context-t}
   @see-function{cairo:user-to-device}"
-  (with-foreign-objects ((x-new :double) (y-new :double))
+  (cffi:with-foreign-objects ((x-new :double) (y-new :double))
     (setf (cffi:mem-ref x-new :double)
           (coerce x 'double-float)
           (cffi:mem-ref y-new :double)
@@ -322,7 +323,7 @@
 ;;; cairo_device_to_user_distance () -> device-to-user-distance
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_device_to_user_distance" %device-to-user-distance) :void
+(cffi:defcfun ("cairo_device_to_user_distance" %device-to-user-distance) :void
   (cr (:pointer (:struct context-t)))
   (dx (:pointer :double))
   (dy (:pointer :double)))
@@ -345,7 +346,7 @@
   transforming (@code{dx},@code{dy}).
   @see-symbol{cairo:context-t}
   @see-function{cairo:device-to-user}"
-  (with-foreign-objects ((dx-new :double) (dy-new :double))
+  (cffi:with-foreign-objects ((dx-new :double) (dy-new :double))
     (setf (cffi:mem-ref dx-new :double)
           (coerce dx 'double-float)
           (cffi:mem-ref dy-new :double)

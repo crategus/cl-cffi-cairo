@@ -8,22 +8,23 @@
 ;;;
 ;;; Copyright (C) 2013 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+;;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; cairo_scaled_font_t
@@ -70,7 +71,7 @@
 ;;; cairo_glyph_t
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct glyph-t
+(cffi:defcstruct glyph-t
   (index :ulong)
   (x :double)
   (y :double))
@@ -96,7 +97,7 @@
   measuring text, each glyph is individually positioned with respect to the
   overall origin.
   @begin{pre}
-(defcstruct glyph-t
+(cffi:defcstruct glyph-t
   (index :ulong)
   (x :double)
   (y :double))
@@ -118,7 +119,7 @@
 ;;; cairo_scaled_font_t
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct scaled-font-t)
+(cffi:defcstruct scaled-font-t)
 
 #+liber-documentation
 (setf (liber:alias-for-symbol 'scaled-font-t)
@@ -150,7 +151,7 @@
 ;;; cairo_font_extents_t
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct font-extents-t
+(cffi:defcstruct font-extents-t
   (ascent :double)
   (descent :double)
   (height :double)
@@ -174,7 +175,7 @@
   hinting, so you can not assume that metrics are independent of the
   transformation matrix), but otherwise will remain unchanged.
   @begin{pre}
-(defcstruct font-extents-t
+(cffi:defcstruct font-extents-t
   (ascent :double)
   (descent :double)
   (height :double)
@@ -213,7 +214,7 @@
 ;;; cairo_text_extents_t
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct text-extents-t
+(cffi:defcstruct text-extents-t
   (x-bearing :double)
   (y-bearing :double)
   (width :double)
@@ -237,7 +238,7 @@
   hinting, so you can not assume that metrics are independent of the
   transformation matrix, but otherwise will remain unchanged.
   @begin{pre}
-(defcstruct text-extents-t
+(cffi:defcstruct text-extents-t
   (x-bearing :double)
   (y-bearing :double)
   (width :double)
@@ -269,7 +270,7 @@
 ;;; cairo_scaled_font_create ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_scaled_font_create" scaled-font-create)
+(cffi:defcfun ("cairo_scaled_font_create" scaled-font-create)
     (:pointer (:struct scaled-font-t))
  #+liber-documentation
  "@version{#2023-1-13}
@@ -307,7 +308,7 @@
 ;;; cairo_scaled_font_reference ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_scaled_font_reference" scaled-font-reference)
+(cffi:defcfun ("cairo_scaled_font_reference" scaled-font-reference)
     (:pointer (:struct scaled-font-t))
  #+liber-documentation
  "@version{#2023-1-13}
@@ -332,7 +333,7 @@
 ;;; cairo_scaled_font_destroy ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_scaled_font_destroy" scaled-font-destroy) :void
+(cffi:defcfun ("cairo_scaled_font_destroy" scaled-font-destroy) :void
  #+liber-documentation
  "@version{#2023-1-13}
   @argument[font]{a @symbol{cairo:scaled-font-t} instance}
@@ -351,7 +352,7 @@
 ;;; cairo_scaled_font_status ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_scaled_font_status" scaled-font-status) status-t
+(cffi:defcfun ("cairo_scaled_font_status" scaled-font-status) status-t
  #+liber-documentation
  "@version{#2023-1-13}
   @argument[font]{a @symbol{cairo:scaled-font-t} instance}
@@ -370,7 +371,7 @@
 ;;; cairo_scaled_font_extents ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_scaled_font_extents" %scaled-font-extents) :void
+(cffi:defcfun ("cairo_scaled_font_extents" %scaled-font-extents) :void
   (font (:pointer (:struct scaled-font-t)))
   (extents (:pointer (:struct font-extents-t))))
 
@@ -387,13 +388,13 @@
   @end{short}
   @see-symbol{cairo:scaled-font-t}
   @see-symbol{cairo:font-extents-t}"
-  (with-foreign-object (extents '(:struct font-extents-t))
+  (cffi:with-foreign-object (extents '(:struct font-extents-t))
     (%scaled-font-extents font extents)
-    (with-foreign-slots ((ascent
-                          descent
-                          height
-                          max-x-advance
-                          max-y-advance) extents (:struct font-extents-t))
+    (cffi:with-foreign-slots ((ascent
+                               descent
+                               height
+                               max-x-advance
+                               max-y-advance) extents (:struct font-extents-t))
     (values ascent descent height max-x-advance max-y-advance))))
 
 (export 'scaled-font-extents)
@@ -402,7 +403,7 @@
 ;;; cairo_scaled_font_text_extents ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_scaled_font_text_extents" %scaled-font-text-extents) :void
+(cffi:defcfun ("cairo_scaled_font_text_extents" %scaled-font-text-extents) :void
   (font (:pointer (:struct scaled-font-t)))
   (utf8 :string)
   (extents (:pointer (:struct text-extents-t))))
@@ -436,14 +437,14 @@
   @see-symbol{cairo:scaled-font-t}
   @see-type{cairo:text-extents-t}
   @see-function{cairo:show-text}"
-  (with-foreign-object (extents '(:struct text-extents-t))
+  (cffi:with-foreign-object (extents '(:struct text-extents-t))
     (%scaled-font-text-extents font utf8 extents)
-    (with-foreign-slots ((x-bearing
-                          y-bearing
-                          width
-                          height
-                          x-advance
-                          y-advance) extents (:struct text-extents-t))
+    (cffi:with-foreign-slots ((x-bearing
+                               y-bearing
+                               width
+                               height
+                               x-advance
+                               y-advance) extents (:struct text-extents-t))
     (values x-bearing y-bearing width height x-advance y-advance))))
 
 (export 'scaled-font-text-extents)
@@ -452,7 +453,8 @@
 ;;; cairo_scaled_font_glyph_extents ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_scaled_font_glyph_extents" %scaled-font-glyph-extents) :void
+(cffi:defcfun ("cairo_scaled_font_glyph_extents" %scaled-font-glyph-extents)
+    :void
   (font (:pointer (:struct scaled-font-t)))
   (glyphs :pointer) ; (:pointer (:struct glyph-t))
   (num :int)
@@ -484,8 +486,8 @@
   @see-symbol{cairo:text-extents-t}
   @see-function{cairo:show-glyphs}"
   (let ((num-glyphs (length glyphs)))
-    (with-foreign-objects ((extents '(:struct text-extents-t))
-                           (glyphs-ptr '(:struct glyph-t) num-glyphs))
+    (cffi:with-foreign-objects ((extents '(:struct text-extents-t))
+                                (glyphs-ptr '(:struct glyph-t) num-glyphs))
       (loop for count from 0 below num-glyphs
             for glyph-ptr = (cffi:mem-aptr glyphs-ptr '(:struct glyph-t) count)
             for glyph in glyphs
@@ -502,12 +504,12 @@
                                               'cairo::y)
                      (coerce (third glyph) 'double-float)))
       (%scaled-font-glyph-extents font glyphs-ptr num-glyphs extents)
-      (with-foreign-slots ((x-bearing
-                            y-bearing
-                            width
-                            height
-                            x-advance
-                            y-advance) extents (:struct text-extents-t))
+      (cffi:with-foreign-slots ((x-bearing
+                                 y-bearing
+                                 width
+                                 height
+                                 x-advance
+                                 y-advance) extents (:struct text-extents-t))
       (values x-bearing y-bearing width height x-advance y-advance)))))
 
 (export 'scaled-font-glyph-extents)
@@ -518,7 +520,7 @@
 
 ;; TODO: Implementation of clusters is missing. Udate the documentation.
 
-(defcfun ("cairo_scaled_font_text_to_glyphs" %scaled-font-text-to-glyphs)
+(cffi:defcfun ("cairo_scaled_font_text_to_glyphs" %scaled-font-text-to-glyphs)
     status-t
   (font (:pointer (:struct scaled-font-t)))
   (x :double)
@@ -560,7 +562,7 @@
   @see-symbol{cairo:scaled-font-t}
   @see-function{cairo:show-glyphs}
   @see-function{cairo:show-text-glyphs}"
-  (with-foreign-objects ((num :int) (glyphs :pointer))
+  (cffi:with-foreign-objects ((num :int) (glyphs :pointer))
     (when (eq :success
               (%scaled-font-text-to-glyphs font
                                            (coerce x 'double-float)
@@ -572,7 +574,9 @@
         (loop with glyph-ptr = (cffi:mem-ref glyphs :pointer)
               for count from 0 below (cffi:mem-ref num :int)
               for glyph = (cffi:mem-aptr glyph-ptr '(:struct glyph-t) count)
-              collect (with-foreign-slots ((index x y) glyph (:struct glyph-t))
+              collect (cffi:with-foreign-slots ((index x y)
+                                                glyph
+                                                (:struct glyph-t))
                         (list index x y))))))
 
 (export 'scaled-font-text-to-glyphs)
@@ -581,7 +585,7 @@
 ;;; cairo_scaled_font_get_font_face ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_scaled_font_get_font_face" scaled-font-font-face)
+(cffi:defcfun ("cairo_scaled_font_get_font_face" scaled-font-font-face)
     (:pointer (:struct font-face-t))
  #+liber-documentation
  "@version{#2023-1-13}
@@ -606,7 +610,8 @@
 ;;; cairo_scaled_font_get_font_options ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_scaled_font_get_font_options" scaled-font-font-options) :void
+(cffi:defcfun ("cairo_scaled_font_get_font_options" scaled-font-font-options)
+    :void
  #+liber-documentation
  "@version{#2023-1-13}
   @argument[font]{a @symbol{cairo:scaled-font-t} instance}
@@ -627,7 +632,8 @@
 ;;; cairo_scaled_font_get_font_matrix ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_scaled_font_get_font_matrix" scaled-font-font-matrix) :void
+(cffi:defcfun ("cairo_scaled_font_get_font_matrix" scaled-font-font-matrix)
+    :void
  #+liber-documentation
  "@version{#2023-1-13}
   @argument[font]{a @symbol{cairo:scaled-font-t} instance}
@@ -646,7 +652,7 @@
 ;;; cairo_scaled_font_get_ctm ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_scaled_font_get_ctm" scaled-font-ctm) :void
+(cffi:defcfun ("cairo_scaled_font_get_ctm" scaled-font-ctm) :void
  #+liber-documentation
  "@version{#2023-1-13}
   @argument[font]{a @symbol{cairo:scaled-font-t} instance}
@@ -670,7 +676,8 @@
 ;;; cairo_scaled_font_get_scale_matrix ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_scaled_font_get_scale_matrix" scaled-font-scale-matrix) :void
+(cffi:defcfun ("cairo_scaled_font_get_scale_matrix" scaled-font-scale-matrix)
+    :void
  #+liber-documentation
  "@version{#2023-1-13}
   @argument[font]{a @symbol{cairo:scaled-font-t} instance}
@@ -691,7 +698,7 @@
 ;;; cairo_scaled_font_get_type ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_scaled_font_get_type" scaled-font-type) font-type-t
+(cffi:defcfun ("cairo_scaled_font_get_type" scaled-font-type) font-type-t
  #+liber-documentation
  "@version{#2023-1-13}
   @argument[font]{a @symbol{cairo:scaled-font-t} instance}
@@ -711,8 +718,8 @@
 ;;; cairo_scaled_font_get_reference_count ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_scaled_font_get_reference_count"
-           scaled-font-reference-count) :uint
+(cffi:defcfun ("cairo_scaled_font_get_reference_count"
+               scaled-font-reference-count) :uint
  #+liber-documentation
  "@version{#2023-1-13}
   @argument[font]{a @symbol{cairo:scaled-font-t} instance}

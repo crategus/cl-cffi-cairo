@@ -8,22 +8,23 @@
 ;;;
 ;;; Copyright (C) 2012 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+;;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; Paths
@@ -72,7 +73,7 @@
 ;;; enum cairo_path_data_type_t
 ;;; ----------------------------------------------------------------------------
 
-(defcenum path-data-type-t
+(cffi:defcenum path-data-type-t
   :move-to
   :line-to
   :curve-to
@@ -90,7 +91,7 @@
   @end{short}
   See the @symbol{cairo:path-data-t} structure for details.
   @begin{pre}
-(defcenum path-data-type-t
+(cffi:defcenum path-data-type-t
   :move-to
   :line-to
   :curve-to
@@ -111,15 +112,15 @@
 ;;; union cairo_path_data_t
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct header-t
+(cffi:defcstruct header-t
   (data-type path-data-type-t)
   (length :int))
 
-(defcstruct point-t
+(cffi:defcstruct point-t
   (x :double)
   (y :double))
 
-(defcstruct path-data-t
+(cffi:defcstruct path-data-t
   (header (:pointer (:struct header-t)))
   (point (:pointer (:struct point-t))))
 
@@ -137,15 +138,15 @@
   and ease-of-use. A path is represented as an array of @sym{cairo:path-data-t}
   instances, which is a union of headers and points.
   @begin{pre}
-(defcstruct header-t
+(cffi:defcstruct header-t
   (data-type path-data-type-t)
   (length :int))
 
-(defcstruct point-t
+(cffi:defcstruct point-t
   (x :double)
   (y :double))
 
-(defcunion path-data-t
+(cffi:defcunion path-data-t
   (header (:pointer (:struct header-t)))
   (point (:pointer (:struct point-t))))
   @end{pre}
@@ -335,7 +336,7 @@
 ;;; cairo_path_t
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct path-t
+(cffi:defcstruct path-t
   (status status-t)
   (data :pointer)           ; (:pointer (:pointer (:struct path-data-t))))
   (numdata :int))
@@ -358,7 +359,7 @@
   in the @symbol{cairo:path-data-type-t} structure, since the data includes both
   headers and coordinates for each portion.
   @begin{pre}
-(defcstruct path-t
+(cffi:defcstruct path-t
   (status status-t)
   (data (:pointer (:pointer (:struct path-data-t))))
   (numdata :int))
@@ -436,7 +437,7 @@
 ;;; cairo_copy_path () -> copy-path
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_copy_path" copy-path) (:pointer (:struct path-t))
+(cffi:defcfun ("cairo_copy_path" copy-path) (:pointer (:struct path-t))
  #+liber-documentation
  "@version{#2021-12-12}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -478,7 +479,8 @@
 ;;; cairo_copy_path_flat () -> copy-path-flat
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_copy_path_flat" copy-path-flat) (:pointer (:struct path-t))
+(cffi:defcfun ("cairo_copy_path_flat" copy-path-flat)
+    (:pointer (:struct path-t))
  #+liber-documentation
  "@version{#2021-12-12}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -527,7 +529,7 @@
 ;;; cairo_path_destroy () -> path-destroy
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_path_destroy" path-destroy) :void
+(cffi:defcfun ("cairo_path_destroy" path-destroy) :void
  #+liber-documentation
  "@version{#2021-12-12}
   @argument[path]{a @symbol{cairo:path-t} instance previously returned by either
@@ -554,7 +556,7 @@
 ;;; cairo_append_path () -> append-path
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_append_path" append-path) :void
+(cffi:defcfun ("cairo_append_path" append-path) :void
  #+liber-documentation
  "@version{#2021-12-12}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -580,7 +582,7 @@
 ;;; cairo_has_current_point () -> has-current-point
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_has_current_point" has-current-point) :bool
+(cffi:defcfun ("cairo_has_current_point" has-current-point) :bool
  #+liber-documentation
  "@version{#2021-12-12}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -599,7 +601,7 @@
 ;;; cairo_get_current_point () -> current-point
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_get_current_point" %current-point) :void
+(cffi:defcfun ("cairo_get_current_point" %current-point) :void
   (cr (:pointer (:struct context-t)))
   (x (:pointer :double))
   (y (:pointer :double)))
@@ -642,7 +644,7 @@ fill     stroke
   @end{pre}
   @see-symbol{cairo:context-t}
   @see-function{cairo:has-current-point}"
-  (with-foreign-objects ((x :double) (y :double))
+  (cffi:with-foreign-objects ((x :double) (y :double))
     (%current-point cr x y)
     (values (cffi:mem-ref x :double)
             (cffi:mem-ref y :double))))
@@ -653,7 +655,7 @@ fill     stroke
 ;;; cairo_new_path () -> new-path
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_new_path" new-path) :void
+(cffi:defcfun ("cairo_new_path" new-path) :void
  #+liber-documentation
  "@version{#2021-12-12}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -670,7 +672,7 @@ fill     stroke
 ;;; cairo_new_sub_path () -> new-sub-path
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_new_sub_path" new-sub-path) :void
+(cffi:defcfun ("cairo_new_sub_path" new-sub-path) :void
  #+liber-documentation
  "@version{2023-1-14}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -696,7 +698,7 @@ fill     stroke
 ;;; cairo_close_path () -> close-path
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_close_path" close-path) :void
+(cffi:defcfun ("cairo_close_path" close-path) :void
  #+liber-documentation
  "@version{#2021-12-12}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -737,7 +739,7 @@ fill     stroke
 ;;; cairo_arc () -> arc
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_arc" %arc) :void
+(cffi:defcfun ("cairo_arc" %arc) :void
   (cr (:pointer (:struct context-t)))
   (x :double)
   (y :double)
@@ -808,7 +810,7 @@ fill     stroke
 ;;; cairo_arc_negative () -> arc-negative
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_arc_negative" %arc-negative) :void
+(cffi:defcfun ("cairo_arc_negative" %arc-negative) :void
   (cr (:pointer (:struct context-t)))
   (x :double)
   (y :double)
@@ -853,7 +855,7 @@ fill     stroke
 ;;; cairo_curve_to () -> curve-to
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_curve_to" %curve-to) :void
+(cffi:defcfun ("cairo_curve_to" %curve-to) :void
   (cr (:pointer (:struct context-t)))
   (x1 :double)
   (y1 :double)
@@ -900,7 +902,7 @@ fill     stroke
 ;;; cairo_line_to () -> line-to
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_line_to" %line-to) :void
+(cffi:defcfun ("cairo_line_to" %line-to) :void
   (cr (:pointer (:struct context-t)))
   (x :double)
   (y :double))
@@ -935,7 +937,7 @@ fill     stroke
 ;;; cairo_move_to () -> move-to
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_move_to" %move-to) :void
+(cffi:defcfun ("cairo_move_to" %move-to) :void
   (cr (:pointer (:struct context-t)))
   (x :double)
   (y :double))
@@ -963,7 +965,7 @@ fill     stroke
 ;;; cairo_rectangle ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_rectangle" %rectangle) :void
+(cffi:defcfun ("cairo_rectangle" %rectangle) :void
   (cr (:pointer (:struct context-t)))
   (x :double)
   (y :double)
@@ -1012,7 +1014,7 @@ fill     stroke
 ;;; cairo_glyph_path () -> glyph-path
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_glyph_path" glyph-path) :void
+(cffi:defcfun ("cairo_glyph_path" glyph-path) :void
  #+liber-documentation
  "@version{#2021-12-12}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -1036,7 +1038,7 @@ fill     stroke
 ;;; cairo_text_path () -> text-path
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_text_path" text-path) :void
+(cffi:defcfun ("cairo_text_path" text-path) :void
  #+liber-documentation
  "@version{2023-1-15}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -1073,7 +1075,7 @@ fill     stroke
 ;;; cairo_rel_curve_to () -> rel-curve-to
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_rel_curve_to" %rel-curve-to) :void
+(cffi:defcfun ("cairo_rel_curve_to" %rel-curve-to) :void
   (cr (:pointer (:struct context-t)))
   (dx1 :double)
   (dy1 :double)
@@ -1132,7 +1134,7 @@ fill     stroke
 ;;; cairo_rel_line_to () -> rel-line-to
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_rel_line_to" %rel-line-to) :void
+(cffi:defcfun ("cairo_rel_line_to" %rel-line-to) :void
   (cr (:pointer (:struct context-t)))
   (dx :double)
   (dy :double))
@@ -1175,7 +1177,7 @@ fill     stroke
 ;;; cairo_rel_move_to () -> rel-move-to
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_rel_move_to" %rel-move-to) :void
+(cffi:defcfun ("cairo_rel_move_to" %rel-move-to) :void
   (cr (:pointer (:struct context-t)))
   (dx :double)
   (dy :double))
@@ -1216,7 +1218,7 @@ fill     stroke
 ;;; cairo_path_extents () -> path-extents
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_path_extents" %path-extents) :void
+(cffi:defcfun ("cairo_path_extents" %path-extents) :void
   (cr (:pointer (:struct context-t)))
   (x1 (:pointer :double))
   (y1 (:pointer :double))
@@ -1260,7 +1262,10 @@ fill     stroke
   @see-function{cairo:stroke-extents}
   @see-function{cairo:move-to}
   @see-function{cairo:line-to}"
-  (with-foreign-objects ((x1 :double) (y1 :double) (x2 :double) (y2 :double))
+  (cffi:with-foreign-objects ((x1 :double)
+                              (y1 :double)
+                              (x2 :double)
+                              (y2 :double))
     (%path-extents cr x1 y1 x2 y2)
     (values (cffi:mem-ref x1 :double)
             (cffi:mem-ref y1 :double)

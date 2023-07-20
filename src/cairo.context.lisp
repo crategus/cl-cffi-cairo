@@ -8,22 +8,23 @@
 ;;;
 ;;; Copyright (C) 2012 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+;;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; cairo_t
@@ -119,7 +120,7 @@
 ;;; enum cairo_fill_rule_t
 ;;; ----------------------------------------------------------------------------
 
-(defcenum fill-rule-t
+(cffi:defcenum fill-rule-t
   :winding
   :even-odd)
 
@@ -141,7 +142,7 @@
   that is applied. The default fill rule is @code{:winding}. New entries may be
   added in future versions.
   @begin{pre}
-(defcenum fill-rule-t
+(cffi:defcenum fill-rule-t
   :winding
   :even-odd)
   @end{pre}
@@ -164,7 +165,7 @@
 ;;; enum cairo_line_cap_t
 ;;; ----------------------------------------------------------------------------
 
-(defcenum line-cap-t
+(cffi:defcenum line-cap-t
   :butt
   :round
   :square)
@@ -180,7 +181,7 @@
   @end{short}
   The default line cap style is @code{:butt}.
   @begin{pre}
-(defcenum line-cap-t
+(cffi:defcenum line-cap-t
   :butt
   :round
   :square)
@@ -201,7 +202,7 @@
 ;;; enum cairo_line_join_t
 ;;; ----------------------------------------------------------------------------
 
-(defcenum line-join-t
+(cffi:defcenum line-join-t
   :miter
   :round
   :bevel)
@@ -217,7 +218,7 @@
   @end{short}
   The default line join style is @code{:miter}.
   @begin{pre}
-(defcenum line-join-t
+(cffi:defcenum line-join-t
   :miter
   :round
   :bevel)
@@ -240,7 +241,7 @@
 ;;; enum cairo_operator_t
 ;;; ----------------------------------------------------------------------------
 
-(defcenum operator-t
+(cffi:defcenum operator-t
   :clear
   :source
   :over
@@ -292,7 +293,7 @@
   mathematical definitions, see
   @url[https://cairographics.org/operators/]{Cairo's Compositing Operators}.
   @begin{pre}
-(defcenum operator-t
+(cffi:defcenum operator-t
   :clear
   :source
   :over
@@ -383,7 +384,7 @@
 ;;; cairo_t
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct context-t)
+(cffi:defcstruct context-t)
 
 #+liber-documentation
 (setf (liber:alias-for-symbol 'context-t)
@@ -436,7 +437,7 @@
 ;;; cairo_create () -> create
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_create" create) (:pointer (:struct context-t))
+(cffi:defcfun ("cairo_create" create) (:pointer (:struct context-t))
  #+liber-documentation
  "@version{2023-1-11}
   @argument[target]{a @symbol{cairo:surface-t} target surface for the Cairo
@@ -478,7 +479,7 @@
 ;;; cairo_reference () -> reference
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_reference" reference) (:pointer (:struct context-t))
+(cffi:defcfun ("cairo_reference" reference) (:pointer (:struct context-t))
  #+liber-documentation
  "@version{2023-1-11}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -500,7 +501,7 @@
 ;;; cairo_destroy () -> destroy
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_destroy" destroy) :void
+(cffi:defcfun ("cairo_destroy" destroy) :void
  #+liber-documentation
  "@version{2023-1-11}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -519,7 +520,7 @@
 ;;; cairo_status () -> status
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_status" status) status-t
+(cffi:defcfun ("cairo_status" status) status-t
  #+liber-documentation
  "@version{2023-1-11}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -539,7 +540,7 @@
 ;;; cairo_save () -> save
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_save" save) :void
+(cffi:defcfun ("cairo_save" save) :void
  #+liber-documentation
  "@version{2023-1-11}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -568,7 +569,7 @@
 ;;; cairo_restore () -> restore
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_restore" restore) :void
+(cffi:defcfun ("cairo_restore" restore) :void
  #+liber-documentation
  "@version{2023-1-11}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -587,7 +588,7 @@
 ;;; cairo_get_target () -> target
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_get_target" target) (:pointer (:struct surface-t))
+(cffi:defcfun ("cairo_get_target" target) (:pointer (:struct surface-t))
  #+liber-documentation
  "@version{2023-1-11}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -615,7 +616,7 @@
 ;;; cairo_push_group () -> push-group
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_push_group" push-group) :void
+(cffi:defcfun ("cairo_push_group" push-group) :void
  #+liber-documentation
 "@version{#2023-1-11}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -673,7 +674,7 @@
 ;;; cairo_push_group_with_content () -> push-group-with-content
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_push_group_with_content" push-group-with-content) :void
+(cffi:defcfun ("cairo_push_group_with_content" push-group-with-content) :void
  #+liber-documentation
  "@version{#2023-1-11}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -705,7 +706,7 @@
 ;;; cairo_pop_group () -> pop-group
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pop_group" pop-group) (:pointer (:struct pattern-t))
+(cffi:defcfun ("cairo_pop_group" pop-group) (:pointer (:struct pattern-t))
  #+liber-documentation
  "@version{#2023-1-11}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -740,7 +741,7 @@
 ;;; cairo_pop_group_to_source () -> pop-group-to-source
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_pop_group_to_source" pop-group-to-source) :void
+(cffi:defcfun ("cairo_pop_group_to_source" pop-group-to-source) :void
  #+liber-documentation
  "@version{#2023-1-11}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -776,7 +777,8 @@
 ;;; cairo_get_group_target () -> group-target
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_get_group_target" group-target) (:pointer (:struct surface-t))
+(cffi:defcfun ("cairo_get_group_target" group-target)
+    (:pointer (:struct surface-t))
  #+liber-documentation
  "@version{#2023-1-11}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -896,7 +898,7 @@
                         :void)
   source)
 
-(defcfun ("cairo_get_source" source) (:pointer (:struct pattern-t))
+(cffi:defcfun ("cairo_get_source" source) (:pointer (:struct pattern-t))
  #+liber-documentation
  "@version{2023-1-11}
   @syntax[]{(cairo:source cr) => source}
@@ -994,7 +996,7 @@
                         :void)
   value)
 
-(defcfun ("cairo_get_antialias" antialias) antialias-t
+(cffi:defcfun ("cairo_get_antialias" antialias) antialias-t
  #+liber-documentation
  "@version{2023-1-11}
   @syntax[]{(cairo:antialias context) => antialias}
@@ -1024,7 +1026,7 @@
 ;;; cairo_set_dash () -> dash
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_set_dash" %set-dash) :void
+(cffi:defcfun ("cairo_set_dash" %set-dash) :void
   (cr (:pointer (:struct context-t)))
   (dashes (:pointer :double))
   (num-dashes :int)
@@ -1034,7 +1036,7 @@
 
 (defun (setf dash) (dashes cr offset)
   (let ((num-dashes (length dashes)))
-    (with-foreign-object (dashes-array :double num-dashes)
+    (cffi:with-foreign-object (dashes-array :double num-dashes)
       ;; TODO: Change the code to use the loop marcro
       (let ((i 0))
         (map nil
@@ -1049,7 +1051,7 @@
                  (coerce offset 'double-float))))
   (values dashes offset))
 
-(defcfun ("cairo_get_dash" %get-dash) :void
+(cffi:defcfun ("cairo_get_dash" %get-dash) :void
   (cr (:pointer (:struct context-t)))
   (dashes (:pointer :double))
   (offset (:pointer :double)))
@@ -1093,7 +1095,7 @@
   @see-function{cairo:stroke}"
   (let ((count (dash-count cr))
         (dashes '()))
-    (with-foreign-objects ((dash-array :double count) (offset :double))
+    (cffi:with-foreign-objects ((dash-array :double count) (offset :double))
       (%get-dash cr dash-array offset)
       ;; TODO: Use the loop macro
       (dotimes (i count)
@@ -1107,7 +1109,7 @@
 ;;; cairo_get_dash_count () -> dash-count
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_get_dash_count" dash-count) :int
+(cffi:defcfun ("cairo_get_dash_count" dash-count) :int
  #+liber-documentation
  "@version{2023-1-11}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -1137,7 +1139,7 @@
                         :void)
   rule)
 
-(defcfun ("cairo_get_fill_rule" fill-rule) fill-rule-t
+(cffi:defcfun ("cairo_get_fill_rule" fill-rule) fill-rule-t
  #+liber-documentation
  "@version{2023-1-11}
   @syntax[]{(cairo:fill-rule cr) => rule}
@@ -1177,7 +1179,7 @@
                         :void)
   cap)
 
-(defcfun ("cairo_get_line_cap" line-cap) line-cap-t
+(cffi:defcfun ("cairo_get_line_cap" line-cap) line-cap-t
  #+liber-documentation
  "@version{2023-1-11}
   @syntax[]{(cairo:line-cap cr) => cap}
@@ -1216,7 +1218,7 @@
                         :void)
   join)
 
-(defcfun ("cairo_get_line_join" line-join) line-join-t
+(cffi:defcfun ("cairo_get_line_join" line-join) line-join-t
  #+liber-documentation
  "@version{2023-1-11}
   @syntax[]{(cairo:line-join cr) => join}
@@ -1256,7 +1258,7 @@
                         :void)
   width)
 
-(defcfun ("cairo_get_line_width" line-width) :double
+(cffi:defcfun ("cairo_get_line_width" line-width) :double
  #+liber-documentation
  "@version{2023-1-11}
   @syntax[]{(cairo:line-width cr) => width}
@@ -1310,7 +1312,7 @@
                           :void)
     limit))
 
-(defcfun ("cairo_get_miter_limit" miter-limit) :double
+(cffi:defcfun ("cairo_get_miter_limit" miter-limit) :double
  #+liber-documentation
  "@version{2023-1-11}
   @syntax[]{(cairo:miter-limit cr) => limit}
@@ -1363,7 +1365,7 @@
                         :void)
   op)
 
-(defcfun ("cairo_get_operator" operator) operator-t
+(cffi:defcfun ("cairo_get_operator" operator) operator-t
  #+liber-documentation
  "@version{2023-1-11}
   @syntax[]{(cairo:operator cr) => op}
@@ -1400,7 +1402,7 @@
                           :void)
     tolerance))
 
-(defcfun ("cairo_get_tolerance" tolerance) :double
+(cffi:defcfun ("cairo_get_tolerance" tolerance) :double
  #+liber-documentation
  "@version{2023-1-11}
   @syntax[]{(cairo:tolerance cr) => tolerance}
@@ -1431,7 +1433,7 @@
 ;;; cairo_clip () -> clip
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_clip" clip) :void
+(cffi:defcfun ("cairo_clip" clip) :void
  #+liber-documentation
  "@version{#2023-1-11}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -1470,7 +1472,7 @@
 ;;; cairo_clip_preserve () -> clip-preserve
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_clip_preserve" clip-preserve) :void
+(cffi:defcfun ("cairo_clip_preserve" clip-preserve) :void
  #+liber-documentation
  "@version{#2023-1-11}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -1508,7 +1510,7 @@
 ;;; cairo_clip_extents () -> clip-extents
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_clip_extents" %clip-extents) :void
+(cffi:defcfun ("cairo_clip_extents" %clip-extents) :void
   (cr (:pointer (:struct context-t)))
   (x1 (:pointer :double))
   (y1 (:pointer :double))
@@ -1530,7 +1532,10 @@
     current clip.
   @end{short}
   @see-symbol{cairo:context-t}"
-  (with-foreign-objects ((x1 :double) (y1 :double) (x2 :double) (y2 :double))
+  (cffi:with-foreign-objects ((x1 :double)
+                              (y1 :double)
+                              (x2 :double)
+                              (y2 :double))
     (%clip-extents cr x1 y1 x2 y2)
     (values (cffi:mem-ref x1 :double)
             (cffi:mem-ref y1 :double)
@@ -1575,7 +1580,7 @@
 ;;; cairo_reset_clip () -> reset-clip
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_reset_clip" reset-clip) :void
+(cffi:defcfun ("cairo_reset_clip" reset-clip) :void
  #+liber-documentation
  "@version{2023-2-3}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -1604,7 +1609,7 @@
 ;;; cairo_rectangle_list_destroy () -> rectangle-list-destroy
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_rectangle_list_destroy" rectangle-list-destroy) :void
+(cffi:defcfun ("cairo_rectangle_list_destroy" rectangle-list-destroy) :void
  #+liber-documentation
  "@version{#2023-1-11}
   @argument[rectangles]{a pointer to a @symbol{cairo:rectangle-list-t} instance,
@@ -1624,7 +1629,7 @@
 ;;; cairo_copy_clip_rectangle_list () -> copy-clip-rectangle-list
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_copy_clip_rectangle_list" copy-clip-rectangle-list)
+(cffi:defcfun ("cairo_copy_clip_rectangle_list" copy-clip-rectangle-list)
     (:pointer (:struct rectangle-list-t))
  #+liber-documentation
  "@version{#2023-1-11}
@@ -1652,7 +1657,7 @@
 ;;; cairo_fill () -> fill
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_fill" fill) :void
+(cffi:defcfun ("cairo_fill" fill) :void
  #+liber-documentation
  "@version{2023-1-11}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -1674,7 +1679,7 @@
 ;;; cairo_fill_preserve () -> fill-preserve
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_fill_preserve" fill-preserve) :void
+(cffi:defcfun ("cairo_fill_preserve" fill-preserve) :void
  #+liber-documentation
  "@version{#2023-1-11}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -1697,7 +1702,7 @@
 ;;; cairo_fill_extents () -> fill-extents
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_fill_extents" %fill-extents) :void
+(cffi:defcfun ("cairo_fill_extents" %fill-extents) :void
   (cr (:pointer (:struct context-t)))
   (x1 (:pointer :double))
   (y1 (:pointer :double))
@@ -1738,7 +1743,10 @@
   @see-function{cairo:path-extents}
   @see-function{cairo:fill-rule}
   @see-function{cairo:fill-preserve}"
-  (with-foreign-objects ((x1 :double) (y1 :double) (x2 :double) (y2 :double))
+  (cffi:with-foreign-objects ((x1 :double)
+                              (y1 :double)
+                              (x2 :double)
+                              (y2 :double))
     (%fill-extents cr x1 y1 x2 y2)
     (values (cffi:mem-ref x1 :double)
             (cffi:mem-ref y1 :double)
@@ -1785,7 +1793,7 @@
 ;;; cairo_mask () -> mask
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_mask" mask) :void
+(cffi:defcfun ("cairo_mask" mask) :void
  #+liber-documentation
  "@version{2023-1-11}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -1807,7 +1815,7 @@
 ;;; cairo_mask_surface () -> mask-surface
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_mask_surface" %mask-surface) :void
+(cffi:defcfun ("cairo_mask_surface" %mask-surface) :void
   (cr (:pointer (:struct context-t)))
   (surface (:pointer (:struct surface-t)))
   (x :double)
@@ -1841,7 +1849,7 @@
 ;;; cairo_paint () -> paint
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_paint" paint) :void
+(cffi:defcfun ("cairo_paint" paint) :void
  #+liber-documentation
  "@version{2023-1-14}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -1890,7 +1898,7 @@
 ;;; cairo_stroke () -> stroke
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_stroke" stroke) :void
+(cffi:defcfun ("cairo_stroke" stroke) :void
  #+liber-documentation
  "@version{2023-1-11}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -1944,7 +1952,7 @@
 ;;; cairo_stroke_preserve () -> stroke-preserve
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_stroke_preserve" stroke-preserve) :void
+(cffi:defcfun ("cairo_stroke_preserve" stroke-preserve) :void
  #+liber-documentation
  "@version{#2023-1-11}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -1971,7 +1979,7 @@
 ;;; cairo_stroke_extents () -> stroke-extents
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_stroke_extents" %stroke-extents) :void
+(cffi:defcfun ("cairo_stroke_extents" %stroke-extents) :void
   (cr (:pointer (:struct context-t)))
   (x1 (:pointer :double))
   (y1 (:pointer :double))
@@ -2017,7 +2025,10 @@
   @see-function{cairo:line-cap}
   @see-function{cairo:dash}
   @see-function{cairo:stroke-preserve}"
-  (with-foreign-objects ((x1 :double) (y1 :double) (x2 :double) (y2 :double))
+  (cffi:with-foreign-objects ((x1 :double)
+                              (y1 :double)
+                              (x2 :double)
+                              (y2 :double))
     (%stroke-extents cr x1 y1 x2 y2)
     (values (cffi:mem-ref x1 :double)
             (cffi:mem-ref y1 :double)
@@ -2068,7 +2079,7 @@
 ;;; cairo_copy_page () -> copy-page
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_copy_page" copy-page) :void
+(cffi:defcfun ("cairo_copy_page" copy-page) :void
  #+liber-documentation
  "@version{#2023-1-11}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -2093,7 +2104,7 @@
 ;;; cairo_show_page () -> show-page
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_show_page" show-page) :void
+(cffi:defcfun ("cairo_show_page" show-page) :void
  #+liber-documentation
  "@version{2023-1-11}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -2115,7 +2126,7 @@
 ;;; cairo_get_reference_count () -> reference-count
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_get_reference_count" reference-count) :uint
+(cffi:defcfun ("cairo_get_reference_count" reference-count) :uint
  #+liber-documentation
  "@version{2023-1-11}
   @argument[cr]{a @symbol{cairo:context-t} context}

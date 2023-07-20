@@ -8,22 +8,23 @@
 ;;;
 ;;; Copyright (C) 2012 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+;;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; Regions
@@ -75,7 +76,7 @@
 ;;; enum cairo_region_overlap_t
 ;;; ----------------------------------------------------------------------------
 
-(defcenum region-overlap-t
+(cffi:defcenum region-overlap-t
   :in
   :out
   :part)
@@ -104,7 +105,7 @@
 ;;; cairo_region_t
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct region-t)
+(cffi:defcstruct region-t)
 
 #+liber-documentation
 (setf (liber:alias-for-symbol 'region-t)
@@ -131,7 +132,8 @@
 ;;; cairo_region_create ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_region_create" region-create) (:pointer (:struct region-t))
+(cffi:defcfun ("cairo_region_create" region-create)
+    (:pointer (:struct region-t))
  #+liber-documentation
  "@version{2023-2-3}
   @begin{return}
@@ -152,7 +154,7 @@
 ;;; cairo_region_create_rectangle ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_region_create_rectangle" region-create-rectangle)
+(cffi:defcfun ("cairo_region_create_rectangle" region-create-rectangle)
     (:pointer (:struct region-t))
  #+liber-documentation
  "@version{#2020-12-26}
@@ -179,7 +181,7 @@
 ;;; cairo_region_create_rectangles ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_region_create_rectangles" region-create-rectangles)
+(cffi:defcfun ("cairo_region_create_rectangles" region-create-rectangles)
     (:pointer (:struct region-t))
  #+liber-documentation
  "@version{#2020-12-26}
@@ -209,8 +211,7 @@
 ;;; cairo_region_copy ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_region_copy" region-copy)
-    (:pointer (:struct region-t))
+(cffi:defcfun ("cairo_region_copy" region-copy) (:pointer (:struct region-t))
  #+liber-documentation
  "@version{#2020-12-26}
   @argument[region]{a @symbol{cairo:region-t} instance}
@@ -235,7 +236,7 @@
 ;;; cairo_region_reference ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_region_reference" region-reference)
+(cffi:defcfun ("cairo_region_reference" region-reference)
     (:pointer (:struct region-t))
  #+liber-documentation
  "@version{#2020-12-26}
@@ -256,7 +257,7 @@
 ;;; cairo_region_destroy ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_region_destroy" region-destroy) :void
+(cffi:defcfun ("cairo_region_destroy" region-destroy) :void
  #+liber-documentation
  "@version{2023-2-3}
   @argument[region]{a @symbol{cairo:region-t} instance}
@@ -277,7 +278,7 @@
 ;;; cairo_region_status ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_region_status" region-status) status-t
+(cffi:defcfun ("cairo_region_status" region-status) status-t
  #+liber-documentation
  "@version{#2020-12-26}
   @argument[region]{a @symbol{cairo:region-t} instance}
@@ -295,7 +296,7 @@
 ;;; cairo_region_get_extents () -> region-extents
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_region_get_extents" region-extents) :void
+(cffi:defcfun ("cairo_region_get_extents" region-extents) :void
  #+liber-documentation
  "@version{#2020-12-26}
   @argument[region]{a @symbol{cairo:region-t} instance}
@@ -316,7 +317,7 @@
 ;;; cairo_region_num_rectangles ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_region_num_rectangles" region-num-rectangles) :int
+(cffi:defcfun ("cairo_region_num_rectangles" region-num-rectangles) :int
  #+liber-documentation
  "@version{#2020-12-15}
   @argument[region]{a @symbol{cairo:region-t} instance}
@@ -333,7 +334,7 @@
 ;;; cairo_region_get_rectangle () -> region-rectangle
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_region_get_rectangle" region-rectangle) :void
+(cffi:defcfun ("cairo_region_get_rectangle" region-rectangle) :void
  #+liber-documentation
  "@version{#2020-12-15}
   @argument[region]{a @symbol{cairo:region-t} instance}
@@ -355,7 +356,7 @@
 ;;; cairo_region_is_empty ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_region_is_empty" region-is-empty) :bool
+(cffi:defcfun ("cairo_region_is_empty" region-is-empty) :bool
  #+liber-documentation
  "@version{#2020-12-15}
   @argument[region]{a @symbol{cairo:region-t} instance}
@@ -370,7 +371,7 @@
 ;;; cairo_region_contains_point ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_region_contains_point" region-contains-point) :bool
+(cffi:defcfun ("cairo_region_contains_point" region-contains-point) :bool
  #+liber-documentation
  "@version{#2020-12-15}
   @argument[region]{a @symbol{cairo:region-t} instance}
@@ -391,7 +392,7 @@
 ;;; cairo_region_contains_rectangle ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_region_contains_rectangle" region-contains-rectangle)
+(cffi:defcfun ("cairo_region_contains_rectangle" region-contains-rectangle)
     region-overlap-t
  #+liber-documentation
  "@version{#2020-12-15}
@@ -417,7 +418,7 @@
 ;;; cairo_region_equal ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_region_equal" region-equal) :bool
+(cffi:defcfun ("cairo_region_equal" region-equal) :bool
  #+liber-documentation
  "@version{#2020-12-15}
   @argument[region-a]{a @symbol{cairo:region-t} instance}
@@ -440,7 +441,7 @@
 ;;; cairo_region_translate ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_region_translate" region-translate) :void
+(cffi:defcfun ("cairo_region_translate" region-translate) :void
  #+liber-documentation
  "@version{#2020-12-15}
   @argument[region]{a @symbol{cairo:region-t} instance}
@@ -458,7 +459,7 @@
 ;;; cairo_region_intersect ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_region_intersect" region-intersect) status-t
+(cffi:defcfun ("cairo_region_intersect" region-intersect) status-t
  #+liber-documentation
  "@version{#2020-12-15}
   @argument[region]{a @symbol{cairo:region-t} instance}
@@ -479,7 +480,7 @@
 ;;; cairo_region_intersect_rectangle ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_region_intersect_rectangle" region-intersect-rectangle)
+(cffi:defcfun ("cairo_region_intersect_rectangle" region-intersect-rectangle)
     status-t
  #+liber-documentation
  "@version{#2020-12-15}
@@ -501,7 +502,7 @@
 ;;; cairo_region_subtract ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_region_subtract" region-subtract) status-t
+(cffi:defcfun ("cairo_region_subtract" region-subtract) status-t
  #+liber-documentation
  "@version{#2020-12-15}
   @argument[region]{a @symbol{cairo:region-t} instance}
@@ -521,7 +522,7 @@
 ;;; cairo_region_subtract_rectangle ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_region_subtract_rectangle" region-subtract-rectangle)
+(cffi:defcfun ("cairo_region_subtract_rectangle" region-subtract-rectangle)
     status-t
  #+liber-documentation
  "@version{#2020-12-15}
@@ -543,7 +544,7 @@
 ;;; cairo_region_union ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_region_union" region-union) status-t
+(cffi:defcfun ("cairo_region_union" region-union) status-t
  #+liber-documentation
  "@version{#2020-12-15}
   @argument[region]{a @symbol{cairo:region-t} instance}
@@ -564,7 +565,7 @@
 ;;; cairo_region_union_rectangle ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_region_union_rectangle" region-union-rectangle) status-t
+(cffi:defcfun ("cairo_region_union_rectangle" region-union-rectangle) status-t
  #+liber-documentation
  "@version{#2020-12-15}
   @argument[region]{a @symbol{cairo:region-t} instance}
@@ -585,7 +586,7 @@
 ;;; cairo_region_xor ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_region_xor" region-xor) status-t
+(cffi:defcfun ("cairo_region_xor" region-xor) status-t
  #+liber-documentation
  "@version{#2020-12-15}
   @argument[region]{a @symbol{cairo:region-t} instance}
@@ -607,7 +608,7 @@
 ;;; cairo_region_xor_rectangle ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_region_xor_rectangle" region-xor-rectangle) status-t
+(cffi:defcfun ("cairo_region_xor_rectangle" region-xor-rectangle) status-t
  #+liber-documentation
  "@version{#2020-12-15}
   @argument[region]{a @symbol{cairo:region-t} instance}

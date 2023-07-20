@@ -8,22 +8,23 @@
 ;;;
 ;;; Copyright (C) 2013 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+;;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; cairo_font_options_t
@@ -71,7 +72,7 @@
 ;;; cairo_font_options_t
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct font-options-t)
+(cffi:defcstruct font-options-t)
 
 #+liber-documentation
 (setf (liber:alias-for-symbol 'font-options-t)
@@ -105,7 +106,7 @@
 ;;; enum cairo_subpixel_order_t
 ;;; ----------------------------------------------------------------------------
 
-(defcenum subpixel-order-t
+(cffi:defcenum subpixel-order-t
   :default
   :rgb
   :bgr
@@ -123,7 +124,7 @@
     @code{:subpixel}.
   @end{short}
   @begin{pre}
-(defcenum subpixel-order-t
+(cffi:defcenum subpixel-order-t
   :default
   :rgb
   :bgr
@@ -150,7 +151,7 @@
 ;;; enum cairo_hint_style_t
 ;;; ----------------------------------------------------------------------------
 
-(defcenum hint-style-t
+(cffi:defcenum hint-style-t
   :default
   :none
   :slight
@@ -173,7 +174,7 @@
 
   New entries may be added in future versions.
   @begin{pre}
-(defcenum hint-style-t
+(cffi:defcenum hint-style-t
   :default
   :none
   :slight
@@ -198,7 +199,7 @@
 ;;; enum cairo_hint_metrics_t
 ;;; ----------------------------------------------------------------------------
 
-(defcenum hint-metrics-t
+(cffi:defcenum hint-metrics-t
   :default
   :off
   :on)
@@ -216,7 +217,7 @@
   however it also means that text will be laid out differently at different
   zoom factors.
   @begin{pre}
-(defcenum hint-metrics-t
+(cffi:defcenum hint-metrics-t
   :default
   :off
   :on)
@@ -235,7 +236,7 @@
 ;;; cairo_font_options_create ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_font_options_create" font-options-create)
+(cffi:defcfun ("cairo_font_options_create" font-options-create)
     (:pointer (:struct font-options-t))
  #+liber-documentation
  "@version{#2021-10-27}
@@ -258,7 +259,7 @@
 ;;; cairo_font_options_copy ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_font_options_copy" font-options-copy)
+(cffi:defcfun ("cairo_font_options_copy" font-options-copy)
     (:pointer (:struct font-options-t))
  #+liber-documentation
  "@version{#2021-10-27}
@@ -282,7 +283,7 @@
 ;;; cairo_font_options_destroy ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_font_options_destroy" font-options-destroy) :void
+(cffi:defcfun ("cairo_font_options_destroy" font-options-destroy) :void
  #+liber-documentation
  "@version{#2021-10-27}
   @argument[options]{a @symbol{cairo:font-options-t} instance}
@@ -301,7 +302,7 @@
 ;;; cairo_font_options_status ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_font_options_status" font-options-status) status-t
+(cffi:defcfun ("cairo_font_options_status" font-options-status) status-t
  #+liber-documentation
  "@version{#2021-10-27}
   @argument[options]{a @symbol{cairo:font-options-t} instance}
@@ -321,7 +322,7 @@
 ;;; cairo_font_options_merge ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_font_options_merge" font-options-merge) :void
+(cffi:defcfun ("cairo_font_options_merge" font-options-merge) :void
  #+liber-documentation
  "@version{#2021-10-27}
   @argument[options]{a @symbol{cairo:font-options-t} instance}
@@ -343,7 +344,7 @@
 ;;; cairo_font_options_hash ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_font_options_hash" font-options-hash) :ulong
+(cffi:defcfun ("cairo_font_options_hash" font-options-hash) :ulong
  #+liber-documentation
  "@version{#2021-10-27}
   @argument[options]{a @symbol{cairo:font-options-t} instance}
@@ -363,7 +364,7 @@
 ;;; cairo_font_options_equal ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_font_options_equal" font-options-equal) :bool
+(cffi:defcfun ("cairo_font_options_equal" font-options-equal) :bool
  #+liber-documentation
  "@version{#2021-10-27}
   @argument[options]{a @symbol{cairo:font-options-t} instance}
@@ -391,7 +392,7 @@
                         :void)
   antialias)
 
-(defcfun ("cairo_font_options_get_antialias" font-options-antialias)
+(cffi:defcfun ("cairo_font_options_get_antialias" font-options-antialias)
     antialias-t
  #+liber-documentation
  "@version{#2021-10-27}
@@ -424,8 +425,8 @@
                         :void)
   order)
 
-(defcfun ("cairo_font_options_get_subpixel_order"
-           font-options-subpixel-order) subpixel-order-t
+(cffi:defcfun ("cairo_font_options_get_subpixel_order"
+               font-options-subpixel-order) subpixel-order-t
  #+liber-documentation
  "@version{#2021-10-28}
   @syntax[]{(cairo:font-options-subpixel-order options) => order}
@@ -459,7 +460,7 @@
                         :void)
   style)
 
-(defcfun ("cairo_font_options_get_hint_style" font-options-hint-style)
+(cffi:defcfun ("cairo_font_options_get_hint_style" font-options-hint-style)
     hint-style-t
  #+liber-documentation
  "@version{#2021-10-28}
@@ -494,8 +495,8 @@
                         :void)
   metrics)
 
-(defcfun ("cairo_font_options_get_hint_metrics"
-           font-options-hint-metrics) hint-metrics-t
+(cffi:defcfun ("cairo_font_options_get_hint_metrics"
+               font-options-hint-metrics) hint-metrics-t
  #+liber-documentation
  "@version{#2021-10-28}
   @syntax[]{(cairo:font-options-hint-metrics options) => metrics}
@@ -528,7 +529,8 @@
                         :void)
   variations)
 
-(defcfun ("cairo_font_options_get_variations" font-options-variations) :string
+(cffi:defcfun ("cairo_font_options_get_variations" font-options-variations)
+    :string
  #+liber-documentation
  "@version{#2021-10-28}
   @syntax[]{(cairo:font-options-variations options) => variations}

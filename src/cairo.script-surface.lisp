@@ -8,22 +8,23 @@
 ;;;
 ;;; Copyright (C) 2020 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+;;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; Script Surfaces
@@ -78,7 +79,7 @@
 ;;;     the output will use byte codes.
 ;;; ----------------------------------------------------------------------------
 
-(defcenum script-mode-t
+(cffi:defcenum script-mode-t
   :ascii
   :binary)
 
@@ -105,7 +106,7 @@
 ;;;     can use cairo_device_status() to check for this.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_script_create" %script-create) (:pointer (:struct device-t))
+(cffi:defcfun ("cairo_script_create" %script-create) (:pointer (:struct device-t))
   (filename :string))
 
 (defun script-create (path)
@@ -161,8 +162,8 @@
 ;;; Since 1.12
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_script_from_recording_surface" script-from-recording-surface)
-    status-t
+(cffi:defcfun ("cairo_script_from_recording_surface"
+               script-from-recording-surface) status-t
   (script (:pointer (:struct device-t)))
   (surface (:pointer (:struct surface-t))))
 
@@ -209,7 +210,7 @@
                         :void)
   mode)
 
-(defcfun ("cairo_script_get_mode" script-mode) script-mode-t
+(cffi:defcfun ("cairo_script_get_mode" script-mode) script-mode-t
   (script (:pointer (:struct device-t))))
 
 (export 'script-mode)
@@ -282,8 +283,8 @@
 ;;;     You can use cairo_surface_status() to check for this.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_script_surface_create_for_target"
-           script-surface-create-for-target) (:pointer (:struct surface-t))
+(cffi:defcfun ("cairo_script_surface_create_for_target"
+               script-surface-create-for-target) (:pointer (:struct surface-t))
   (script (:pointer (:struct device-t)))
   (target (:pointer (:struct surface-t))))
 

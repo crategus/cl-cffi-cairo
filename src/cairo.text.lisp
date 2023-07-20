@@ -8,22 +8,23 @@
 ;;;
 ;;; Copyright (C) 2013 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+;;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; Text
@@ -100,7 +101,7 @@
 ;;; enum cairo_font_slant_t
 ;;; ----------------------------------------------------------------------------
 
-(defcenum font-slant-t
+(cffi:defcenum font-slant-t
   :normal
   :italic
   :oblique)
@@ -112,7 +113,7 @@
  "@version{#2021-12-12}
   @short{Specifies variants of a font face based on their slant.}
   @begin{pre}
-(defcenum font-slant-t
+(cffi:defcenum font-slant-t
   :normal
   :italic
   :oblique)
@@ -131,7 +132,7 @@
 ;;; enum cairo_font_weight_t
 ;;; ----------------------------------------------------------------------------
 
-(defcenum font-weight-t
+(cffi:defcenum font-weight-t
   :normal
   :bold)
 
@@ -142,7 +143,7 @@
  "@version{#2021-12-12}
   @short{Specifies variants of a font face based on their weight.}
   @begin{pre}
-(defcenum font-slant-t
+(cffi:defcenum font-slant-t
   :normal
   :bold)
   @end{pre}
@@ -159,7 +160,7 @@
 ;;; cairo_text_cluster_t
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct text-cluster-t
+(cffi:defcstruct text-cluster-t
   (num-bytes :int)
   (num-glyphs :int))
 
@@ -184,7 +185,7 @@
   See the @fun{cairo:show-text-glyphs} function for how clusters are used in
   advanced text operations.
   @begin{pre}
-(defcstruct text-cluster-t
+(cffi:defcstruct text-cluster-t
   (num-bytes :int)
   (num-glyphs :int))
   @end{pre}
@@ -201,7 +202,7 @@
 ;;; enum cairo_text_cluster_flags_t
 ;;; ----------------------------------------------------------------------------
 
-(defcenum text-cluster-flags-t
+(cffi:defcenum text-cluster-flags-t
   (:backward 1))
 
 #+liber-documentation
@@ -211,7 +212,7 @@
  "@version{#2021-12-12}
   @short{Specifies properties of a text cluster mapping.}
   @begin{pre}
-(defcenum text-cluster-flags-t
+(cffi:defcenum text-cluster-flags-t
   (:backward 1))
   @end{pre}
   @begin[code]{table}
@@ -226,7 +227,7 @@
 ;;; cairo_select_font_face ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_select_font_face" %select-font-face) :void
+(cffi:defcfun ("cairo_select_font_face" %select-font-face) :void
   (cr (:pointer (:struct context-t)))
   (family :string)
   (slant font-slant-t)
@@ -302,7 +303,7 @@
 ;;; cairo_set_font_size ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_set_font_size" %set-font-size) :void
+(cffi:defcfun ("cairo_set_font_size" %set-font-size) :void
   (cr (:pointer (:struct context-t)))
   (size :double))
 
@@ -335,7 +336,7 @@
 ;;; cairo_set_font_matrix ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_set_font_matrix" set-font-matrix) :void
+(cffi:defcfun ("cairo_set_font_matrix" set-font-matrix) :void
  #+liber-documentation
  "@version{#2021-12-12}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -361,7 +362,7 @@
 ;;; cairo_get_font_matrix ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_get_font_matrix" get-font-matrix) :void
+(cffi:defcfun ("cairo_get_font_matrix" get-font-matrix) :void
  #+liber-documentation
  "@version{#2021-12-12}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -392,7 +393,7 @@
                         :void)
     options)
 
-(defcfun ("cairo_get_font_options" %get-font-options) :void
+(cffi:defcfun ("cairo_get_font_options" %get-font-options) :void
   (cr (:pointer (:struct context-t)))
   (options (:pointer (:struct font-options-t))))
 
@@ -418,7 +419,7 @@
   default value, like @code{:default}, then the value from the surface is used.
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:font-options-t}"
-  (with-foreign-object (options '(:struct font-options-t))
+  (cffi:with-foreign-object (options '(:struct font-options-t))
     (%get-font-options cr options)
     (unless (cffi:null-pointer-p options)
       options)))
@@ -437,7 +438,7 @@
                         :void)
   face)
 
-(defcfun ("cairo_get_font_face" font-face) (:pointer (:struct font-face-t))
+(cffi:defcfun ("cairo_get_font_face" font-face) (:pointer (:struct font-face-t))
  #+liber-documentation
  "@version{#2021-12-12}
   @syntax[]{(cairo:font-face cr) => face}
@@ -483,7 +484,7 @@
                         :void)
   font)
 
-(defcfun ("cairo_get_scaled_font" scaled-font)
+(cffi:defcfun ("cairo_get_scaled_font" scaled-font)
     (:pointer (:struct scaled-font-t))
  #+liber-documentation
  "@version{#2021-12-12}
@@ -524,7 +525,7 @@
 ;;; cairo_show_text ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_show_text" %show-text) :void
+(cffi:defcfun ("cairo_show_text" %show-text) :void
   (cr (:pointer (:struct context-t)))
   (utf8 :string))
 
@@ -566,7 +567,7 @@
 ;;; cairo_show_glyphs ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_show_glyphs" %show-glyphs) :void
+(cffi:defcfun ("cairo_show_glyphs" %show-glyphs) :void
   (cr (:pointer (:struct context-t)))
   (glyphs (:pointer (:struct glyph-t)))
   (num-glyphs :int))
@@ -583,7 +584,7 @@
   @end{short}
   @see-symbol{cairo:context-t}"
   (let ((num-glyphs (length glyphs)))
-    (with-foreign-object (glyphs-ptr '(:struct glyph-t) num-glyphs)
+    (cffi:with-foreign-object (glyphs-ptr '(:struct glyph-t) num-glyphs)
       (loop for count from 0 below num-glyphs
             for glyph in glyphs
             for glyph-ptr = (cffi:mem-aptr glyphs-ptr '(:struct glyph-t) count)
@@ -607,7 +608,7 @@
 ;;; cairo_show_text_glyphs ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_show_text_glyphs" show-text-glyphs) :void
+(cffi:defcfun ("cairo_show_text_glyphs" show-text-glyphs) :void
  #+liber-documentation
  "@version{#2021-12-12}
   @argument[cr]{a @symbol{cairo:context-t} context}
@@ -661,7 +662,7 @@
 ;;; cairo_font_extents ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_font_extents" %font-extents) :void
+(cffi:defcfun ("cairo_font_extents" %font-extents) :void
   (cr (:pointer (:struct context-t)))
   (extents (:pointer (:struct font-extents-t))))
 
@@ -678,13 +679,13 @@
   @end{short}
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:font-extents-t}"
-  (with-foreign-object (extents '(:struct font-extents-t))
+  (cffi:with-foreign-object (extents '(:struct font-extents-t))
     (%font-extents cr extents)
-    (with-foreign-slots ((ascent
-                          descent
-                          height
-                          max-x-advance
-                          max-y-advance) extents (:struct font-extents-t))
+    (cffi:with-foreign-slots ((ascent
+                               descent
+                               height
+                               max-x-advance
+                               max-y-advance) extents (:struct font-extents-t))
     (values ascent descent height max-x-advance max-y-advance))))
 
 (export 'font-extents)
@@ -693,7 +694,7 @@
 ;;; cairo_text_extents ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_text_extents" %text-extents) :void
+(cffi:defcfun ("cairo_text_extents" %text-extents) :void
   (cr (:pointer (:struct context-t)))
   (utf8 :string)
   (extents (:pointer (:struct text-extents-t))))
@@ -727,14 +728,14 @@
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:text-extents-t}
   @see-function{cairo:show-text}"
-  (with-foreign-object (extents '(:struct text-extents-t))
+  (cffi:with-foreign-object (extents '(:struct text-extents-t))
     (%text-extents cr utf8 extents)
-    (with-foreign-slots ((x-bearing
-                          y-bearing
-                          width
-                          height
-                          x-advance
-                          y-advance) extents (:struct text-extents-t))
+    (cffi:with-foreign-slots ((x-bearing
+                               y-bearing
+                               width
+                               height
+                               x-advance
+                               y-advance) extents (:struct text-extents-t))
     (values x-bearing y-bearing width height x-advance y-advance))))
 
 (export 'text-extents)
@@ -743,7 +744,7 @@
 ;;; cairo_glyph_extents ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_glyph_extents" %glyph-extents) :void
+(cffi:defcfun ("cairo_glyph_extents" %glyph-extents) :void
   (cr (:pointer (:struct context-t)))
   (glyphs (:pointer (:struct glyph-t)))
   (num-glyphs :int)
@@ -777,8 +778,8 @@
   @see-symbol{cairo:text-extents-t}
   @see-function{cairo:show-glyphs}"
   (let ((num-glyphs (length glyphs)))
-    (with-foreign-objects ((extents '(:struct text-extents-t))
-                           (glyphs-ptr '(:struct glyph-t) num-glyphs))
+    (cffi:with-foreign-objects ((extents '(:struct text-extents-t))
+                                (glyphs-ptr '(:struct glyph-t) num-glyphs))
       (loop for count from 0 below num-glyphs
             for glyph-ptr = (cffi:mem-aptr glyphs-ptr '(:struct glyph-t) count)
             for glyph in glyphs
@@ -795,12 +796,12 @@
                                               'cairo::y)
                      (coerce (third glyph) 'double-float)))
       (%glyph-extents cr glyphs-ptr num-glyphs extents)
-      (with-foreign-slots ((x-bearing
-                            y-bearing
-                            width
-                            height
-                            x-advance
-                            y-advance) extents (:struct text-extents-t))
+      (cffi:with-foreign-slots ((x-bearing
+                                 y-bearing
+                                 width
+                                 height
+                                 x-advance
+                                 y-advance) extents (:struct text-extents-t))
       (values x-bearing y-bearing width height x-advance y-advance)))))
 
 (export 'glyph-extents)
@@ -809,7 +810,7 @@
 ;;; cairo_toy_font_face_create ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_toy_font_face_create" toy-font-face-create)
+(cffi:defcfun ("cairo_toy_font_face_create" toy-font-face-create)
     (:pointer (:struct font-face-t))
  #+liber-documentation
  "@version{#2021-12-12}
@@ -847,7 +848,7 @@
 ;;; cairo_toy_font_face_get_family ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_toy_font_face_get_family" toy-font-face-family)
+(cffi:defcfun ("cairo_toy_font_face_get_family" toy-font-face-family)
     :string
  #+liber-documentation
  "@version{#2021-12-12}
@@ -868,7 +869,7 @@
 ;;; cairo_toy_font_face_get_slant ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_toy_font_face_get_slant" toy-font-face-slant)
+(cffi:defcfun ("cairo_toy_font_face_get_slant" toy-font-face-slant)
     font-slant-t
  #+liber-documentation
  "@version{#2021-12-12}
@@ -885,7 +886,7 @@
 ;;; cairo_toy_font_face_get_weight ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_toy_font_face_get_weight" toy-font-face-weight)
+(cffi:defcfun ("cairo_toy_font_face_get_weight" toy-font-face-weight)
     font-weight-t
  #+liber-documentation
  "@version{#2021-12-12}
@@ -902,7 +903,7 @@
 ;;; cairo_glyph_allocate ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_glyph_allocate" glyph-allocate)
+(cffi:defcfun ("cairo_glyph_allocate" glyph-allocate)
     (:pointer (:struct glyph-t))
  #+liber-documentation
  "@version{#2023-1-15}
@@ -932,7 +933,7 @@
 ;;; cairo_glyph_free ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_glyph_free" glyph-free) :void
+(cffi:defcfun ("cairo_glyph_free" glyph-free) :void
  #+liber-documentation
  "@version{#2021-12-12}
   @argument[glyphs]{array of @symbol{cairo:glyph-t} glyphs to free, or NULL}
@@ -955,7 +956,7 @@
 ;;; cairo_text_cluster_allocate ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_text_cluster_allocate" text-cluster-allocate)
+(cffi:defcfun ("cairo_text_cluster_allocate" text-cluster-allocate)
     (:pointer (:struct text-cluster-t))
  #+liber-documentation
  "@version{#2023-1-15}
@@ -985,7 +986,7 @@
 ;;; cairo_text_cluster_free ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("cairo_text_cluster_free" text-cluster-free) :void
+(cffi:defcfun ("cairo_text_cluster_free" text-cluster-free) :void
  #+liber-documentation
  "@version{#2021-12-12}
   @argument[clusters]{array of @symbol{cairo:text-cluster-t} text clusters to

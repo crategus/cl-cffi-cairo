@@ -4,7 +4,7 @@
 ;;; The documentation of the file is taken from the Cairo Reference Manual
 ;;; Version 1.16 and modified to document the Lisp binding to the Cairo
 ;;; library. See <http://cairographics.org>. The API documentation of the
-;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk/>.
+;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2012 - 2023 Dieter Kaiser
 ;;;
@@ -789,45 +789,44 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_surface_get_device ()
-;;;
-;;; cairo_device_t * cairo_surface_get_device (cairo_surface_t *surface);
-;;;
-;;; This function returns the device for a surface. See cairo_device_t.
-;;;
-;;; surface :
-;;;     a cairo_surface_t
-;;;
-;;; Returns :
-;;;     The device for surface or NULL if the surface does not have an
-;;;     associated device.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_surface_get_device" surface-device)
     (:pointer (:struct device-t))
+ #+liber-documentation
+ "@version{2023-7-21}
+  @argument[surface]{a @symbol{cairo:surface-t} instance}
+  @return{A @symbol{cairo:device-t} instance with the device for @arg{surface}
+    or @code{null-pointer} if the surface does not have an associated device.}
+  @begin{short}
+    This function returns the device for a surface.
+  @end{short}
+  See the @symbol{cairo:device-t} documentation.
+  @see-symbol{cairo:surface-t}
+  @see-symbol{cairo:device-t}"
   (surface (:pointer (:struct surface-t))))
 
 (export 'surface-device)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_surface_get_font_options ()
-;;;
-;;; void cairo_surface_get_font_options (cairo_surface_t *surface,
-;;;                                      cairo_font_options_t *options);
-;;;
-;;; Retrieves the default font rendering options for the surface. This allows
-;;; display surfaces to report the correct subpixel order for rendering on them,
-;;; print surfaces to disable hinting of metrics and so forth. The result can
-;;; then be used with cairo_scaled_font_create().
-;;;
-;;; surface :
-;;;     a cairo_surface_t
-;;;
-;;; options :
-;;;     a cairo_font_options_t object into which to store the retrieved options.
-;;;     All existing values are overwritten
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_surface_get_font_options" surface-font-options) :void
+ #+liber-documentation
+ "@version{2023-7-21}
+  @argument[surface]{a @symbol{cairo:surface-t} instance}
+  @argument[options]{a @symbol{cairo:font-options-t} instance into which to
+    store the retrieved options, all existing values are overwritten}
+  @begin{short}
+    Retrieves the default font rendering options for the surface.
+  @end{short}
+  This allows display surfaces to report the correct subpixel order for
+  rendering on them, print surfaces to disable hinting of metrics and so forth.
+  The result can then be used with the @fun{cairo:scaled-font-create} function.
+  @see-symbol{cairo:surface-t}
+  @see-symbol{cairo:font-options-t}
+  @see-function{cairo:scaled-font-create}"
   (surface (:pointer (:struct surface-t)))
   (options (:pointer (:struct font-options-t))))
 
@@ -835,20 +834,21 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_surface_get_content ()
-;;;
-;;; cairo_content_t cairo_surface_get_content (cairo_surface_t *surface);
-;;;
-;;; This function returns the content type of surface which indicates whether
-;;; the surface contains color and/or alpha information. See cairo_content_t.
-;;;
-;;; surface :
-;;;     a cairo_surface_t
-;;;
-;;; Returns :
-;;;     The content type of surface.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_surface_get_content" surface-content) content-t
+ #+liber-documentation
+ "@version{2023-7-21}
+  @argument[surface]{a @symbol{cairo:surface-t} instance}
+  @return{A @symbol{cairo:content-t} value with the content type of
+    @arg{surface}.}
+  @begin{short}
+    This function returns the content type of @arg{surface} which indicates
+    whether the surface contains color and/or alpha information.
+  @end{short}
+  See the @symbol{cairo:content-t} enumeration.
+  @see-symbol{cairo:surface-t}
+  @see-symbol{cairo:content-t}"
   (surface (:pointer (:struct surface-t))))
 
 (export 'surface-content)
@@ -875,38 +875,26 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_surface_mark_dirty_rectangle ()
-;;;
-;;; void cairo_surface_mark_dirty_rectangle (cairo_surface_t *surface,
-;;;                                          int x,
-;;;                                          int y,
-;;;                                          int width,
-;;;                                          int height);
-;;;
-;;; Like cairo_surface_mark_dirty(), but drawing has been done only to the
-;;; specified rectangle, so that cairo can retain cached contents for other
-;;; parts of the surface.
-;;;
-;;; Any cached clip set on the surface will be reset by this function, to make
-;;; sure that future cairo calls have the clip set that they expect.
-;;;
-;;; surface :
-;;;     a cairo_surface_t
-;;;
-;;; x :
-;;;     X coordinate of dirty rectangle
-;;;
-;;; y :
-;;;     Y coordinate of dirty rectangle
-;;;
-;;; width :
-;;;     width of dirty rectangle
-;;;
-;;; height :
-;;;     height of dirty rectangle
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_surface_mark_dirty_rectangle"
                surface-mark-dirty-rectangle) :void
+ #+liber-documentation
+ "@version{#2023-7-21}
+  @argument[surface]{a @symbol{cairo:surface-t} instance}
+  @argument[x]{an integer with the x coordinate of dirty rectangle}
+  @argument[y]{an integer with the y coordinate of dirty rectangle}
+  @argument[width]{an integer with the width of dirty rectangle}
+  @argument[height]{an integer with the height of dirty rectangle}
+  @begin{short}
+    Like the @fun{cairo:surface-mark-dirty} function, but drawing has been done
+    only to the specified rectangle, so that Cairo can retain cached contents
+    for other parts of the surface.
+  @end{short}
+  Any cached clip set on the surface will be reset by this function, to make
+  sure that future Cairo calls have the clip set that they expect.
+  @see-symbol{cairo:surface-t}
+  @see-function{cairo:surface-mark-dirty}"
   (surface (:pointer (:struct surface-t)))
   (x :int)
   (y :int)
@@ -917,23 +905,45 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_surface_set_device_offset ()
+;;; cairo_surface_get_device_offset ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("cairo_surface_set_device_offset" surface-set-device-offset)
-    :void
+(defun (setf surface-device-offset) (offset surface)
+  (destructuring-bind (xoffset yoffset) offset
+    (setf xoffset (coerce xoffset 'double-float))
+    (setf yoffset (coerce yoffset 'double-float))
+    (cffi:foreign-funcall "cairo_surface_set_device_offset"
+                          (:pointer (:struct surface-t)) surface
+                          :double xoffset
+                          :double yoffset
+                          :void)
+    (values xoffset yoffset)))
+
+(cffi:defcfun ("cairo_surface_get_device_offset" %surface-device-offset) :void
+  (surface (:pointer (:struct surface-t)))
+  (xoffset (:pointer :double))
+  (yoffset (:pointer :double)))
+
+(defun surface-device-offset (surface)
  #+liber-documentation
- "@version{#2020-12-16}
+ "@version{#2023-7-21}
+  @syntax[]{(cairo:surface-device-offset surface) => xoffset, yoffset}
+  @syntax[]{(setf (cairo:surface-device-offset surface) (list xoffset yoffset))}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
-  @argument[x-offset]{a double float offset in the x direction, in device units}
-  @argument[y-offset]{a double float offset in the y direction, in device units}
+  @argument[xoffset]{a double float offset in the x direction, in device units}
+  @argument[yoffset]{a double float offset in the y direction, in device units}
   @begin{short}
-    Sets an offset that is added to the device coordinates determined by the
-    CTM when drawing to surface.
+    The @sym{cairo:surface-device-offset} functions returns the previous device
+    offset.
   @end{short}
+  The @sym{(setf cairo:surface-device-offset)} function sets an offset that is
+  added to the device coordinates determined by the CTM when drawing to
+  @arg{surface}.
+
   One use case for this function is when we want to create a
   @symbol{cairo:surface-t} instance that redirects drawing for a portion of an
-  onscreen surface to an offscreen surface in a way that is completely invisible
-  to the user of the Cairo API. Setting a transformation via the
+  onscreen surface to an offscreen surface in a way that is completely
+  invisible to the user of the Cairo API. Setting a transformation via the
   @fun{cairo:translate} function is not sufficient to do this, since functions
   like the @fun{cairo:device-to-user} function will expose the hidden offset.
 
@@ -942,45 +952,12 @@
   @see-symbol{cairo:surface-t}
   @see-function{cairo:translate}
   @see-function{cairo:device-to-user}"
-  (surface (:pointer (:struct surface-t)))
-  (x-offset :double)
-  (y-offset :double))
+  (cffi:with-foreign-objects ((xoffset :double) (yoffset :double))
+    (%surface-device-offset surface xoffset yoffset)
+    (values (cffi:mem-ref xoffset :double)
+            (cffi:mem-ref yoffset :double))))
 
-(export 'surface-set-device-offset)
-
-;;; ----------------------------------------------------------------------------
-;;; cairo_surface_get_device_offset ()
-;;;
-;;; void cairo_surface_get_device_offset (cairo_surface_t *surface,
-;;;                                       double *x_offset,
-;;;                                       double *y_offset);
-;;;
-;;; This function returns the previous device offset set by
-;;; cairo_surface_set_device_offset().
-;;;
-;;; surface :
-;;;     a cairo_surface_t
-;;;
-;;; x_offset :
-;;;     the offset in the X direction, in device units
-;;;
-;;; y_offset :
-;;;     the offset in the Y direction, in device units
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("cairo_surface_get_device_offset" %surface-get-device-offset)
-    :void
-  (surface (:pointer (:struct surface-t)))
-  (x-offset (:pointer :double))
-  (y-offset (:pointer :double)))
-
-(defun surface-get-device-offset (surface)
-  (cffi:with-foreign-objects ((x-offset :double) (y-offset :double))
-    (%surface-get-device-offset surface x-offset y-offset)
-    (values (cffi:mem-ref x-offset :double)
-            (cffi:mem-ref y-offset :double))))
-
-(export 'surface-get-device-offset)
+(export 'surface-device-offset)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_surface_get_device_scale ()

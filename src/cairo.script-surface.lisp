@@ -4,7 +4,7 @@
 ;;; The documentation of the file is taken from the Cairo Reference Manual
 ;;; Version 1.16 and modified to document the Lisp binding to the Cairo
 ;;; library. See <http://cairographics.org>. The API documentation of the
-;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk/>.
+;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2020 - 2023 Dieter Kaiser
 ;;;
@@ -33,83 +33,112 @@
 ;;;
 ;;; Types and Values
 ;;;
-;;;     CAIRO_HAS_SCRIPT_SURFACE
 ;;;     cairo_script_mode_t
 ;;;
 ;;; Functions
 ;;;
 ;;;     cairo_script_create
-;;;     cairo_script_create_for_stream
+;;;     cairo_script_create_for_stream                     not implemented
 ;;;     cairo_script_from_recording_surface
 ;;;     cairo_script_get_mode
 ;;;     cairo_script_set_mode
 ;;;     cairo_script_surface_create
 ;;;     cairo_script_surface_create_for_target
 ;;;     cairo_script_write_comment
-;;;
-;;; Description
-;;;
-;;;     The script surface provides the ability to render to a native script
-;;;     that matches the cairo drawing model. The scripts can be replayed using
-;;;     tools under the util/cairo-script directory, or with cairo-perf-trace.
 ;;; ----------------------------------------------------------------------------
 
 (in-package :cairo)
 
-;;; ----------------------------------------------------------------------------
-;;; CAIRO_HAS_SCRIPT_SURFACE
-;;;
-;;; #define CAIRO_HAS_SCRIPT_SURFACE 1
-;;;
-;;; Defined if the script surface backend is available. The script surface
-;;; backend is always built in since 1.12.
-;;;
-;;; Since 1.12
-;;; ----------------------------------------------------------------------------
+
+(defmacro with-cairo-script-surface ((surface path content width height)
+                                     &body body)
+ #+liber-documentation
+ "@version{2023-7-21}
+  @syntax[]{(with-cairo-script-surface (surface path content width height) body) => result}
+  @argument[surface]{a newly allocated @symbol{cairo:surface-t} instance}
+  @argument[path]{a path or namestring with the file to write the script to}
+  @argument[content]{a @symbol{cairo:content-t} value}
+  @argument[width]{a number coerced to a double float with the width in pixels}
+  @argument[height]{a number coerced to a double float with the height in
+    pixels}
+  @begin{short}
+    The @sym{with-cairo-script-surface} macro allocates a new
+    @symbol{cairo:surface-t} instance for a newly created @symbol{device-t}
+    instance of @code{:script} type and executes the body that uses the
+    Cairo script surface.
+  @end{short}
+  After execution of the body the allocated memory for the Cairo surface and the
+  Cairo device is released.
+  @see-symbol{cairo:surface-t}
+  @see-symbol{cairo:device-t}
+  @see-function{cairo:script-create}
+  @see-function{cairo:script-surface-create}"
+  (let ((device (gensym)))
+    `(let* ((,device (script-create ,path))
+            (,surface (script-surface-create ,device
+                                             ,content
+                                             ,width
+                                             ,height)))
+     (unwind-protect
+       (progn ,@body)
+       (progn
+         (surface-destroy ,surface)
+         (device-destroy ,device))))))
+
+(export 'with-cairo-script-surface)
 
 ;;; ----------------------------------------------------------------------------
 ;;; enum cairo_script_mode_t
-;;;
-;;; A set of script output variants.
-;;;
-;;; CAIRO_SCRIPT_MODE_ASCII
-;;;     the output will be in readable text (default).
-;;;
-;;; CAIRO_SCRIPT_MODE_BINARY
-;;;     the output will use byte codes.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcenum script-mode-t
   :ascii
   :binary)
 
+#+liber-documentation
+(setf (liber:alias-for-symbol 'script-mode-t)
+      "CEnum"
+      (liber:symbol-documentation 'script-mode-t)
+ "@version{2023-7-21}
+  @short{A set of script output variants.}
+  @begin{pre}
+(cffi:defcenum script-mode-t
+  :ascii
+  :binary)
+  @end{pre}
+  @begin[code]{table}
+    @entry[:ascii]{The output will be in readable text (default).}
+    @entry[:binary]{The output will use byte codes.}
+  @end{table}
+  @see-function{cairo:script-mode}")
+
 (export 'script-mode-t)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_script_create ()
-;;;
-;;; cairo_device_t *
-;;; cairo_script_create (const char *filename);
-;;;
-;;; Creates a output device for emitting the script, used when creating the
-;;; individual surfaces.
-;;;
-;;; filename :
-;;;     the name (path) of the file to write the script to
-;;;
-;;; Returns :
-;;;     a pointer to the newly created device. The caller owns the surface and
-;;;     should call cairo_device_destroy() when done with it.
-;;;
-;;;     This function always returns a valid pointer, but it will return a
-;;;     pointer to a "nil" device if an error such as out of memory occurs. You
-;;;     can use cairo_device_status() to check for this.
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("cairo_script_create" %script-create) (:pointer (:struct device-t))
+(cffi:defcfun ("cairo_script_create" %script-create)
+    (:pointer (:struct device-t))
   (filename :string))
 
 (defun script-create (path)
+ #+liber-documentation
+ "@version{2023-7-21}
+  @argument[path]{a path or namestring with the file to write the script to}
+  @return{A @symbol{cairo:device-t} instance with the newly created device.
+    The caller owns the device and should call the @fun{cairo:device-destroy}
+    function when done with it. This function always returns a valid pointer,
+    but it will return a pointer to a \"nil\" device if an error such as out of
+    memory occurs. You can use the @fun{cairo:device-status} function to check
+    for this.}
+  @begin{short}
+    Creates an output device for emitting the script, used when creating the
+    individual surfaces.
+  @end{short}
+  @see-symbol{cairo:device-t}
+  @see-function{cairo:device-destroy}
+  @see-function{cairo:device-status}"
   (%script-create (namestring path)))
 
 (export 'script-create)
@@ -143,27 +172,21 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_script_from_recording_surface ()
-;;;
-;;; cairo_status_t
-;;; cairo_script_from_recording_surface (cairo_device_t *script,
-;;;                                      cairo_surface_t *recording_surface);
-;;;
-;;; Converts the record operations in recording_surface into a script.
-;;;
-;;; script :
-;;;     the script (output device)
-;;;
-;;; recording_surface :
-;;;     the recording surface to replay
-;;;
-;;; Returns :
-;;;     CAIRO_STATUS_SUCCESS on successful completion or an error code.
-;;;
-;;; Since 1.12
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_script_from_recording_surface"
                script-from-recording-surface) status-t
+ #+liber-documentation
+ "@version{#2023-7-21}
+  @argument[script]{a @symbol{cairo:device-t} instance}
+  @argument[surface]{a @symbol{cairo:surface-t} instance with the recording
+    surface to replay}
+  @return{The @code{:success} value on successful completion or an error code.}
+  @begin{short}
+    Converts the recorded operations in @arg{surface} into a script.
+  @end{short}
+  @see-symbol{cairo:device-t}
+  @see-symbol{cairo:surface-t}"
   (script (:pointer (:struct device-t)))
   (surface (:pointer (:struct surface-t))))
 
@@ -171,36 +194,7 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_script_get_mode ()
-;;;
-;;; cairo_script_mode_t
-;;; cairo_script_get_mode (cairo_device_t *script);
-;;;
-;;; Queries the script for its current output mode.
-;;;
-;;; script :
-;;;     The script (output device) to query
-;;;
-;;; Returns :
-;;;     the current output mode of the script
-;;;
-;;; Since 1.12
-;;; ----------------------------------------------------------------------------
-;;; ----------------------------------------------------------------------------
-;;; cairo_script_set_mode ()
-;;;
-;;; void
-;;; cairo_script_set_mode (cairo_device_t *script,
-;;;                        cairo_script_mode_t mode);
-;;;
-;;; Change the output mode of the script
-;;;
-;;; script :
-;;;     The script (output device)
-;;;
-;;; mode :
-;;;     the new mode
-;;;
-;;; Since 1.12
+;;; cairo_script_set_mode () -> script-mode
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf script-mode) (mode script)
@@ -211,43 +205,50 @@
   mode)
 
 (cffi:defcfun ("cairo_script_get_mode" script-mode) script-mode-t
+ #+liber-documentation
+ "@version{2023-7-21}
+  @syntax[]{(cairo:script-mode script) => mode}
+  @syntax[]{(setf (cairo:script-mode script) mode)}
+  @argument[script]{a @symbol{cairo:device-t} instance}
+  @argument[mode]{a @symbol{cairo:script-mode-t} value}
+  @begin{short}
+    The @sym{cairo:script-mode} function queries the script for its current
+    output mode.
+  @end{short}
+  The @sym{(setf cairo:script-mode} functions changes the output mode of the
+  script.
+  @see-symbol{cairo:device-t}
+  @see-symbol{cairo:script-mode-t}"
   (script (:pointer (:struct device-t))))
 
 (export 'script-mode)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_script_surface_create ()
-;;;
-;;; cairo_surface_t *
-;;; cairo_script_surface_create (cairo_device_t *script,
-;;;                              cairo_content_t content,
-;;;                              double width,
-;;;                              double height);
-;;;
-;;; Create a new surface that will emit its rendering through script
-;;;
-;;; script :
-;;;     the script (output device)
-;;;
-;;; content :
-;;;     the content of the surface
-;;;
-;;; width :
-;;;     width in pixels
-;;;
-;;; height :
-;;;     height in pixels
-;;;
-;;; Returns :
-;;;     a pointer to the newly created surface. The caller owns the surface and
-;;;     should call cairo_surface_destroy() when done with it.
-;;;
-;;;     This function always returns a valid pointer, but it will return a
-;;;     pointer to a "nil" surface if an error such as out of memory occurs.
-;;;     You can use cairo_surface_status() to check for this.
 ;;; ----------------------------------------------------------------------------
 
 (defun script-surface-create (script content width height)
+ #+liber-documentation
+ "@version{2023-7-21}
+  @argument[script]{a @symbol{cairo:device-t} instance}
+  @argument[content]{a @symbol{cairo:content-t} value}
+  @argument[width]{a number coerced to a double float with the width in pixels}
+  @argument[height]{a number coerced to a double float with the height in
+    pixels}
+  @return{A @symbol{cairo:surface-t} instance with the newly created surface.
+    The caller owns the surface and should call the @fun{cairo:surface-destroy}
+    function when done with it. This function always returns a valid pointer,
+    but it will return a pointer to a \"nil\" surface if an error such as out
+    of memory occurs. You can use the @fun{cairo:surface-status} function to
+    check for this.}
+  @begin{short}
+    Creates a new surface that will emit its rendering through @arg{script}.
+  @end{short}
+  @see-symbol{cairo:device-t}
+  @see-symbol{cairo:surface-t}
+  @see-symbol{cairo:content-t}
+  @see-function{cairo:surface-destroy}
+  @see-function{cairo:surface-status}"
   (cffi:foreign-funcall "cairo_script_surface_create"
                         (:pointer (:struct device-t)) script
                         content-t content
@@ -259,32 +260,28 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_script_surface_create_for_target ()
-;;;
-;;; cairo_surface_t *
-;;; cairo_script_surface_create_for_target
-;;;                                (cairo_device_t *script,
-;;;                                 cairo_surface_t *target);
-;;;
-;;; Create a pxoy surface that will render to target and record the operations
-;;; to device .
-;;;
-;;; script :
-;;;     the script (output device)
-;;;
-;;; target :
-;;;     a target surface to wrap
-;;;
-;;; Returns :
-;;;     a pointer to the newly created surface. The caller owns the surface and
-;;;     should call cairo_surface_destroy() when done with it.
-;;;
-;;;     This function always returns a valid pointer, but it will return a
-;;;     pointer to a "nil" surface if an error such as out of memory occurs.
-;;;     You can use cairo_surface_status() to check for this.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_script_surface_create_for_target"
                script-surface-create-for-target) (:pointer (:struct surface-t))
+ #+liber-documentation
+ "@version{#2023-7-21}
+  @argument[script]{a @symbol{cairo:device-t} instance}
+  @argument[target]{a @symbol{cairo:surface-t} instance}
+  @return{A @symbol{cairo:surface-t} instance to the newly created surface.
+    The caller owns the surface and should call the @fun{cairo:surface-destroy}
+    function when done with it. This function always returns a valid pointer,
+    but it will return a pointer to a \"nil\" surface if an error such as out
+    of memory occurs. You can use the @fun{cairo:surface-status} function to
+    check for this.}
+  @begin{short}
+    Creates a proxy surface that will render to @arg{target} and record the
+    operations to @arg{script}.
+  @end{short}
+  @see-symbol{cairo:device-t}
+  @see-symbol{cairo:surface-t}
+  @see-function{cairo:surface-destroy}
+  @see-function{cairo:surface-status}"
   (script (:pointer (:struct device-t)))
   (target (:pointer (:struct surface-t))))
 
@@ -292,25 +289,17 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_script_write_comment ()
-;;;
-;;; void
-;;; cairo_script_write_comment (cairo_device_t *script,
-;;;                             const char *comment,
-;;;                             int len);
-;;;
-;;; Emit a string verbatim into the script.
-;;;
-;;; script :
-;;;     the script (output device)
-;;;
-;;; comment :
-;;;     the string to emit
-;;;
-;;; len :
-;;;     the length of the sting to write, or -1 to use strlen()
 ;;; ----------------------------------------------------------------------------
 
 (defun script-write-comment (script comment)
+ #+liber-documentation
+ "@version{2023-7-21}
+  @argument[script]{a @symbol{cairo:device-t} instance}
+  @argument[comment]{a string with the comment to emit}
+  @begin{short}
+    Emit a string verbatim into the script.
+  @end{short}
+  @see-symbol{cairo:device-t}"
   (cffi:foreign-funcall "cairo_script_write_comment"
                         (:pointer (:struct device-t)) script
                         :string comment

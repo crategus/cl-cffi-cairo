@@ -4,7 +4,7 @@
 ;;; The documentation of this file is taken from the Cairo Reference Manual
 ;;; Version 1.16 and modified to document the Lisp binding to the Cairo
 ;;; library. See <http://cairographics.org>. The API documentation of the Lisp
-;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk/>.
+;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2012 - 2023 Dieter Kaiser
 ;;;
@@ -527,9 +527,8 @@ my_device_modifying_function (cairo_device_t *device)
       @about-function{surface-content}
       @about-function{surface-mark-dirty}
       @about-function{surface-mark-dirty-rectangle}
-      @about-function{surface-set-device-offset}
-      @about-function{surface-get-device-offset}
-      @about-function{surfacedevice-scale}
+      @about-function{surface-device-offset}
+      @about-function{surface-device-scale}
       @about-function{surface-fallback-resolution}
       @about-function{surface-type}
       @about-function{surface-reference-count}
@@ -767,10 +766,11 @@ cairo_destroy (cr);
     @end{subsection}
     @begin[Script Surfaces]{subsection}
       The script surface provides the ability to render to a native script that
-      matches the cairo drawing model. The scripts can be replayed using tools
-      under the @file{util/cairo-script} directory, or with
-      @code{cairo-perf-trace}.
+      matches the Cairo drawing model. The scripts can be replayed using tools
+      under the @file{util/cairo-script} directory, or with the
+      @code{cairo-perf-trace} utility.
       @about-symbol{script-mode-t}
+      @about-macro{with-cairo-script-surface}
       @about-function{script-create}
       @about-function{script-create-for-stream}
       @about-function{script-from-recording-surface}

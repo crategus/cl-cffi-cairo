@@ -4,7 +4,7 @@
 ;;; The documentation of the file is taken from the Cairo Reference Manual
 ;;; Version 1.16 and modified to document the Lisp binding to the Cairo
 ;;; library. See <http://cairographics.org>. The API documentation of the
-;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk/>.
+;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2013 - 2023 Dieter Kaiser
 ;;;
@@ -90,6 +90,27 @@
 (in-package :cairo)
 
 (defmacro with-cairo-toy-font-face ((face &rest args) &body body)
+ #+liber-documentation
+ "@version{2023-7-21}
+  @syntax[]{(with-cairo-toy-font-face (face family slant weight) body => result}
+  @argument[face]{a newly allocated @symbol{cairo:font-face-t} instance}
+  @argument[familiy]{a string with the font family name, encoded in UTF-8}
+  @argument[slant]{a @symbol{cairo:font-slant-t} value with the slant for the
+    font}
+  @argument[weight]{a @symbol{cairo:font-weight-t} value with the weight for
+    the font}
+  @begin{short}
+    The @sym{with-cairo-toy-font-face} macro allocates a new
+    @symbol{cairo:font-face-t} instance and executes the body that uses the
+    font face.
+  @end{short}
+  After execution of the body the allocated memory for the font face is
+  released. See the @fun{cairo:toy-font-face-create} function for more
+  information.
+  @see-symbol{cairo:font-face-t}
+  @see-symbol{cairo:font-slant-t}
+  @see-symbol{cairo:font-weight-t}
+  @see-function{cairo:toy-font-face-create}"
   `(let ((,face (toy-font-face-create ,@args)))
      (unwind-protect
        (progn ,@body)
@@ -110,7 +131,7 @@
 (setf (liber:alias-for-symbol 'font-slant-t)
       "CEnum"
       (liber:symbol-documentation 'font-slant-t)
- "@version{#2021-12-12}
+ "@version{2023-7-21}
   @short{Specifies variants of a font face based on their slant.}
   @begin{pre}
 (cffi:defcenum font-slant-t
@@ -140,7 +161,7 @@
 (setf (liber:alias-for-symbol 'font-weight-t)
       "CEnum"
       (liber:symbol-documentation 'font-weight-t)
- "@version{#2021-12-12}
+ "@version{2023-7-21}
   @short{Specifies variants of a font face based on their weight.}
   @begin{pre}
 (cffi:defcenum font-slant-t
@@ -848,17 +869,13 @@
 ;;; cairo_toy_font_face_get_family ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("cairo_toy_font_face_get_family" toy-font-face-family)
-    :string
+(cffi:defcfun ("cairo_toy_font_face_get_family" toy-font-face-family) :string
  #+liber-documentation
- "@version{#2021-12-12}
-  @argument[face]{a @symbol{cairo:font-face-t} toy font face}
-  @begin{return}
-    The family name. This string is owned by the font face and remains valid
-    as long as the font face is alive (referenced).
-  @end{return}
+ "@version{2023-7-21}
+  @argument[face]{a @symbol{cairo:font-face-t} instance}
+  @return{A string with the family name.}
   @begin{short}
-    Gets the familly name of a toy font.
+    Gets the family name of a toy font face.
   @end{short}
   @see-symbol{cairo:font-face-t}"
   (face (:pointer (:struct font-face-t))))
@@ -869,13 +886,12 @@
 ;;; cairo_toy_font_face_get_slant ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("cairo_toy_font_face_get_slant" toy-font-face-slant)
-    font-slant-t
+(cffi:defcfun ("cairo_toy_font_face_get_slant" toy-font-face-slant) font-slant-t
  #+liber-documentation
- "@version{#2021-12-12}
-  @argument[face]{a @symbol{cairo:font-face-t} toy font face}
+ "@version{2023-7-21}
+  @argument[face]{a @symbol{cairo:font-face-t} instance}
   @return{The @symbol{cairo:font-slant-t} slant value.}
-  @short{Gets the slant a toy font.}
+  @short{Gets the slant a toy font face.}
   @see-symbol{cairo:font-face-t}
   @see-symbol{cairo:font-slant-t}"
   (face (:pointer (:struct font-face-t))))
@@ -889,10 +905,10 @@
 (cffi:defcfun ("cairo_toy_font_face_get_weight" toy-font-face-weight)
     font-weight-t
  #+liber-documentation
- "@version{#2021-12-12}
-  @argument[face]{a @symbol{cairo:font-face-t} toy font face}
+ "@version{2023-7-21}
+  @argument[face]{a @symbol{cairo:font-face-t} instance}
   @return{The @symbol{cairo:font-weight-t} weight value.}
-  @short{Gets the weight a toy font.}
+  @short{Gets the weight a toy font face.}
   @see-symbol{cairo:font-face-t}
   @see-symbol{cairo:font-weight-t}"
   (face (:pointer (:struct font-face-t))))

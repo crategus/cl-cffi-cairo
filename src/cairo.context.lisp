@@ -4,7 +4,7 @@
 ;;; The documentation of the file is taken from the Cairo Reference Manual
 ;;; Version 1.16 and modified to document the Lisp binding to the Cairo
 ;;; library. See <http://cairographics.org>. The API documentation of the
-;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk/>.
+;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2012 - 2023 Dieter Kaiser
 ;;;
@@ -413,8 +413,8 @@
 
 (defmacro with-cairo-context ((context surface) &body body)
  #+liber-documentation
- "@version{2023-1-11}
-  @syntax[]{with-cairo-context (context surface) body => result}
+ "@version{2023-7-21}
+  @syntax[]{(with-cairo-context (context surface) body) => result}
   @argument[context]{a newly allocated @symbol{cairo:context-t} instance}
   @argument[surface]{a @symbol{cairo:surface-t} target surface}
   @begin{short}

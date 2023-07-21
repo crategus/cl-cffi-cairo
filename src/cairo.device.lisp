@@ -4,7 +4,7 @@
 ;;; The documentation of the file is taken from the Cairo Reference Manual
 ;;; Version 1.16 and modified to document the Lisp binding to the Cairo
 ;;; library. See <http://cairographics.org>. The API documentation of the
-;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk/>.
+;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2013 - 2023 Dieter Kaiser
 ;;;
@@ -260,7 +260,7 @@
 
 (cffi:defcfun ("cairo_device_status" device-status) status-t
  #+liber-documentation
- "@version{#2023-1-10}
+ "@version{2023-7-21}
   @argument[device]{a @symbol{cairo:device-t} instance}
   @return{A @symbol{cairo:status-t} value with an error code if the device is
     in an error state.}
@@ -329,7 +329,7 @@
 
 (cffi:defcfun ("cairo_device_get_type" device-type) device-type-t
  #+liber-documentation
- "@version{#2020-12-16}
+ "@version{2023-7-21}
   @argument[device]{a @symbol{cairo:device-t} instance}
   @return{A value of the @symbol{cairo:device-type-t} enumeration for the
     type of @arg{device}.}

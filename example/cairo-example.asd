@@ -1,9 +1,10 @@
 (asdf:defsystem :cairo-example
   :name "cairo-example"
   :author "Dieter Kaiser"
-  :license "LLGPL"
+  :license "MIT"
   :serial t
-  :depends-on (:cl-cffi-cairo :cl-cffi-glib)
+  :depends-on (:cl-cffi-cairo
+               :cl-cffi-glib)               ; only for g:malloc and g:free
   :components ((:file "cairo-example")
 
                (:file "draw-caps")
@@ -38,6 +39,8 @@
                (:file "pdf-simple")
                (:file "pdf-draw")
                (:file "pdf-draw-multipage")
+
+               (:file "script-draw")
                ))
 
-;;; --- 2023-2-12 --------------------------------------------------------------
+;;; --- 2023-7-21 --------------------------------------------------------------

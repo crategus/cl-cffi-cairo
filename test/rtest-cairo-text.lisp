@@ -13,9 +13,47 @@
 
 ;;; --- Functions --------------------------------------------------------------
 
+;;;     with-cairo-toy-font-face
+
+#-windows
+(test with-cairo-toy-font-face.1
+  (cairo:with-cairo-toy-font-face (face "" :normal :normal)
+    (is (string= "" (cairo:toy-font-face-family face)))
+    (is (eq :normal (cairo:toy-font-face-slant face)))
+    (is (eq :normal (cairo:toy-font-face-weight face))))
+  (cairo:with-cairo-toy-font-face (face "Sans" :normal :normal)
+    (is (string= "Sans" (cairo:toy-font-face-family face)))
+    (is (eq :normal (cairo:toy-font-face-slant face)))
+    (is (eq :normal (cairo:toy-font-face-weight face)))))
+
+#+windows
+(test with-cairo-toy-font-face.1
+  (cairo:with-cairo-toy-font-face (face "" :normal :normal)
+    (is (string= "Arial" (cairo:toy-font-face-family face)))
+    (is (eq :normal (cairo:toy-font-face-slant face)))
+    (is (eq :normal (cairo:toy-font-face-weight face))))
+  (cairo:with-cairo-toy-font-face (face "Sans" :normal :normal)
+    (is (string= "Sans" (cairo:toy-font-face-family face)))
+    (is (eq :normal (cairo:toy-font-face-slant face)))
+    (is (eq :normal (cairo:toy-font-face-weight face)))))
+
+#-windows
+(test with-cairo-toy-font-face.2
+  (cairo:with-cairo-toy-font-face (face "" :italic :bold)
+    (is (string= "" (cairo:toy-font-face-family face)))
+    (is (eq :italic (cairo:toy-font-face-slant face)))
+    (is (eq :bold (cairo:toy-font-face-weight face)))))
+
+#+windows
+(test with-cairo-toy-font-face.2
+  (cairo:with-cairo-toy-font-face (face "" :italic :bold)
+    (is (string= "Arial" (cairo:toy-font-face-family face)))
+    (is (eq :italic (cairo:toy-font-face-slant face)))
+    (is (eq :bold (cairo:toy-font-face-weight face)))))
+
 ;;;     cairo_select_font_face
 
-(test select-font-face
+(test cairo-select-font-face
   (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
     (is-false (cairo:select-font-face context "Courier" :weight :bold))
     (is (cffi:pointerp (cairo:font-face context)))
@@ -37,7 +75,7 @@
 ;;;     cairo_set_font_options
 ;;;     cairo_get_font_options
 
-(test font-options
+(test cairo-font-options
   (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
     (let ((options (cairo:font-options context)))
       (is (cffi:pointerp options))
@@ -55,7 +93,7 @@
 
 ;;;     cairo_show_text
 
-(test show-text
+(test cairo-show-text
   (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
     (is-false (cairo:show-text context ""))
     (is-false (cairo:show-text context "Ägypten"))
@@ -64,7 +102,7 @@
 
 ;;;     cairo_show_glyphs
 
-(test show-glyphs.1
+(test cairo-show-glyphs.1
   (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
     (let* ((glyphs '((35 10 30) (36 30 30) (37 50 30)))
            (num-glyphs (length glyphs)))
@@ -100,7 +138,7 @@
         (cairo:surface-write-to-png (cairo:target context)
                                     (sys-path "out/image1.png"))))))
 
-(test show-glyphs.2
+(test cairo-show-glyphs.2
   (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
     (let ((glyphs '((35 10 30) (36 30 30) (37 50 30))))
       ;; Clear surface
@@ -121,7 +159,8 @@
 
 ;;;     cairo_font_extents
 
-(test font-extents
+#-windows
+(test cairo-font-extents
   (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
     ;; Set a font and a font size
     (cairo:select-font-face context "Sans")
@@ -135,9 +174,25 @@
       (is (approx-equal 34.0 max-x-advance))
       (is (approx-equal  0.0 max-y-advance)))))
 
+#+windows
+(test cairo-font-extents
+  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
+    ;; Set a font and a font size
+    (cairo:select-font-face context "Sans")
+    (cairo:set-font-size context 18)
+    (multiple-value-bind (ascent descent height max-x-advance max-y-advance)
+        (cairo:font-extents context)
+      ;; Check the values
+      (is (approx-equal  17.0 ascent))
+      (is (approx-equal   4.0 descent))
+      (is (approx-equal  21.0 height))
+      (is (approx-equal 252.0 max-x-advance))
+      (is (approx-equal   0.0 max-y-advance)))))
+
 ;;;     cairo_text_extents
 
-(test text-extents
+#-windows
+(test cairo-text-extents
   (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
     ;; Set a font and a font size
     (cairo:select-font-face context "Sans")
@@ -152,9 +207,26 @@
       (is (approx-equal  80.0 x-advance))
       (is (approx-equal   0.0 y-advance)))))
 
+#+windows
+(test cairo-text-extents
+  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
+    ;; Set a font and a font size
+    (cairo:select-font-face context "Sans")
+    (cairo:set-font-size context 18)
+    (multiple-value-bind (x-bearing y-bearing width height x-advance y-advance)
+        (cairo:text-extents context "Crategus")
+      ;; Check the returned values
+      (is (approx-equal   0.0 x-bearing))
+      (is (approx-equal -13.0 y-bearing))
+      (is (approx-equal  79.0 width))
+      (is (approx-equal  17.0 height))
+      (is (approx-equal  80.0 x-advance))
+      (is (approx-equal   0.0 y-advance)))))
+
 ;;;     cairo_glyph_extents
 
-(test glyph-extents
+#-windows
+(test cairo-glyph-extents
   (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
     ;; Set a font and a font size
     (cairo:select-font-face context "Sans")
@@ -169,12 +241,28 @@
     (is (approx-equal  12.0 x-advance))
     (is (approx-equal   0.0 y-advance)))))
 
+#+windows
+(test cairo-glyph-extents
+  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
+    ;; Set a font and a font size
+    (cairo:select-font-face context "Sans")
+    (cairo:set-font-size context 18)
+    (multiple-value-bind (x-bearing y-bearing width height x-advance y-advance)
+        (cairo:glyph-extents context '((36 10 20)))
+    ;; Check the returned values
+    (is (approx-equal  -1.3 x-bearing))
+    (is (approx-equal -13.0 y-bearing))
+    (is (approx-equal  13.0 width))
+    (is (approx-equal  13.0 height))
+    (is (approx-equal  12.0 x-advance))
+    (is (approx-equal   0.0 y-advance)))))
+
 ;;;     cairo_toy_font_face_create
 ;;;     cairo_toy_font_face_get_family
 ;;;     cairo_toy_font_face_get_slant
 ;;;     cairo_toy_font_face_get_weight
 
-(test toy-font-face-create
+(test cairo-toy-font-face-create
   (cairo:with-cairo-toy-font-face (face "Sans" :italic :bold)
     (is (string= "Sans" (cairo:toy-font-face-family face)))
     (is (eq :italic (cairo:toy-font-face-slant face)))
@@ -185,4 +273,4 @@
 ;;;     cairo_text_cluster_allocate
 ;;;     cairo_text_cluster_free
 
-;;; --- 2023-1-26 --------------------------------------------------------------
+;;; --- 2023-7-21 --------------------------------------------------------------

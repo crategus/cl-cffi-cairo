@@ -130,7 +130,7 @@
       (liber:symbol-documentation 'fill-rule-t)
  "@version{2023-1-11}
   @begin{short}
-    The @sym{cairo:fill-rule-t} enumeration is used to select how paths are
+    The @symbol{cairo:fill-rule-t} enumeration is used to select how paths are
     filled.
   @end{short}
   For both fill rules, whether or not a point is included in the fill is
@@ -176,8 +176,8 @@
       (liber:symbol-documentation 'line-cap-t)
  "@version{2023-1-11}
   @begin{short}
-    The @sym{cairo:line-cap-t} enumeration specifies how to render the endpoints
-    of the path when stroking.
+    The @symbol{cairo:line-cap-t} enumeration specifies how to render the
+    endpoints of the path when stroking.
   @end{short}
   The default line cap style is @code{:butt}.
   @begin{pre}
@@ -213,7 +213,7 @@
       (liber:symbol-documentation 'line-join-t)
  "@version{2023-1-11}
   @begin{short}
-    The @sym{cairo:line-jonit-t} enumeration specifies how to render the
+    The @symbol{cairo:line-join-t} enumeration specifies how to render the
     junction of two lines when stroking.
   @end{short}
   The default line join style is @code{:miter}.
@@ -278,7 +278,7 @@
       (liber:symbol-documentation 'operator-t)
  "@version{2023-1-11}
   @begin{short}
-    The @sym{cairo:operator-t} enumeration is used to set the compositing
+    The @symbol{cairo:operator-t} enumeration is used to set the compositing
     operator for all Cairo drawing operations.
   @end{short}
   The default operator is @code{:over}. The operators marked as unbounded modify
@@ -392,14 +392,14 @@
       (liber:symbol-documentation 'context-t)
  "@version{#2022-12-19}
   @begin{short}
-    A @sym{cairo:context-t} Cairo context contains the current state of the
+    A @symbol{cairo:context-t} Cairo context contains the current state of the
     rendering device, including coordinates of yet to be drawn shapes.
   @end{short}
-  Cairo contexts, as @sym{cairo:context-t} contexts are named, are central to
-  Cairo and all drawing with Cairo is always done to a @sym{cairo:context-t}
+  Cairo contexts, as @symbol{cairo:context-t} contexts are named, are central to
+  Cairo and all drawing with Cairo is always done to a @symbol{cairo:context-t}
   context.
 
-  Memory management of the @sym{cairo:context-t} context is done with the
+  Memory management of the @symbol{cairo:context-t} context is done with the
   @fun{cairo:reference} and @fun{cairo:destroy} functions.
   @see-function{cairo:destroy}
   @see-function{cairo:reference}
@@ -418,9 +418,9 @@
   @argument[context]{a newly allocated @symbol{cairo:context-t} instance}
   @argument[surface]{a @symbol{cairo:surface-t} target surface}
   @begin{short}
-    The @sym{with-cairo-context} macro allocates a new @symbol{cairo:context-t}
-    instance for the given @arg{surface} and executes the body that uses the
-    Cairo context.
+    The @symbol{with-cairo-context} macro allocates a new
+    @symbol{cairo:context-t} instance for the given @arg{surface} and executes
+    the body that uses the Cairo context.
   @end{short}
   After execution of the body the allocated memory for the Cairo context is
   released.
@@ -549,10 +549,10 @@
     stack of saved states for @arg{cr}.
   @end{short}
   When the @fun{cairo:restore} function is called, @arg{cr} will be restored
-  to the saved state. Multiple calls to the @sym{cairo:save} and
+  to the saved state. Multiple calls to the @fun{cairo:save} and
   @fun{cairo:restore} functions can be nested. Each call to the
   @fun{cairo:restore} function restores the state from the matching paired
-  @sym{cairo:save} call.
+  @fun{cairo:save} call.
 
   It is not necessary to clear all saved states before a Cairo context is freed.
   If the reference count of a Cairo context drops to zero in response to a call
@@ -634,10 +634,10 @@
   translucence onto the destination.
 
   Groups can be nested arbitrarily deep by making balanced calls to the
-  @sym{cairo:push-group} and @fun{cairo:pop-group} functions. Each call pushes
+  @fun{cairo:push-group} and @fun{cairo:pop-group} functions. Each call pushes
   and pops the new target group onto and from a stack.
 
-  The @sym{cairo:push-group} function calls the @fun{cairo:save} function so
+  The @fun{cairo:push-group} function calls the @fun{cairo:save} function so
   that any changes to the graphics state will not be visible outside the group,
   the pop group functions call the @fun{cairo:restore} function.
 
@@ -722,7 +722,7 @@
     containing the results of all drawing operations performed to the group.
   @end{short}
 
-  The @sym{cairo:pop-group} function calls the @fun{cairo:restore} function,
+  The @fun{cairo:pop-group} function calls the @fun{cairo:restore} function,
   balancing a call to the @fun{cairo:save} function by the push group
   function, so that any changes to the graphics state will not be visible
   outside the group.
@@ -759,7 +759,7 @@
   but is more convenient as their is no need for a variable to store the
   pattern.
 
-  The @sym{cairo:pop-group-to-source} function calls the @fun{cairo:restore}
+  The @fun{cairo:pop-group-to-source} function calls the @fun{cairo:restore}
   function, balancing a call to the @fun{cairo:save} function by the push
   group function, so that any changes to the graphics state will not be visible
   outside the group.
@@ -907,12 +907,12 @@
   @argument[source]{a @symbol{cairo:pattern-t} instance to be used as the
     source for subsequent drawing operations}
   @begin{short}
-   The @sym{cairo:source} function gets the current source pattern for
+   The @fun{cairo:source} function gets the current source pattern for
    @arg{cr}.
   @end{short}
-  The @sym{(setf cairo:source)} function sets the source pattern within
-  @arg{cr} to @arg{source}. This pattern will then be used for any subsequent
-  drawing operation until a new source pattern is set.
+  The @setf{cairo:source} function sets the source pattern within @arg{cr} to
+  @arg{source}. This pattern will then be used for any subsequent drawing
+  operation until a new source pattern is set.
 
   The default source pattern is a solid pattern that is opaque black, that
   is, it is equivalent to
@@ -923,10 +923,9 @@
   @fun{cairo:pattern-reference} function.
   @begin[Note]{dictionary}
     The transformation matrix of the pattern will be locked to the user space
-    in effect at the time of the call of the @sym{(setf cairo:source)}
-    function. This means that further modifications of the current
-    transformation matrix will not affect the source pattern. See the
-    @fun{cairo:pattern-matrix} function.
+    in effect at the time of the call of the @setf{cairo:source} function. This
+    means that further modifications of the current transformation matrix will
+    not affect the source pattern. See the @fun{cairo:pattern-matrix} function.
   @end{dictionary}
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:pattern-t}
@@ -1004,10 +1003,10 @@
   @argument[cr]{a @symbol{cairo:context-t} context}
   @argument[antialias]{a @symbol{cairo:antialias-t} value}
   @begin{short}
-    The @sym{cairo:antialias} function gets the current shape antialiasing
+    The @fun{cairo:antialias} function gets the current shape antialiasing
     mode.
   @end{short}
-  The @sym{(setf cairo:antialias)} sets the antialiasing mode of the
+  The @setf{cairo:antialias} function sets the antialiasing mode of the
   rasterizer used for drawing shapes. This value is a hint, and a particular
   backend may or may not support a particular value. At the current time, no
   backend supports the @code{:subpixel} mode when drawing shapes.
@@ -1067,9 +1066,9 @@
   @argument[offset]{a number coerced to a double float with an offset into the
     dash pattern at which the stroke should start}
   @begin{short}
-    The @sym{cairo:dash} function gets the current dash list.
+    The @fun{cairo:dash} function gets the current dash list.
   @end{short}
-  The @sym{(setf cairo:dash)} function sets the dash pattern to be used by the
+  The @setf{cairo:dash} function sets the dash pattern to be used by the
   @fun{cairo:stroke} function. A dash pattern is specified by dashes, a list of
   positive values. Each value provides the length of alternate \"on\" and
   \"off\" portions of the stroke. The offset specifies an offset into the
@@ -1089,7 +1088,7 @@
   @begin[Note]{dictionary}
     The length values are in user-space units as evaluated at the time of
     stroking. This is not necessarily the same as the user space at the time of
-    the call of the @sym{(setf cairo:dash)} function.
+    the call of the @setf{cairo:dash} function.
   @end{dictionary}
   @see-symbol{cairo:context-t}
   @see-function{cairo:stroke}"
@@ -1147,10 +1146,10 @@
   @argument[cr]{a @symbol{cairo:context-t} context}
   @argument[rule]{a @symbol{cairo:fill-rule-t} value for the fill rule}
   @begin{short}
-    The @sym{cairo:fill-rule} function gets the current fill rule.
+    The @fun{cairo:fill-rule} function gets the current fill rule.
   @end{short}
-  The @sym{(setf cairo:fill-rule)} function sets the current fill rule within
-  the Cairo context.
+  The @setf{cairo:fill-rule} function sets the current fill rule within the
+  Cairo context.
 
   The fill rule is used to determine which regions are inside or outside a
   complex, potentially self-intersecting, path. The current fill rule affects
@@ -1187,11 +1186,11 @@
   @argument[cr]{a @symbol{cairo:context-t} context}
   @argument[cap]{a @symbol{cairo:line-cap-t} value for the line cap style}
   @begin{short}
-    The @sym{cairo:line-cap} function gets the current line cap style.
+    The @fun{cairo:line-cap} function gets the current line cap style.
   @end{short}
-  The @sym{(setf cairo:line-cap)} function sets the current line cap style
-  within the Cairo context. See the @symbol{cairo:line-cap-t} enumeration for
-  details about how the available line cap styles are drawn.
+  The @setf{cairo:line-cap} function sets the current line cap style within the
+  Cairo context. See the @symbol{cairo:line-cap-t} enumeration for details about
+  how the available line cap styles are drawn.
 
   As with the other stroke parameters, the current line cap style is examined
   by the @fun{cairo:stroke} and @fun{cairo:stroke-extents} functions, but
@@ -1226,12 +1225,11 @@
   @argument[cr]{a @symbol{cairo:context-t} context}
   @argument[join]{a @symbol{cairo:line-join-t} value for the line join style}
   @begin{short}
-    The @sym{cairo:line-join} funcion gets the current line join style.
+    The @fun{cairo:line-join} funcion gets the current line join style.
   @end{short}
-  The @sym{(setf cairo:line-join)} function sets the current line join style
-  within the Cairo context.
-  See the @symbol{cairo:line-join-t} enumeration for details about how the
-  available line join styles are drawn.
+  The @setf{cairo:line-join} function sets the current line join style within
+  the Cairo context. See the @symbol{cairo:line-join-t} enumeration for details
+  about how the available line join styles are drawn.
 
   As with the other stroke parameters, the current line join style is examined
   by the @fun{cairo:stroke} and @fun{cairo:stroke-extents} functions, but
@@ -1266,12 +1264,12 @@
   @argument[cr]{a @symbol{cairo:context-t} context}
   @argument[width]{a number coerced to a double float with the line width}
   @begin{short}
-    The @sym{cairo:line-width} function returns the current line width value.
+    The @fun{cairo:line-width} function returns the current line width value.
   @end{short}
-  The @sym{(setf cairo:line-width)} function sets the current line width within
-  the Cairo context. Note that the value is unchanged even if the CTM has
-  changed between the calls to the @sym{cairo:line-width} and
-  @sym{(setf cairo:line-width)} functions.
+  The @setf{cairo:line-width} function sets the current line width within the
+  Cairo context. Note that the value is unchanged even if the CTM has changed
+  between the calls to the @fun{cairo:line-width} and @setf{cairo:line-width}
+  functions.
 
   The line width value specifies the diameter of a pen that is circular in user
   space, though device-space pen may be an ellipse in general due to
@@ -1286,11 +1284,11 @@
     When the description above refers to user space and CTM it refers to the
     user space and CTM in effect at the time of the stroking operation, not
     the user space and CTM in effect at the time of the call to the
-    @sym{(setf cairo:line-width)} function. The simplest usage makes both of
-    these spaces identical. That is, if there is no change to the CTM between a
-    call to the @sym{(setf cairo:line-width)} function and the stroking
-    operation, then one can just pass user-space values to the
-    @sym{(setf cairo:line-width)} function and ignore this note.
+    @setf{cairo:line-width} function. The simplest usage makes both of these
+    spaces identical. That is, if there is no change to the CTM between a call
+    to the @setf{cairo:line-width} function and the stroking operation, then one
+    can just pass user-space values to the @setf{cairo:line-width} function and
+    ignore this note.
   @end{dictionary}
   @see-symbol{cairo:context-t}
   @see-function{cairo:stroke}
@@ -1320,11 +1318,11 @@
   @argument[cr]{a @symbol{cairo:context-t} context}
   @argument[limit]{a number coerced to a double float with the miter limit}
   @begin{short}
-    The @sym{cairo:miter-limit} function gets the current miter limit.
+    The @fun{cairo:miter-limit} function gets the current miter limit.
     function.
   @end{short}
-  The @sym{(setf cairo:miter-limit)} function sets the current miter limit
-  within the Cairo context.
+  The @setf{cairo:miter-limit} function sets the current miter limit within the
+  Cairo context.
 
   If the current line join style is set to @code{:miter}, see the
   @fun{cairo:line-join} function, the miter limit is used to determine
@@ -1374,13 +1372,12 @@
   @argument[op]{a compositing operator, specified as a @symbol{cairo:operator-t}
     value}
   @begin{short}
-    The @sym{cairo:operator} function gets the current compositing operator
+    The @fun{cairo:operator} function gets the current compositing operator
     for a Cairo context.
   @end{short}
-  The @sym{(setf cairo:operator)} function sets the compositing operator to
-  be used for all drawing operations. See the @symbol{cairo:operator-t}
-  enumeration for details on the semantics of each available compositing
-  operator.
+  The @setf{cairo:operator} function sets the compositing operator to be used
+  for all drawing operations. See the @symbol{cairo:operator-t} enumeration for
+  details on the semantics of each available compositing operator.
 
   The default operator is @code{:over}.
   @see-symbol{cairo:context-t}
@@ -1411,10 +1408,10 @@
   @argument[tolerance]{a number coerced to a double float with the tolerance,
     in device units, typically pixels}
   @begin{short}
-    The @sym{cairo:tolerance} function gets the current tolerance value.
+    The @fun{cairo:tolerance} function gets the current tolerance value.
   @end{short}
-  The @sym{(setf cairo:tolerance)} functions sets the tolerance used when
-  converting paths into trapezoids.
+  The @setf{cairo:tolerance} functions sets the tolerance used when converting
+  paths into trapezoids.
 
   Curved segments of the path will be subdivided until the maximum deviation
   between the original path and the polygonal approximation is less than
@@ -1444,17 +1441,17 @@
     function.
   @end{short}
 
-  After a call of the @sym{cairo:clip} function, the current path will be
+  After a call of the @fun{cairo:clip} function, the current path will be
   cleared from the Cairo context.
 
   The current clip region affects all drawing operations by effectively
   masking out any changes to the surface that are outside the current clip
   region.
 
-  Calling the @sym{cairo:clip} function can only make the clip region smaller,
+  Calling the @fun{cairo:clip} function can only make the clip region smaller,
   never larger. But the current clip is part of the graphics state, so a
   temporary restriction of the clip region can be achieved by calling
-  the @sym{cairo:clip} function within a
+  the @fun{cairo:clip} function within a
   @fun{cairo:save}/@fun{cairo:restore} pair. The only other means of
   increasing the size of the clip region is the @fun{cairo:reset-clip}
   function.
@@ -1483,16 +1480,16 @@
   @end{short}
   See the @fun{cairo:fill-rule} function.
 
-  Unlike the @fun{cairo:clip} function, the @sym{cairo:clip-preserve}
-  function preserves the path within the Cairo context.
+  Unlike the @fun{cairo:clip} function, the @fun{cairo:clip-preserve} function
+  preserves the path within the Cairo context.
 
   The current clip region affects all drawing operations by effectively masking
   out any changes to the surface that are outside the current clip region.
 
-  Calling the @sym{cairo:clip-preserve} function can only make the clip region
+  Calling the @fun{cairo:clip-preserve} function can only make the clip region
   smaller, never larger. But the current clip is part of the graphics state, so
   a temporary restriction of the clip region can be achieved by calling the
-  @sym{cairo:clip-preserve} function within a
+  @fun{cairo:clip-preserve} function within a
   @fun{cairo:save}/@fun{cairo:restore} pair. The only other means of
   increasing the size of the clip region is the @fun{cairo:reset-clip}
   function.
@@ -1591,12 +1588,11 @@
   target surface. Equivalently, if infinity is too hard to grasp, one can
   imagine the clip region being reset to the exact bounds of the target surface.
 
-  Note that code meant to be reusable should not call the
-  @sym{cairo:reset-clip} function as it will cause results unexpected by
-  higher-level code which calls the @fun{cairo:clip} function. Consider using
-  the @fun{cairo:save} and @fun{cairo:restore} functions around the
-  @fun{cairo:clip} function as a more robust means of temporarily restricting
-  the clip region.
+  Note that code meant to be reusable should not call the @fun{cairo:reset-clip}
+  function as it will cause results unexpected by higher-level code which calls
+  the @fun{cairo:clip} function. Consider using the @fun{cairo:save} and
+  @fun{cairo:restore} functions around the @fun{cairo:clip} function as a more
+  robust means of temporarily restricting the clip region.
   @see-symbol{cairo:context-t}
   @see-function{cairo:clip}
   @see-function{cairo:save}
@@ -1665,7 +1661,7 @@
     A drawing operator that fills the current path according to the current
     fill rule, each sub-path is implicitly closed before being filled.
   @end{short}
-  After the @sym{cairo:fill} function, the current path will be cleared from
+  After the @fun{cairo:fill} function, the current path will be cleared from
   the Cairo context. See the @fun{cairo:fill-rule} and @fun{cairo:fill-preserve}
   functions.
   @see-symbol{cairo:context-t}
@@ -1687,8 +1683,8 @@
     A drawing operator that fills the current path according to the current
     fill rule, each sub-path is implicitly closed before being filled.
   @end{short}
-  Unlike the @fun{cairo:fill} function, the @sym{cairo:fill-preserve}
-  function preserves the path within the Cairo context.
+  Unlike the @fun{cairo:fill} function, the @fun{cairo:fill-preserve} function
+  preserves the path within the Cairo context.
 
   See the @fun{cairo:fill-rule} and @fun{cairo:fill} functions.
   @see-symbol{cairo:context-t}
@@ -1731,7 +1727,7 @@
   returns non-zero extents for some paths with no inked area, such as a simple
   line segment.
 
-  Note that the @sym{cairo:fill-extents} function must necessarily do more
+  Note that the @fun{cairo:fill-extents} function must necessarily do more
   work to compute the precise inked areas in light of the fill rule, so the
   @fun{cairo:path-extents} function may be more desirable for sake of
   performance if the non-inked path extents are desired.
@@ -1906,7 +1902,7 @@
     A drawing operator that strokes the current path according to the current
     line width, line join, line cap, and dash settings.
   @end{short}
-  After the @sym{cairo:stroke} function, the current path will be cleared from
+  After the @fun{cairo:stroke} function, the current path will be cleared from
   the Cairo context. See the @fun{cairo:line-width}, @fun{cairo:line-join},
   @fun{cairo:line-cap}, @fun{cairo:dash}, and @fun{cairo:stroke-preserve}
   functions.
@@ -1960,7 +1956,7 @@
     A drawing operator that strokes the current path according to the current
     line width, line join, line cap, and dash settings.
   @end{short}
-  Unlike the @fun{cairo:stroke} function, the @sym{cairo:stroke-preserve}
+  Unlike the @fun{cairo:stroke} function, the @fun{cairo:stroke-preserve}
   function preserves the path within the Cairo context.
 
   See the @fun{cairo:line-width}, @fun{cairo:line-join}, @fun{cairo:line-cap},
@@ -2005,11 +2001,11 @@
   and clipping are not taken into account.
 
   Note that if the line width is set to exactly zero, then the
-  @sym{cairo:stroke-extents} function will return an empty rectangle. Contrast
+  @fun{cairo:stroke-extents} function will return an empty rectangle. Contrast
   with the @fun{cairo:path-extents} function which can be used to compute the
   non-empty bounds as the line width approaches zero.
 
-  Note that the @sym{cairo:stroke-extents} function must necessarily do more
+  Note that the @fun{cairo:stroke-extents} function must necessarily do more
   work to compute the precise inked areas in light of the stroke parameters, so
   the @fun{cairo:path-extents} function may be more desirable for sake of
   performance if non-inked path extents are desired.

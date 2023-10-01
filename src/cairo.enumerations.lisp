@@ -48,8 +48,8 @@
       (liber:symbol-documentation 'antialias-t)
  "@version{2023-1-11}
   @begin{short}
-    The @sym{cairo:antialias-t} enumeration specifies the type of antialiasing
-    to do when rendering text or shapes.
+    The @symbol{cairo:antialias-t} enumeration specifies the type of 
+    antialiasing to do when rendering text or shapes.
   @end{short}
   As it is not necessarily clear from the above what advantages a particular
   antialias method provides, there is also a set of hints:

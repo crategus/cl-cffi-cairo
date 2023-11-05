@@ -24,7 +24,7 @@
 
 (defsystem :cl-cffi-cairo
   :name "cl-cffi-cairo"
-  :version "0.3.0"
+  :version "0.4.0"
   :author  "Dieter Kaiser"
   :license "MIT"
   :components
@@ -88,6 +88,9 @@
 
 (defsystem :cl-cffi-cairo/test
   :name "cl-cffi-cairo/test"
+  :version "0.4.0"
+  :author  "Dieter Kaiser"
+  :license "MIT"
   :pathname "test/"
   :serial t
   :components ((:file "rtest-cairo")
@@ -108,7 +111,6 @@
                (:file "rtest-cairo-pattern")
                (:file "rtest-cairo-context")
                (:file "rtest-cairo-transformation")
-
 
                (:file "rtest-cairo-text")
                (:file "rtest-cairo-path"))

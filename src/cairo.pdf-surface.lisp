@@ -2,7 +2,7 @@
 ;;; cairo.pdf-surface.lisp
 ;;;
 ;;; The documentation of the file is taken from the Cairo Reference Manual
-;;; Version 1.16 and modified to document the Lisp binding to the Cairo
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo
 ;;; library. See <http://cairographics.org>. The API documentation of the
 ;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -41,16 +41,17 @@
 ;;;
 ;;; Functions
 ;;;
-;;;     cairo_pdf_surface_create ()
-;;;     cairo_pdf_surface_create_for_stream ()
-;;;     cairo_pdf_surface_restrict_to_version ()
-;;;     cairo_pdf_get_versions ()
-;;;     cairo_pdf_version_to_string ()
-;;;     cairo_pdf_surface_set_size ()
-;;;     cairo_pdf_surface_add_outline ()
-;;;     cairo_pdf_surface_set_metadata ()
-;;;     cairo_pdf_surface_set_page_label ()
-;;;     cairo_pdf_surface_set_thumbnail_size ()
+;;;     cairo_pdf_surface_create
+;;;     cairo_pdf_surface_create_for_stream
+;;;     cairo_pdf_surface_restrict_to_version
+;;;     cairo_pdf_get_versions
+;;;     cairo_pdf_version_to_string
+;;;     cairo_pdf_surface_set_size
+;;;     cairo_pdf_surface_add_outline
+;;;     cairo_pdf_surface_set_metadata
+;;;     cairo_pdf_surface_set_custom_metadata
+;;;     cairo_pdf_surface_set_page_label
+;;;     cairo_pdf_surface_set_thumbnail_size
 ;;;
 ;;; Description
 ;;;
@@ -224,13 +225,17 @@
 
 (cffi:defcenum pdf-version-t
   :version-1-4
-  :version-1-5)
+  :version-1-5
+  #+cairo-1-18
+  :version-1-6
+  #+cairo-1-18
+  :version-1-7)
 
 #+liber-documentation
 (setf (liber:alias-for-symbol 'pdf-version-t)
       "CEnum"
       (liber:symbol-documentation 'pdf-version-t)
- "@version{2023-1-9}
+ "@version{2023-11-5}
   @begin{short}
     The @sym{cairo:pdf-version-t} enumeration is used to describe the version
     number of the PDF specification that a generated PDF file will conform to.
@@ -238,11 +243,17 @@
   @begin{pre}
 (cffi:defcenum pdf-version-t
   :version-1-4
-  :version-1-5)
+  :version-1-5
+  #+cairo-1-18
+  :version-1-6
+  #+cairo-1-18
+  :version-1-7)
   @end{pre}
   @begin[code]{table}
     @entry[:version-1-4]{The version 1.4 of the PDF specification.}
     @entry[:version-1-5]{The version 1.5 of the PDF specification.}
+    @entry[:version-1-6]{The version 1.6 of the PDF specification.}
+    @entry[:version-1-7]{The version 1.7 of the PDF specification.}
   @end{table}
   @see-function{cairo:pdf-version-to-string}")
 
@@ -493,6 +504,36 @@
   (utf8 :string))
 
 (export 'pdf-surface-set-metadata)
+
+;;; ----------------------------------------------------------------------------
+;;; cairo_pdf_surface_set_custom_metadata ()
+;;;
+;;; void
+;;; cairo_pdf_surface_set_custom_metadata (cairo_surface_t *surface,
+;;;                                        const char *name,
+;;;                                        const char *value);
+;;;
+;;; Set custom document metadata. name may be any string except for the
+;;; following names reserved by PDF: "Title", "Author", "Subject", "Keywords",
+;;; "Creator", "Producer", "CreationDate", "ModDate", "Trapped".
+;;;
+;;; If value is NULL or an empty string, the name metadata will not be set.
+;;;
+;;; For example:
+;;;
+;;; cairo_pdf_surface_set_custom_metadata (surface, "ISBN", "978-0123456789");
+;;;
+;;; surface
+;;;     a PDF cairo_surface_t
+;;;
+;;; name
+;;;     The name of the custom metadata item to set (utf8).
+;;;
+;;; value
+;;;     The value of the metadata (utf8).
+;;;
+;;; Since 1.18
+;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_pdf_surface_set_page_label ()

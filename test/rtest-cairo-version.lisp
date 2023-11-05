@@ -14,12 +14,12 @@
 
 #-windows
 (test version
-  (is (= 11600 (cairo:version))))
+  (is (= 11800 (cairo:version))))
 
 ;;;     cairo_version_string
 
 #-windows
 (test version-string
-  (is (string= "1.16.0" (cairo:version-string))))
+  (is (string= "1.18.0" (cairo:version-string))))
 
-;;; --- 2023-1-7 ---------------------------------------------------------------
+;;; --- 2023-11-5 --------------------------------------------------------------

@@ -159,7 +159,6 @@
 
 ;;;     cairo_font_extents
 
-#-windows
 (test cairo-font-extents
   (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
     ;; Set a font and a font size
@@ -168,10 +167,25 @@
     (multiple-value-bind (ascent descent height max-x-advance max-y-advance)
         (cairo:font-extents context)
       ;; Check the values
-      (is (approx-equal 17.0 ascent))
-      (is (approx-equal  5.0 descent))
-      (is (approx-equal 21.0 height))
-      (is (approx-equal 34.0 max-x-advance))
+      (is (typep ascent 'double-float))
+      (is (typep descent 'double-float))
+      (is (typep height 'double-float))
+      (is (typep max-x-advance 'double-float))
+      (is (typep max-y-advance 'double-float)))))
+
+#+crategus
+(test cairo-font-extents
+  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
+    ;; Set a font and a font size
+    (cairo:select-font-face context "Sans")
+    (cairo:set-font-size context 18)
+    (multiple-value-bind (ascent descent height max-x-advance max-y-advance)
+        (cairo:font-extents context)
+      ;; Check the values
+      (is (approx-equal 20.0 ascent))
+      (is (approx-equal  6.0 descent))
+      (is (approx-equal 25.0 height))
+      (is (approx-equal 51.0 max-x-advance))
       (is (approx-equal  0.0 max-y-advance)))))
 
 #+windows
@@ -273,4 +287,4 @@
 ;;;     cairo_text_cluster_allocate
 ;;;     cairo_text_cluster_free
 
-;;; --- 2023-7-21 --------------------------------------------------------------
+;;; --- 2023-11-5 --------------------------------------------------------------

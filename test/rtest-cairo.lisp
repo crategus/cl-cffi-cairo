@@ -25,4 +25,16 @@
   (asdf:system-relative-pathname system
                                  (concatenate 'string "test/" filename)))
 
-;;; --- 2023-1-26 --------------------------------------------------------------
+(defun flatten (tree)
+  (let (lst)
+    (labels ((traverse (subtree)
+               (when subtree
+                 (if (consp subtree)
+                     (progn
+                       (traverse (car subtree))
+                       (traverse (cdr subtree)))
+                     (push subtree lst)))))
+      (traverse tree))
+    (nreverse lst)))
+
+;;; --- 2023-11-5 --------------------------------------------------------------

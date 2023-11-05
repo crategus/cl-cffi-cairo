@@ -22,14 +22,14 @@
 
 #-windows
 (test pdf-versions
-  (is (equal '(:version-1-4 :version-1-5)
+  (is (equal '(:VERSION-1-4 :VERSION-1-5 :VERSION-1-6 :VERSION-1-7)
              (cairo:pdf-versions))))
 
 ;;;     cairo_pdf_version_to_string ()
 
 #-windows
 (test pdf-version-to-string
-  (is (equal '("PDF 1.4" "PDF 1.5")
+  (is (equal '("PDF 1.4" "PDF 1.5" "PDF 1.6" "PDF 1.7")
              (mapcar #'cairo:pdf-version-to-string (cairo:pdf-versions)))))
 
 ;;;     cairo_pdf_surface_set_size ()
@@ -38,4 +38,4 @@
 ;;;     cairo_pdf_surface_set_page_label ()
 ;;;     cairo_pdf_surface_set_thumbnail_size ()
 
-;;; --- 2023-1-7 ---------------------------------------------------------------
+;;; --- 2023-11-5 --------------------------------------------------------------

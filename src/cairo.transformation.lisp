@@ -6,7 +6,7 @@
 ;;; library. See <http://cairographics.org>. The API documentation of the
 ;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2013 - 2023 Dieter Kaiser
+;;; Copyright (C) 2013 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -61,16 +61,18 @@
 
 (defun translate (cr tx ty)
  #+liber-documentation
- "@version{2023-1-14}
+ "@version{2023-12-26}
   @argument[cr]{a @symbol{cairo:context-t} context}
-  @argument[tx]{a double float with the amount to translate in the x direction}
-  @argument[ty]{a double float with the amount to translate in the y direction}
+  @argument[tx]{a number coerced to a double float with the amount to translate
+    in the x direction}
+  @argument[ty]{a number coerced to a double float with the amount to translate
+    in the y direction}
   @begin{short}
     Modifies the current transformation matrix (CTM) by translating the
     user-space origin by (@arg{tx}, @arg{ty}).
   @end{short}
   This offset is interpreted as a user-space coordinate according to the CTM in
-  place before the new call to the @sym{cairo:translate} function. In other
+  place before the new call to the @fun{cairo:translate} function. In other
   words, the translation of the user-space origin takes place after any existing
   transformation.
   @see-symbol{cairo:context-t}"
@@ -94,10 +96,12 @@
 
 (defun scale (cr sx sy)
  #+liber-documentation
- "@version{2023-1-14}
+ "@version{2023-12-26}
   @argument[cr]{a @symbol{cairo:context-t} context}
-  @argument[sx]{a double float with the scale factor for the x dimension}
-  @argument[sy]{a double float with the scale factor for the y dimension}
+  @argument[sx]{a number coerced to a double float with the scale factor for
+    the x dimension}
+  @argument[sy]{a number coerced to a double float with the scale factor for
+    the y dimension}
   @begin{short}
     Modifies the current transformation matrix (CTM) by scaling the x and y
     user-space axes by @arg{sx} and @arg{sy} respectively.
@@ -119,17 +123,17 @@
 
 (defun rotate (cr angle)
  #+liber-documentation
- "@version{2023-1-14}
+ "@version{2023-12-26}
   @argument[cr]{a @symbol{cairo:context-t} context}
-  @argument[angle]{a double float with an angle in radians by which the
-    user-space axes will be rotated}
+  @argument[angle]{a number coerced to a double float with an angle in radians
+    by which the user-space axes will be rotated}
   @begin{short}
     Modifies the current transformation matrix (CTM) by rotating the user-space
     axes by @arg{angle} radians.
   @end{short}
   The rotation of the axes takes places after any existing transformation of
-  user space. The rotation direction for positive angles is from the positive x
-  axis toward the positive y axis.
+  user space. The rotation direction for positive angles is from the positive
+  x axis toward the positive y axis.
   @see-symbol{cairo:context-t}"
   (%rotate cr (coerce angle 'double-float)))
 
@@ -179,11 +183,11 @@
   @argument[matrix]{a @symbol{cairo:matrix-t} transformation matrix from user
     space to device space}
   @begin{short}
-    The @sym{cairo:matrix} function gets the current transformation matrix
+    The @fun{cairo:matrix} function gets the current transformation matrix
     (CTM).
   @end{short}
-  The @sym{(setf cairo:matrix)} function modifies the current transformation
-  matrix (CTM) by setting it equal to @arg{matrix}.
+  The @setf{cairo:matrix} function modifies the current transformation matrix
+  (CTM) by setting it equal to @arg{matrix}.
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:matrix-t}"
   (cffi:foreign-funcall "cairo_get_matrix"

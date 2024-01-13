@@ -2,11 +2,11 @@
 ;;; cairo.path.lisp
 ;;;
 ;;; The documentation of the file is taken from the Cairo Reference Manual
-;;; Version 1.16 and modified to document the Lisp binding to the Cairo
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo
 ;;; library. See <http://cairographics.org>. The API documentation of the
 ;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2012 - 2023 Dieter Kaiser
+;;; Copyright (C) 2012 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -85,7 +85,7 @@
       (liber:symbol-documentation 'path-data-type-t)
  "@version{#2021-12-12}
   @begin{short}
-    The @sym{cairo:path-data-type-t} enumeration is used to describe the type
+    The @symbol{cairo:path-data-type-t} enumeration is used to describe the type
     of one portion of a path when represented as a @symbol{cairo:path-t}
     instance.
   @end{short}
@@ -130,13 +130,13 @@
       (liber:symbol-documentation 'path-data-t)
  "@version{#2021-12-12}
   @begin{short}
-    The @sym{cairo:path-data-t} structure is used to represent the path data
+    The @symbol{cairo:path-data-t} structure is used to represent the path data
     inside a @symbol{cairo:path-t} instance.
   @end{short}
 
   The data structure is designed to try to balance the demands of efficiency
-  and ease-of-use. A path is represented as an array of @sym{cairo:path-data-t}
-  instances, which is a union of headers and points.
+  and ease-of-use. A path is represented as an array of
+  @symbol{cairo:path-data-t} instances, which is a union of headers and points.
   @begin{pre}
 (cffi:defcstruct header-t
   (data-type path-data-type-t)
@@ -168,49 +168,49 @@
   Here is sample code for iterating through a @symbol{cairo:path-t} structure:
   @begin{pre}
 (defun path-to-lisp (path)
-  (loop with count = 0
-        with numdata = (cairo:path-numdata path)
-        with element = :path
-        with data = (cairo:path-data path)
-        with size = (cffi:foreign-type-size '(:struct cairo:path-data-t))
-        collect element
-        while (< count numdata)
-        do (cond ((eq :move-to (cairo:header-data-type data))
-                  (setf element (list :move-to))
-                  (setf count (incf count (cairo:header-length data)))
-                  (setf data (cffi:inc-pointer data size))
-                  (push (cairo:point-x data) element)
-                  (push (cairo:point-y data) element)
-                  (setf element (reverse element))
-                  (setf data (cffi:inc-pointer data size)))
-                 ((eq :line-to (cairo:header-data-type data))
-                  (setf element (list :line-to))
-                  (setf count (incf count (cairo:header-length data)))
-                  (setf data (cffi:inc-pointer data size))
-                  (push (cairo:point-x data) element)
-                  (push (cairo:point-y data) element)
-                  (setf element (reverse element))
-                  (setf data (cffi:inc-pointer data size)))
-                 ((eq :curve-to (cairo:header-data-type data))
-                  (setf element (list :curve-to))
-                  (setf count (incf count (cairo:header-length data)))
-                  (setf data (cffi:inc-pointer data size))
-                  (push (cairo:point-x data) element)
-                  (push (cairo:point-y data) element)
-                  (setf data (cffi:inc-pointer data size))
-                  (push (cairo:point-x data) element)
-                  (push (cairo:point-y data) element)
-                  (setf data (cffi:inc-pointer data size))
-                  (push (cairo:point-x data) element)
-                  (push (cairo:point-y data) element)
-                  (setf element (reverse element))
-                  (setf data (cffi:inc-pointer data size)))
-                 ((eq :close-path (cairo:header-data-type data))
-                  (setf element (list :close-path))
-                  (setf count (incf count (cairo:header-length data)))
-                  (setf data (cffi:inc-pointer data size)))
-                 (t (error \"KEYWORD ~a not known to PATH-DATA-TYPE-T\"
-                           (cairo:header-data-type data))))))
+  (iter (with count = 0)
+        (with numdata = (cairo:path-numdata path))
+        (with element = :path)
+        (with data = (cairo:path-data path))
+        (with size = (cffi:foreign-type-size '(:struct cairo:path-data-t)))
+        (collect element)
+        (while (< count numdata))
+        (cond ((eq :move-to (cairo:header-data-type data))
+               (setf element (list :move-to))
+               (setf count (incf count (cairo:header-length data)))
+               (setf data (cffi:inc-pointer data size))
+               (push (cairo:point-x data) element)
+               (push (cairo:point-y data) element)
+               (setf element (reverse element))
+               (setf data (cffi:inc-pointer data size)))
+              ((eq :line-to (cairo:header-data-type data))
+               (setf element (list :line-to))
+               (setf count (incf count (cairo:header-length data)))
+               (setf data (cffi:inc-pointer data size))
+               (push (cairo:point-x data) element)
+               (push (cairo:point-y data) element)
+               (setf element (reverse element))
+               (setf data (cffi:inc-pointer data size)))
+              ((eq :curve-to (cairo:header-data-type data))
+               (setf element (list :curve-to))
+               (setf count (incf count (cairo:header-length data)))
+               (setf data (cffi:inc-pointer data size))
+               (push (cairo:point-x data) element)
+               (push (cairo:point-y data) element)
+               (setf data (cffi:inc-pointer data size))
+               (push (cairo:point-x data) element)
+               (push (cairo:point-y data) element)
+               (setf data (cffi:inc-pointer data size))
+               (push (cairo:point-x data) element)
+               (push (cairo:point-y data) element)
+               (setf element (reverse element))
+               (setf data (cffi:inc-pointer data size)))
+              ((eq :close-path (cairo:header-data-type data))
+               (setf element (list :close-path))
+               (setf count (incf count (cairo:header-length data)))
+               (setf data (cffi:inc-pointer data size)))
+              (t (error \"KEYWORD ~a not known to PATH-DATA-TYPE-T\"
+                        (cairo:header-data-type data))))))
   @end{pre}
   As of Cairo 1.4, Cairo does not mind if there are more elements in a portion
   of the path than needed. Such elements can be used by users of the Cairo API
@@ -289,7 +289,7 @@
  #+liber-documentation
  "@version{#2023-1-7}
   @argument[header]{a @symbol{cairo:header-t} instance}
-  @return{An integer with the length of the header.}
+  @return{The integer with the length of the header.}
   @begin{short}
     Accessor of the @code{length} slot of the @symbol{cairo:header-t}
     structure.
@@ -308,7 +308,7 @@
  #+liber-documentation
  "@version{#2023-1-13}
   @argument[header]{a @symbol{cairo:point-t} instance}
-  @return{A double float with the x coordinate of the point.}
+  @return{The double float with the x coordinate of the point.}
   @begin{short}
     Accessor of the @code{x} slot of the @symbol{cairo:point-t} structure.
   @end{short}
@@ -323,7 +323,7 @@
  #+liber-documentation
  "@version{#2023-1-13}
   @argument[header]{a @symbol{cairo:point-t} instance}
-  @return{A double float with the y coordinate of the point.}
+  @return{The double float with the y coordinate of the point.}
   @begin{short}
     Accessor of the @code{y} slot of the @symbol{cairo:point-t} structure.
   @end{short}
@@ -421,7 +421,7 @@
  #+liber-documentation
  "@version{#2023-1-6}
   @argument[path]{a @symbol{cairo:path-t} instance}
-  @return{An integer with the number of elements in the data array.}
+  @return{The integer with the number of elements in the data array.}
   @begin{short}
     Accessor of the @code{data} slot of the @symbol{cairo:path-t} structure.
   @end{short}
@@ -537,10 +537,10 @@
   @begin{short}
     Immediately releases all memory associated with @arg{path}.
   @end{short}
-  After a call to the @sym{cairo:path-destroy} function the path pointer is no
+  After a call to the @fun{cairo:path-destroy} function the path pointer is no
   longer valid and should not be used further.
   @begin[Note]{dictionary}
-    The @sym{cairo:path-destroy} function should only be called with a pointer
+    The @fun{cairo:path-destroy} function should only be called with a pointer
     to a @symbol{cairo:path-t} instance returned by a Cairo function. Any path
     that is created manually, i.e. outside of Cairo, should be destroyed
     manually as well.
@@ -683,7 +683,7 @@ fill     stroke
   current point. In many cases, this call is not needed since new sub-paths are
   frequently started with the @fun{cairo:move-to} function.
 
-  A call to the @sym{cairo:new-sub-path} function is particularly useful when
+  A call to the @fun{cairo:new-sub-path} function is particularly useful when
   beginning a new sub-path with one of the @fun{cairo:arc} calls. This makes
   things easier as it is no longer necessary to manually compute the initial
   coordinates of the arc for a call to the @fun{cairo:move-to} function.
@@ -710,16 +710,16 @@ fill     stroke
   After this call the current point will be at the joined endpoint of the
   sub-path.
 
-  The behavior of the @sym{cairo:close-path} function is distinct from simply
+  The behavior of the @fun{cairo:close-path} function is distinct from simply
   calling the @fun{cairo:line-to} function with the equivalent coordinate in
   the case of stroking. When a closed sub-path is stroked, there are no caps on
   the ends of the sub-path. Instead, there is a line join connecting the final
   and initial segments of the sub-path.
 
-  If there is no current point before the call to the @sym{cairo:close-path}
+  If there is no current point before the call to the @fun{cairo:close-path}
   function, this function will have no effect.
   @begin[Note]{dictionary}
-    As of Cairo version 1.2.4 any call to the @sym{cairo:close-path} function
+    As of Cairo version 1.2.4 any call to the @fun{cairo:close-path} function
     will place an explicit @code{:move-to} element into the path immediately
     after the @code{:close-path} element, which can be seen in the
     @fun{cairo:copy-path} function for example. This can simplify path
@@ -767,7 +767,7 @@ fill     stroke
   If there is a current point, an initial line segment will be added to the
   path to connect the current point to the beginning of the arc. If this
   initial line is undesired, it can be avoided by calling the
-  @fun{cairo:new-sub-path} function before calling the @sym{cairo:arc} function.
+  @fun{cairo:new-sub-path} function before calling the @fun{cairo:arc} function.
 
   Angles are measured in radians. An angle of 0 is in the direction of the
   positive x axis (in user space). An angle of PI/2 radians (90 degrees) is in
@@ -881,7 +881,7 @@ fill     stroke
   @end{short}
   After this call the current point will be (@arg{x3}, @arg{y3}).
 
-  If there is no current point before the call to the @sym{cairo:curve-to}
+  If there is no current point before the call to the @fun{cairo:curve-to}
   function this function will behave as if preceded by a call to:
   @begin{pre}
 (cairo:move-to cr x1 y1)
@@ -921,7 +921,7 @@ fill     stroke
   @end{short}
   After this call the current point will be (@arg{x}, @arg{y}).
 
-  If there is no current point before the call to the @sym{cairo:line-to}
+  If there is no current point before the call to the @fun{cairo:line-to}
   function this function will behave as:
   @begin{pre}
 (cairo:move-to cr x y)
@@ -1054,10 +1054,10 @@ fill     stroke
   moved to the origin of where the next glyph would be placed in this same
   progression. That is, the current point will be at the origin of the final
   glyph offset by its advance values. This allows for chaining multiple calls
-  to to the @sym{cairo:text-path} function without having to set current point
+  to to the @fun{cairo:text-path} function without having to set current point
   in between.
   @begin[Note]{dictionary}
-    The @sym{cairo:text-path} function call is part of what the Cairo designers
+    The @fun{cairo:text-path} function call is part of what the Cairo designers
     call the \"toy\" text API. It is convenient for short demos and simple
     programs, but it is not expected to be adequate for serious text-using
     applications. See the @fun{cairo:glyph-path} function for the \"real\" text
@@ -1247,7 +1247,7 @@ fill     stroke
   functions which return the extents of only the area that would be \"inked\"
   by the corresponding drawing operations.
 
-  The result of the @sym{cairo:path-extents} function is defined as equivalent
+  The result of the @fun{cairo:path-extents} function is defined as equivalent
   to the limit of the @fun{cairo:stroke-extents} function with @code{:round} as
   the line width approaches 0.0, but never reaching the empty-rectangle
   returned by the @fun{cairo:stroke-extents} function for a line width of 0.0.
@@ -1256,7 +1256,7 @@ fill     stroke
   @fun{cairo:line-to} segments, even degenerate cases where the coordinates to
   both calls are identical, will be considered as contributing to the extents.
   However, a lone @fun{cairo:move-to} will not contribute to the results of
-  the @sym{cairo:path-extents} function.
+  the @fun{cairo:path-extents} function.
   @see-symbol{cairo:context-t}
   @see-function{cairo:fill-extents}
   @see-function{cairo:stroke-extents}

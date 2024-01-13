@@ -2,11 +2,11 @@
 ;;; cairo.user-font.lisp
 ;;;
 ;;; The documentation of the file is taken from the Cairo Reference Manual
-;;; Version 1.16 and modified to document the Lisp binding to the Cairo
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo
 ;;; library. See <http://cairographics.org>. The API documentation of the
 ;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2020 - 2023 Dieter Kaiser
+;;; Copyright (C) 2020 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -47,10 +47,14 @@
 ;;;     cairo_user_font_face_get_init_func
 ;;;     cairo_user_font_face_set_render_glyph_func
 ;;;     cairo_user_font_face_get_render_glyph_func
+;;;     cairo_user_font_face_set_render_color_glyph_func   Since 1.18
+;;;     cairo_user_font_face_get_render_color_glyph_func   Since 1.18
 ;;;     cairo_user_font_face_set_unicode_to_glyph_func
 ;;;     cairo_user_font_face_get_unicode_to_glyph_func
 ;;;     cairo_user_font_face_set_text_to_glyphs_func
 ;;;     cairo_user_font_face_get_text_to_glyphs_func
+;;;     cairo_user_scaled_font_get_foreground_marker       Since 1.18
+;;;     cairo_user_scaled_font_get_foreground_source       Since 1.18
 ;;;
 ;;; Description
 ;;;
@@ -73,7 +77,6 @@
 ;;;
 ;;; Since 1.8
 ;;; ----------------------------------------------------------------------------
-
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_user_scaled_font_init_func_t ()
@@ -434,6 +437,61 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
+;;; cairo_user_font_face_set_render_color_glyph_func ()
+;;;
+;;; void
+;;; cairo_user_font_face_set_render_color_glyph_func
+;;;              (cairo_font_face_t *font_face,
+;;;               cairo_user_scaled_font_render_glyph_func_t render_glyph_func);
+;;;
+;;; Sets the color glyph rendering function of a user-font. See
+;;; cairo_user_scaled_font_render_glyph_func_t for details of how the callback
+;;; works.
+;;;
+;;; The font-face should not be immutable or a CAIRO_STATUS_USER_FONT_IMMUTABLE
+;;; error will occur. A user font-face is immutable as soon as a scaled-font is
+;;; created from it.
+;;;
+;;; The render_glyph callback is the only mandatory callback of a user-font. At
+;;; least one of cairo_user_font_face_set_render_color_glyph_func() or
+;;; cairo_user_font_face_set_render_glyph_func() must be called to set a render
+;;; callback. If both callbacks are set, the color glyph render callback is
+;;; invoked first. If the color glyph render callback returns
+;;; CAIRO_STATUS_USER_FONT_NOT_IMPLEMENTED, the non-color version of the
+;;; callback is invoked.
+;;;
+;;; If the callback is NULL and a glyph is tried to be rendered using font_face,
+;;; a CAIRO_STATUS_USER_FONT_ERROR will occur.
+;;;
+;;; font_face
+;;;     A user font face
+;;;
+;;; render_glyph_func
+;;;     The render_glyph callback, or NULL
+;;;
+;;; Since 1.18
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; cairo_user_font_face_get_render_color_glyph_func ()
+;;;
+;;; cairo_user_scaled_font_render_glyph_func_t
+;;; cairo_user_font_face_get_render_color_glyph_func
+;;;                                (cairo_font_face_t *font_face);
+;;;
+;;; Gets the color glyph rendering function of a user-font.
+;;;
+;;; font_face
+;;;     A user font face
+;;;
+;;; Returns
+;;;     The render_glyph callback of font_face or NULL if none set or an error
+;;;     has occurred.
+;;;
+;;; Since 1.18
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
 ;;; cairo_user_font_face_set_unicode_to_glyph_func ()
 ;;;
 ;;; void
@@ -519,6 +577,104 @@
 ;;;     occurred.
 ;;;
 ;;; Since 1.8
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; cairo_user_scaled_font_get_foreground_marker ()
+;;;
+;;; cairo_pattern_t *
+;;; cairo_user_scaled_font_get_foreground_marker
+;;;                                (cairo_scaled_font_t *scaled_font);
+;;;
+;;; Gets the foreground pattern of the glyph currently being rendered. A
+;;; cairo_user_scaled_font_render_glyph_func_t function that has been set with
+;;; cairo_user_font_face_set_render_color_glyph_func() may call this function to
+;;; retrieve the current foreground pattern for the glyph being rendered. The
+;;; function should not be called outside of a
+;;; cairo_user_font_face_set_render_color_glyph_func() callback.
+;;;
+;;; The foreground marker pattern contains an internal marker to indicate that
+;;; it is to be substituted with the current source when rendered to a surface.
+;;; Querying the foreground marker will reveal a solid black color, however this
+;;; is not representative of the color that will actually be used. Similarly,
+;;; setting a solid black color will render black, not the foreground pattern
+;;; when the glyph is painted to a surface. Using the foreground marker as the
+;;; source instead of cairo_user_scaled_font_get_foreground_source() in a color
+;;; render callback has the following benefits:
+;;;
+;;; Cairo only needs to call the render callback once as it can cache the
+;;; recording. Cairo will substitute the actual foreground color when rendering
+;;; the recording.
+;;;
+;;; On backends that have the concept of a foreground color in fonts such as
+;;; PDF, PostScript, and SVG, cairo can generate more optimal output. The glyph
+;;; can be included in an embedded font.
+;;;
+;;; The one drawback of the using foreground marker is the render callback can
+;;; not access the color components of the pattern as the actual foreground
+;;; pattern is not available at the time the render callback is invoked. If the
+;;; render callback needs to query the foreground pattern, use
+;;; cairo_user_scaled_font_get_foreground_source().
+;;;
+;;; If the render callback simply wants to call cairo_set_source() with the
+;;; foreground pattern, cairo_user_scaled_font_get_foreground_marker() is the
+;;; preferred function to use as it results in better performance than
+;;; cairo_user_scaled_font_get_foreground_source().
+;;;
+;;; scaled_font
+;;;     A user scaled font
+;;;
+;;; Returns
+;;;     the current foreground source marker pattern. This object is owned by
+;;;     cairo. This object must not be modified or used outside of a color
+;;;     render callback. To keep a reference to it, you must call
+;;;     cairo_pattern_reference().
+;;;
+;;; Since 1.18
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; cairo_user_scaled_font_get_foreground_source ()
+;;;
+;;; cairo_pattern_t *
+;;; cairo_user_scaled_font_get_foreground_source
+;;;                                (cairo_scaled_font_t *scaled_font);
+;;;
+;;; Gets the foreground pattern of the glyph currently being rendered. A
+;;; cairo_user_scaled_font_render_glyph_func_t function that has been set with
+;;; cairo_user_font_face_set_render_color_glyph_func() may call this function to
+;;; retrieve the current foreground pattern for the glyph being rendered. The
+;;; function should not be called outside of a
+;;; cairo_user_font_face_set_render_color_glyph_func() callback.
+;;;
+;;; This function returns the current source at the time the glyph is rendered.
+;;; Compared with cairo_user_scaled_font_get_foreground_marker(), this function
+;;; returns the actual source pattern that will be used to render the glyph. The
+;;; render callback is free to query the pattern and extract color components or
+;;; other pattern data. For example if the render callback wants to create a
+;;; gradient stop based on colors in the foreground source pattern, it will need
+;;; to use this function in order to be able to query the colors in the
+;;; foreground pattern.
+;;;
+;;; While this function does not have the restrictions on using the pattern that
+;;; cairo_user_scaled_font_get_foreground_marker() has, it does incur a
+;;; performance penalty. If a render callback calls this function:
+;;;
+;;; Cairo will call the render callback whenever the current pattern of the
+;;; context in which the glyph is rendered changes.
+;;;
+;;; On backends that support font embedding (PDF, PostScript, and SVG), cairo
+;;; can not embed this glyph in a font. Instead the glyph will be emitted as an
+;;; image or sequence of drawing operations each time it is used.
+;;;
+;;; scaled_font
+;;;     A user scaled font
+;;;
+;;; Returns
+;;;     the current foreground source pattern. This object is owned by cairo.
+;;;     To keep a reference to it, you must call cairo_pattern_reference().
+;;;
+;;; Since 1.18
 ;;; ----------------------------------------------------------------------------
 
 ;;; --- End of file cairo.user-font.lisp ---------------------------------------

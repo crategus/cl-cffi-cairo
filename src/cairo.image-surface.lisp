@@ -2,11 +2,11 @@
 ;;; cairo.image-surface.lisp
 ;;;
 ;;; The documentation of the file is taken from the Cairo Reference Manual
-;;; Version 1.16 and modified to document the Lisp binding to the Cairo
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo
 ;;; library. See <http://cairographics.org>. The API documentation of the
 ;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2013 - 2023 Dieter Kaiser
+;;; Copyright (C) 2013 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -57,12 +57,10 @@
 
 (in-package :cairo)
 
-;;; ----------------------------------------------------------------------------
-
-(defmacro with-cairo-image-surface ((surface &rest args) &body body)
+(defmacro with-image-surface ((surface &rest args) &body body)
  #+liber-documentation
  "@version{2023-2-3}
-  @syntax[]{(with-cairo-image-surface (surface format width height) body) =>
+  @syntax[]{(cairo:with-image-surface (surface format width height) body) =>
     result}
   @argument[surface]{a @symbol{cairo:surface-t} instance to create and
     initialize}
@@ -71,7 +69,7 @@
   @argument[width]{an integer with the width of the surface, in pixels}
   @argument[height]{an integer with the height of the surface, in pixels}
   @begin{short}
-    The @sym{with-cairo-image-surface} macro allocates a new
+    The @fun{cairo:with-image-surface} macro allocates a new
     @symbol{cairo:surface-t} instance, initializes the Cairo surface with the
     @arg{format}, @arg{width}, and @arg{height} values and executes the body
     that uses the Cairo surface.
@@ -88,14 +86,14 @@
        (progn ,@body)
        (surface-destroy ,surface))))
 
-(export 'with-cairo-image-surface)
+(export 'with-image-surface)
 
 ;;; ----------------------------------------------------------------------------
 
-(defmacro with-cairo-context-for-image-surface ((context &rest args) &body body)
+(defmacro with-context-for-image-surface ((context &rest args) &body body)
  #+liber-documentation
  "@version{2023-2-3}
-  @syntax[]{(with-cairo-context-for-image-surface (context format width height)
+  @syntax[]{(cairo:with-context-for-image-surface (context format width height)
     body) => result}
   @argument[context]{a @symbol{cairo:context-t} instance to create and
     initialize}
@@ -104,7 +102,7 @@
   @argument[width]{an integer with the width of the surface, in pixels}
   @argument[height]{an integer with the height of the surface, in pixels}
   @begin{short}
-    The @sym{with-cairo-context-for-image-surface} macro allocates a new
+    The @fun{cairo:with-context-for-image-surface} macro allocates a new
     @symbol{cairo:context-t} instance, initializes the Cairo context with the
     @arg{format}, @arg{width}, and @arg{height} values and executes the body
     that uses the Cairo context.
@@ -118,11 +116,11 @@
   @see-function{cairo:create}
   @see-function{cairo:image-surface-create}"
   (let ((surface (gensym)))
-    `(with-cairo-image-surface (,surface ,@args)
-       (with-cairo-context (,context ,surface)
+    `(with-image-surface (,surface ,@args)
+       (with-context (,context ,surface)
          (progn ,@body)))))
 
-(export 'with-cairo-context-for-image-surface)
+(export 'with-context-for-image-surface)
 
 ;;; ----------------------------------------------------------------------------
 ;;; CAIRO_HAS_IMAGE_SURFACE
@@ -331,7 +329,7 @@
  #+liber-documentation
  "@version{#2020-12-21}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
-  @return{An integer with the width of the surface in pixels.}
+  @return{The integer with the width of the surface in pixels.}
   @begin{short}
     Gets the width of the image surface in pixels.
   @end{short}
@@ -349,7 +347,7 @@
  #+liber-documentation
  "@version{#2020-12-21}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
-  @return{An integer with the height of the surface in pixels.}
+  @return{The integer with the height of the surface in pixels.}
   @begin{short}
     Gets the height of the image surface in pixels.
   @end{short}

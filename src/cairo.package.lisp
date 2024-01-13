@@ -2,11 +2,11 @@
 ;;; cairo.package.lisp
 ;;;
 ;;; The documentation of this file is taken from the Cairo Reference Manual
-;;; Version 1.16 and modified to document the Lisp binding to the Cairo
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo
 ;;; library. See <http://cairographics.org>. The API documentation of the Lisp
 ;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2012 - 2023 Dieter Kaiser
+;;; Copyright (C) 2012 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -28,7 +28,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (defpackage :cairo
-  (:use :common-lisp)
+  (:use :iterate :common-lisp)
   (:import-from :cffi)
   (:shadow #:fill))
 
@@ -70,7 +70,7 @@
       @about-symbol{line-join-t}
       @about-symbol{operator-t}
       @about-symbol{context-t}
-      @about-macro{with-cairo-context}
+      @about-macro{with-context}
       @about-function{create}
       @about-function{reference}
       @about-function{reference-count}
@@ -120,6 +120,7 @@
       @about-function{copy-page}
       @about-function{show-page}
       @about-function{user-data}
+      @about-function{hairline}
     @end{subsection}
     @begin[Paths]{subsection}
       Creating paths and manipulating path data. Paths are the most basic
@@ -287,7 +288,7 @@
       @about-function{font-extents}
       @about-function{text-extents}
       @about-function{glyph-extents}
-      @about-macro{with-cairo-toy-font-face}
+      @about-macro{with-toy-font-face}
       @about-function{toy-font-face-create}
       @about-function{toy-font-face-family}
       @about-function{toy-font-face-slant}
@@ -547,8 +548,8 @@ my_device_modifying_function (cairo_device_t *device)
       are those defined in the @symbol{cairo:format-t} enumeration.
       @about-symbol{format-t}
       @about-function{format-stride-for-width}
-      @about-macro{with-cairo-image-surface}
-      @about-macro{with-cairo-context-for-image-surface}
+      @about-macro{with-image-surface}
+      @about-macro{with-context-for-image-surface}
       @about-function{image-surface-create}
       @about-function{image-surface-create-for-data}
       @about-function{image-surface-data}
@@ -770,7 +771,7 @@ cairo_destroy (cr);
       under the @file{util/cairo-script} directory, or with the
       @code{cairo-perf-trace} utility.
       @about-symbol{script-mode-t}
-      @about-macro{with-cairo-script-surface}
+      @about-macro{with-script-surface}
       @about-function{script-create}
       @about-function{script-create-for-stream}
       @about-function{script-from-recording-surface}

@@ -2,11 +2,11 @@
 ;;; cairo.region.lisp
 ;;;
 ;;; The documentation of the file is taken from the Cairo Reference Manual
-;;; Version 1.16 and modified to document the Lisp binding to the Cairo
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo
 ;;; library. See <http://cairographics.org>. The API documentation of the
 ;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2012 - 2023 Dieter Kaiser
+;;; Copyright (C) 2012 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -87,8 +87,8 @@
       (liber:symbol-documentation 'region-overlap-t)
  "@version{#2020-12-26}
   @begin{short}
-    Used as the return value for the function
-    @fun{cairo:region-contains-rectangle}.
+    Used as the return value for the @fun{cairo:region-contains-rectangle}
+    function.
   @end{short}
   @begin[code]{table}
     @entry[:in]{The contents are entirely inside the region.}
@@ -113,14 +113,14 @@
       (liber:symbol-documentation 'region-t)
  "@version{#2020-12-14}
   @begin{short}
-    A @sym{cairo:region-t} structure represents a set of integer-aligned
+    A @symbol{cairo:region-t} structure represents a set of integer-aligned
     rectangles.
   @end{short}
   It allows operations like the functions @fun{cairo:region-union} and
   @fun{cairo:region-intersect} to be performed on them.
 
-  Memory management of @sym{cairo:region-t} is done with the functions
-  @fun{cairo:region-reference} and @fun{cairo:region-destroy}.
+  Memory management of @symbol{cairo:region-t} structure is done with the
+  @fun{cairo:region-reference} and @fun{cairo:region-destroy} functions.
   @see-function{cairo:region-union}
   @see-function{cairo:region-intersect}
   @see-function{cairo:region-reference}
@@ -137,7 +137,7 @@
  #+liber-documentation
  "@version{2023-2-3}
   @begin{return}
-    A newly allocated @symbol{cairo:region-t} instance. Free with the
+    The newly allocated @symbol{cairo:region-t} instance. Free with the
     @fun{cairo:region-destroy} function. This function always returns a valid
     pointer. If memory cannot be allocated, then a special error object is
     returned where all operations on the object do nothing. You can check for
@@ -321,7 +321,7 @@
  #+liber-documentation
  "@version{#2020-12-15}
   @argument[region]{a @symbol{cairo:region-t} instance}
-  @return{An integer with the number of rectangles contained in @arg{region}.}
+  @return{The integer with the number of rectangles contained in @arg{region}.}
   @begin{short}
     Returns the number of rectangles contained in @arg{region}.
   @end{short}

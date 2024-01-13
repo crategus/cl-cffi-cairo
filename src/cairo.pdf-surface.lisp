@@ -6,7 +6,7 @@
 ;;; library. See <http://cairographics.org>. The API documentation of the
 ;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2020 - 2023 Dieter Kaiser
+;;; Copyright (C) 2020 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -153,7 +153,7 @@
       (liber:symbol-documentation 'pdf-outline-flags-t)
  "@version{2023-1-9}
   @begin{short}
-    The @sym{cairo:pdf-outline-flags-t} flags is used by the
+    The @symbol{cairo:pdf-outline-flags-t} flags is used by the
     @fun{cairo:pdf-surface-add-outline} function to specify the attributes of
     an outline item.
   @end{short}
@@ -192,7 +192,7 @@
       (liber:symbol-documentation 'pdf-metadata-t)
  "@version{2023-1-9}
   @begin{short}
-    The @sym{cairo:pdf-metadata-t} enumeration is used by the
+    The @symbol{cairo:pdf-metadata-t} enumeration is used by the
     @fun{cairo:pdf-surface-set-metadata} function to specify the metadata to
     set.
   @end{short}
@@ -237,7 +237,7 @@
       (liber:symbol-documentation 'pdf-version-t)
  "@version{2023-11-5}
   @begin{short}
-    The @sym{cairo:pdf-version-t} enumeration is used to describe the version
+    The @symbol{cairo:pdf-version-t} enumeration is used to describe the version
     number of the PDF specification that a generated PDF file will conform to.
   @end{short}
   @begin{pre}
@@ -372,7 +372,7 @@
 (defun pdf-versions ()
  #+liber-documentation
  "@version{2023-1-9}
-  @return{A list of @symbol{cairo:pdf-version-t} values with the supported
+  @return{The list of @symbol{cairo:pdf-version-t} values with the supported
     versions}
   @begin{short}
     Used to retrieve the list of supported versions.
@@ -382,9 +382,9 @@
   @see-function{cairo:pdf-surface-restrict-to-version}"
   (cffi:with-foreign-objects ((ptr :pointer) (num :int))
     (%pdf-versions ptr num)
-    (loop with versions = (cffi:mem-ref ptr :pointer)
-          for count from 0 below (cffi:mem-ref num :int)
-          collect (cffi:mem-aref versions 'pdf-version-t count))))
+    (iter (with versions = (cffi:mem-ref ptr :pointer))
+          (for n from 0 below (cffi:mem-ref num :int))
+          (collect (cffi:mem-aref versions 'pdf-version-t n)))))
 
 (export 'pdf-versions)
 
@@ -455,7 +455,7 @@
     outline links to}
   @argument[flags]{a @symbol{cairo:pdf-outline-flgs-t} value with the outline
     flags}
-  @return{An integer with the ID for the added item.}
+  @return{The integer with the ID for the added item.}
   @begin{short}
     Add an item to the document outline hierarchy with the name @arg{utf8}
     that links to the location specified by @arg{link}.

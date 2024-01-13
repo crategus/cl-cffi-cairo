@@ -2,11 +2,11 @@
 ;;; cairo.context.lisp
 ;;;
 ;;; The documentation of the file is taken from the Cairo Reference Manual
-;;; Version 1.16 and modified to document the Lisp binding to the Cairo
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo
 ;;; library. See <http://cairographics.org>. The API documentation of the
 ;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2012 - 2023 Dieter Kaiser
+;;; Copyright (C) 2012 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -112,6 +112,8 @@
 ;;;     cairo_get_reference_count
 ;;;     cairo_set_user_data
 ;;;     cairo_get_user_data
+;;;     cairo_set_hairline                                 Since 1.18
+;;;     cairo_get_hairline                                 Since 1.18
 ;;; ----------------------------------------------------------------------------
 
 (in-package :cairo)
@@ -403,22 +405,22 @@
   @fun{cairo:reference} and @fun{cairo:destroy} functions.
   @see-function{cairo:destroy}
   @see-function{cairo:reference}
-  @see-macro{with-cairo-context}")
+  @see-macro{cairo:with-context}")
 
 (export 'context-t)
 
 ;;; ----------------------------------------------------------------------------
-;;; with-cairo-context
+;;; cairo:with-context
 ;;; ----------------------------------------------------------------------------
 
-(defmacro with-cairo-context ((context surface) &body body)
+(defmacro with-context ((context surface) &body body)
  #+liber-documentation
- "@version{2023-7-21}
-  @syntax[]{(with-cairo-context (context surface) body) => result}
+ "@version{2024-1-12}
+  @syntax[]{(cairo:with-context (context surface) body) => result}
   @argument[context]{a newly allocated @symbol{cairo:context-t} instance}
   @argument[surface]{a @symbol{cairo:surface-t} target surface}
   @begin{short}
-    The @symbol{with-cairo-context} macro allocates a new
+    The @symbol{cairo:with-context} macro allocates a new
     @symbol{cairo:context-t} instance for the given @arg{surface} and executes
     the body that uses the Cairo context.
   @end{short}
@@ -431,7 +433,7 @@
        (progn ,@body)
        (destroy ,context))))
 
-(export 'with-cairo-context)
+(export 'with-context)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_create () -> create
@@ -470,7 +472,7 @@
   @see-function{cairo:destroy}
   @see-function{cairo:image-surface-create}
   @see-function{cairo:surface-destroy}
-  @see-macro{with-cairo-context}"
+  @see-macro{cairo:with-context}"
   (target (:pointer (:struct surface-t))))
 
 (export 'create)
@@ -524,8 +526,8 @@
  #+liber-documentation
  "@version{2023-1-11}
   @argument[cr]{a @symbol{cairo:context-t} context}
-  @return{A value of the @symbol{cairo:status-t} enumeration for the current
-    status of the Cairo context.}
+  @return{The @symbol{cairo:status-t} value for the current status of the Cairo
+    context.}
   @begin{short}
     Checks whether an error has previously occurred for the Cairo context.
   @end{short}
@@ -1547,13 +1549,13 @@
 
 (defun in-clip (cr x y)
  #+liber-documentation
- "@version{#2023-1-11}
+ "@version{#2024-1-12}
   @argument[cr]{a @symbol{cairo:context-t} context}
   @argument[x]{a number coerced to a double float with the x coordinate of the
     point to test}
   @argument[y]{a number coerced to a double float with the y coordinate of the
     point to test}
-  @return{A non-zero value if the point is inside, or zero if outside.}
+  @return{@em{True} if the point is inside, or @em{false} if outside.}
   @begin{short}
     Tests whether the given point is inside the area that would be visible
     through the current clip, i.e. the area that would be filled by a call to
@@ -1763,7 +1765,7 @@
     point to test}
   @argument[y]{a number coerced to a double float with the y coordinate of the
     point to test}
-  @return{A non-zero value if the point is inside, or zero if outside.}
+  @return{@em{True} if the point is inside, or @em{false} if outside.}
   @begin{short}
     Tests whether the given point is inside the area that would be affected by
     a @fun{cairo:fill} operation given the current path and filling
@@ -2045,7 +2047,7 @@
     point to test}
   @argument[y]{a number coerced to a double float with the y coordinate of the
     point to test}
-  @return{A non-zero value if the point is inside, or zero if outside.}
+  @return{@em{True} if the point is inside, or @em{false} if outside.}
   @begin{short}
     Tests whether the given point is inside the area that would be affected by
     a @fun{cairo:stroke} operation given the current path and stroking
@@ -2166,8 +2168,6 @@
 ;;; Returns :
 ;;;     CAIRO_STATUS_SUCCESS or CAIRO_STATUS_NO_MEMORY if a slot could not be
 ;;;     allocated for the user data.
-;;;
-;;; Since 1.4
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -2186,8 +2186,62 @@
 ;;;
 ;;; Returns :
 ;;;     the user data previously attached or NULL.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; cairo_set_hairline ()
 ;;;
-;;; Since 1.4
+;;; void
+;;; cairo_set_hairline (cairo_t *cr,
+;;;                     cairo_bool_t set_hairline);
+;;;
+;;; Sets lines within the cairo context to be hairlines. Hairlines are logically
+;;; zero-width lines that are drawn at the thinnest renderable width possible in
+;;; the current context.
+;;;
+;;; On surfaces with native hairline support, the native hairline functionality
+;;; will be used. Surfaces that support hairlines include:
+;;;
+;;; pdf/ps: Encoded as 0-width line.
+;;;
+;;; win32_printing: Rendered with PS_COSMETIC pen.
+;;;
+;;; svg: Encoded as 1px non-scaling-stroke.
+;;;
+;;; script: Encoded with set-hairline function.
+;;;
+;;; Cairo will always render hairlines at 1 device unit wide, even if an
+;;; anisotropic scaling was applied to the stroke width. In the wild, handling
+;;; of this situation is not well-defined. Some PDF, PS, and SVG renderers match
+;;; Cairo's output, but some very popular implementations (Acrobat, Chrome,
+;;; rsvg) will scale the hairline unevenly. As such, best practice is to reset
+;;; any anisotropic scaling before calling cairo_stroke(). See
+;;; https://cairographics.org/cookbook/ellipses/ for an example.
+;;;
+;;; cr
+;;;     a cairo_t
+;;;
+;;; set_hairline
+;;;     whether or not to set hairline mode
+;;;
+;;; Since 1.18
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; cairo_get_hairline ()
+;;;
+;;; cairo_bool_t
+;;; cairo_get_hairline (cairo_t *cr);
+;;;
+;;; Returns whether or not hairline mode is set, as set by cairo_set_hairline().
+;;;
+;;; cr
+;;;     a cairo context
+;;;
+;;; Returns
+;;;     whether hairline mode is set.
+;;;
+;;; Since 1.18
 ;;; ----------------------------------------------------------------------------
 
 ;;; --- End of file cairo.context.lisp -----------------------------------------

@@ -2,11 +2,11 @@
 ;;; cairo.svg-surface.lisp
 ;;;
 ;;; The documentation of the file is taken from the Cairo Reference Manual
-;;; Version 1.16 and modified to document the Lisp binding to the Cairo
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo
 ;;; library. See <http://cairographics.org>. The API documentation of the
 ;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2020 - 2023 Dieter Kaiser
+;;; Copyright (C) 2020 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -80,7 +80,7 @@
       (liber:symbol-documentation 'svg-version-t)
  "@version{#2023-1-9}
   @begin{short}
-    The @sym{cairo:svg-version-t} enumeration is used to describe the version
+    The @symbol{cairo:svg-version-t} enumeration is used to describe the version
     number of the SVG specification that a generated SVG file will conform to.
   @end{short}
   @begin{pre}
@@ -148,7 +148,7 @@
       (liber:symbol-documentation 'svg-unit-t)
  "@version{#2023-1-9}
   @begin{short}
-    The @sym{cairo:svg-unit-t} enumeration is used to describe the units valid
+    The @symbol{cairo:svg-unit-t} enumeration is used to describe the units valid
     for coordinates and lengths in the SVG specification.
   @end{short}
   @begin{pre}
@@ -204,7 +204,7 @@
     surface, in points (1 point == 1/72.0 inch)}
   @argument[height]{a number coerced to a double float with the height of the
     surface, in points (1 point == 1/72.0 inch)}
-  @return{A newly created @symbol{cairo:surface-t} instance. The caller owns the
+  @return{The newly created @symbol{cairo:surface-t} instance. The caller owns the
     surface and should call the @fun{cairo:surface-destroy} function when done
     with it. This function always returns a valid pointer, but it will return a
     pointer to a \"nil\" surface if an error such as out of memory occurs. You
@@ -326,17 +326,17 @@
   @argument[surface]{a @symbol{cairo:surface-t} instance}
   @argument[unit]{a @symbol{cairo:svg-unit-t} value}
   @begin{short}
-    The @sym{cairo:svg-surface-document-unit} function gets the unit of the SVG
+    The @fun{cairo:svg-surface-document-unit} function gets the unit of the SVG
     surface.
   @end{short}
   If the surface passed as an argument is not a SVG surface, the function sets
   the error status to @code{CAIRO_STATUS_SURFACE_TYPE_MISMATCH} and returns
   @code{CAIRO_SVG_UNIT_USER}.
 
-  The @sym{(setf cairo:svg-surface-document-unit)} function sets the unit for
-  use with the specified width and height of the generated SVG file. See the
-  @symbol{cairo:svg-unit-t} enumeration for a list of available unit values that
-  can be used here.
+  The @setf{cairo:svg-surface-document-unit} function sets the unit for use
+  with the specified width and height of the generated SVG file. See the
+  @symbol{cairo:svg-unit-t} enumeration for a list of available unit values
+  that can be used here.
 
   This function can be called at any time before generating the SVG file.
 
@@ -390,7 +390,7 @@
 (defun svg-versions ()
  #+liber-documentation
  "@version{#2023-1-9}
-  @return{A list of @symbol{cairo:svg-version-t} values with the supported
+  @return{The list of @symbol{cairo:svg-version-t} values with the supported
     versions.}
   @begin{short}
     Used to retrieve the list of supported versions.
@@ -400,9 +400,9 @@
   @see-function{cairo:svg-surface-restrict-to-version}"
   (cffi:with-foreign-objects ((ptr :pointer) (num :int))
     (%svg-versions ptr num)
-    (loop with versions = (cffi:mem-ref ptr :pointer)
-          for count from 0 below (cffi:mem-ref num :int)
-          collect (cffi:mem-aref versions 'svg-version-t count))))
+    (iter (with versions = (cffi:mem-ref ptr :pointer))
+          (for n from 0 below (cffi:mem-ref num :int))
+          (collect (cffi:mem-aref versions 'svg-version-t n)))))
 
 (export 'svg-versions)
 
@@ -414,7 +414,7 @@
  #+liber-documentation
  "@version{#2023-1-9}
   @argument[version]{a @symbol{cairo:svg-version-t} value}
-  @return{A string with the given @arg{version}.}
+  @return{The string with the given @arg{version}.}
   @begin{short}
     Gets the string representation of the given version ID.
   @end{short}

@@ -2,11 +2,11 @@
 ;;; cairo.device.lisp
 ;;;
 ;;; The documentation of the file is taken from the Cairo Reference Manual
-;;; Version 1.16 and modified to document the Lisp binding to the Cairo
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo
 ;;; library. See <http://cairographics.org>. The API documentation of the
 ;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2013 - 2023 Dieter Kaiser
+;;; Copyright (C) 2013 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -126,15 +126,14 @@
       (liber:symbol-documentation 'device-t)
  "@version{#2020-12-16}
   @begin{short}
-    A @sym{cairo:device-t} structure represents the driver interface for drawing
-    operations to a @symbol{cairo:surface-t} instance.
+    A @symbol{cairo:device-t} structure represents the driver interface for
+    drawing operations to a @symbol{cairo:surface-t} instance.
   @end{short}
-  There are different subtypes of @sym{cairo:device-t} structures for different
-  drawing backends. For example, the @code{egl-device-create} function creates
-  a device that wraps an EGL display and context.
+  There are different subtypes of @symbol{cairo:device-t} structures for
+  different drawing backends.
 
   The type of a device can be queried with the @fun{cairo:device-type} function.
-  Memory management of the @sym{cairo:device-t} structure is done with the
+  Memory management of the @symbol{cairo:device-t} structure is done with the
   @fun{cairo:device-reference} and @fun{cairo:device-destroy} functions.
   @see-symbol{cairo:surface-t}
   @see-function{cairo:device-type}
@@ -164,8 +163,8 @@
       (liber:symbol-documentation 'device-type-t)
  "@version{#2020-12-16}
   @begin{short}
-    The @sym{cairo:device-type-t} enumeration is used to describe the type of a
-    given device.
+    The @symbol{cairo:device-type-t} enumeration is used to describe the type of
+    a given device.
   @end{short}
   The devices types are also known as \"backends\" within Cairo. The device
   type can be queried with the function @fun{cairo:device-type}.
@@ -262,7 +261,7 @@
  #+liber-documentation
  "@version{2023-7-21}
   @argument[device]{a @symbol{cairo:device-t} instance}
-  @return{A @symbol{cairo:status-t} value with an error code if the device is
+  @return{The @symbol{cairo:status-t} value with an error code if the device is
     in an error state.}
   @begin{short}
     Checks whether an error has previously occurred for this device.
@@ -290,7 +289,7 @@
   but will instead trigger a @code{:device-finished} error.
 
   When the last call to the @fun{cairo:device-destroy} function decreases the
-  reference count to zero, cairo will call the @sym{cairo:device-finish}
+  reference count to zero, cairo will call the @fun{cairo:device-finish}
   function if it has not been called already, before freeing the resources
   associated with the device.
 
@@ -331,8 +330,7 @@
  #+liber-documentation
  "@version{2023-7-21}
   @argument[device]{a @symbol{cairo:device-t} instance}
-  @return{A value of the @symbol{cairo:device-type-t} enumeration for the
-    type of @arg{device}.}
+  @return{The @symbol{cairo:device-type-t} value for the type of @arg{device}.}
   @begin{short}
     This function returns the type of the device.
   @end{short}
@@ -427,7 +425,7 @@
   @begin{return}
     @code{:success} on success or an error code if the device is in an
     error state and could not be acquired. After a successful call to the
-    @sym{cairo:device-acquire} function, a matching call to the
+    @fun{cairo:device-acquire} function, a matching call to the
     @fun{cairo:device-release} function is required.
   @end{return}
   @begin{short}
@@ -480,6 +478,14 @@
 ;;;
 ;;; double
 ;;; cairo_device_observer_elapsed (cairo_device_t *device);
+;;;
+;;; Returns the total elapsed time of the observation.
+;;;
+;;; abstract_device
+;;;     the observed cairo_device_t
+;;;
+;;; Returns
+;;;     the elapsed time, in nanoseconds.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -487,6 +493,14 @@
 ;;;
 ;;; double
 ;;; cairo_device_observer_fill_elapsed (cairo_device_t *device);
+;;;
+;;; Returns the elapsed time of the fill operations.
+;;;
+;;; abstract_device
+;;;     the observed cairo_device_t
+;;;
+;;; Returns
+;;;     the elapsed time, in nanoseconds.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -494,6 +508,14 @@
 ;;;
 ;;; double
 ;;; cairo_device_observer_glyphs_elapsed (cairo_device_t *device);
+;;;
+;;; Returns the elapsed time of the glyph operations.
+;;;
+;;; abstract_device
+;;;     the observed cairo_device_t
+;;;
+;;; Returns
+;;;     the elapsed time, in nanoseconds.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -501,6 +523,14 @@
 ;;;
 ;;; double
 ;;; cairo_device_observer_mask_elapsed (cairo_device_t *device);
+;;;
+;;; Returns the elapsed time of the mask operations.
+;;;
+;;; abstract_device
+;;;     the observed cairo_device_t
+;;;
+;;; Returns
+;;;     the elapsed time, in nanoseconds
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -508,6 +538,14 @@
 ;;;
 ;;; double
 ;;; cairo_device_observer_paint_elapsed (cairo_device_t *device);
+;;;
+;;; Returns the elapsed time of the paint operations.
+;;;
+;;; abstract_device
+;;;     the observed cairo_device_t
+;;;
+;;; Returns
+;;;     the elapsed time, in nanoseconds.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -517,6 +555,20 @@
 ;;; cairo_device_observer_print (cairo_device_t *device,
 ;;;                              cairo_write_func_t write_func,
 ;;;                              void *closure);
+;;;
+;;; Prints the device log using the given function.
+;;;
+;;; abstract_device
+;;;     the observed cairo_device_t
+;;;
+;;; write_func
+;;;     the write function
+;;;
+;;; closure
+;;;     data to pass to the write_func
+;;;
+;;; Returns
+;;;     the status after the operation
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -524,6 +576,14 @@
 ;;;
 ;;; double
 ;;; cairo_device_observer_stroke_elapsed (cairo_device_t *device);
+;;;
+;;; Returns the elapsed time of the stroke operations.
+;;;
+;;; abstract_device
+;;;     the observed cairo_device_t
+;;;
+;;; Returns
+;;;     the elapsed time, in nanoseconds.
 ;;; ----------------------------------------------------------------------------
 
 ;;; --- End of file cairo.device.lisp ------------------------------------------

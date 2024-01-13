@@ -2,11 +2,11 @@
 ;;; cairo.scaled-font.lisp
 ;;;
 ;;; The documentation of the file is taken from the Cairo Reference Manual
-;;; Version 1.16 and modified to document the Lisp binding to the Cairo
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo
 ;;; library. See <http://cairographics.org>. The API documentation of the
 ;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2013 - 2023 Dieter Kaiser
+;;; Copyright (C) 2013 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -82,8 +82,8 @@
       (liber:symbol-documentation 'glyph-t)
  "@version{#2021-12-12}
   @begin{short}
-    The @sym{cairo:glyph-t} structure holds information about a single glyph when
-    drawing or measuring text.
+    The @symbol{cairo:glyph-t} structure holds information about a single glyph
+    when drawing or measuring text.
   @end{short}
   A font is (in simple terms) a collection of shapes used to draw text. A glyph
   is one of these shapes. There can be multiple glyphs for a single character
@@ -127,19 +127,19 @@
       (liber:symbol-documentation 'scaled-font-t)
  "@version{#2023-1-13}
   @begin{short}
-    A @sym{cairo:scaled-font-t} structure is a font scaled to a particular size
-    and device resolution.
+    A @symbol{cairo:scaled-font-t} structure is a font scaled to a particular
+    size and device resolution.
   @end{short}
-  A @sym{cairo:scaled-font-t} structure is most useful for low-level font usage
-  where a library or application wants to cache a reference to a scaled font to
-  speed up the computation of metrics.
+  A @symbol{cairo:scaled-font-t} structure is most useful for low-level font
+  usage where a library or application wants to cache a reference to a scaled
+  font to speed up the computation of metrics.
 
   There are various types of scaled fonts, depending on the font backend they
   use. The type of a scaled font can be queried using the
   @fun{cairo:scaled-font-type} function.
 
-  Memory management of the @sym{cairo:scaled-font-t} structure is done with the
-  @fun{cairo:scaled-font-reference} and @fun{cairo:scaled-font-destroy}
+  Memory management of the @symbol{cairo:scaled-font-t} structure is done with
+  the @fun{cairo:scaled-font-reference} and @fun{cairo:scaled-font-destroy}
   functions.
   @see-function{cairo:scaled-font-type}
   @see-function{cairo:scaled-font-reference}
@@ -164,7 +164,7 @@
       (liber:symbol-documentation 'font-extents-t)
  "@version{2023-1-15}
   @begin{short}
-    The @sym{cairo:font-extents-t} structure stores metric information for a
+    The @symbol{cairo:font-extents-t} structure stores metric information for a
     font.
   @end{short}
   Values are given in the current user-space coordinate system. Because font
@@ -228,7 +228,7 @@
       (liber:symbol-documentation 'text-extents-t)
  "@version{#2023-1-13}
   @begin{short}
-    The @sym{cairo:text-extents-t} structure stores the extents of a single
+    The @symbol{cairo:text-extents-t} structure stores the extents of a single
     glyph or a string of glyphs in user-space coordinates.
   @end{short}
   Because text extents are in user-space coordinates, they are mostly, but not
@@ -488,21 +488,21 @@
   (let ((num-glyphs (length glyphs)))
     (cffi:with-foreign-objects ((extents '(:struct text-extents-t))
                                 (glyphs-ptr '(:struct glyph-t) num-glyphs))
-      (loop for count from 0 below num-glyphs
-            for glyph-ptr = (cffi:mem-aptr glyphs-ptr '(:struct glyph-t) count)
-            for glyph in glyphs
-            do (setf (cffi:foreign-slot-value glyph-ptr
-                                              '(:struct glyph-t)
-                                              'cairo::index)
-                     (first glyph)
-                     (cffi:foreign-slot-value glyph-ptr
-                                              '(:struct glyph-t)
-                                              'cairo::x)
-                     (coerce (second glyph) 'double-float)
-                     (cffi:foreign-slot-value glyph-ptr
-                                              '(:struct glyph-t)
-                                              'cairo::y)
-                     (coerce (third glyph) 'double-float)))
+      (iter (for n from 0 below num-glyphs)
+            (for glyph-ptr = (cffi:mem-aptr glyphs-ptr '(:struct glyph-t) n))
+            (for glyph in glyphs)
+            (setf (cffi:foreign-slot-value glyph-ptr
+                                           '(:struct glyph-t)
+                                           'cairo::index)
+                  (first glyph)
+                  (cffi:foreign-slot-value glyph-ptr
+                                           '(:struct glyph-t)
+                                           'cairo::x)
+                  (coerce (second glyph) 'double-float)
+                  (cffi:foreign-slot-value glyph-ptr
+                                           '(:struct glyph-t)
+                                           'cairo::y)
+                  (coerce (third glyph) 'double-float)))
       (%scaled-font-glyph-extents font glyphs-ptr num-glyphs extents)
       (cffi:with-foreign-slots ((x-bearing
                                  y-bearing
@@ -571,13 +571,13 @@
                                            (cffi:null-pointer)
                                            (cffi:null-pointer)
                                            (cffi:null-pointer)))
-        (loop with glyph-ptr = (cffi:mem-ref glyphs :pointer)
-              for count from 0 below (cffi:mem-ref num :int)
-              for glyph = (cffi:mem-aptr glyph-ptr '(:struct glyph-t) count)
-              collect (cffi:with-foreign-slots ((index x y)
-                                                glyph
-                                                (:struct glyph-t))
-                        (list index x y))))))
+      (iter (with glyph-ptr = (cffi:mem-ref glyphs :pointer))
+            (for n from 0 below (cffi:mem-ref num :int))
+            (for glyph = (cffi:mem-aptr glyph-ptr '(:struct glyph-t) n))
+            (collect (cffi:with-foreign-slots ((index x y)
+                                               glyph
+                                               (:struct glyph-t))
+                       (list index x y)))))))
 
 (export 'scaled-font-text-to-glyphs)
 
@@ -723,7 +723,7 @@
  #+liber-documentation
  "@version{#2023-1-13}
   @argument[font]{a @symbol{cairo:scaled-font-t} instance}
-  @return{An integer with the current reference count of @arg{font}. If the
+  @return{The integer with the current reference count of @arg{font}. If the
     object is a nil object, 0 will be returned.}
   @begin{short}
     Returns the current reference count of @arg{font}.

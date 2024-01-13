@@ -2,11 +2,11 @@
 ;;; cairo.text.lisp
 ;;;
 ;;; The documentation of the file is taken from the Cairo Reference Manual
-;;; Version 1.16 and modified to document the Lisp binding to the Cairo
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo
 ;;; library. See <http://cairographics.org>. The API documentation of the
 ;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2013 - 2023 Dieter Kaiser
+;;; Copyright (C) 2013 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -89,10 +89,10 @@
 
 (in-package :cairo)
 
-(defmacro with-cairo-toy-font-face ((face &rest args) &body body)
+(defmacro with-toy-font-face ((face &rest args) &body body)
  #+liber-documentation
  "@version{2023-7-21}
-  @syntax[]{(with-cairo-toy-font-face (face family slant weight) body => result}
+  @syntax[]{(cairo:with-toy-font-face (face family slant weight) body => result}
   @argument[face]{a newly allocated @symbol{cairo:font-face-t} instance}
   @argument[familiy]{a string with the font family name, encoded in UTF-8}
   @argument[slant]{a @symbol{cairo:font-slant-t} value with the slant for the
@@ -100,7 +100,7 @@
   @argument[weight]{a @symbol{cairo:font-weight-t} value with the weight for
     the font}
   @begin{short}
-    The @sym{with-cairo-toy-font-face} macro allocates a new
+    The @fun{cairo:with-toy-font-face} macro allocates a new
     @symbol{cairo:font-face-t} instance and executes the body that uses the
     font face.
   @end{short}
@@ -116,7 +116,7 @@
        (progn ,@body)
        (font-face-destroy ,face))))
 
-(export 'with-cairo-toy-font-face)
+(export 'with-toy-font-face)
 
 ;;; ----------------------------------------------------------------------------
 ;;; enum cairo_font_slant_t
@@ -191,7 +191,7 @@
       (liber:symbol-documentation 'text-cluster-t)
  "@version{#2021-12-12}
   @begin{short}
-    The @sym{cairo:text-cluster-t} structure holds information about a single
+    The @symbol{cairo:text-cluster-t} structure holds information about a single
     text cluster.
   @end{short}
   A text cluster is a minimal mapping of some glyphs corresponding to some
@@ -295,7 +295,7 @@
   font handling and text layout library, for example Pango, in conjunction
   with Cairo.
 
-  If text is drawn without a call to the @sym{cairo:select-font-face} function,
+  If text is drawn without a call to the @fun{cairo:select-font-face} function,
   nor the @fun{cairo:font-face} function nor the @fun{cairo:scaled-font}
   function, the default family is platform-specific, but is essentially
   \"sans-serif\". Default slant is @code{:normal}, and default weight is
@@ -304,7 +304,7 @@
   This function is equivalent to a call to the @fun{cairo:toy-font-face-create}
   function followed by the @fun{cairo:font-face} function.
   @begin[Note]{dictionary}
-    The @sym{cairo:select-font-face} function is part of what the Cairo
+    The @fun{cairo:select-font-face} function is part of what the Cairo
     designers call the \"toy\" text API. It is convenient for short demos
     and simple programs, but it is not expected to be adequate for serious
     text-using applications.
@@ -336,14 +336,14 @@
     in user space units}
   @begin{short}
     Sets the current font matrix to a scale by a factor of @arg{size},
-    replacing any font matrix previously set with the @sym{cairo:set-font-size}
+    replacing any font matrix previously set with the @fun{cairo:set-font-size}
     or @fun{cairo:set-font-matrix} functions.
   @end{short}
   This results in a font size of @arg{size} user space units. More precisely,
   this matrix will result in the em-square of the font being a @arg{size} by
   @arg{size} square in user space.
 
-  If text is drawn without a call to the @sym{cairo:set-font-size} function,
+  If text is drawn without a call to the @fun{cairo:set-font-size} function,
   nor the @fun{cairo:set-font-matrix} or @fun{cairo:scaled-font} functions,
   the default font size is 10.0.
   @see-symbol{cairo:context-t}
@@ -426,14 +426,14 @@
   @argument[cr]{a @symbol{cairo:context-t} context}
   @argument[options]{a @symbol{cairo:font-options-t} instance}
   @begin{short}
-    The @sym{cairo:font-options} function retrieves font rendering options.
+    The @fun{cairo:font-options} function retrieves font rendering options.
   @end{short}
-  The @sym{(setf font-options)} function sets a set of custom font
-  rendering options for the Cairo context.
+  The @setf{cairo:ont-options} function sets a set of custom font rendering
+  options for the Cairo context.
 
   Note that the returned font options do not include any font options derived
   from the underlying surface. They are literally the font options passed to
-  the @sym{(setf font-options)} function.
+  the @setf{cairo:font-options} function.
 
   Rendering font options are derived by merging these @arg{options} with the
   options derived from underlying surface. If the value in @arg{options} has a
@@ -468,10 +468,10 @@
   @argument[face]{a @symbol{cairo:font-face-t} instance, or @code{nil} to
     restore to the default font}
   @begin{short}
-    The @sym{cairo:font-face} function gets the current font face for a Cairo
+    The @fun{cairo:font-face} function gets the current font face for a Cairo
     context.
   @end{short}
-  The @sym{(setf cairo:font-face)} function replaces the current
+  The @setf{cairo:font-face} function replaces the current
   @symbol{cairo:font-face-t} instance in the Cairo context with @arg{face}.
 
   The replaced font face in the Cairo context will be destroyed if there are
@@ -514,11 +514,11 @@
   @argument[cr]{a @symbol{cairo:context-t} context}
   @argument[font]{a @symbol{cairo:scaled-font-t} instance}
   @begin{short}
-    The @sym{cairo:scaled-font} function gets the current scaled font for the
+    The @fun{cairo:scaled-font} function gets the current scaled font for the
     Cairo context.
   @end{short}
-  The @sym{(setf cairo:scaled-font)} function replaces the current font face,
-  font matrix, and font options in the Cairo context with those of the
+  The @setf{cairo:scaled-font} function replaces the current font face, font
+  matrix, and font options in the Cairo context with those of the
   @symbol{cairo:scaled-font-t} instance.
 
   Except for some translation, the current CTM of the Cairo context should
@@ -570,9 +570,9 @@
   glyph would be placed in this same progression. That is, the current point
   will be at the origin of the final glyph offset by its advance values. This
   allows for easy display of a single logical string with multiple calls to
-  the @sym{cairo:show-text} function.
+  the @fun{cairo:show-text} function.
   @begin[Note]{dictionary}
-    The @sym{cairo:show-text} function is part of what the Cairo designers call
+    The @fun{cairo:show-text} function is part of what the Cairo designers call
     the \"toy\" text API. It is convenient for short demos and simple programs,
     but it is not expected to be adequate for serious text-using applications.
     See the @fun{cairo:show-glyphs} function for the \"real\" text display API
@@ -606,21 +606,21 @@
   @see-symbol{cairo:context-t}"
   (let ((num-glyphs (length glyphs)))
     (cffi:with-foreign-object (glyphs-ptr '(:struct glyph-t) num-glyphs)
-      (loop for count from 0 below num-glyphs
-            for glyph in glyphs
-            for glyph-ptr = (cffi:mem-aptr glyphs-ptr '(:struct glyph-t) count)
-            do (setf (cffi:foreign-slot-value glyph-ptr
-                                              '(:struct glyph-t)
-                                              'index)
-                     (first glyph)
-                     (cffi:foreign-slot-value glyph-ptr
-                                              '(:struct glyph-t)
-                                              'x)
-                     (coerce (second glyph) 'double-float)
-                     (cffi:foreign-slot-value glyph-ptr
-                                              '(:struct glyph-t)
-                                              'y)
-                     (coerce (third glyph) 'double-float)))
+      (iter (for n from 0 below num-glyphs)
+            (for glyph in glyphs)
+            (for glyph-ptr = (cffi:mem-aptr glyphs-ptr '(:struct glyph-t) n))
+            (setf (cffi:foreign-slot-value glyph-ptr
+                                           '(:struct glyph-t)
+                                           'index)
+                  (first glyph)
+                  (cffi:foreign-slot-value glyph-ptr
+                                           '(:struct glyph-t)
+                                           'x)
+                  (coerce (second glyph) 'double-float)
+                  (cffi:foreign-slot-value glyph-ptr
+                                           '(:struct glyph-t)
+                                           'y)
+                  (coerce (third glyph) 'double-float)))
       (%show-glyphs cr glyphs-ptr num-glyphs))))
 
 (export 'show-glyphs)
@@ -801,21 +801,21 @@
   (let ((num-glyphs (length glyphs)))
     (cffi:with-foreign-objects ((extents '(:struct text-extents-t))
                                 (glyphs-ptr '(:struct glyph-t) num-glyphs))
-      (loop for count from 0 below num-glyphs
-            for glyph-ptr = (cffi:mem-aptr glyphs-ptr '(:struct glyph-t) count)
-            for glyph in glyphs
-            do (setf (cffi:foreign-slot-value glyph-ptr
-                                              '(:struct glyph-t)
-                                              'cairo::index)
-                     (first glyph)
-                     (cffi:foreign-slot-value glyph-ptr
-                                              '(:struct glyph-t)
-                                              'cairo::x)
-                     (coerce (second glyph) 'double-float)
-                     (cffi:foreign-slot-value glyph-ptr
-                                              '(:struct glyph-t)
-                                              'cairo::y)
-                     (coerce (third glyph) 'double-float)))
+      (iter (for n from 0 below num-glyphs)
+            (for glyph-ptr = (cffi:mem-aptr glyphs-ptr '(:struct glyph-t) n))
+            (for glyph in glyphs)
+            (setf (cffi:foreign-slot-value glyph-ptr
+                                           '(:struct glyph-t)
+                                           'cairo::index)
+                  (first glyph)
+                  (cffi:foreign-slot-value glyph-ptr
+                                           '(:struct glyph-t)
+                                           'cairo::x)
+                  (coerce (second glyph) 'double-float)
+                  (cffi:foreign-slot-value glyph-ptr
+                                           '(:struct glyph-t)
+                                           'cairo::y)
+                  (coerce (third glyph) 'double-float)))
       (%glyph-extents cr glyphs-ptr num-glyphs extents)
       (cffi:with-foreign-slots ((x-bearing
                                  y-bearing
@@ -873,7 +873,7 @@
  #+liber-documentation
  "@version{2023-7-21}
   @argument[face]{a @symbol{cairo:font-face-t} instance}
-  @return{A string with the family name.}
+  @return{The string with the family name.}
   @begin{short}
     Gets the family name of a toy font face.
   @end{short}

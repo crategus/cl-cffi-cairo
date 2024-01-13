@@ -2,11 +2,11 @@
 ;;; cairo.script-surface.lisp
 ;;;
 ;;; The documentation of the file is taken from the Cairo Reference Manual
-;;; Version 1.16 and modified to document the Lisp binding to the Cairo
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo
 ;;; library. See <http://cairographics.org>. The API documentation of the
 ;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2020 - 2023 Dieter Kaiser
+;;; Copyright (C) 2020 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -49,12 +49,11 @@
 
 (in-package :cairo)
 
-
-(defmacro with-cairo-script-surface ((surface path content width height)
-                                     &body body)
+(defmacro with-script-surface ((surface path content width height) &body body)
  #+liber-documentation
  "@version{2023-7-21}
-  @syntax[]{(with-cairo-script-surface (surface path content width height) body) => result}
+  @syntax[]{(cairo:with-script-surface (surface path content width height) body)
+    => result}
   @argument[surface]{a newly allocated @symbol{cairo:surface-t} instance}
   @argument[path]{a path or namestring with the file to write the script to}
   @argument[content]{a @symbol{cairo:content-t} value}
@@ -62,7 +61,7 @@
   @argument[height]{a number coerced to a double float with the height in
     pixels}
   @begin{short}
-    The @sym{with-cairo-script-surface} macro allocates a new
+    The @fun{cairo:with-script-surface} macro allocates a new
     @symbol{cairo:surface-t} instance for a newly created @symbol{device-t}
     instance of @code{:script} type and executes the body that uses the
     Cairo script surface.
@@ -85,7 +84,7 @@
          (surface-destroy ,surface)
          (device-destroy ,device))))))
 
-(export 'with-cairo-script-surface)
+(export 'with-script-surface)
 
 ;;; ----------------------------------------------------------------------------
 ;;; enum cairo_script_mode_t

@@ -2,11 +2,11 @@
 ;;; cairo.types.lisp
 ;;;
 ;;; The documentation of the file is taken from the Cairo Reference Manual
-;;; Version 1.16 and modified to document the Lisp binding to the Cairo
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo
 ;;; library. See <http://cairographics.org>. The API documentation of the
 ;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2013 - 2023 Dieter Kaiser
+;;; Copyright (C) 2013 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -96,7 +96,7 @@
       (liber:symbol-documentation 'rectangle-t)
  "@version{#2023-1-11}
   @begin{short}
-    The @sym{cairo:rectangle-t} structure is a data structure for holding a
+    The @symbol{cairo:rectangle-t} structure is a data structure for holding a
     rectangle.
   @end{short}
   @begin{pre}
@@ -132,8 +132,8 @@
       (liber:symbol-documentation 'rectangle-list-t)
  "@version{#2023-1-1}
   @begin{short}
-    The @sym{cairo:rectangle-list-t} structure is a data structure for holding
-    a dynamically allocated array of rectangles.
+    The @symbol{cairo:rectangle-list-t} structure is a data structure for
+    holding a dynamically allocated array of rectangles.
   @end{short}
   @begin{pre}
 (cffi:defcstruct rectangle-list-t

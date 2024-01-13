@@ -2,11 +2,11 @@
 ;;; cairo.font-face.lisp
 ;;;
 ;;; The documentation of the file is taken from the Cairo Reference Manual
-;;; Version 1.16 and modified to document the Lisp binding to the Cairo
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo
 ;;; library. See <http://cairographics.org>. The API documentation of the
 ;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2014 - 2023 Dieter Kaiser
+;;; Copyright (C) 2014 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -72,7 +72,7 @@
       (liber:symbol-documentation 'font-face-t)
  "@version{#2020-12-15}
   @begin{short}
-    A @sym{cairo:font-face-t} structure specifies all aspects of a font other
+    A @symbol{cairo:font-face-t} structure specifies all aspects of a font other
     than the size or font matrix. A font matrix is used to distort a font by
     sheering it or scaling it unequally in the two directions.
   @end{short}
@@ -84,7 +84,7 @@
   use. The type of a font face can be queried using the
   @fun{cairo:font-face-type} function.
 
-  Memory management of the @sym{cairo:font-face-t} structure is done with the
+  Memory management of the @symbol{cairo:font-face-t} structure is done with the
   @fun{cairo:font-face-reference} and @fun{cairo:font-face-destroy} functions.
   @see-symbol{cairo:context-t}
   @see-fun{cairo:font-face}
@@ -111,7 +111,7 @@
       (liber:symbol-documentation 'font-type-t)
  "@version{2023-1-16}
   @begin{short}
-    The @sym{cairo:font-type-t} enumeration is used to describe the type of a
+    The @symbol{cairo:font-type-t} enumeration is used to describe the type of a
     given font face or scaled font.
   @end{short}
   The font types are also known as \"font backends\" within Cairo.

@@ -2,11 +2,11 @@
 ;;; cairo.pattern.lisp
 ;;;
 ;;; The documentation of the file is taken from the Cairo Reference Manual
-;;; Version 1.16 and modified to document the Lisp binding to the Cairo
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo
 ;;; library. See <http://cairographics.org>. The API documentation of the
 ;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2013 - 2023 Dieter Kaiser
+;;; Copyright (C) 2013 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -109,10 +109,10 @@
       (liber:symbol-documentation 'pattern-t)
  "@version{#2020-12-25}
   @begin{short}
-    A @sym{cairo:pattern-t} structure represents a source when drawing onto a
-    surface.
+    A @symbol{cairo:pattern-t} structure represents a source when drawing onto
+    a surface.
   @end{short}
-  There are different subtypes of @sym{cairo:pattern-t} structures, for
+  There are different subtypes of @symbol{cairo:pattern-t} structures, for
   different types of sources; for example, the @fun{cairo:pattern-create-rgb}
   function creates a pattern for a solid opaque color.
 
@@ -124,7 +124,7 @@
   The type of a pattern can be queried with the @fun{cairo:pattern-type}
   function.
 
-  Memory management of the @sym{cairo:pattern-t} structure is done with the
+  Memory management of the @symbol{cairo:pattern-t} structure is done with the
   @fun{cairo:pattern-reference} and @fun{cairo:pattern-destroy} functions.
   @see-function{cairo:pattern-create-rgb}
   @see-function{cairo:set-source-rgb}
@@ -150,7 +150,7 @@
       (liber:symbol-documentation 'extend-t)
  "@version{#2020-12-12}
   @begin{short}
-    The @sym{cairo:extend-t} enumeration is used to describe how pattern
+    The @symbol{cairo:extend-t} enumeration is used to describe how pattern
     color/alpha will be determined for areas \"outside\" the pattern's natural
     area, for example, outside the surface bounds or outside the gradient
     geometry.
@@ -199,7 +199,7 @@
       (liber:symbol-documentation 'filter-t)
  "@version{#2020-12-12}
   @begin{short}
-    The @sym{cairo:filter-t} enumeration is used to indicate what filtering
+    The @symbol{cairo:filter-t} enumeration is used to indicate what filtering
     should be applied when reading pixel values from patterns.
   @end{short}
   See the @fun{cairo:pattern-filter} function for indicating the desired filter
@@ -248,13 +248,13 @@
       (liber:symbol-documentation 'pattern-type-t)
  "@version{#2020-12-12}
   @begin{short}
-    The @sym{cairo:pattern-type-t} enumeration is used to describe the type of
-    a given pattern.
+    The @symbol{cairo:pattern-type-t} enumeration is used to describe the type
+    of a given pattern.
   @end{short}
 
   The type of a pattern is determined by the function used to create it. The
   @fun{cairo:pattern-create-rgb} and @fun{cairo:pattern-create-rgba} functions
-  create @code{:solid} patterns. The remaining @sym{cairo:pattern-create}
+  create @code{:solid} patterns. The remaining @fun{cairo:pattern-create}
   functions map to pattern types in obvious ways.
 
   The pattern type can be queried with the @fun{cairo:pattern-type} function.
@@ -1142,7 +1142,7 @@ cairo_mesh_pattern_end_patch (pattern)
   @end{short}
 
   If there is no current point before the call to the
-  @sym{cairo:mesh-pattern-line-to} function this function will behave as
+  @fun{cairo:mesh-pattern-line-to} function this function will behave as
   @begin{pre}
 (mesh-pattern-move-to pattern x y)
   @end{pre}
@@ -1183,7 +1183,7 @@ cairo_mesh_pattern_end_patch (pattern)
   @end{short}
 
   If the current patch has no current point before the call to the
-  @sym{cairo:mesh-pattern-curve-to} function, this function will behave as if
+  @fun{cairo:mesh-pattern-curve-to} function, this function will behave as if
   preceded by a call
   @begin{pre}
 (mesh-pattern-move-to pattern x1 y1)
@@ -1598,12 +1598,12 @@ cairo_mesh_pattern_end_patch (pattern)
   @argument[extend]{a @symbol{cairo:extend-t} value describing how the area
     outside of the pattern will be drawn}
   @begin{short}
-    The @sym{cairo:pattern-extend} function gets the current extend mode for a
+    The @fun{cairo:pattern-extend} function gets the current extend mode for a
     pattern.
   @end{short}
-  The @sym{(setf cairo:pattern-extend)} function sets the mode to be used for
-  drawing outside the area of a pattern. See the @symbol{cairo:extend-t}
-  enumeration for details on the semantics of each extend strategy.
+  The @setf{cairo:pattern-extend} function sets the mode to be used for drawing
+  outside the area of a pattern. See the @symbol{cairo:extend-t} enumeration for
+  details on the semantics of each extend strategy.
 
   The default extend mode is @code{:none} for surface patterns and @code{:pad}
   for gradient patterns.
@@ -1634,10 +1634,10 @@ cairo_mesh_pattern_end_patch (pattern)
   @argument[filter]{a @symbol{cairo:filter-t} value describing the filter to
     use for resizing the pattern}
   @begin{short}
-    The @sym{cairo:pattern-filter} function gets the current filter for a
+    The @fun{cairo:pattern-filter} function gets the current filter for a
     @arg{pattern}.
   @end{short}
-  The @sym{(setf cairo:pattern-filter)} function sets the filter to be used for
+  The @setf{cairo:pattern-filter} function sets the filter to be used for
   resizing when using this pattern. See the @symbol{cairo:filter-t} enumeration
   for details on each filter.
 
@@ -1676,12 +1676,12 @@ cairo_mesh_pattern_end_patch (pattern)
   @argument[pattern]{a @symbol{cairo:pattern-t} instance}
   @argument[matrix]{a @symbol{cairo:matrix-t} instance}
   @begin{short}
-    The @sym{cairo:pattern-matrix} function gets the pattern's transformation
+    The @fun{cairo:pattern-matrix} function gets the pattern's transformation
     matrix.
   @end{short}
-  The @sym{(setf cairo:pattern-matrix)} function sets the pattern's
-  transformation matrix to @arg{matrix}. This matrix is a transformation from
-  user space to pattern space.
+  The @setf{cairo:pattern-matrix} function sets the pattern's transformation
+  matrix to @arg{matrix}. This matrix is a transformation from user space to
+  pattern space.
 
   When a pattern is first created it always has the identity matrix for its
   transformation matrix, which means that pattern space is initially identical
@@ -1722,7 +1722,7 @@ cairo_mesh_pattern_end_patch (pattern)
  #+liber-documentation
  "@version{#2020-12-13}
   @argument[pattern]{a @symbol{cairo:pattern-t} instance}
-  @return{A value of the @symbol{cairo:pattern-type-t} enumeration.}
+  @return{The @symbol{cairo:pattern-type-t} value.}
   @begin{short}
     This function returns the type of a pattern.
   @end{short}

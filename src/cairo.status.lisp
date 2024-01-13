@@ -2,11 +2,11 @@
 ;;; cairo.status.lisp
 ;;;
 ;;; The documentation of the file is taken from the Cairo Reference Manual
-;;; Version 1.16 and modified to document the Lisp binding to the Cairo
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo
 ;;; library. See <http://cairographics.org>. The API documentation of the
 ;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2013 - 2023 Dieter Kaiser
+;;; Copyright (C) 2013 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -112,7 +112,7 @@
       (liber:symbol-documentation 'status-t)
  "@version{#2020-12-5}
   @begin{short}
-    The @sym{cairo:status-t} enumeration is used to indicate errors that can
+    The @symbol{cairo:status-t} enumeration is used to indicate errors that can
     occur when using Cairo.
   @end{short}
   In some cases it is returned directly by functions. but when using a
@@ -179,7 +179,7 @@
       function.}
     @entry[:no-current-point]{No current point defined.}
     @entry[:invalid-matrix]{Invalid matrix (not invertible).}
-    @entry[:invalid-status]{Invalid @sym{cairo:status-t} value for an input.}
+    @entry[:invalid-status]{Invalid @symbol{cairo:status-t} value for an input.}
     @entry[:null-pointer]{@code{NULL} pointer.}
     @entry[:invalid-string]{Input string not valid UTF-8.}
     @entry[:path-data]{Input path data not valid.}
@@ -262,7 +262,7 @@
  #+liber-documentation
  "@version{#2020-12-5}
   @argument[status]{a value of the @symbol{cairo:status-t} enumeration}
-  @return{A string representation of the Cario status.}
+  @return{The string representation of the Cario status.}
   @begin{short}
     Provides a human readable description of a Cairo status value.
   @end{short}
@@ -292,8 +292,6 @@
 ;;; called as necessary). If there are active cairo objects, this call is likely
 ;;; to cause a crash, (eg. an assertion failure due to a hash table being
 ;;; destroyed when non-empty).
-;;;
-;;; Since 1.0
 ;;; ----------------------------------------------------------------------------
 
 ;;; --- End of file cairo.status.lisp ------------------------------------------

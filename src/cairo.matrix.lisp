@@ -2,11 +2,11 @@
 ;;; cairo.matrix.lisp
 ;;;
 ;;; The documentation of the file is taken from the Cairo Reference Manual
-;;; Version 1.16 and modified to document the Lisp binding to the Cairo
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo
 ;;; library. See <http://cairographics.org>. The API documentation of the
 ;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2013 - 2023 Dieter Kaiser
+;;; Copyright (C) 2013 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -71,8 +71,8 @@
       (liber:symbol-documentation 'matrix-t)
  "@version{#2022-10-4}
   @begin{short}
-    A @sym{cairo:matrix-t} structure holds an affine transformation, such as a
-    scale, rotation, shear, or a combination of those.
+    A @symbol{cairo:matrix-t} structure holds an affine transformation, such as
+    a scale, rotation, shear, or a combination of those.
   @end{short}
   The transformation of a point (x, y) is given by:
   @begin{pre}
@@ -80,7 +80,7 @@ xnew = xx * x + xy * y + x0
 ynew = yx * x + yy * y + y0
   @end{pre}
   The current transformation matrix of a @symbol{cairo:context-t} context,
-  represented as a @sym{cairo:matrix-t} structure, defines the transformation
+  represented as a @symbol{cairo:matrix-t} structure, defines the transformation
   from user space coordinates to device space coordinates. See the
   @fun{cairo:matrix} function.
   @begin{pre}
@@ -115,7 +115,7 @@ ynew = yx * x + yy * y + y0
  #+liber-documentation
  "@version{#2022-10-7}
   @argument[matrix]{a @symbol{cairo:matrix-t} instance}
-  @return{A list with the floating point values.}
+  @return{The list with the floating point values.}
   @begin{short}
     Converts the matrix to a list of floating point values.
   @end{short}
@@ -148,7 +148,7 @@ ynew = yx * x + yy * y + y0
     component of the affine transformation}
   @argument[y0]{a number coerced to a double float with the y translation
     component of the affine transformation}
-  @return{A initialized @symbol{cairo:matrix-t} instance.}
+  @return{The initialized @symbol{cairo:matrix-t} instance.}
   @begin{short}
     Sets the matrix to be the affine transformation given by xx, yx, xy, yy,
     x0, y0.
@@ -180,7 +180,8 @@ ynew = yx * x + yy * y + y0
  #+liber-documentation
  "@version{#2022-10-4}
   @argument[matrix]{a @symbol{cairo:matrix-t} instance to initialize}
-  @return{A @symbol{cairo:matrix-t} instance set to be an identity transformation.}
+  @return{The @symbol{cairo:matrix-t} instance set to be an identity
+    transformation.}
   @begin{short}
     Modifies the matrix to be an identity transformation.
   @end{short}
@@ -204,7 +205,7 @@ ynew = yx * x + yy * y + y0
     tanslate in the x direction}
   @argument[ty]{a number coerced to a double float with the amount to
     tanslate in the y direction}
-  @return{A initialized @symbol{cairo:matrix-t} instance.}
+  @return{The initialized @symbol{cairo:matrix-t} instance.}
   @begin{short}
     Initializes the matrix to a transformation that translates by  @arg{tx}
     and @arg{ty} in the x and y dimensions, respectively.
@@ -231,7 +232,7 @@ ynew = yx * x + yy * y + y0
     in the x direction}
   @argument[sy]{a number coerced to a double float with the scale factor
     in the y direction}
-  @return{A initialized @symbol{cairo:matrix-t} instance.}
+  @return{The initialized @symbol{cairo:matrix-t} instance.}
   @begin{short}
     Initializes the matrix to a transformation that scales by @arg{sx} and
     @arg{sy} in the x and y dimensions, respectively.
@@ -256,7 +257,7 @@ ynew = yx * x + yy * y + y0
   @argument[matrix]{a @symbol{cairo:matrix-t} instance to initialize}
   @argument[radians]{a number coerced to a double float with the angle of
     rotation, in radians}
-  @return{A initialized @symbol{cairo:matrix-t} instance.}
+  @return{The initialized @symbol{cairo:matrix-t} instance.}
   @begin{short}
     Initializes the matrix to a transformation that rotates by @arg{radians}.
   @end{short}
@@ -285,7 +286,7 @@ ynew = yx * x + yy * y + y0
     tanslate in the x direction}
   @argument[ty]{a number coerced to a double float with the amount to
     tanslate in the y direction}
-  @return{A @symbol{cairo:matrix-t} instance with the applied translation.}
+  @return{The @symbol{cairo:matrix-t} instance with the applied translation.}
   @begin{short}
     Applies a translation by @arg{tx}, @arg{ty} to the transformation in
     the matrix.
@@ -315,7 +316,7 @@ ynew = yx * x + yy * y + y0
     in the x direction}
   @argument[sy]{a number coerced to a double float with the scale factor
     in the y direction}
-  @return{A @symbol{cairo:matrix-t} instance with the applied scaling.}
+  @return{The @symbol{cairo:matrix-t} instance with the applied scaling.}
   @begin{short}
     Applies scaling by @arg{sx} and @arg{sy} to the transformation in the
     matrix.
@@ -343,7 +344,7 @@ ynew = yx * x + yy * y + y0
   @argument[matrix]{a @symbol{cairo:matrix-t} instance}
   @argument[radians]{a number coerced to a double float with the angle of
     rotation, in radians}
-  @return{A @symbol{cairo:matrix-t} instance with the applied rotation.}
+  @return{The @symbol{cairo:matrix-t} instance with the applied rotation.}
   @begin{short}
     Applies rotation by @arg{radians} to the transformation in the matrix.
   @end{short}
@@ -371,7 +372,7 @@ ynew = yx * x + yy * y + y0
  #+liber-documentation
  "@version{#2022-10-4}
   @argument[matrix]{a @symbol{cairo:matrix-t} instance}
-  @return{An inversed @symbol{cairo:matrix-t} instance if @arg{matrix} has an
+  @return{The inversed @symbol{cairo:matrix-t} instance if @arg{matrix} has an
     inverse, otherwise @em{false}.}
   @begin{short}
     Changes the matrix to be the inverse of its original value.
@@ -398,7 +399,7 @@ ynew = yx * x + yy * y + y0
   @argument[result]{a @symbol{cairo:matrix-t} instance for the result}
   @argument[a]{a @symbol{cairo:matrix-t} instance}
   @argument[b]{a @symbol{cairo:matrix-t} instance}
-  @return{A @symbol{cairo:matrix-t} instance with the result.}
+  @return{The @symbol{cairo:matrix-t} instance with the result.}
   @begin{short}
     Multiplies the affine transformations in  @arg{a} and @arg{b} together
   @end{short}

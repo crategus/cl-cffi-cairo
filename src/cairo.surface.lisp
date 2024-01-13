@@ -2,11 +2,11 @@
 ;;; cairo.surface.lisp
 ;;;
 ;;; The documentation of the file is taken from the Cairo Reference Manual
-;;; Version 1.16 and modified to document the Lisp binding to the Cairo
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo
 ;;; library. See <http://cairographics.org>. The API documentation of the
 ;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2012 - 2023 Dieter Kaiser
+;;; Copyright (C) 2012 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -33,7 +33,7 @@
 ;;;
 ;;; Types and Values
 ;;;
-;;;     CAIRO_HAS_MIME_SURFACE
+;;;     CAIRO_HAS_MIME_SURFACE                             Deprecated 1.18
 ;;;     CAIRO_MIME_TYPE_CCITT_FAX
 ;;;     CAIRO_MIME_TYPE_CCITT_FAX_PARAMS
 ;;;     CAIRO_MIME_TYPE_EPS
@@ -135,6 +135,9 @@
 ;;; CAIRO_HAS_MIME_SURFACE
 ;;;
 ;;; #define CAIRO_HAS_MIME_SURFACE 1
+;;;
+;;; CAIRO_HAS_MIME_SURFACE has been deprecated since version 1.18 and should not
+;;; be used in newly-written code. This symbol should not be used
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -277,14 +280,14 @@
       (liber:symbol-documentation 'surface-t)
  "@version{#2020-12-16}
   @begin{short}
-    A @sym{cairo:surface-t} structure represents an image, either as the
+    A @symbol{cairo:surface-t} structure represents an image, either as the
     destination of a drawing operation or as source when drawing onto another
     surface.
   @end{short}
-  To draw to a @sym{cairo:surface-t} structure, create a Cairo context with the
-  surface as the target, using the @fun{cairo:create} function.
+  To draw to a @symbol{cairo:surface-t} structure, create a Cairo context with
+  the surface as the target, using the @fun{cairo:create} function.
 
-  There are different subtypes of a @sym{cairo:surface-t} structure for
+  There are different subtypes of a @symbol{cairo:surface-t} structure for
   different drawing backends. For example, the
   @fun{cairo:image-surface-create} function creates a bitmap image in memory.
   The type of a surface can be queried with the @fun{cairo:surface-type}
@@ -295,11 +298,11 @@
   it will be initially cleared; for example, the
   @fun{cairo:image-surface-create} and @fun{cairo:surface-create-similar}
   functions. Alternatively, if the user passes in a reference to some backing
-  storage and asks Cairo to wrap that in a @sym{cairo:surface-t} structure,
+  storage and asks Cairo to wrap that in a @symbol{cairo:surface-t} structure,
   then the contents are not modified; for example, the
   @fun{cairo:image-surface-create-for-data} function.
 
-  Memory management of a @sym{cairo:surface-t} structure is done with the
+  Memory management of a @symbol{cairo:surface-t} structure is done with the
   @fun{cairo:surface-reference} and @fun{cairo:surface-destroy} functions.
   @see-function{cairo:create}
   @see-function{cairo:image-surface-create}
@@ -326,14 +329,14 @@
       (liber:symbol-documentation 'content-t)
  "@version{#2021-5-13}
   @begin{short}
-    The @sym{cairo:content-t} enumeration is used to describe the content that
-    a surface will contain, whether color information, alpha information
+    The @symbol{cairo:content-t} enumeration is used to describe the content
+    that a surface will contain, whether color information, alpha information
     (translucence vs. opacity), or both.
   @end{short}
 
-  Note: The large values here are designed to keep @sym{cairo:content-t} values
-  distinct from @symbol{cairo:format-t} values so that the implementation can
-  detect the error if users confuse the two types.
+  Note: The large values here are designed to keep @symbol{cairo:content-t}
+  values distinct from @symbol{cairo:format-t} values so that the implementation
+  can detect the error if users confuse the two types.
   @begin{pre}
 (cffi:defcenum content-t
   (:color #x1000)
@@ -386,8 +389,8 @@
       (liber:symbol-documentation 'surface-type-t)
  "@version{#2020-12-16}
   @begin{short}
-    The @sym{cairo:surface-type-t} enumeration is used to describe the type of
-    a given surface.
+    The @symbol{cairo:surface-type-t} enumeration is used to describe the type
+    of a given surface.
   @end{short}
   The surface types are also known as \"backends\" or \"surface backends\"
   within Cairo.
@@ -442,27 +445,38 @@
     @entry[:ps]{The surface is of type ps.}
     @entry[:xlib]{The surface is of type xlib.}
     @entry[:xcb]{The surface is of type xcb.}
-    @entry[:glitz]{The surface is of type glitz.}
+    @entry[:glitz]{The surface is of type glitz. Deprecated 1.18: glitz support
+      have been removed, this surface type will never be set by Cairo.}
     @entry[:quartz]{The surface is of type quartz.}
     @entry[:win32]{The surface is of type win32.}
-    @entry[:beos]{The surface is of type beos.}
-    @entry[:directfb]{The surface is of type directfb.}
+    @entry[:beos]{The surface is of type beos. Deprecated 1.18: beos support
+      have been removed, this surface type will never be set by Cairo.}
+    @entry[:directfb]{The surface is of type directfb. Deprecated 1.18: directfb
+      support have been removed, this surface type will never be set by Cairo.}
     @entry[:svg]{The surface is of type svg.}
-    @entry[:os2]{The surface is of type os2.}
+    @entry[:os2]{The surface is of type os2. Deprecated 1.18: os2 support have
+      been removed, this surface type will never be set by Cairo.}
     @entry[:win32-printing]{The surface is a win32 printing surface.}
     @entry[:quartz-image]{The surface is of type quartz_image.}
     @entry[:script]{The surface is of type script.}
-    @entry[:qt]{The surface is of type Qt.}
+    @entry[:qt]{The surface is of type Qt. Deprecated 1.18: Ot support have been
+      removed, this surface type will never be set by Cairo.}
     @entry[:recording]{The surface is of type recording.}
-    @entry[:vg]{The surface is a OpenVG surface.}
-    @entry[:gl]{The surface is of type OpenGL.}
-    @entry[:drm]{The surface is of type Direct Render Manager.}
+    @entry[:vg]{The surface is a OpenVG surface. Deprecated 1.18: OpenVG support
+      have been removed, this surface type will never be set by Cairo.}
+    @entry[:gl]{The surface is of type OpenGL. Deprecated 1.18: OpenGL support
+      have been removed, this surface type will never be set by Cairo.}
+    @entry[:drm]{The surface is of type Direct Render Manager. Deprecated 1.18:
+      DRM support have been removed, this surface type will never be set by
+      Cairo.}
     @entry[:tee]{The surface is of type 'tee' (a multiplexing surface).}
     @entry[:xml]{The surface is of type XML (for debugging).}
-    @entry[:skia]{The surface is of type Skia.}
+    @entry[:skia]{The surface is of type Skia. Deprecated 1.18: Skia support
+      have been removed, this surface type will never be set by Cairo.}
     @entry[:subsurface]{The surface is a subsurface created with the
       @fun{cairo:surface-create-for-rectangle} function.}
-    @entry[:cogl]{This surface is of type Cogl.}
+    @entry[:cogl]{This surface is of type Cogl. Deprecated 1.18: Cogl support
+      have been removed, this surface type will never be set by Cairo.}
   @end{table}
   @see-symbol{cairo:surface-t}
   @see-function{cairo:surface-create-similar}
@@ -491,8 +505,8 @@
       (liber:symbol-documentation 'format-t)
  "@version{#2020-12-16}
   @begin{short}
-    The @sym{cairo:format-t} enumeration is used to identify the memory format
-    of image data.
+    The @symbol{cairo:format-t} enumeration is used to identify the memory
+    format of image data.
   @end{short}
   New entries may be added in future versions.
   @begin{pre}
@@ -796,7 +810,7 @@
  #+liber-documentation
  "@version{2023-7-21}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
-  @return{A @symbol{cairo:device-t} instance with the device for @arg{surface}
+  @return{The @symbol{cairo:device-t} instance with the device for @arg{surface}
     or @code{null-pointer} if the surface does not have an associated device.}
   @begin{short}
     This function returns the device for a surface.
@@ -840,7 +854,7 @@
  #+liber-documentation
  "@version{2023-7-21}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
-  @return{A @symbol{cairo:content-t} value with the content type of
+  @return{The @symbol{cairo:content-t} value with the content type of
     @arg{surface}.}
   @begin{short}
     This function returns the content type of @arg{surface} which indicates
@@ -933,12 +947,11 @@
   @argument[xoffset]{a double float offset in the x direction, in device units}
   @argument[yoffset]{a double float offset in the y direction, in device units}
   @begin{short}
-    The @sym{cairo:surface-device-offset} functions returns the previous device
+    The @fun{cairo:surface-device-offset} functions returns the previous device
     offset.
   @end{short}
-  The @sym{(setf cairo:surface-device-offset)} function sets an offset that is
-  added to the device coordinates determined by the CTM when drawing to
-  @arg{surface}.
+  The @setf{cairo:surface-device-offset} function sets an offset that is added
+  to the device coordinates determined by the CTM when drawing to @arg{surface}.
 
   One use case for this function is when we want to create a
   @symbol{cairo:surface-t} instance that redirects drawing for a portion of an
@@ -1084,7 +1097,7 @@
  #+liber-documentation
  "@version{2023-2-3}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
-  @return{A value of the @symbol{cairo:surface-type-t} enumeration.}
+  @return{The @symbol{cairo:surface-type-t} value.}
   @begin{short}
     This function returns the type of the backend used to create the surface.
   @end{short}

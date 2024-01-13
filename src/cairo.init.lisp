@@ -1,7 +1,7 @@
 ;;; ----------------------------------------------------------------------------
 ;;; cairo.init.lisp
 ;;;
-;;; Copyright (C) 2012 - 2023 Dieter Kaiser
+;;; Copyright (C) 2012 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -46,15 +46,15 @@
                                          minor-version-var
                                          &body versions)
   `(eval-when (:load-toplevel :execute)
-     ,@(loop for (major minor) on versions by #'cddr
-             collect `(when (or (and (= ,major-version-var ,major)
-                                     (>= ,minor-version-var ,minor))
-                                (> ,major-version-var ,major))
-                        (pushnew ,(intern (format nil "~A-~A-~A"
-                                                  (string library-name)
-                                                  major minor)
-                                          (find-package :keyword))
-                                 *features*)))))
+     ,@(iter (for (major minor) on versions by #'cddr)
+             (collect `(when (or (and (= ,major-version-var ,major)
+                                      (>= ,minor-version-var ,minor))
+                                 (> ,major-version-var ,major))
+                         (pushnew ,(intern (format nil "~A-~A-~A"
+                                                   (string library-name)
+                                                   major minor)
+                                           (find-package :keyword))
+                                  *features*))))))
 
 (define-condition foreign-library-version-mismatch (error)
   ((library :initarg :library :reader .library)
@@ -91,8 +91,8 @@
     (truncate (/ +cairo-version+ 10000))
     (- (truncate (/ +cairo-version+ 100))
        (* 100 (truncate (/ +cairo-version+ 10000))))
-    1 16   ; Since 19-10-2018
-    1 18   ; Since 23-09-2023
+    1 16   ; Since 2018-10-19
+    1 18   ; Since 2023-09-23
     1 20)
 
 (require-library-version "Cairo" 1 16

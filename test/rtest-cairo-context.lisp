@@ -20,7 +20,7 @@
 
 ;;;     cairo_create
 
-(test create.1
+(test cairo-create.1
   (let* ((surface (cairo:image-surface-create :rgb24 100 150))
          (context (cairo:create surface)))
     (is (cffi:pointerp context))
@@ -28,24 +28,24 @@
     (is-false (cairo:destroy context))
     (is-false (cairo:surface-destroy surface))))
 
-(test create.2
-  (cairo:with-cairo-image-surface (surface :rgb24 100 150)
+(test cairo-create.2
+  (cairo:with-image-surface (surface :rgb24 100 150)
     (let ((context (cairo:create surface)))
       (is (cffi:pointerp context))
       (is (eq :success (cairo:status context)))
       (is-false (cairo:destroy context)))))
 
-(test create.3
-  (cairo:with-cairo-image-surface (surface :rgb24 100 150)
-    (cairo:with-cairo-context (context surface)
+(test cairo-create.3
+  (cairo:with-image-surface (surface :rgb24 100 150)
+    (cairo:with-context (context surface)
       (is (cffi:pointerp context))
       (is (eq :success (cairo:status context))))))
 
 ;;;     cairo_reference
 ;;;     cairo_destroy
 
-(test reference/destroy
-  (cairo:with-cairo-image-surface (surface :rgb24 100 150)
+(test cairo-reference/destroy
+  (cairo:with-image-surface (surface :rgb24 100 150)
     (let ((context (cairo:create surface)))
       (is (cffi:pointerp context))
       (is (eq :success (cairo:status context)))
@@ -59,25 +59,25 @@
 
 ;;;     cairo_status
 
-(test status
-  (cairo:with-cairo-image-surface (surface :rgb24 150 100)
-    (cairo:with-cairo-context (context surface)
+(test cairo-status
+  (cairo:with-image-surface (surface :rgb24 150 100)
+    (cairo:with-context (context surface)
       (is (eq :success (cairo:status context))))))
 
 ;;;   cairo_save
 ;;;   cairo_restore
 
-(test save/restore
-  (cairo:with-cairo-image-surface (surface :rgb24 150 100)
-    (cairo:with-cairo-context (context surface)
+(test cairo-save/restore
+  (cairo:with-image-surface (surface :rgb24 150 100)
+    (cairo:with-context (context surface)
       (is-false (cairo:save context))
       (is-false (cairo:restore context)))))
 
 ;;;   cairo_get_target
 
-(test target
-  (cairo:with-cairo-image-surface (surface :rgb24 150 100)
-    (cairo:with-cairo-context (context surface)
+(test cairo-target
+  (cairo:with-image-surface (surface :rgb24 150 100)
+    (cairo:with-context (context surface)
       (is (eq :success (cairo:status context)))
       (is (cffi:pointer-eq surface (cairo:target context))))))
 
@@ -96,9 +96,9 @@
 ;;;     cairo_set_antialias
 ;;;     cairo_get_antialias
 
-(test antialias
-  (cairo:with-cairo-image-surface (surface :rgb24 100 150)
-    (cairo:with-cairo-context (context surface)
+(test cairo-antialias
+  (cairo:with-image-surface (surface :rgb24 100 150)
+    (cairo:with-context (context surface)
       (is (eq :default (cairo:antialias context)))
       (is (eq :none (setf (cairo:antialias context) :none)))
       (is (eq :none (cairo:antialias context)))
@@ -117,9 +117,9 @@
 ;;;     cairo_get_dash_count
 ;;;     cairo_get_dash
 
-(test dash
-  (cairo:with-cairo-image-surface (surface :rgb24 100 150)
-    (cairo:with-cairo-context (context surface)
+(test cairo-dash
+  (cairo:with-image-surface (surface :rgb24 100 150)
+    (cairo:with-context (context surface)
       ;; Get default values
       (is (equal '(() 0.0d0)
                   (multiple-value-list (cairo:dash context))))
@@ -144,9 +144,9 @@
 ;;;     cairo_set_fill_rule
 ;;;     cairo_get_fill_rule
 
-(test fill-rule
-  (cairo:with-cairo-image-surface (surface :rgb24 100 150)
-    (cairo:with-cairo-context (context surface)
+(test cairo-fill-rule
+  (cairo:with-image-surface (surface :rgb24 100 150)
+    (cairo:with-context (context surface)
       (is (eq :winding (cairo:fill-rule context)))
       (is (eq :even-odd (setf (cairo:fill-rule context) :even-odd)))
       (is (eq :even-odd (cairo:fill-rule context))))))
@@ -154,9 +154,9 @@
 ;;;     cairo_set_line_cap
 ;;;     cairo_get_line_cap
 
-(test line-cap
-  (cairo:with-cairo-image-surface (surface :rgb24 100 150)
-    (cairo:with-cairo-context (context surface)
+(test cairo-line-cap
+  (cairo:with-image-surface (surface :rgb24 100 150)
+    (cairo:with-context (context surface)
       (is (eq :butt (cairo:line-cap context)))
       (is (eq :round (setf (cairo:line-cap context) :round)))
       (is (eq :round (cairo:line-cap context)))
@@ -166,9 +166,9 @@
 ;;;     cairo_set_line_join
 ;;;     cairo_get_line_join
 
-(test line-join
-  (cairo:with-cairo-image-surface (surface :rgb24 100 150)
-    (cairo:with-cairo-context (context surface)
+(test cairo-line-join
+  (cairo:with-image-surface (surface :rgb24 100 150)
+    (cairo:with-context (context surface)
       (is (eq :miter (cairo:line-join context)))
       (is (eq :round (setf (cairo:line-join context) :round)))
       (is (eq :round (cairo:line-join context)))
@@ -178,16 +178,16 @@
 ;;;     cairo_set_line_width
 ;;;     cairo_get_line_width
 
-(test line-width.1
-  (cairo:with-cairo-image-surface (surface :rgb24 100 150)
-    (cairo:with-cairo-context (context surface)
+(test cairo-line-width.1
+  (cairo:with-image-surface (surface :rgb24 100 150)
+    (cairo:with-context (context surface)
       (is (= 2.0d0 (cairo:line-width context)))
       (is (= 1.0d0 (setf (cairo:line-width context) 1.0)))
       (is (= 1.0d0 (cairo:line-width context))))))
 
-(test line-width.2
-  (cairo:with-cairo-image-surface (surface :rgb24 100 150)
-    (cairo:with-cairo-context (context surface)
+(test cairo-line-width.2
+  (cairo:with-image-surface (surface :rgb24 100 150)
+    (cairo:with-context (context surface)
       (is (= 0.5d0 (setf (cairo:line-width context) 1/2)))
       (is (= 0.5d0 (cairo:line-width context)))
       (is (= 1.0d0 (setf (cairo:line-width context) 1)))
@@ -200,9 +200,9 @@
 ;;;     cairo_set_miter_limit
 ;;;     cairo_get_miter_limit
 
-(test miter-limit
-  (cairo:with-cairo-image-surface (surface :rgb24 100 150)
-    (cairo:with-cairo-context (context surface)
+(test cairo-miter-limit
+  (cairo:with-image-surface (surface :rgb24 100 150)
+    (cairo:with-context (context surface)
       (is (= 10.0d0 (cairo:miter-limit context)))
       (is (= 15.0d0 (setf (cairo:miter-limit context) 15.0)))
       (is (= 15.0d0 (cairo:miter-limit context))))))
@@ -210,9 +210,9 @@
 ;;;     cairo_set_operator
 ;;;     cairo_get_operator
 
-(test operator
-  (cairo:with-cairo-image-surface (surface :rgb24 100 150)
-    (cairo:with-cairo-context (context surface)
+(test cairo-operator
+  (cairo:with-image-surface (surface :rgb24 100 150)
+    (cairo:with-context (context surface)
       (is (eq :over (cairo:operator context)))
       (is (eq :clear (setf (cairo:operator context) :clear)))
       (is (eq :clear (cairo:operator context))))))
@@ -220,9 +220,9 @@
 ;;;     cairo_set_tolerance
 ;;;     cairo_get_tolerance
 
-(test tolerance
-  (cairo:with-cairo-image-surface (surface :rgb24 100 150)
-    (cairo:with-cairo-context (context surface)
+(test cairo-tolerance
+  (cairo:with-image-surface (surface :rgb24 100 150)
+    (cairo:with-context (context surface)
       (is (= 0.1d0 (cairo:tolerance context)))
       (is (approx-equal 0.2d0 (setf (cairo:tolerance context) 0.2)))
       (is (approx-equal 0.2d0 (cairo:tolerance context))))))
@@ -251,7 +251,7 @@
 
 ;;;     cairo_get_reference_count
 
-(test reference-count
+(test cairo-reference-count
   (let* ((surface (cairo:image-surface-create :rgb24 100 150))
          (context (cairo:create surface)))
     (is (= 1 (cairo:reference-count context)))
@@ -264,5 +264,7 @@
 
 ;;;     cairo_set_user_data
 ;;;     cairo_get_user_data
+;;;     cairo_set_hairline                                 Since 1.18
+;;;     cairo_get_hairline                                 Since 1.18
 
-;;; --- 2023-1-11 --------------------------------------------------------------
+;;; 2024-1-12

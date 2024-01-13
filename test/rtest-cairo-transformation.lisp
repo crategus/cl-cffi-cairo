@@ -8,8 +8,8 @@
 ;;;     cairo_translate
 
 (test ctm-translate
-  (cairo:with-cairo-image-surface (surface :rgb24 150 100)
-    (cairo:with-cairo-context (context surface)
+  (cairo:with-image-surface (surface :rgb24 150 100)
+    (cairo:with-context (context surface)
 
       (is (cffi:pointer-eq context (cairo:translate context 10 20)))
 )))
@@ -26,4 +26,4 @@
 ;;;     cairo_device_to_user_distance
 
 
-;;; --- 2023-1-3 ---------------------------------------------------------------
+;;; 2024-1-12

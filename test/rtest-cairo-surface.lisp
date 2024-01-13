@@ -54,7 +54,7 @@
 ;;;     cairo_surface_get_font_options
 
 (test cairo-surface-font-options
-  (cairo:with-cairo-image-surface (surface :rgb24 200 100)
+  (cairo:with-image-surface (surface :rgb24 200 100)
     (let ((options (cairo:font-options-create)))
       (is-false (cairo:surface-font-options surface options))
       (is (eq :success (cairo:font-options-status options)))
@@ -68,7 +68,7 @@
 ;;;     cairo_surface_get_content
 
 (test cairo-surface-content
-  (cairo:with-cairo-image-surface (surface :rgb24 200 100)
+  (cairo:with-image-surface (surface :rgb24 200 100)
     (is (eq :color (cairo:surface-content surface)))))
 
 ;;;     cairo_surface_mark_dirty
@@ -93,4 +93,4 @@
 ;;;     cairo_surface_map_to_image
 ;;;     cairo_surface_unmap_image
 
-;;; --- 2023-7-21 --------------------------------------------------------------
+;;; 2024-1-12

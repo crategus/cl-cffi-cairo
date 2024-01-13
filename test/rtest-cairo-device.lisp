@@ -14,7 +14,7 @@
 ;;;     cairo_device_destroy
 ;;;     cairo_device_get_reference_count
 
-(test device-reference/destroy
+(test cairo-device-reference/destroy
   (let* ((path (sys-path "out/tmp.script"))
          (script (cairo:script-create path)))
     (is (cffi:pointerp script))
@@ -27,20 +27,20 @@
     (is-false (cairo:device-destroy script))))
 
 ;; no device for image surface
-(test device-reference/destroy.1
+(test cairo-device-reference/destroy.1
   (let ((surface (cairo:image-surface-create :rgb24 100 150)))
     (is (cffi:null-pointer-p (cairo:surface-device surface)))
     (is-false (cairo:surface-destroy surface))))
 
 ;; no device for pdf surface
-(test device-reference/destroy.2
+(test cairo-device-reference/destroy.2
   (let* ((path (sys-path "out/tmp.pdf"))
          (surface (cairo:pdf-surface-create path 100 150)))
     (is (cffi:null-pointer-p (cairo:surface-device surface)))
     (is-false (cairo:surface-destroy surface))))
 
 ;; Example with device for script surface
-(test device-reference/destroy.3
+(test cairo-device-reference/destroy.3
   (let* ((filename (sys-path "out/tmp.script"))
          (script (cairo:script-create filename))
          (surface (cairo:script-surface-create script :color 100 150)))
@@ -54,7 +54,7 @@
 ;;;     cairo_device_finish
 ;;;     cairo_device_flush
 
-(test device-status/finish/flush
+(test cairo-device-status/finish/flush
   (let* ((filename (sys-path "out/tmp.script"))
          (script (cairo:script-create filename))
          (surface (cairo:script-surface-create script :color 100 150)))
@@ -69,14 +69,14 @@
 
 ;;;     cairo_device_get_type
 
-(test device-type.1
+(test cairo-device-type.1
   (let* ((filename (sys-path "out/tmp.script"))
          (script (cairo:script-create filename)))
     (is (cffi:pointerp script))
     (is (eq :script (cairo:device-type script)))
     (is-false (cairo:device-destroy script))))
 
-(test device-type.2
+(test cairo-device-type.2
   (let* ((filename (sys-path "out/tmp.script"))
          (script (cairo:script-create filename))
          (surface (cairo:script-surface-create script :color 100 150)))
@@ -101,4 +101,4 @@
 ;;;     cairo_device_observer_print ()
 ;;;     cairo_device_observer_stroke_elapsed ()
 
-;;; --- 2023-1-26 --------------------------------------------------------------
+;;; 2024-1-12

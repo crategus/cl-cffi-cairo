@@ -9,11 +9,11 @@
 
 ;;; --- Functions --------------------------------------------------------------
 
-;;;     with-cairo-script-surface
+;;;     cairo:with-script-surface
 
-(test with-cairo-script-surface
+(test cairo-with-script-surface
   (let ((path (sys-path "out/output.script")))
-    (cairo:with-cairo-script-surface (surface path :color 200 100)
+    (cairo:with-script-surface (surface path :color 200 100)
       (is (and (cffi:pointerp surface) (not (cffi:null-pointer-p surface))))
       (is (eq :ascii (cairo:script-mode (cairo:surface-device surface))))
       (is (eq :script (cairo:device-type (cairo:surface-device surface)))))))
@@ -64,8 +64,8 @@
 
 (test cairo-script-write-comment
   (let ((path (sys-path "out/comment.script")))
-    (cairo:with-cairo-script-surface (surface path :color 200 100)
+    (cairo:with-script-surface (surface path :color 200 100)
       (is-false (cairo:script-write-comment (cairo:surface-device surface)
                                             "Der Kommentar")))))
 
-;;; --- 2023-7-21 --------------------------------------------------------------
+;;; 2024-1-12

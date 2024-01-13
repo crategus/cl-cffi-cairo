@@ -76,4 +76,4 @@
     (is (= height (cairo:image-surface-height surface)))
     (is (= stride (cairo:image-surface-stride surface)))))
 
-;;; 2020-12-21
+;;; 2024-1-12

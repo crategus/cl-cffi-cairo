@@ -11,8 +11,8 @@
 ;;;     cairo_path_data_t
 ;;;     cairo_path_data_type_t
 
-(test path-structure.1
-  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
+(test cairo-path-structure.1
+  (cairo:with-context-for-image-surface (context :rgb24 400 300)
     (is-false (cairo:new-path context))
     (is-false (cairo:move-to context 10 10))
     (is-false (cairo:line-to context 20 20))
@@ -106,8 +106,8 @@
         (format t "       point-y : ~a~%" (cairo:point-y data)))
       (is-false (cairo:path-destroy path)))))
 
-(test path-structure.2
-  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
+(test cairo-path-structure.2
+  (cairo:with-context-for-image-surface (context :rgb24 400 300)
     (is-false (cairo:new-path context))
     (is-false (cairo:move-to context 10 10))
     (is-false (cairo:line-to context 20 20))
@@ -210,8 +210,8 @@
 
 ;;;     cairo_copy_path
 
-(test copy-path
-  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
+(test cairo-copy-path
+  (cairo:with-context-for-image-surface (context :rgb24 400 300)
     (is-false (cairo:new-path context))
     (is-false (cairo:move-to context 10 20))
     (is-false (cairo:line-to context 30 40))
@@ -227,18 +227,18 @@
 
 ;;;     cairo_copy_path_flat
 
-(test copy-path-flat
-  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
+(test cairo-copy-path-flat
+  (cairo:with-context-for-image-surface (context :rgb24 400 300)
     (is-false (cairo:new-path context))
     (is-false (cairo:move-to context 10 20))
     (is-false (cairo:line-to context 30 40))
     (is-false (cairo:curve-to context 50 60 70 80 90 100))
     (is-false (cairo:close-path context))
     (let ((path (cairo:copy-path-flat context)))
-      (is (equal '(:PATH (:MOVE-TO 10.0d0 20.0d0) 
+      (is (equal '(:PATH (:MOVE-TO 10.0d0 20.0d0)
                          (:LINE-TO 30.0d0 40.0d0)
-                         (:LINE-TO 90.0d0 100.0d0) 
-                         (:CLOSE-PATH) 
+                         (:LINE-TO 90.0d0 100.0d0)
+                         (:CLOSE-PATH)
                          (:MOVE-TO 10.0d0 20.0d0))
                  (path-to-lisp path)))
       (is-false (cairo:path-destroy path)))))
@@ -250,9 +250,9 @@
 ;;;     cairo_has_current_point
 ;;;     cairo_get_current_point
 
-(test current-point
-  (cairo:with-cairo-image-surface (surface :rgb24 100 150)
-    (cairo:with-cairo-context (context surface)
+(test cairo-current-point
+  (cairo:with-image-surface (surface :rgb24 100 150)
+    (cairo:with-context (context surface)
       (is-false (cairo:new-path context))
       (is-false (cairo:move-to context 10 10))
       (is-true (cairo:has-current-point context))
@@ -279,4 +279,4 @@
 ;;;     cairo_rel_move_to
 ;;;     cairo_path_extents
 
-;;; --- 2023-1-13 --------------------------------------------------------------
+;;; 2024-1-12

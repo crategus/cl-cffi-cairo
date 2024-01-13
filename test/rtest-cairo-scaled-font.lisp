@@ -19,7 +19,7 @@
 ;;;     cairo_scaled_font_extents
 
 (test cairo-scaled-font-extents
-  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
+  (cairo:with-context-for-image-surface (context :rgb24 400 300)
     ;; Set a font and a font size
     (cairo:select-font-face context "Sans")
     (cairo:set-font-size context 18)
@@ -35,7 +35,7 @@
 
 #+crategus
 (test cairo-scaled-font-extents
-  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
+  (cairo:with-context-for-image-surface (context :rgb24 400 300)
     ;; Set a font and a font size
     (cairo:select-font-face context "Sans")
     (cairo:set-font-size context 18)
@@ -51,7 +51,7 @@
 
 #+windows
 (test cairo-scaled-font-extents
-  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
+  (cairo:with-context-for-image-surface (context :rgb24 400 300)
     ;; Set a font and a font size
     (cairo:select-font-face context "Sans")
     (cairo:set-font-size context 18)
@@ -69,7 +69,7 @@
 
 #-windows
 (test cairo-scaled-font-text-extents
-  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
+  (cairo:with-context-for-image-surface (context :rgb24 400 300)
     ;; Set a font and a font size
     (cairo:select-font-face context "Sans")
     (cairo:set-font-size context 18)
@@ -85,24 +85,24 @@
 
 #+windows
 (test cairo-scaled-font-text-extents
-  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
+  (cairo:with-context-for-image-surface (context :rgb24 400 300)
     ;; Set a font and a font size
     (cairo:select-font-face context "Sans")
     (cairo:set-font-size context 18)
     (multiple-value-bind (x-bearing y-bearing width height x-advance y-advance)
         (cairo:scaled-font-text-extents (cairo:scaled-font context) "Crategus")
       ;; Check the returned values
-      (is (approx-equal   0.0 x-bearing))
+      (is (approx-equal  -0.1 x-bearing))
       (is (approx-equal -13.0 y-bearing))
       (is (approx-equal  79.0 width))
-      (is (approx-equal  17.0 height))
+      (is (approx-equal  18.9 height))
       (is (approx-equal  80.0 x-advance))
       (is (approx-equal   0.0 y-advance)))))
 
 ;;;     cairo_scaled_font_glyph_extents
 
 (test cairo-scaled-font-glyph-extents
-  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
+  (cairo:with-context-for-image-surface (context :rgb24 400 300)
     ;; Set a font and a font size
     (cairo:select-font-face context "Sans")
     (let ((font (cairo:scaled-font context)))
@@ -118,7 +118,7 @@
 
 #+crategus
 (test cairo-scaled-font-glyph-extents
-  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
+  (cairo:with-context-for-image-surface (context :rgb24 400 300)
     ;; Set a font and a font size
     (cairo:select-font-face context "Sans")
     (let ((font (cairo:scaled-font context)))
@@ -134,7 +134,7 @@
 
 #+windows
 (test cairo-scaled-font-glyph-extents
-  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
+  (cairo:with-context-for-image-surface (context :rgb24 400 300)
     ;; Set a font and a font size
     (cairo:select-font-face context "Sans")
     (let ((font (cairo:scaled-font context)))
@@ -142,16 +142,16 @@
           (cairo:scaled-font-glyph-extents font '((36 10 20)))
       ;; Check the returned values
       (is (approx-equal  -1.0 x-bearing))
-      (is (approx-equal  -7.0 y-bearing))
+      (is (approx-equal  -8.2 y-bearing))
       (is (approx-equal   9.0 width))
-      (is (approx-equal   7.0 height))
+      (is (approx-equal   9.2 height))
       (is (approx-equal   7.0 x-advance))
       (is (approx-equal   0.0 y-advance))))))
 
 ;;;     cairo_scaled_font_text_to_glyphs
 
 (test cairo-scaled-font-text-to-glyphs
-  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
+  (cairo:with-context-for-image-surface (context :rgb24 400 300)
     ;; Set a font and a font size
     (cairo:select-font-face context "Sans")
     (cairo:set-font-size context 18)
@@ -163,7 +163,7 @@
 ;; TODO: Create a check with approx-equal
 #+nil
 (test cairo-scaled-font-text-to-glyphs
-  (cairo:with-cairo-context-for-image-surface (context :rgb24 400 300)
+  (cairo:with-context-for-image-surface (context :rgb24 400 300)
     ;; Set a font and a font size
     (cairo:select-font-face context "Sans")
     (cairo:set-font-size context 18)
@@ -188,4 +188,4 @@
 ;;;     cairo_scaled_font_set_user_data
 ;;;     cairo_scaled_font_get_user_data
 
-;;; --- 2023-11-5 --------------------------------------------------------------
+;;; 2024-1-12

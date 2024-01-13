@@ -14,7 +14,7 @@
 
 ;;;     cairo_font_options_create
 
-(test font-options-create
+(test cairo-font-options-create
   (let ((options (cairo:font-options-create)))
     (is (cffi:pointerp options))
     (is (eq :default (cairo:font-options-antialias options)))
@@ -42,7 +42,7 @@
 ;;;     cairo_font_options_set_variations
 
 #+nil
-(test font-options-features
+(test cairo-font-options-features
   (let ((options (gdk-screen-font-options (gdk-screen-default))))
     (is (eq :subpixel (cairo:font-options-antialias options)))
     (is (eq :rgb (cairo:font-options-subpixel-order options)))
@@ -51,7 +51,7 @@
     (is-false (cairo:font-options-variations options))))
 
 #+nil
-(test font-options-variations
+(test cairo-font-options-variations
   (let ((options (gdk-screen-font-options (gdk-screen-default))))
     (is (string= "wght 200, wdth 140.5"
                  (setf (cairo:font-options-variations options)
@@ -62,4 +62,4 @@
     (is-false (setf (cairo:font-options-variations options) nil))
     (is-false (cairo:font-options-variations options))))
 
-;;; 2022-7-9
+;;; 2024-1-12

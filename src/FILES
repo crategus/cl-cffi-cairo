@@ -1,47 +1,57 @@
-Cairo 1.16.0
+Cairo 1.18
+
+    *   : needs update
+    +   : needs work
+    -   : deprecated
+    %   : not or not fully implemented
+    &   : objects and structures are implemented, some functions are missing
 
 Drawing
 
-  cairo_t — The cairo drawing context
-  Paths — Creating paths and manipulating path data
-  cairo_pattern_t — Sources for drawing
-  Regions — Representing a pixel-aligned area
-  Transformations — Manipulating the current transformation matrix
-  text — Rendering text and glyphs
-  Raster Sources — Supplying arbitrary image data
-  Tags and Links — Hyperlinks and document structure
+  cairo.context-lisp               cairo_t                          Cairo 1.18 +
+  cairo.path.lisp                  Paths                            Cairo 1.18 +
+  cairo.pattern.lisp               cairo_pattern_t                  Cairo 1.18
+  cairo.region.lisp                Regions                          Cairo 1.18
+  cairo.transformation.lisp        Transformations                  Cairo 1.18
+  cairo.text.lisp                  Text                             Cairo 1.18
+  cairo.raster-source.lisp         Raster Sources                   Cairo 1.18 +
+  cairo.tag.lisp                   Tags and Links                   Cairo 1.18 +
 
 Fonts
 
-  cairo_font_face_t — Base class for font faces
-  cairo_scaled_font_t — Font face at particular size and options
-  cairo_font_options_t — How a font should be rendered
-  FreeType Fonts — Font support for FreeType
-  Win32 Fonts — Font support for Microsoft Windows
-  Quartz (CGFont) Fonts — Font support via CGFont on OS X
-  User Fonts — Font support with font data provided by the user
+  cairo.font-face.lisp             cairo_font_face_t                Cairo 1.18
+  cairo.scaled-font.lisp           cairo_scaled_font_t              Cairo 1.18
+  cairo.font-options.lisp          cairo_font_options_t             Cairo 1.18 +
+  cairo.freetype-font.lisp         FreeType Fonts                   Cairo 1.18 +
+  cairo.win32-font.lisp            Win32 Fonts                      Cairo 1.18 +
+  cairo.dwrite-font.lisp           DWrite Fonts                     Cairo 1.18 +
+  cairo.quartz-font.lisp           Quartz (CGFont) Fonts            Cairo 1.18 +
+  cairo.user-font.lisp             User Fonts                       Cairo 1.18 +
 
 Surfaces
 
-  cairo_device_t — interface to underlying rendering system
-  cairo_surface_t — Base class for surfaces
-  Image Surfaces — Rendering to memory buffers
-  PDF Surfaces — Rendering PDF documents
-  PNG Support — Reading and writing PNG images
-  PostScript Surfaces — Rendering PostScript documents
-  Recording Surfaces — Records all drawing operations
-  Win32 Surfaces — Microsoft Windows surface support
-  SVG Surfaces — Rendering SVG documents
-  Quartz Surfaces — Rendering to Quartz surfaces
-  XCB Surfaces — X Window System rendering using the XCB library
-  XLib Surfaces — X Window System rendering using XLib
-  XLib-XRender Backend — X Window System rendering using XLib
-  Script Surfaces — Rendering to replayable scripts
+  cairo.device.lisp                cairo_device_t                   Cairo 1.18 +
+  cairo.surface.lisp               cairo_surface_t                  Cairo 1.18 +
+  cairo.image-surface.lisp         Image Surfaces                   Cairo 1.18
+  cairo.pdf-surface.lisp           PDF Surfaces                     Cairo 1.18 +
+  cairo.png-surface.lisp           PNG Support                      Cairo 1.18 +
+  cairo.ps-surface.lisp            PostScript Surfaces              Cairo 1.18 +
+  cairo.recording-surface.lisp     Recording Surfaces               Cairo 1.18 +
+  cairo.win32-surface.lisp         Win32 Surfaces                   Cairo 1.18 +
+  cairo.svg-surface.lisp           SVG Surfaces                     Cairo 1.18 +
+  cairo.quartz-surface.lisp        Quartz Surfaces                  Cairo 1.18 +
+  cairo.xcb-surface.lisp           XCB Surfaces                     Cairo 1.18 +
+  cairo.xlib-surface.lisp          XLib Surfaces                    Cairo 1.18 +
+  cairo.xlib-xrender-surface.lisp  XLib-XRender Backend             Cairo 1.18 +
+  cairo.script-surface.lisp        Script Surfaces                  Cairo 1.18
+  cairo.surface-oberserver.lisp    Surface Observer                 Cairo 1.18 +
+  cairo.tee-surface.lisp           Tee surface                      Cairo 1.18 +
 
 Utilities
 
-  cairo_matrix_t — Generic matrix operations
-  Error handling — Decoding cairo's status
-  Version Information — Compile-time and run-time version checks.
-  Types — Generic data types
+  cairo.matrix.lisp                cairo_matrix_t                   Cairo 1.18
+  cairo.status.lisp                Error handling                   Cairo 1.18 +
+  cairo.version.lisp               Version Information              Cairo 1.18
+  cairo.types.lisp                 Types                            Cairo 1.18 +
 
+2024-1-13

@@ -1,7 +1,7 @@
 ;;; ----------------------------------------------------------------------------
 ;;; cl-cffi-cairo.asd
 ;;;
-;;; Copyright (C) 2012 - 2023 Dieter Kaiser
+;;; Copyright (C) 2012 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -35,54 +35,57 @@
      (:file "cairo.init")
 
      ;; Utilities
-     (:file "cairo.version")                ; Version checks
-     (:file "cairo.status")                 ; Decoding Cairo's status
-     (:file "cairo.matrix")                 ; Generic matrix operations
-     (:file "cairo.types")                  ; Generic data types
+     (:file "cairo.version")
+     (:file "cairo.status")
+     (:file "cairo.matrix")
+     (:file "cairo.types")
 
      ;; Enumerations
-     (:file "cairo.enumerations")           ; Enumerations for Cairo
+     (:file "cairo.enumerations")
 
      ;; Fonts
-     (:file "cairo.font-options")           ; How a font should be rendered
-     (:file "cairo.font-face")              ; Base class for font faces
-     (:file "cairo.scaled-font")            ; Font face at particular size
+     (:file "cairo.font-options")
+     (:file "cairo.font-face")
+     (:file "cairo.scaled-font")
 
-     (:file "cairo.freetype-font")          ; Font support for FreeType
-     (:file "cairo.win32-font")             ; Font support for Windows
-     (:file "cairo.quartz-font")            ; Font support on OS X
-     (:file "cairo.user-font")              ; Font support for user font
+     (:file "cairo.freetype-font")
+     (:file "cairo.dwrite-font"                  :if-feature cairo-1-18)
+     (:file "cairo.win32-font")
+     (:file "cairo.quartz-font")
+     (:file "cairo.user-font")
 
      ;; Surfaces
-     (:file "cairo.device")                 ; interface to rendering system
-     (:file "cairo.surface")                ; Base class for surfaces
-     (:file "cairo.image-surface")          ; Rendering to memory buffers
-     (:file "cairo.png-surface")            ; Reading and writing PNG images
-     (:file "cairo.pdf-surface")            ; Rendering PDF documents
-     (:file "cairo.ps-surface")             ; Rendering PostScript documents
-     (:file "cairo.recording-surface")      ; Records all drawing operations
-     (:file "cairo.win32-surface")          ; Windows surface support
-     (:file "cairo.svg-surface")            ; Rendering SVG documents
-     (:file "cairo.quartz-surface")         ; Rendering to Quartz surfaces
-     (:file "cairo.xcb-surface")            ; Rendering using the XCB library
-     (:file "cairo.xlib-surface")           ; Rendering using XLib
-     (:file "cairo.xlib-xrender-surface")   ; using XLib and X Render
-     (:file "cairo.script-surface")         ; Rendering to replayable scripts
+     (:file "cairo.device")
+     (:file "cairo.surface")
+     (:file "cairo.image-surface")
+     (:file "cairo.png-surface")
+     (:file "cairo.pdf-surface")
+     (:file "cairo.ps-surface")
+     (:file "cairo.recording-surface")
+     (:file "cairo.win32-surface")
+     (:file "cairo.svg-surface")
+     (:file "cairo.quartz-surface")
+     (:file "cairo.xcb-surface")
+     (:file "cairo.xlib-surface")
+     (:file "cairo.xlib-xrender-surface")
+     (:file "cairo.script-surface")
+     (:file "cairo.surface-observer")
+     (:file "cairo.tee-surface")
 
      ;; Drawing
-     (:file "cairo.pattern")                ; Sources for drawing
-     (:file "cairo.context")                ; Cairo drawing context
-     (:file "cairo.region")                 ; Representing pixel area
-     (:file "cairo.transformation")         ; Transformations
-     (:file "cairo.raster-source")          ; Supplying arbitrary image data
-     (:file "cairo.tag")                    ; Hyperlinks, document structure
+     (:file "cairo.pattern")
+     (:file "cairo.context")
+     (:file "cairo.region")
+     (:file "cairo.transformation")
+     (:file "cairo.raster-source")
+     (:file "cairo.tag")
 
      ;; More Drawing
-     (:file "cairo.text")                   ; Rendering text and glyphs
-     (:file "cairo.path")                   ; Creating paths
+     (:file "cairo.text")
+     (:file "cairo.path")
     )))
   :in-order-to ((asdf:test-op (test-op "cl-cffi-cairo/test")))
-  :depends-on (:cffi))
+  :depends-on (:iterate :cffi))
 
 ;; Definine a test operation for the library
 

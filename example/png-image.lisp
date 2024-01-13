@@ -3,7 +3,7 @@
 (in-package :cairo-example)
 
 (defun demo-png-image ()
-  (with-cairo-context-for-image-surface (context :argb32 400 300)
+  (cairo:with-context-for-image-surface (context :argb32 400 300)
     ;; Clear surface
     (cairo:set-source-rgb context 1.0 1.0 1.0)
     (cairo:paint context)
@@ -20,4 +20,4 @@
     (cairo:surface-write-to-png (cairo:target context)
                                 (sys-path "out/image.png"))))
 
-;;; --- 2023-2-12 --------------------------------------------------------------
+;;; --- 2024-1-12 --------------------------------------------------------------

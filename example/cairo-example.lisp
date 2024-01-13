@@ -1,8 +1,6 @@
 (defpackage :cairo-example
   (:use :common-lisp)
-  (:import-from :cairo #:with-cairo-context
-                       #:with-cairo-context-for-image-surface
-                       #:with-cairo-image-surface)
+  (:import-from :cairo)
   (:export #:run-example
 
            #:cairo-draw-caps
@@ -51,4 +49,4 @@
 (defun sys-path (filename &optional (system :cairo-example))
   (asdf:system-relative-pathname system filename))
 
-;;; --- 2023-2-12 --------------------------------------------------------------
+;;; --- 2024-1-12 --------------------------------------------------------------

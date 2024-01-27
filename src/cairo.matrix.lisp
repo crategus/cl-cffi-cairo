@@ -69,7 +69,7 @@
 (setf (liber:alias-for-symbol 'matrix-t)
       "CStruct"
       (liber:symbol-documentation 'matrix-t)
- "@version{#2022-10-4}
+ "@version{2024-1-27}
   @begin{short}
     A @symbol{cairo:matrix-t} structure holds an affine transformation, such as
     a scale, rotation, shear, or a combination of those.
@@ -79,7 +79,7 @@
 xnew = xx * x + xy * y + x0
 ynew = yx * x + yy * y + y0
   @end{pre}
-  The current transformation matrix of a @symbol{cairo:context-t} context,
+  The current transformation matrix of a @symbol{cairo:context-t} instance,
   represented as a @symbol{cairo:matrix-t} structure, defines the transformation
   from user space coordinates to device space coordinates. See the
   @fun{cairo:matrix} function.
@@ -109,24 +109,118 @@ ynew = yx * x + yy * y + y0
 
 ;;; ----------------------------------------------------------------------------
 
-;; Lisp function to get the values of a Cairo matrix-t structure
-
-(defun matrix-to-float (matrix)
+(defmacro with-matrix ((var &rest args) &body body)
  #+liber-documentation
- "@version{#2022-10-7}
-  @argument[matrix]{a @symbol{cairo:matrix-t} instance}
-  @return{The list with the floating point values.}
+ "@version{2024-1-27}
+  @syntax{(cairo:with-matrix (matrix) body) => result}
+  @syntax{(cairo:with-matrix (matrix rad) body) => result}
+  @syntax{(cairo:with-matrix (matrix :translate tx ty) body) => result}
+  @syntax{(cairo:with-matrix (matrix :scale sx sy) body) => result}
+  @syntax{(cairo:with-matrix (matrix xx yx xy yy x0 y0) body) => result}
+  @argument[matrix]{a @symbol{cairo:matrix-t} instance to create and initialize}
+  @argument[rad]{a number coerced to a double float with the angle of rotation,
+    in radians}
+  @argument[tx]{a number coerced to a double float with the amount to
+    tanslate in the x direction}
+  @argument[ty]{a number coerced to a double float with the amount to
+    tanslate in the y direction}
+  @argument[sx]{a number coerced to a double float with the scale factor
+    in the x direction}
+  @argument[sy]{a number coerced to a double float with the scale factor
+    in the y direction}
+  @argument[xx]{a number coerced to a double float with the xx component of
+    the affine transformation}
+  @argument[yx]{a number coerced to a double float with the yx component of
+    the affine transformation}
+  @argument[xy]{a number coerced to a double float with the xy component of
+    the affine transformation}
+  @argument[yy]{a number coerced to a double float with the yy component of
+    the affine transformation}
+  @argument[x0]{a number coerced to a double float with the x translation
+    component of the affine transformation}
+  @argument[y0]{a number coerced to a double float with the y translation
+    component of the affine transformation}
   @begin{short}
-    Converts the matrix to a list of floating point values.
+    The @fun{cairo:with-matrix} macro allocates a new @symbol{cairo:matrix-t}
+    instance, initializes the matrix with the given values and executes the body
+    that uses the matrix.
   @end{short}
-  @begin[Note]{dictionary}
-    This function is a Lisp extension and not present in the C library.
-  @end{dictionary}
-  @see-symbol{cairo:matrix-t}"
-  (cffi:with-foreign-slots ((xx yx xy yy x0 y0) matrix (:struct matrix-t))
-    (list xx yx xy yy x0 y0)))
+  After execution of the body the allocated memory for the matrix is released.
 
-(export 'matrix-to-float)
+  When no argument is given the matrix is initialized to the identity
+  transformation with the @fun{cairo:matrix-init-identity} function. The
+  initialization with one argument initializes a rotation with the
+  @fun{cairo:matrix-init-rotate} function. The initialization with three
+  arguments initializes a translation with the @fun{cairo:matrix-init-translate}
+  function or a transformation whicht scales with the
+  @fun{cairo:matrix-init-scale} function. When six numbers are given the matrix
+  is initialized with the @fun{cairo:matrix-init} function.
+  @see-symbol{cairo:matrix-t}
+  @see-macro{cairo:with-matrices}
+  @see-function{cairo:matrix-init}
+  @see-function{cairo:matrix-init-identity}
+  @see-function{cairo:matrix-init-rotate}
+  @see-function{cairo:matrix-init-translate}
+  @see-function{cairo:matrix-init-scale}"
+  (cond ((null args)
+         ;; No arguments, initialize with the identity transformation
+         `(cffi:with-foreign-object (,var '(:struct matrix-t))
+            (matrix-init-identity ,var)
+            (progn ,@body)))
+        ((null (second args))
+         ;; One argument, initialize a rotation
+         `(cffi:with-foreign-object (,var '(:struct matrix-t))
+            (matrix-init-rotate ,var ,@args)
+            (progn ,@body)))
+        ((null (fourth args))
+         ;; Three arguments, translation or scale
+         (destructuring-bind (type arg1 arg2) args
+           (cond ((eq :scale type)
+                  `(cffi:with-foreign-object (,var '(:struct matrix-t))
+                     (matrix-init-scale ,var ,arg1 ,arg2)
+                     (progn ,@body)))
+                 ((eq :translate type)
+                  `(cffi:with-foreign-object (,var '(:struct matrix-t))
+                     (matrix-init-translate ,var ,arg1 ,arg2)
+                     (progn ,@body)))
+                 (t
+                  (error "Syntax error in CAIRO:WITH-MATRIX")))))
+        ((null (seventh args))
+         ;; Six arguments for initialization
+         `(cffi:with-foreign-object (,var '(:struct matrix-t))
+             (matrix-init ,var ,@args)
+             (progn ,@body)))
+        (t
+         (error "Syntax error in CAIRO:WITH-MATRIX"))))
+
+(export 'with-matrix)
+
+(defmacro with-matrices (vars &body body)
+ #+liber-documentation
+ "@version{2024-1-27}
+  @syntax{(cairo:with-matrices (matrix1 ... matrixn) body) => result}
+  @argument[matrix1 ... matrixn]{the newly created @symbol{cairo:matrix-t}
+    instances}
+  @argument[body]{a body that uses the bindings @arg{matrix1 ... matrixn}}
+  @begin{short}
+    The @fun{cairo:with-matrices} macro creates new variable bindings and
+    executes the body that use these bindings.
+  @end{short}
+  The macro performs the bindings sequentially, like the @code{let*} macro.
+
+  Each matrix can be initialized with values using the syntax for the
+  @fun{cairo:with-matrix} macro. See also the @fun{cairo:with-matrix}
+  documentation.
+  @see-symbol{cairo:matrix-t}
+  @see-macro{cairo:with-matrix}"
+  (if vars
+      (let ((var (mklist (first vars))))
+        `(with-matrix ,var
+           (with-matrices ,(rest vars)
+             ,@body)))
+      `(progn ,@body)))
+
+(export 'with-matrices)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_matrix_init ()
@@ -134,7 +228,7 @@ ynew = yx * x + yy * y + y0
 
 (defun matrix-init (matrix xx yx xy yy x0 y0)
  #+liber-documentation
- "@version{#2022-10-4}
+ "@version{2024-1-27}
   @argument[matrix]{a @symbol{cairo:matrix-t} instance to initialize}
   @argument[xx]{a number coerced to a double float with the xx component of
     the affine transformation}
@@ -150,15 +244,31 @@ ynew = yx * x + yy * y + y0
     component of the affine transformation}
   @return{The initialized @symbol{cairo:matrix-t} instance.}
   @begin{short}
-    Sets the matrix to be the affine transformation given by xx, yx, xy, yy,
-    x0, y0.
+    Sets the matrix to be the affine transformation given by the @arg{xx},
+    @arg{yx}, @arg{xy}, @arg{yy}, @arg{x0}, @arg{y0} arguments.
   @end{short}
   The transformation is given by:
   @begin{pre}
 xnew = xx * x + xy * y + x0
 ynew = yx * x + yy * y + y0
   @end{pre}
-  @see-symbol{cairo:matrix-t}"
+  @begin[Example]{dictionary}
+    The @symbol{cairo:matrix-t} structure is a CFFI type. Therefore to create a
+    matrix we have to define a foreign object:
+    @begin{pre}
+(cffi:with-foreign-object (matrix '(:struct cairo:matrix-t))
+  (cairo:matrix-init matrix 0.5 0.0 0.0 1.0 2.0 3.0)
+  (cairo:matrix-to-float matrix))
+=> (0.5d0 0.0d0 0.0d0 1.0d0 2.0d0 3.0d0)
+    @end{pre}
+  @end{dictionary}
+  @begin[Note]{dictionary}
+    The @fun{cairo:with-matrix} and @fun{cairo:with-matrices} macros are more
+    convenient to define and initialize a matrix in one step.
+  @end{dictionary}
+  @see-symbol{cairo:matrix-t}
+  @see-macro{cairo:with-matrix}
+  @see-macro{cairo:with-matrices}"
   (cffi:foreign-funcall "cairo_matrix_init"
                         (:pointer (:struct matrix-t)) matrix
                         :double (coerce xx 'double-float)
@@ -178,7 +288,7 @@ ynew = yx * x + yy * y + y0
 
 (defun matrix-init-identity (matrix)
  #+liber-documentation
- "@version{#2022-10-4}
+ "@version{2024-1-27}
   @argument[matrix]{a @symbol{cairo:matrix-t} instance to initialize}
   @return{The @symbol{cairo:matrix-t} instance set to be an identity
     transformation.}
@@ -199,7 +309,7 @@ ynew = yx * x + yy * y + y0
 
 (defun matrix-init-translate (matrix tx ty)
  #+liber-documentation
- "@version{#2022-10-4}
+ "@version{2024-1-27}
   @argument[matrix]{a @symbol{cairo:matrix-t} instance to initialize}
   @argument[tx]{a number coerced to a double float with the amount to
     tanslate in the x direction}
@@ -207,7 +317,7 @@ ynew = yx * x + yy * y + y0
     tanslate in the y direction}
   @return{The initialized @symbol{cairo:matrix-t} instance.}
   @begin{short}
-    Initializes the matrix to a transformation that translates by  @arg{tx}
+    Initializes the matrix to a transformation that translates by @arg{tx}
     and @arg{ty} in the x and y dimensions, respectively.
   @end{short}
   @see-symbol{cairo:matrix-t}"
@@ -226,7 +336,7 @@ ynew = yx * x + yy * y + y0
 
 (defun matrix-init-scale (matrix sx sy)
  #+liber-documentation
- "@version{#2022-10-4}
+ "@version{2024-1-27}
   @argument[matrix]{a @symbol{cairo:matrix-t} instance to initialize}
   @argument[sx]{a number coerced to a double float with the scale factor
     in the x direction}
@@ -253,7 +363,7 @@ ynew = yx * x + yy * y + y0
 
 (defun matrix-init-rotate (matrix radians)
  #+liber-documentation
- "@version{#2022-10-4}
+ "@version{2024-1-27}
   @argument[matrix]{a @symbol{cairo:matrix-t} instance to initialize}
   @argument[radians]{a number coerced to a double float with the angle of
     rotation, in radians}
@@ -275,12 +385,33 @@ ynew = yx * x + yy * y + y0
 (export 'matrix-init-rotate)
 
 ;;; ----------------------------------------------------------------------------
+;;; cairo:matrix-to-float
+;;; ----------------------------------------------------------------------------
+
+(defun matrix-to-float (matrix)
+ #+liber-documentation
+ "@version{2024-1-27}
+  @argument[matrix]{a @symbol{cairo:matrix-t} instance}
+  @return{The list with the floating point values.}
+  @begin{short}
+    Converts the matrix to a list of floating point values.
+  @end{short}
+  @begin[Note]{dictionary}
+    This function is a Lisp extension and not present in the C library.
+  @end{dictionary}
+  @see-symbol{cairo:matrix-t}"
+  (cffi:with-foreign-slots ((xx yx xy yy x0 y0) matrix (:struct matrix-t))
+    (list xx yx xy yy x0 y0)))
+
+(export 'matrix-to-float)
+
+;;; ----------------------------------------------------------------------------
 ;;; cairo_matrix_translate ()
 ;;; ----------------------------------------------------------------------------
 
 (defun matrix-translate (matrix tx ty)
  #+liber-documentation
- "@version{#2022-10-4}
+ "@version{2024-1-27}
   @argument[matrix]{a @symbol{cairo:matrix-t} instance}
   @argument[tx]{a number coerced to a double float with the amount to
     tanslate in the x direction}
@@ -310,7 +441,7 @@ ynew = yx * x + yy * y + y0
 
 (defun matrix-scale (matrix sx sy)
  #+liber-documentation
- "@version{#2022-10-4}
+ "@version{2024-1-27}
   @argument[matrix]{a @symbol{cairo:matrix-t} instance}
   @argument[sx]{a number coerced to a double float with the scale factor
     in the x direction}
@@ -340,7 +471,7 @@ ynew = yx * x + yy * y + y0
 
 (defun matrix-rotate (matrix radians)
  #+liber-documentation
- "@version{#2022-10-4}
+ "@version{2024-1-27}
   @argument[matrix]{a @symbol{cairo:matrix-t} instance}
   @argument[radians]{a number coerced to a double float with the angle of
     rotation, in radians}
@@ -370,7 +501,7 @@ ynew = yx * x + yy * y + y0
 
 (defun matrix-invert (matrix)
  #+liber-documentation
- "@version{#2022-10-4}
+ "@version{2024-1-27}
   @argument[matrix]{a @symbol{cairo:matrix-t} instance}
   @return{The inversed @symbol{cairo:matrix-t} instance if @arg{matrix} has an
     inverse, otherwise @em{false}.}
@@ -395,7 +526,7 @@ ynew = yx * x + yy * y + y0
 
 (defun matrix-multiply (result a b)
  #+liber-documentation
- "@version{#2022-10-7}
+ "@version{2024-1-27}
   @argument[result]{a @symbol{cairo:matrix-t} instance for the result}
   @argument[a]{a @symbol{cairo:matrix-t} instance}
   @argument[b]{a @symbol{cairo:matrix-t} instance}
@@ -424,8 +555,8 @@ ynew = yx * x + yy * y + y0
 
 (defun matrix-transform-distance (matrix dx dy)
  #+liber-documentation
- "@version{#2022-10-7}
-  @syntax[]{(cairo:transform-distance matrix dx dy) => tdx, tdy}
+ "@version{2024-1-27}
+  @syntax{(cairo:transform-distance matrix dx dy) => tdx, tdy}
   @argument[matrix]{a @symbol{cairo:matrix-t} instance}
   @argument[dx]{a number coerced to a double float with the x component of
     a distance vector}
@@ -469,8 +600,8 @@ tdy = dx * b + dy * d
 
 (defun matrix-transform-point (matrix x y)
  #+liber-documentation
- "@version{#2022-10-7}
-  @syntax[]{(transform-distance matrix x y) => tx, ty}
+ "@version{2024-1-27}
+  @syntax{(cairo:transform-distance matrix x y) => tx, ty}
   @argument[matrix]{a @symbol{cairo:matrix-t} instance}
   @argument[x]{a number coerced to a double float with the x position}
   @argument[y]{a number coerced to a double float with the y position}

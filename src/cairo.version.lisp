@@ -76,7 +76,7 @@
 
 (defun version-encode (major minor micro)
  #+liber-documentation
- "@version{2023-1-7}
+ "@version{2024-1-27}
   @argument[major]{an integer with the major component of the version number}
   @argument[minor]{an integer with the minor component of the version number}
   @argument[micro]{an integer with the micro component of the version number}
@@ -122,7 +122,7 @@
 
 (cffi:defcfun ("cairo_version" version) :int
  #+liber-documentation
- "@version{2023-1-7}
+ "@version{2024-1-27}
   @return{The integer with the encoded version.}
   @begin{short}
     Returns the version of the Cairo library encoded in a single integer.
@@ -146,7 +146,7 @@
 
 (cffi:defcfun ("cairo_version_string" version-string) :string
  #+liber-documentation
- "@version{2023-1-7}
+ "@version{2024-1-27}
   @return{The string containing the Cairo version.}
   @begin{short}
     Returns the version of the Cairo library as a human readable string of the

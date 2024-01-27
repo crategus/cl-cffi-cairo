@@ -1,7 +1,7 @@
 (in-package :cairo-test)
 
-(def-suite cairo-version :in cairo-suite)
-(in-suite cairo-version)
+(def-suite cairo-version-suite :in cairo-suite)
+(in-suite cairo-version-suite)
 
 ;;; --- Functions --------------------------------------------------------------
 
@@ -20,4 +20,4 @@
 (test cairo-version-string
   (is (string= "1.18.0" (cairo:version-string))))
 
-;;; 2024-1-12
+;;; 2024-1-27

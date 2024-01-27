@@ -38,20 +38,7 @@
 ;;; Functions
 ;;;
 ;;;     cairo_status_to_string
-;;;     cairo_debug_reset_static_data
-;;;
-;;; Description
-;;;
-;;; Cairo uses a single status type to represent all kinds of errors. A status
-;;; value of CAIRO_STATUS_SUCCESS represents no error and has an integer value
-;;; of zero. All other status values represent an error.
-;;;
-;;; Cairo's error handling is designed to be easy to use and safe. All major
-;;; cairo objects retain an error status internally which can be queried anytime
-;;; by the users using cairo*_status() calls. In the mean time, it is safe to
-;;; call all cairo functions normally even if the underlying object is in an
-;;; error status. This means that no error handling code is required before or
-;;; after each individual cairo function call.
+;;;     cairo_debug_reset_static_data                      not implemented
 ;;; ----------------------------------------------------------------------------
 
 (in-package :cairo)
@@ -85,7 +72,7 @@
   :invalid-index
   :clip-not-representable
   :temp-file-error
-  :invalide-stride
+  :invalid-stride
   :font-type-mismatch
   :user-font-immutable
   :user-font-error
@@ -104,19 +91,23 @@
   :freetype-error
   :win32-gdk-error
   :tag-error
+  #+cairo-1-18
+  :dwrite-error
+  #+cairo-1-18
+  :svg-font-error
   :last-status)
 
 #+liber-documentation
 (setf (liber:alias-for-symbol 'status-t)
       "CEnum"
       (liber:symbol-documentation 'status-t)
- "@version{#2020-12-5}
+ "@version{2024-1-27}
   @begin{short}
     The @symbol{cairo:status-t} enumeration is used to indicate errors that can
     occur when using Cairo.
   @end{short}
   In some cases it is returned directly by functions. but when using a
-  @symbol{cairo:context-t} context, the last error, if any, is stored in the
+  @symbol{cairo:context-t} instance, the last error, if any, is stored in the
   context and can be retrieved with the @fun{cairo:status} function.
 
   New entries may be added in future versions. Use the
@@ -148,7 +139,7 @@
   :invalid-index
   :clip-not-representable
   :temp-file-error
-  :invalide-stride
+  :invalid-stride
   :font-type-mismatch
   :user-font-immutable
   :user-font-error
@@ -167,12 +158,16 @@
   :freetype-error
   :win32-gdk-error
   :tag-error
+  #+cairo-1-18
+  :dwrite-error
+  #+cairo-1-18
+  :svg-font-error
   :last-status)
   @end{pre}
   @begin[code]{table}
     @entry[:success]{No error has occurred.}
     @entry[:no-memory]{Out of memory.}
-    @entry[:invalid-store]{The @fun{cairo:restore} function called without
+    @entry[:invalid-restore]{The @fun{cairo:restore} function called without
       matching the @fun{cairo:save} function.}
     @entry[:invalid-pop-group]{No saved group to pop, i.e. the
     @fun{cairo:pop-group} function without matching the @fun{cairo:push-group}
@@ -233,6 +228,10 @@
     @entry[:win32-gdi-error]{Error occurred in the Windows Graphics Device
       Interface.}
     @entry[:tag-error]{Invalid tag name, attributes, or nesting.}
+    @entry[:dwrite-error]{Error occurred in the Windows Direct Write API.
+      Since 1.18}
+    @entry[:svg-font-error]{Error occurred in OpenType-SVG font rendering.
+      Since 1.18}
     @entry[:last-status]{This is a special value indicating the number of status
       values defined in this enumeration. When using this value, note that the
       version of Cairo at run-time may have additional status values defined
@@ -258,16 +257,68 @@
 ;;; cairo_status_to_string ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("cairo_status_to_string" status-to-string) :string
+(cffi:defcfun ("cairo_status_to_string" %status-to-string) :string
+  (status status-t))
+
+(defun status-to-string (status)
  #+liber-documentation
- "@version{#2020-12-5}
-  @argument[status]{a value of the @symbol{cairo:status-t} enumeration}
+ "@version{2024-1-27}
+  @argument[status]{a @symbol{cairo:status-t} value}
   @return{The string representation of the Cario status.}
   @begin{short}
     Provides a human readable description of a Cairo status value.
   @end{short}
   @see-symbol{cairo:status-t}"
-  (status status-t))
+  (let ((desc '((:success . "no error has occurred")
+                (:no-memory . "out of memory")
+                (:invalid-restore . "cairo:restore without matching cairo:save")
+                (:invalid-pop-group . "no saved group to pop, i.e. cairo:pop-group without matching cairo:push-group")
+                (:no-current-point . "no current point defined")
+                (:invalid-matrix . "invalid matrix (not invertible)")
+                (:invalid-status . "invalid value for an input cairo:status-t")
+                (:null-pointer . "NULL pointer")
+                (:invalid-string . "input string not valid UTF-8")
+                (:invalid-path-data . "input path data not valid")
+                (:read-error . "error while reading from input stream")
+                (:write-error . "error while writing to output stream")
+                (:surface-finished . "the target surface has been finished")
+                (:surface-type-mismatch . "the surface type is not appropriate for the operation")
+                (:pattern-type-mismatch . "the pattern type is not appropriate for the operation")
+                (:invalid-content . "invalid value for an input cairo:input-t")
+                (:invalid-format . "invalid value for an input cairo:format-t")
+                (:invalid-visual . "invalid value for an input Visual*")
+                (:file-not-found . "file not found")
+                (:invalid-dash . "invalid value for a dash setting")
+                (:invalid-dsc-comment . "invalid value for a DSC comment")
+                (:invalid-index . "invalid index passed to getter")
+                (:clip-not-representable . "clip region not representable in desired format")
+                (:temp-file-error . "error creating or writing to a temporary file")
+                (:invalid-stride . "invalid value for stride")
+                (:font-type-mismatch . "the font type is not appropriate for the operation")
+                (:user-font-immutable . "the user-font is immutable")
+                (:user-font-error . "error occurred in a user-font callback function")
+                (:negative-count . "negative number used where it is not allowed")
+                (:invalid-clusters . "input clusters do not represent the accompanying text and glyph arrays")
+                (:invalid-slant . "invalid value for an input cairo:font-slant-t")
+                (:invalid-weight . "invalid value for an input cairo:font-weight-t")
+                (:invalid-size . "invalid value (typically too big) for the size of the input (surface, pattern, etc.)")
+                (:user-font-not-implemented . "user-font method not implemented")
+                (:device-type-mismatch . "the device type is not appropriate for the operation")
+                (:device-error . "an operation to the device caused an unspecified error")
+                (:invalid-mesh-construction . "invalid operation during mesh pattern construction")
+                (:device-finished . "the target device has been finished")
+                (:jbig2-global-missing . "CAIRO_MIME_TYPE_JBIG2_GLOBAL_ID used but no CAIRO_MIME_TYPE_JBIG2_GLOBAL data provided")
+                (:png-error . "error occurred in libpng while reading from or writing to a PNG file")
+                (:freetype-error . "error occurred in libfreetype")
+                (:win32-gdk-error . "error occurred in the Windows Graphics Device Interface")
+                (:tag-error . "invalid tag name, attributes, or nesting")
+                (:dwrite-error . "Window Direct Write error")
+                (:svg-font-error .  "error occured while rendering an OpenType-SVG font")
+               ))
+        text)
+  (if (setf text (cdr (assoc status desc :test #'eq)))
+      text
+      (%status-to-string status))))
 
 (export 'status-to-string)
 

@@ -1,7 +1,7 @@
 (in-package :cairo-test)
 
-(def-suite cairo-matrix :in cairo-suite)
-(in-suite cairo-matrix)
+(def-suite cairo-matrix-suite :in cairo-suite)
+(in-suite cairo-matrix-suite)
 
 ;;; --- Types and Values -------------------------------------------------------
 

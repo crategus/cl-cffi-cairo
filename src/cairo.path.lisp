@@ -34,7 +34,7 @@
 ;;; Types and Values
 ;;;
 ;;;     cairo_path_t
-;;;     cairo_path_data_t
+;;;     cairo_path_data_t                                  not exported
 ;;;     cairo_path_data_type_t
 ;;;
 ;;; Functions
@@ -48,23 +48,18 @@
 ;;;     cairo_new_path
 ;;;     cairo_new_sub_path
 ;;;     cairo_close_path
+;;;     cairo_path_extents
+;;;     cairo_move_to
+;;;     cairo_rel_move_to
+;;;     cairo_line_to
+;;;     cairo_rel_line_to
+;;;     cairo_curve_to
+;;;     cairo_rel_curve_to
+;;;     cairo_rectangle
 ;;;     cairo_arc
 ;;;     cairo_arc_negative
-;;;     cairo_curve_to
-;;;     cairo_line_to
-;;;     cairo_move_to
-;;;     cairo_rectangle
 ;;;     cairo_glyph_path
 ;;;     cairo_text_path
-;;;     cairo_rel_curve_to
-;;;     cairo_rel_line_to
-;;;     cairo_rel_move_to
-;;;     cairo_path_extents
-;;;
-;;; Description
-;;;
-;;;     Paths are the most basic drawing tools and are primarily used to
-;;;     implicitly generate simple masks.
 ;;; ----------------------------------------------------------------------------
 
 (in-package :cairo)
@@ -83,10 +78,10 @@
 (setf (liber:alias-for-symbol 'path-data-type-t)
        "CEnum"
       (liber:symbol-documentation 'path-data-type-t)
- "@version{#2021-12-12}
+ "@version{2024-1-23}
   @begin{short}
-    The @symbol{cairo:path-data-type-t} enumeration is used to describe the type
-    of one portion of a path when represented as a @symbol{cairo:path-t}
+    The @symbol{cairo:path-data-type-t} enumeration is used to describe the
+    type of one portion of a path when represented as a @symbol{cairo:path-t}
     instance.
   @end{short}
   See the @symbol{cairo:path-data-t} structure for details.
@@ -109,7 +104,7 @@
 (export 'path-data-type-t)
 
 ;;; ----------------------------------------------------------------------------
-;;; union cairo_path_data_t
+;;; union cairo_path_data_t                                not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct header-t
@@ -167,7 +162,7 @@
 
   Here is sample code for iterating through a @symbol{cairo:path-t} structure:
   @begin{pre}
-(defun path-to-lisp (path)
+(defun path-to-list (path)
   (iter (with count = 0)
         (with numdata = (cairo:path-numdata path))
         (with element = :path)
@@ -215,16 +210,14 @@
   As of Cairo 1.4, Cairo does not mind if there are more elements in a portion
   of the path than needed. Such elements can be used by users of the Cairo API
   to hold extra values in the path data structure. For this reason, it is
-  recommended that applications always use data->header.length to iterate over
-  the path data, instead of hardcoding the number of elements for each element
-  type.
+  recommended that applications always use the @fun{cairo:header-length}
+  function to iterate over the path data, instead of hardcoding the number of
+  elements for each element type.
   @see-symbol{cairo:path-t}
   @see-function{cairo:move-to}
   @see-function{cairo:line-to}
   @see-function{cairo:curve-to}
   @see-function{cairo:close-path}")
-
-(export 'path-data-t)
 
 ;;; ----------------------------------------------------------------------------
 
@@ -243,8 +236,6 @@
 #+liber-documentation
 (setf (liber:alias-for-function 'path-data-header) "Accessor")
 
-(export 'path-data-header)
-
 ;;; ----------------------------------------------------------------------------
 
 (defun path-data-point (pathdata)
@@ -261,8 +252,6 @@
 
 #+liber-documentation
 (setf (liber:alias-for-function 'path-data-point) "Accessor")
-
-(export 'path-data-point)
 
 ;;; ----------------------------------------------------------------------------
 
@@ -281,8 +270,6 @@
 #+liber-documentation
 (setf (liber:alias-for-function 'header-data-type) "Accessor")
 
-(export 'header-data-type)
-
 ;;; ----------------------------------------------------------------------------
 
 (defun header-length (header)
@@ -300,8 +287,6 @@
 #+liber-documentation
 (setf (liber:alias-for-function 'header-length) "Accessor")
 
-(export 'header-length)
-
 ;;; ----------------------------------------------------------------------------
 
 (defun point-x (point)
@@ -314,8 +299,6 @@
   @end{short}
   @see-symbol{cairo:path-data-t}"
   (cffi:foreign-slot-value point '(:struct point-t) 'x))
-
-(export 'point-x)
 
 ;;; ----------------------------------------------------------------------------
 
@@ -330,8 +313,6 @@
   @see-symbol{cairo:path-data-t}"
   (cffi:foreign-slot-value point '(:struct point-t) 'y))
 
-(export 'point-y)
-
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_path_t
 ;;; ----------------------------------------------------------------------------
@@ -345,7 +326,7 @@
 (setf (liber:alias-for-symbol 'path-t)
        "CStruct"
       (liber:symbol-documentation 'path-t)
- "@version{#2021-12-12}
+ "@version{2024-1-23}
   @begin{short}
     A data structure for holding a path.
   @end{short}
@@ -381,9 +362,9 @@
 
 (defun path-status (path)
  #+liber-documentation
- "@version{#2023-1-6}
+ "@version{2024-1-23}
   @argument[path]{a @symbol{cairo:path-t} instance}
-  @return{The current @symbol{cairo:status-t} error status.}
+  @return{The current @symbol{cairo:status-t} value with the error status.}
   @begin{short}
     Accessor of the @code{status} slot of the @symbol{cairo:path-t} structure.
   @end{short}
@@ -400,7 +381,7 @@
 
 (defun path-data (path)
  #+liber-documentation
- "@version{#2023-1-6}
+ "@version{2024-1-23}
   @argument[path]{a @symbol{cairo:path-t} instance}
   @return{The @symbol{cairo:path-data-t} instances in the path.}
   @begin{short}
@@ -419,7 +400,7 @@
 
 (defun path-numdata (path)
  #+liber-documentation
- "@version{#2023-1-6}
+ "@version{2024-1-23}
   @argument[path]{a @symbol{cairo:path-t} instance}
   @return{The integer with the number of elements in the data array.}
   @begin{short}
@@ -439,8 +420,8 @@
 
 (cffi:defcfun ("cairo_copy_path" copy-path) (:pointer (:struct path-t))
  #+liber-documentation
- "@version{#2021-12-12}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-23}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{return}
     The copy of the @symbol{cairo:path-t} current path. The caller owns the
     returned object and should call the @fun{cairo:path-destroy} function when
@@ -458,17 +439,18 @@
   @begin{itemize}
     @begin{item}
       If there is insufficient memory to copy the path. In this case the status
-      of the path will be set to @code{:no-memory}.
+      of the path will be set to the @code{:no-memory} value.
     @end{item}
     @begin{item}
-      If @arg{cr} is already in an error state. In this case path->status will
-      contain the same status that would be returned by the @fun{cairo:status}
-      function.
+      If @arg{cr} is already in an error state. In this case the
+      @fun{cairo:path-status} function will return the same status that would
+      be returned by the @fun{cairo:status} function.
     @end{item}
   @end{itemize}
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:path-t}
   @see-symbol{cairo:path-data-t}
+  @see-function{cairo:path-status}
   @see-function{cairo:status}
   @see-function{cairo:path-destroy}"
   (cr (:pointer (:struct context-t))))
@@ -482,8 +464,8 @@
 (cffi:defcfun ("cairo_copy_path_flat" copy-path-flat)
     (:pointer (:struct path-t))
  #+liber-documentation
- "@version{#2021-12-12}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-23}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{return}
     The copy of the @symbol{cairo:path-t} current path. The caller owns the
     returned object and should call the @fun{cairo:path-destroy} function when
@@ -499,20 +481,20 @@
   This function is like the @fun{cairo:copy-path} function except that any
   curves in the path will be approximated with piecewise-linear approximations,
   accurate to within the current tolerance value. That is, the result is
-  guaranteed to not have any elements of type @code{:curve-to} which will
-  instead be replaced by a series of @code{:line-to} elements.
+  guaranteed to not have any @code{:curve-to} elements which will instead be
+  replaced by a series of @code{:line-to} elements.
 
   This function will always return a valid pointer, but the result will have
   no data, if either of the following conditions hold:
   @begin{itemize}
     @begin{item}
       If there is insufficient memory to copy the path. In this case the status
-      of the path will be set to @code{:no-memory}.
+      of the path will be set to the @code{:no-memory} value.
     @end{item}
     @begin{item}
-      If @arg{cr} is already in an error state. In this case path->status will
-      contain the same status that would be returned by the @fun{cairo:status}
-      function.
+      If @arg{cr} is already in an error state. In this case the
+      @fun{cairo:path-status} function will return the same status that would
+      be returned by the @fun{cairo:status} function.
     @end{item}
   @end{itemize}
   @see-symbol{cairo:context-t}
@@ -531,7 +513,7 @@
 
 (cffi:defcfun ("cairo_path_destroy" path-destroy) :void
  #+liber-documentation
- "@version{#2021-12-12}
+ "@version{2024-1-23}
   @argument[path]{a @symbol{cairo:path-t} instance previously returned by either
   the @fun{cairo:copy-path} or @fun{cairo:copy-path-flat} functions}
   @begin{short}
@@ -553,13 +535,92 @@
 (export 'path-destroy)
 
 ;;; ----------------------------------------------------------------------------
+;;; cairo:path-data-lo-list
+;;; ----------------------------------------------------------------------------
+
+(defun path-data-to-list (path)
+ #+liber-documentation
+ "@version{2024-1-23}
+  @argument[path]{a @symbol{cairo:path-t} instance}
+  @return{The list with the path.}
+  @begin{short}
+    Creates a list with the path information from a @symbol{cairo:path-t}
+    instance.
+  @end{short}
+  @begin[Example]{dictionary}
+    @begin{pre}
+(cairo:with-recording-surface (surface :color)
+  (cairo:with-context (context surface)
+    (cairo:new-path context)
+    (cairo:rectangle context  10 20 30 40)
+    (let ((path (cairo:copy-path-flat context)))
+      (prog1
+        (cairo:path-data-to-list path)
+        (cairo:path-destroy path)))))
+=> (:PATH
+    (:MOVE-TO 10.0d0 20.0d0)
+    (:LINE-TO 40.0d0 20.0d0)
+    (:LINE-TO 40.0d0 60.0d0)
+    (:LINE-TO 10.0d0 60.0d0)
+    (:CLOSE-PATH)
+    (:MOVE-TO 10.0d0 20.0d0))
+    @end{pre}
+  @end{dictionary}
+  @see-symbol{cairo:path-t}"
+  (loop with count = 0
+        with numdata = (path-numdata path)
+        with element = :path
+        with data = (path-data path)
+        with size = (cffi:foreign-type-size '(:struct path-data-t))
+        collect element
+        while (< count numdata)
+        do (cond ((eq :move-to (header-data-type data))
+                  (setf element (list :move-to))
+                  (setf count (incf count (header-length data)))
+                  (setf data (cffi:inc-pointer data size))
+                  (push (point-x data) element)
+                  (push (point-y data) element)
+                  (setf element (reverse element))
+                  (setf data (cffi:inc-pointer data size)))
+                 ((eq :line-to (header-data-type data))
+                  (setf element (list :line-to))
+                  (setf count (incf count (header-length data)))
+                  (setf data (cffi:inc-pointer data size))
+                  (push (point-x data) element)
+                  (push (point-y data) element)
+                  (setf element (reverse element))
+                  (setf data (cffi:inc-pointer data size)))
+                 ((eq :curve-to (header-data-type data))
+                  (setf element (list :curve-to))
+                  (setf count (incf count (header-length data)))
+                  (setf data (cffi:inc-pointer data size))
+                  (push (point-x data) element)
+                  (push (point-y data) element)
+                  (setf data (cffi:inc-pointer data size))
+                  (push (point-x data) element)
+                  (push (point-y data) element)
+                  (setf data (cffi:inc-pointer data size))
+                  (push (point-x data) element)
+                  (push (point-y data) element)
+                  (setf element (reverse element))
+                  (setf data (cffi:inc-pointer data size)))
+                 ((eq :close-path (header-data-type data))
+                  (setf element (list :close-path))
+                  (setf count (incf count (header-length data)))
+                  (setf data (cffi:inc-pointer data size)))
+                 (t (error "KEYWORD ~a not known to PATH-DATA-TYPE-T"
+                           (header-data-type data))))))
+
+(export 'path-data-to-list)
+
+;;; ----------------------------------------------------------------------------
 ;;; cairo_append_path () -> append-path
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_append_path" append-path) :void
  #+liber-documentation
- "@version{#2021-12-12}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-23}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[path]{a @symbol{cairo:path-t} instance to be appended}
   @begin{short}
     Append @arg{path} onto the current path.
@@ -568,7 +629,7 @@
   or @fun{cairo:copy-path-flat} functions or it may be constructed manually.
   See the @symbol{cairo:path-t} documentation for details on how the path data
   structure should be initialized, and note that the status of the path must be
-  initialized to @code{:success}.
+  initialized to the @code{:success} value.
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:path-t}
   @see-function{cairo:copy-path}
@@ -584,8 +645,8 @@
 
 (cffi:defcfun ("cairo_has_current_point" has-current-point) :bool
  #+liber-documentation
- "@version{#2021-12-12}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-23}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @return{Whether a current point is defined.}
   @begin{short}
     Returns whether a current point is defined on the current path.
@@ -608,8 +669,8 @@
 
 (defun current-point (cr)
  #+liber-documentation
- "@version{#2021-12-12}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-23}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{return}
     @arg{x} -- a double float x coordinate of the current point @br{}
     @arg{y} -- a double float y coordinate of the current point
@@ -657,8 +718,8 @@ fill     stroke
 
 (cffi:defcfun ("cairo_new_path" new-path) :void
  #+liber-documentation
- "@version{#2021-12-12}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-23}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{short}
     Clears the current path.
   @end{short}
@@ -674,8 +735,8 @@ fill     stroke
 
 (cffi:defcfun ("cairo_new_sub_path" new-sub-path) :void
  #+liber-documentation
- "@version{2023-1-14}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-23}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{short}
     Begin a new sub-path.
   @end{short}
@@ -700,8 +761,8 @@ fill     stroke
 
 (cffi:defcfun ("cairo_close_path" close-path) :void
  #+liber-documentation
- "@version{#2021-12-12}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-23}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{short}
     Adds a line segment to the path from the current point to the beginning of
     the current sub-path, the most recent point passed to the
@@ -719,13 +780,13 @@ fill     stroke
   If there is no current point before the call to the @fun{cairo:close-path}
   function, this function will have no effect.
   @begin[Note]{dictionary}
-    As of Cairo version 1.2.4 any call to the @fun{cairo:close-path} function
-    will place an explicit @code{:move-to} element into the path immediately
-    after the @code{:close-path} element, which can be seen in the
-    @fun{cairo:copy-path} function for example. This can simplify path
-    processing in some cases as it may not be necessary to save the \"last
-    @code{:move-to} point\" during processing as the @code{:move-to} immediately
-    after the @code{:close-path} will provide that point.
+    Any call to the @fun{cairo:close-path} function will place an explicit
+    @code{:move-to} element into the path immediately after the
+    @code{:close-path} element, which can be seen in the @fun{cairo:copy-path}
+    function for example. This can simplify path processing in some cases as it
+    may not be necessary to save the \"last @code{:move-to} point\" during
+    processing as the @code{:move-to} element immediately after the
+    @code{:close-path} element will provide that point.
   @end{dictionary}
   @see-symbol{cairo:context-t}
   @see-function{cairo:move-to}
@@ -734,6 +795,368 @@ fill     stroke
   (cr (:pointer (:struct context-t))))
 
 (export 'close-path)
+
+;;; ----------------------------------------------------------------------------
+;;; cairo_path_extents () -> path-extents
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("cairo_path_extents" %path-extents) :void
+  (cr (:pointer (:struct context-t)))
+  (x1 (:pointer :double))
+  (y1 (:pointer :double))
+  (x2 (:pointer :double))
+  (y2 (:pointer :double)))
+
+(defun path-extents (cr)
+ #+liber-documentation
+ "@version{2024-1-23}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
+  @begin{return}
+    @arg{x1} -- a double float for the left of the resulting extents @br{}
+    @arg{y1} -- a double float for the top of the resulting extents @br{}
+    @arg{x2} -- a double float for the right of the resulting extents @br{}
+    @arg{y2} -- a double float for the bottom of the resulting extents
+  @end{return}
+  @begin{short}
+    Computes a bounding box in user-space coordinates covering the points on
+    the current path.
+  @end{short}
+  If the current path is empty, returns an empty rectangle ((0,0), (0,0)).
+  Stroke parameters, fill rule, surface dimensions and clipping are not taken
+  into account.
+
+  Contrast with the @fun{cairo:fill-extents} and @fun{cairo:stroke-extents}
+  functions which return the extents of only the area that would be \"inked\"
+  by the corresponding drawing operations.
+
+  The result of the @fun{cairo:path-extents} function is defined as equivalent
+  to the limit of the @fun{cairo:stroke-extents} function with the @code{:round}
+  value as the line width approaches 0.0, but never reaching the empty-rectangle
+  returned by the @fun{cairo:stroke-extents} function for a line width of 0.0.
+
+  Specifically, this means that zero-area sub-paths such as @fun{cairo:move-to},
+  @fun{cairo:line-to} segments, even degenerate cases where the coordinates to
+  both calls are identical, will be considered as contributing to the extents.
+  However, a lone @fun{cairo:move-to} will not contribute to the results of
+  the @fun{cairo:path-extents} function.
+  @see-symbol{cairo:context-t}
+  @see-function{cairo:fill-extents}
+  @see-function{cairo:stroke-extents}
+  @see-function{cairo:move-to}
+  @see-function{cairo:line-to}"
+  (cffi:with-foreign-objects ((x1 :double)
+                              (y1 :double)
+                              (x2 :double)
+                              (y2 :double))
+    (%path-extents cr x1 y1 x2 y2)
+    (values (cffi:mem-ref x1 :double)
+            (cffi:mem-ref y1 :double)
+            (cffi:mem-ref x2 :double)
+            (cffi:mem-ref y2 :double))))
+
+(export 'path-extents)
+
+;;; ----------------------------------------------------------------------------
+;;; cairo_move_to () -> move-to
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("cairo_move_to" %move-to) :void
+  (cr (:pointer (:struct context-t)))
+  (x :double)
+  (y :double))
+
+(defun move-to (cr x y)
+ #+liber-documentation
+ "@version{2024-1-23}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
+  @argument[x]{a number coerced to a double float with the x coordinate of the
+    new position}
+  @argument[y]{a number coerced to a double float with the y coordinate of the
+    new position}
+  @begin{short}
+    Begin a new sub-path.
+  @end{short}
+  After this call the current point will be (@arg{x}, @arg{y}).
+  @see-symbol{cairo:context-t}
+  @see-function{cairo:line-to}"
+  (%move-to cr (coerce x 'double-float)
+               (coerce y 'double-float)))
+
+(export 'move-to)
+
+;;; ----------------------------------------------------------------------------
+;;; cairo_rel_move_to () -> rel-move-to
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("cairo_rel_move_to" %rel-move-to) :void
+  (cr (:pointer (:struct context-t)))
+  (dx :double)
+  (dy :double))
+
+(defun rel-move-to (cr dx dy)
+ #+liber-documentation
+ "@version{2024-1-23}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
+  @argument[dx]{a number with the x offset}
+  @argument[dy]{a number with the y offset}
+  @begin{short}
+    Begin a new sub-path.
+  @end{short}
+  After this call the current point will offset by (x, y).
+
+  Given a current point of (x, y),
+  @begin{pre}
+(cairo:rel-move-to cr dx dy)
+  @end{pre}
+  is logically equivalent to
+  @begin{pre}
+(cairo:move-to cr (+ x dx) (+ y dy))
+  @end{pre}
+  It is an error to call this function with no current point. Doing so will
+  cause @arg{cr} to shutdown with a @code{:no-current-point} status.
+  @begin[Note]{dictionary}
+    The numbers of the arguments are coerced to double float values before
+    being passed to the C function.
+  @end{dictionary}
+  @see-class{cairo:context-t}
+  @see-function{cairo:move-to}"
+  (%rel-move-to cr (coerce dx 'double-float)
+                   (coerce dy 'double-float)))
+
+(export 'rel-move-to)
+
+;;; ----------------------------------------------------------------------------
+;;; cairo_line_to () -> line-to
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("cairo_line_to" %line-to) :void
+  (cr (:pointer (:struct context-t)))
+  (x :double)
+  (y :double))
+
+(defun line-to (cr x y)
+ #+liber-documentation
+ "@version{2024-1-23}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
+  @argument[x]{a number coerced to a double float with the x coordinate of the
+    end of the new line}
+  @argument[y]{a number coerced to a double float with the y coordinate of the
+    end of the new line}
+  @begin{short}
+    Adds a line to the path from the current point to position
+   (@arg{x}, @arg{y}) in user-space coordinates.
+  @end{short}
+  After this call the current point will be (@arg{x}, @arg{y}).
+
+  If there is no current point before the call to the @fun{cairo:line-to}
+  function this function will behave as:
+  @begin{pre}
+(cairo:move-to cr x y)
+  @end{pre}
+  @see-symbol{cairo:context-t}
+  @see-function{cairo:move-to}"
+  (%line-to cr (coerce x 'double-float)
+               (coerce y 'double-float)))
+
+(export 'line-to)
+
+;;; ----------------------------------------------------------------------------
+;;; cairo_rel_line_to () -> rel-line-to
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("cairo_rel_line_to" %rel-line-to) :void
+  (cr (:pointer (:struct context-t)))
+  (dx :double)
+  (dy :double))
+
+(defun rel-line-to (cr dx dy)
+ #+liber-documentation
+ "@version{2024-1-23}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
+  @argument[dx]{a number with the x offset to the end of the new line}
+  @argument[dy]{a number with the y offset to the end of the new line}
+  @begin{short}
+    Relative-coordinate version of the @fun{cairo:line-to} function.
+  @end{short}
+  Adds a line to the path from the current point to a point that is offset from
+  the current point by (@arg{dx}, @arg{dy}) in user space. After this call the
+  current point will be offset by (@arg{dx}, @arg{dy}).
+
+  Given a current point of (x, y),
+  @begin{pre}
+(cairo:rel-line-to cr dx dy)
+  @end{pre}
+  is logically equivalent to
+  @begin{pre}
+(cairo:line-to cr (+ x dx) (+ y dy))
+  @end{pre}
+  It is an error to call this function with no current point. Doing so will
+  cause @arg{cr} to shutdown with a @code{:no-current-point} status.
+  @begin[Note]{dictionary}
+    The numbers of the arguments are coerced to double float values before
+    being passed to the C function.
+  @end{dictionary}
+  @see-symbol{cairo:context-t}
+  @see-function{cairo:line-to}"
+  (%rel-line-to cr (coerce dx 'double-float)
+                   (coerce dy 'double-float)))
+
+(export 'rel-line-to)
+
+;;; ----------------------------------------------------------------------------
+;;; cairo_curve_to () -> curve-to
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("cairo_curve_to" %curve-to) :void
+  (cr (:pointer (:struct context-t)))
+  (x1 :double)
+  (y1 :double)
+  (x2 :double)
+  (y2 :double)
+  (x3 :double)
+  (y3 :double))
+
+(defun curve-to (cr x1 y1 x2 y2 x3 y3)
+ #+liber-documentation
+ "@version{2024-1-23}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
+  @argument[x1]{a number with the x coordinate of the first control point}
+  @argument[y1]{a number with the y coordinate of the first control point}
+  @argument[x2]{a number with the x coordinate of the second control point}
+  @argument[y2]{a number with the y coordinate of the second control point}
+  @argument[x3]{a number with the x coordinate of the third control point}
+  @argument[y3]{a number with the x coordinate of the third control point}
+  @begin{short}
+    Adds a cubic Bezier spline to the path from the current point to position
+    (@arg{x3}, @arg{y3}) in user-space coordinates, using (@arg{x1}, @arg{y1})
+    and (@arg{x2}, @arg{y2}) as the control points.
+  @end{short}
+  After this call the current point will be (@arg{x3}, @arg{y3}).
+
+  If there is no current point before the call to the @fun{cairo:curve-to}
+  function this function will behave as if preceded by a call to:
+  @begin{pre}
+(cairo:move-to cr x1 y1)
+  @end{pre}
+  @begin[Note]{dictionary}
+    The numbers of the arguments are coerced to double float values before
+    being passed to the C function.
+  @end{dictionary}
+  @see-symbol{cairo:context-t}
+  @see-function{cairo:move-to}"
+  (%curve-to cr (coerce x1 'double-float) (coerce y1 'double-float)
+                (coerce x2 'double-float) (coerce y2 'double-float)
+                (coerce x3 'double-float) (coerce y3 'double-float)))
+
+(export 'curve-to)
+
+;;; ----------------------------------------------------------------------------
+;;; cairo_rel_curve_to () -> rel-curve-to
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("cairo_rel_curve_to" %rel-curve-to) :void
+  (cr (:pointer (:struct context-t)))
+  (dx1 :double)
+  (dy1 :double)
+  (dx2 :double)
+  (dy2 :double)
+  (dx3 :double)
+  (dy3 :double))
+
+(defun rel-curve-to (cr dx1 dy1 dx2 dy2 dx3 dy3)
+ #+liber-documentation
+ "@version{2024-1-23}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
+  @argument[dx1]{a number with the x offset to the first control point}
+  @argument[dy1]{a number with the y offset to the first control point}
+  @argument[dx2]{a number with the x offset to the second control point}
+  @argument[dy2]{a number with the y offset to the second control point}
+  @argument[dx3]{a number with the x offset to the end of the curve}
+  @argument[dy3]{a number with the y offset to the end of the curve}
+  @begin{short}
+    Relative-coordinate version of the @fun{cairo:curve-to} function.
+  @end{short}
+  All offsets are relative to the current point. Adds a cubic Bézier spline to
+  the path from the current point to a point offset from the current point by
+  (@arg{dx3}, @arg{dy3}), using points offset by (@arg{dx1}, @arg{dy1}) and
+  (@arg{dx2}, @arg{dy2}) as the control points. After this call the current
+  point will be offset by (@arg{dx3}, @arg{dy3}).
+
+  Given a current point of (@arg{x}, @arg{y}),
+  @begin{pre}
+(cairo:rel-curve-to cr dx1 dy1 dx2 dy2 dx3 dy3)
+  @end{pre}
+  is logically equivalent to
+  @begin{pre}
+(cairo:curve-to cr (+ x dx1) (+ y dy1)
+                   (+ x dx2) (+ y dy2)
+                   (+ x dx3) (+ y dy3))
+  @end{pre}
+  It is an error to call this function with no current point. Doing so will
+  cause @arg{cr} to shutdown with a @code{:no-current-point} status.
+  @begin[Note]{dictionary}
+    The numbers of the arguments are coerced to double float values before
+    being passed to the C function.
+  @end{dictionary}
+  @see-symbol{cairo:context-t}
+  @see-function{cairo:curve-to}"
+  (%rel-curve-to cr (coerce dx1 'double-float)
+                    (coerce dy1 'double-float)
+                    (coerce dx2 'double-float)
+                    (coerce dy2 'double-float)
+                    (coerce dx3 'double-float)
+                    (coerce dy3 'double-float)))
+
+(export 'rel-curve-to)
+
+;;; ----------------------------------------------------------------------------
+;;; cairo_rectangle ()
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("cairo_rectangle" %rectangle) :void
+  (cr (:pointer (:struct context-t)))
+  (x :double)
+  (y :double)
+  (width :double)
+  (height :double))
+
+(defun rectangle (cr x y width height)
+ #+liber-documentation
+ "@version{2024-1-23}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
+  @argument[x]{a number with the x coordinate of the top left corner of the
+    rectangle}
+  @argument[y]{a number with the y coordinate to the top left corner of the
+    rectangle}
+  @argument[width]{a number with the width of the rectangle}
+  @argument[height]{a number with the height of the rectangle}
+  @begin{short}
+    Adds a closed sub-path rectangle of the given size to the current path at
+    position (@arg{x}, @arg{y}) in user-space coordinates.
+  @end{short}
+
+  This function is logically equivalent to:
+  @begin{pre}
+(cairo:move-to cr x y)
+(cairo:rel-line-to cr width 0)
+(cairo:rel-line-to cr 0 height)
+(cairo:rel-line-to cr (- width) 0)
+(cairo:close-path cr)
+  @end{pre}
+  @begin[Note]{dictionary}
+    The numbers of the arguments are coerced to double float values before
+    being passed to the C function.
+  @end{dictionary}
+  @see-symbol{cairo:context-t}
+  @see-function{cairo:move-to}
+  @see-function{cairo:rel-line-to}
+  @see-function{cairo:close-path}"
+  (%rectangle cr (coerce x 'double-float)
+                 (coerce y 'double-float)
+                 (coerce width 'double-float)
+                 (coerce height 'double-float)))
+
+(export 'rectangle)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_arc () -> arc
@@ -749,8 +1172,8 @@ fill     stroke
 
 (defun arc (cr x y radius angle1 angle2)
  #+liber-documentation
- "@version{2023-1-14}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-23}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[x]{a number with the x position of the center of the arc}
   @argument[y]{a number with the y position of the center of the arc}
   @argument[radius]{a number with the radius of the arc}
@@ -762,7 +1185,7 @@ fill     stroke
   The arc is centered at @code{(@arg{x}, @arg{y})}, begins at @arg{angle1}
   and proceeds in the direction of increasing angles to end at @arg{angle2}. If
   @arg{angle2} is less than @arg{angle1} it will be progressively increased by
-  2*PI until it is greater than @arg{angle1}.
+  @code{2*PI} until it is greater than @arg{angle1}.
 
   If there is a current point, an initial line segment will be added to the
   path to connect the current point to the beginning of the arc. If this
@@ -770,19 +1193,19 @@ fill     stroke
   @fun{cairo:new-sub-path} function before calling the @fun{cairo:arc} function.
 
   Angles are measured in radians. An angle of 0 is in the direction of the
-  positive x axis (in user space). An angle of PI/2 radians (90 degrees) is in
-  the direction of the positive y axis (in user space). Angles increase in the
-  direction from the positive x axis toward the positive y axis. So with the
-  default transformation matrix, angles increase in a clockwise direction.
+  positive x axis (in user space). An angle of @code{PI/2} radians (90 degrees)
+  is in the direction of the positive y axis (in user space). Angles increase
+  in the direction from the positive x axis toward the positive y axis. So with
+  the default transformation matrix, angles increase in a clockwise direction.
 
   This function gives the arc in the direction of increasing angles. See the
   @fun{cairo:arc-negative} function to get the arc in the direction of
   decreasing angles.
   @begin[Example]{dictionary}
     The arc is circular in user space. To achieve an elliptical arc, you can
-    scale the current transformation matrix by different amounts in the x and y
-    directions. For example, to draw an ellipse in the box given by @arg{x},
-    @arg{y}, @arg{width}, @arg{height}:
+    scale the current Coordinate Transformation Matrix (CTM) by different
+    amounts in the x and y directions. For example, to draw an ellipse in the
+    box given by @arg{x}, @arg{y}, @arg{width}, @arg{height}:
     @begin{pre}
 (cairo:save cr)
 (cairo:translate cr (+ x (/ width 2)) (+ y (/ height 2)))
@@ -820,8 +1243,8 @@ fill     stroke
 
 (defun arc-negative (cr x y radius angle1 angle2)
  #+liber-documentation
- "@version{#2021-12-12}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-23}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[x]{a number with the x position of the center of the arc}
   @argument[y]{a number with the y position of the center of the arc}
   @argument[radius]{a number with the radius of the arc}
@@ -852,174 +1275,20 @@ fill     stroke
 (export 'arc-negative)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_curve_to () -> curve-to
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("cairo_curve_to" %curve-to) :void
-  (cr (:pointer (:struct context-t)))
-  (x1 :double)
-  (y1 :double)
-  (x2 :double)
-  (y2 :double)
-  (x3 :double)
-  (y3 :double))
-
-(defun curve-to (cr x1 y1 x2 y2 x3 y3)
- #+liber-documentation
- "@version{2023-1-14}
-  @argument[cr]{a @symbol{cairo:context-t} context}
-  @argument[x1]{a number with the x coordinate of the first control point}
-  @argument[y1]{a number with the y coordinate of the first control point}
-  @argument[x2]{a number with the x coordinate of the second control point}
-  @argument[y2]{a number with the y coordinate of the second control point}
-  @argument[x3]{a number with the x coordinate of the third control point}
-  @argument[y3]{a number with the x coordinate of the third control point}
-  @begin{short}
-    Adds a cubic Bezier spline to the path from the current point to position
-    (@arg{x3}, @arg{y3}) in user-space coordinates, using (@arg{x1}, @arg{y1})
-    and (@arg{x2}, @arg{y2}) as the control points.
-  @end{short}
-  After this call the current point will be (@arg{x3}, @arg{y3}).
-
-  If there is no current point before the call to the @fun{cairo:curve-to}
-  function this function will behave as if preceded by a call to:
-  @begin{pre}
-(cairo:move-to cr x1 y1)
-  @end{pre}
-  @begin[Note]{dictionary}
-    The numbers of the arguments are coerced to double float values before
-    being passed to the C function.
-  @end{dictionary}
-  @see-symbol{cairo:context-t}
-  @see-function{cairo:move-to}"
-  (%curve-to cr (coerce x1 'double-float) (coerce y1 'double-float)
-                (coerce x2 'double-float) (coerce y2 'double-float)
-                (coerce x3 'double-float) (coerce y3 'double-float)))
-
-(export 'curve-to)
-
-;;; ----------------------------------------------------------------------------
-;;; cairo_line_to () -> line-to
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("cairo_line_to" %line-to) :void
-  (cr (:pointer (:struct context-t)))
-  (x :double)
-  (y :double))
-
-(defun line-to (cr x y)
- #+liber-documentation
- "@version{2023-1-14}
-  @argument[cr]{a @symbol{cairo:context-t} context}
-  @argument[x]{a number coerced to a double float with the x coordinate of the
-    end of the new line}
-  @argument[y]{a number coerced to a double float with the y coordinate of the
-    end of the new line}
-  @begin{short}
-    Adds a line to the path from the current point to position
-   (@arg{x}, @arg{y}) in user-space coordinates.
-  @end{short}
-  After this call the current point will be (@arg{x}, @arg{y}).
-
-  If there is no current point before the call to the @fun{cairo:line-to}
-  function this function will behave as:
-  @begin{pre}
-(cairo:move-to cr x y)
-  @end{pre}
-  @see-symbol{cairo:context-t}
-  @see-function{cairo:move-to}"
-  (%line-to cr (coerce x 'double-float)
-               (coerce y 'double-float)))
-
-(export 'line-to)
-
-;;; ----------------------------------------------------------------------------
-;;; cairo_move_to () -> move-to
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("cairo_move_to" %move-to) :void
-  (cr (:pointer (:struct context-t)))
-  (x :double)
-  (y :double))
-
-(defun move-to (cr x y)
- #+liber-documentation
- "@version{2023-1-14}
-  @argument[cr]{a @symbol{cairo:context-t} context}
-  @argument[x]{a number coerced to a double float with the x coordinate of the
-    new position}
-  @argument[y]{a number coerced to a double float with the y coordinate of the
-    new position}
-  @begin{short}
-    Begin a new sub-path.
-  @end{short}
-  After this call the current point will be (@arg{x}, @arg{y}).
-  @see-symbol{cairo:context-t}
-  @see-function{cairo:line-to}"
-  (%move-to cr (coerce x 'double-float)
-               (coerce y 'double-float)))
-
-(export 'move-to)
-
-;;; ----------------------------------------------------------------------------
-;;; cairo_rectangle ()
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("cairo_rectangle" %rectangle) :void
-  (cr (:pointer (:struct context-t)))
-  (x :double)
-  (y :double)
-  (width :double)
-  (height :double))
-
-(defun rectangle (cr x y width height)
- #+liber-documentation
- "@version{2023-1-14}
-  @argument[cr]{a @symbol{cairo:context-t} context}
-  @argument[x]{a number with the x coordinate of the top left corner of the
-    rectangle}
-  @argument[y]{a number with the y coordinate to the top left corner of the
-    rectangle}
-  @argument[width]{a number with the width of the rectangle}
-  @argument[height]{a number with the height of the rectangle}
-  @begin{short}
-    Adds a closed sub-path rectangle of the given size to the current path at
-    position (@arg{x}, @arg{y}) in user-space coordinates.
-  @end{short}
-
-  This function is logically equivalent to:
-  @begin{pre}
-(cairo:move-to cr x y)
-(cairo:rel-line-to cr width 0)
-(cairo:rel-line-to cr 0 height)
-(cairo:rel-line-to cr (- width) 0)
-(cairo:close-path cr)
-  @end{pre}
-  @begin[Note]{dictionary}
-    The numbers of the arguments are coerced to double float values before
-    being passed to the C function.
-  @end{dictionary}
-  @see-symbol{cairo:context-t}
-  @see-function{cairo:move-to}
-  @see-function{cairo:rel-line-to}
-  @see-function{cairo:close-path}"
-  (%rectangle cr (coerce x 'double-float)
-                 (coerce y 'double-float)
-                 (coerce width 'double-float)
-                 (coerce height 'double-float)))
-
-(export 'rectangle)
-
-;;; ----------------------------------------------------------------------------
 ;;; cairo_glyph_path () -> glyph-path
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("cairo_glyph_path" glyph-path) :void
+(cffi:defcfun ("cairo_glyph_path" %glyph-path) :void
+  (cr (:pointer (:struct context-t)))
+  (glyphs (:pointer (:pointer (:struct glyph-t))))
+  (n :int))
+
+(defun glyph-path (cr glyphs)
  #+liber-documentation
- "@version{#2021-12-12}
-  @argument[cr]{a @symbol{cairo:context-t} context}
-  @argument[glyphs]{an array of @symbol{cairo:glyph-t} glyphs to show}
-  @argument[num]{an integer with the number of glyphs to show}
+ "@version{2024-1-23}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
+  @argument[glyphs]{a list with glyphs, each glyph is represented by
+    @code{(index x y)} values}
   @begin{short}
     Adds closed paths for the glyphs to the current path.
   @end{short}
@@ -1028,9 +1297,18 @@ fill     stroke
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:glyph-t}
   @see-function{cairo:show-glyphs}"
-  (cr (:pointer (:struct context-t)))
-  (glyphs (:pointer (:pointer (:struct glyph-t))))
-  (num :int))
+  (let ((n (length glyphs)))
+    (cffi:with-foreign-object (glyphs-ptr '(:struct glyph-t) n)
+      (iter (for i from 0 below n)
+            (for (index x y) in glyphs)
+            (for ptr = (cffi:mem-aptr glyphs-ptr '(:struct glyph-t) i))
+            (setf (cffi:foreign-slot-value ptr '(:struct glyph-t) 'index)
+                  index
+                  (cffi:foreign-slot-value ptr '(:struct glyph-t) 'x)
+                  (coerce x 'double-float)
+                  (cffi:foreign-slot-value ptr '(:struct glyph-t) 'y)
+                  (coerce y 'double-float)))
+      (%glyph-path cr glyphs-ptr n))))
 
 (export 'glyph-path)
 
@@ -1040,8 +1318,8 @@ fill     stroke
 
 (cffi:defcfun ("cairo_text_path" text-path) :void
  #+liber-documentation
- "@version{2023-1-15}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-23}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[utf8]{a string of text encoded in UTF-8, or @code{nil}}
   @begin{short}
     Adds closed paths for text to the current path.
@@ -1070,208 +1348,5 @@ fill     stroke
   (uft8 :string))
 
 (export 'text-path)
-
-;;; ----------------------------------------------------------------------------
-;;; cairo_rel_curve_to () -> rel-curve-to
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("cairo_rel_curve_to" %rel-curve-to) :void
-  (cr (:pointer (:struct context-t)))
-  (dx1 :double)
-  (dy1 :double)
-  (dx2 :double)
-  (dy2 :double)
-  (dx3 :double)
-  (dy3 :double))
-
-(defun rel-curve-to (cr dx1 dy1 dx2 dy2 dx3 dy3)
- #+liber-documentation
- "@version{#2021-12-12}
-  @argument[cr]{a @symbol{cairo:context-t} context}
-  @argument[dx1]{a number with the x offset to the first control point}
-  @argument[dy1]{a number with the y offset to the first control point}
-  @argument[dx2]{a number with the x offset to the second control point}
-  @argument[dy2]{a number with the y offset to the second control point}
-  @argument[dx3]{a number with the x offset to the end of the curve}
-  @argument[dy3]{a number with the y offset to the end of the curve}
-  @begin{short}
-    Relative-coordinate version of the @fun{cairo:curve-to} function.
-  @end{short}
-  All offsets are relative to the current point. Adds a cubic Bézier spline to
-  the path from the current point to a point offset from the current point by
-  (@arg{dx3}, @arg{dy3}), using points offset by (@arg{dx1}, @arg{dy1}) and
-  (@arg{dx2}, @arg{dy2}) as the control points. After this call the current
-  point will be offset by (@arg{dx3}, @arg{dy3}).
-
-  Given a current point of (@arg{x}, @arg{y}),
-  @begin{pre}
-(cairo:rel-curve-to cr dx1 dy1 dx2 dy2 dx3 dy3)
-  @end{pre}
-  is logically equivalent to
-  @begin{pre}
-(cairo:curve-to cr (+ x dx1) (+ y dy1)
-                   (+ x dx2) (+ y dy2)
-                   (+ x dx3) (+ y dy3))
-  @end{pre}
-  It is an error to call this function with no current point. Doing so will
-  cause @arg{cr} to shutdown with a status of @code{:no-current-point}.
-  @begin[Note]{dictionary}
-    The numbers of the arguments are coerced to double float values before
-    being passed to the C function.
-  @end{dictionary}
-  @see-symbol{cairo:context-t}
-  @see-function{cairo:curve-to}"
-  (%rel-curve-to cr (coerce dx1 'double-float)
-                    (coerce dy1 'double-float)
-                    (coerce dx2 'double-float)
-                    (coerce dy2 'double-float)
-                    (coerce dx3 'double-float)
-                    (coerce dy3 'double-float)))
-
-(export 'rel-curve-to)
-
-;;; ----------------------------------------------------------------------------
-;;; cairo_rel_line_to () -> rel-line-to
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("cairo_rel_line_to" %rel-line-to) :void
-  (cr (:pointer (:struct context-t)))
-  (dx :double)
-  (dy :double))
-
-(defun rel-line-to (cr dx dy)
- #+liber-documentation
- "@version{2023-1-14}
-  @argument[cr]{a @symbol{cairo:context-t} context}
-  @argument[dx]{a number with the x offset to the end of the new line}
-  @argument[dy]{a number with the y offset to the end of the new line}
-  @begin{short}
-    Relative-coordinate version of the @fun{cairo:line-to} function.
-  @end{short}
-  Adds a line to the path from the current point to a point that is offset from
-  the current point by (@arg{dx}, @arg{dy}) in user space. After this call the
-  current point will be offset by (@arg{dx}, @arg{dy}).
-
-  Given a current point of (x, y),
-  @begin{pre}
-(cairo:rel-line-to cr dx dy)
-  @end{pre}
-  is logically equivalent to
-  @begin{pre}
-(cairo:line-to cr (+ x dx) (+ y dy))
-  @end{pre}
-  It is an error to call this function with no current point. Doing so will
-  cause @arg{cr} to shutdown with a status of @code{:no-current-point}.
-  @begin[Note]{dictionary}
-    The numbers of the arguments are coerced to double float values before
-    being passed to the C function.
-  @end{dictionary}
-  @see-symbol{cairo:context-t}
-  @see-function{cairo:line-to}"
-  (%rel-line-to cr (coerce dx 'double-float)
-                   (coerce dy 'double-float)))
-
-(export 'rel-line-to)
-
-;;; ----------------------------------------------------------------------------
-;;; cairo_rel_move_to () -> rel-move-to
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("cairo_rel_move_to" %rel-move-to) :void
-  (cr (:pointer (:struct context-t)))
-  (dx :double)
-  (dy :double))
-
-(defun rel-move-to (cr dx dy)
- #+liber-documentation
- "@version{#2021-12-12}
-  @argument[cr]{a @symbol{cairo:context-t} context}
-  @argument[dx]{a number with the x offset}
-  @argument[dy]{a number with the y offset}
-  @begin{short}
-    Begin a new sub-path.
-  @end{short}
-  After this call the current point will offset by (x, y).
-
-  Given a current point of (x, y),
-  @begin{pre}
-(cairo:rel-move-to cr dx dy)
-  @end{pre}
-  is logically equivalent to
-  @begin{pre}
-(cairo:move-to cr (+ x dx) (+ y dy))
-  @end{pre}
-  It is an error to call this function with no current point. Doing so will
-  cause @arg{cr} to shutdown with a status of @code{:no-current-point}.
-  @begin[Note]{dictionary}
-    The numbers of the arguments are coerced to double float values before
-    being passed to the C function.
-  @end{dictionary}
-  @see-class{cairo:context-t}
-  @see-function{cairo:move-to}"
-  (%rel-move-to cr (coerce dx 'double-float)
-                   (coerce dy 'double-float)))
-
-(export 'rel-move-to)
-
-;;; ----------------------------------------------------------------------------
-;;; cairo_path_extents () -> path-extents
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("cairo_path_extents" %path-extents) :void
-  (cr (:pointer (:struct context-t)))
-  (x1 (:pointer :double))
-  (y1 (:pointer :double))
-  (x2 (:pointer :double))
-  (y2 (:pointer :double)))
-
-(defun path-extents (cr)
- #+liber-documentation
- "@version{#2021-12-12}
-  @argument[cr]{a @symbol{cairo:context-t} context}
-  @begin{return}
-    @arg{x1} -- a double float for the left of the resulting extents @br{}
-    @arg{y1} -- a double float for the top of the resulting extents @br{}
-    @arg{x2} -- a double float for the right of the resulting extents @br{}
-    @arg{y2} -- a double float for the bottom of the resulting extents
-  @end{return}
-  @begin{short}
-    Computes a bounding box in user-space coordinates covering the points on
-    the current path.
-  @end{short}
-  If the current path is empty, returns an empty rectangle ((0,0), (0,0)).
-  Stroke parameters, fill rule, surface dimensions and clipping are not taken
-  into account.
-
-  Contrast with the @fun{cairo:fill-extents} and @fun{cairo:stroke-extents}
-  functions which return the extents of only the area that would be \"inked\"
-  by the corresponding drawing operations.
-
-  The result of the @fun{cairo:path-extents} function is defined as equivalent
-  to the limit of the @fun{cairo:stroke-extents} function with @code{:round} as
-  the line width approaches 0.0, but never reaching the empty-rectangle
-  returned by the @fun{cairo:stroke-extents} function for a line width of 0.0.
-
-  Specifically, this means that zero-area sub-paths such as @fun{cairo:move-to},
-  @fun{cairo:line-to} segments, even degenerate cases where the coordinates to
-  both calls are identical, will be considered as contributing to the extents.
-  However, a lone @fun{cairo:move-to} will not contribute to the results of
-  the @fun{cairo:path-extents} function.
-  @see-symbol{cairo:context-t}
-  @see-function{cairo:fill-extents}
-  @see-function{cairo:stroke-extents}
-  @see-function{cairo:move-to}
-  @see-function{cairo:line-to}"
-  (cffi:with-foreign-objects ((x1 :double)
-                              (y1 :double)
-                              (x2 :double)
-                              (y2 :double))
-    (%path-extents cr x1 y1 x2 y2)
-    (values (cffi:mem-ref x1 :double)
-            (cffi:mem-ref y1 :double)
-            (cffi:mem-ref x2 :double)
-            (cffi:mem-ref y2 :double))))
-
-(export 'path-extents)
 
 ;;; --- End of file cairo.path.lisp --------------------------------------------

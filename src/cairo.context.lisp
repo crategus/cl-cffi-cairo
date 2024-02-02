@@ -92,8 +92,8 @@
 ;;;     cairo_in_clip
 ;;;     cairo_reset_clip
 ;;;
-;;;     cairo_rectangle_list_destroy             rectangle-list-destroy
-;;;     cairo_copy_clip_rectangle_list           rectangle-list-copy-clip
+;;;     cairo_rectangle_list_destroy                       not exported
+;;;     cairo_copy_clip_rectangle_list
 ;;;
 ;;;     cairo_fill
 ;;;     cairo_fill_preserve
@@ -110,8 +110,8 @@
 ;;;     cairo_copy_page
 ;;;     cairo_show_page
 ;;;     cairo_get_reference_count
-;;;     cairo_set_user_data
-;;;     cairo_get_user_data
+;;;     cairo_set_user_data                                not implemented
+;;;     cairo_get_user_data                                not implemented
 ;;;     cairo_set_hairline                                 Since 1.18
 ;;;     cairo_get_hairline                                 Since 1.18
 ;;; ----------------------------------------------------------------------------
@@ -130,7 +130,7 @@
 (setf (liber:alias-for-symbol 'fill-rule-t)
       "CEnum"
       (liber:symbol-documentation 'fill-rule-t)
- "@version{2023-1-11}
+ "@version{2024-1-17}
   @begin{short}
     The @symbol{cairo:fill-rule-t} enumeration is used to select how paths are
     filled.
@@ -141,8 +141,8 @@
   does not pass through the end point of a segment or have a tricky
   intersection such as intersecting tangent to the path. Note that filling is
   not actually implemented in this way. This is just a description of the rule
-  that is applied. The default fill rule is @code{:winding}. New entries may be
-  added in future versions.
+  that is applied. The default fill rule is the @code{:winding} value. New
+  entries may be added in future versions.
   @begin{pre}
 (cffi:defcenum fill-rule-t
   :winding
@@ -176,12 +176,12 @@
 (setf (liber:alias-for-symbol 'line-cap-t)
       "CEnum"
       (liber:symbol-documentation 'line-cap-t)
- "@version{2023-1-11}
+ "@version{2024-1-17}
   @begin{short}
     The @symbol{cairo:line-cap-t} enumeration specifies how to render the
     endpoints of the path when stroking.
   @end{short}
-  The default line cap style is @code{:butt}.
+  The default line cap style is the @code{:butt} value.
   @begin{pre}
 (cffi:defcenum line-cap-t
   :butt
@@ -213,12 +213,12 @@
 (setf (liber:alias-for-symbol 'line-join-t)
       "CEnum"
       (liber:symbol-documentation 'line-join-t)
- "@version{2023-1-11}
+ "@version{2024-1-17}
   @begin{short}
     The @symbol{cairo:line-join-t} enumeration specifies how to render the
     junction of two lines when stroking.
   @end{short}
-  The default line join style is @code{:miter}.
+  The default line join style is the @code{:miter} value.
   @begin{pre}
 (cffi:defcenum line-join-t
   :miter
@@ -278,15 +278,15 @@
 (setf (liber:alias-for-symbol 'operator-t)
       "CEnum"
       (liber:symbol-documentation 'operator-t)
- "@version{2023-1-11}
+ "@version{2024-1-17}
   @begin{short}
     The @symbol{cairo:operator-t} enumeration is used to set the compositing
     operator for all Cairo drawing operations.
   @end{short}
-  The default operator is @code{:over}. The operators marked as unbounded modify
-  their destination even outside of the mask layer, that is, their effect is not
-  bound by the mask layer. However, their effect can still be limited by way of
-  clipping.
+  The default operator is the @code{:over} value. The operators marked as
+  unbounded modify their destination even outside of the mask layer, that is,
+  their effect is not bound by the mask layer. However, their effect can still
+  be limited by way of clipping.
 
   To keep things simple, the operator descriptions here document the behavior
   for when both source and destination are either fully transparent or fully
@@ -375,7 +375,7 @@
       color images.}
     @entry[:hsl-luinosity]{Creates a color with the luminosity of the source
       and the hue and saturation of the target. This produces an inverse effect
-      to @code{:hsl-color}.}
+      to the @code{:hsl-color} value.}
   @end{table}
   @see-symbol{cairo:context-t}
   @see-function{cairo:operator}")
@@ -392,20 +392,23 @@
 (setf (liber:alias-for-symbol 'context-t)
       "CStruct"
       (liber:symbol-documentation 'context-t)
- "@version{#2022-12-19}
+ "@version{2024-1-17}
   @begin{short}
-    A @symbol{cairo:context-t} Cairo context contains the current state of the
+    The @symbol{cairo:context-t} structure contains the current state of the
     rendering device, including coordinates of yet to be drawn shapes.
   @end{short}
-  Cairo contexts, as @symbol{cairo:context-t} contexts are named, are central to
-  Cairo and all drawing with Cairo is always done to a @symbol{cairo:context-t}
-  context.
+  Cairo contexts, as @symbol{cairo:context-t} instances are named, are central
+  to Cairo and all drawing with Cairo is always done to a
+  @symbol{cairo:context-t} instance.
 
-  Memory management of the @symbol{cairo:context-t} context is done with the
-  @fun{cairo:reference} and @fun{cairo:destroy} functions.
+  Use the @fun{cairo:create} function or the @fun{cairo:with-context} macro to
+  create a Cairo context for a target surface. Memory management of the
+  @symbol{cairo:context-t} instance is done with the @fun{cairo:reference} and
+  @fun{cairo:destroy} functions.
+  @see-function{cairo:create}
+  @see-macro{cairo:with-context}
   @see-function{cairo:destroy}
-  @see-function{cairo:reference}
-  @see-macro{cairo:with-context}")
+  @see-function{cairo:reference}")
 
 (export 'context-t)
 
@@ -413,22 +416,27 @@
 ;;; cairo:with-context
 ;;; ----------------------------------------------------------------------------
 
-(defmacro with-context ((context surface) &body body)
+(defmacro with-context ((context target) &body body)
  #+liber-documentation
- "@version{2024-1-12}
-  @syntax[]{(cairo:with-context (context surface) body) => result}
+ "@version{2024-1-17}
+  @syntax{(cairo:with-context (context surface) body) => result}
   @argument[context]{a newly allocated @symbol{cairo:context-t} instance}
-  @argument[surface]{a @symbol{cairo:surface-t} target surface}
+  @argument[target]{a @symbol{cairo:surface-t} target surface}
   @begin{short}
     The @symbol{cairo:with-context} macro allocates a new
-    @symbol{cairo:context-t} instance for the given @arg{surface} and executes
+    @symbol{cairo:context-t} instance for the given @arg{target} and executes
     the body that uses the Cairo context.
   @end{short}
   After execution of the body the allocated memory for the Cairo context is
   released.
+
+  This macro allocates the Cairo context with the @fun{cairo:create} function
+  and destroys it with the @fun{cairo:destroy} function.
   @see-symbol{cairo:context-t}
-  @see-symbol{cairo:surface-t}"
-  `(let ((,context (create ,surface)))
+  @see-symbol{cairo:surface-t}
+  @see-function{cairo:create}
+  @see-function{cairo:destroy}"
+  `(let ((,context (create ,target)))
      (unwind-protect
        (progn ,@body)
        (destroy ,context))))
@@ -441,13 +449,10 @@
 
 (cffi:defcfun ("cairo_create" create) (:pointer (:struct context-t))
  #+liber-documentation
- "@version{2023-1-11}
+ "@version{2024-1-17}
   @argument[target]{a @symbol{cairo:surface-t} target surface for the Cairo
     context}
-  @begin{return}
-    A newly allocated @symbol{cairo:context-t} context with a reference count
-    of 1.
-  @end{return}
+  @return{A newly allocated @symbol{cairo:context-t} instance.}
   @begin{short}
     Creates a new Cairo context with all graphics state parameters set to
     default values and with @arg{target} as a target surface.
@@ -458,10 +463,10 @@
   The initial reference count should be released with the @fun{cairo:destroy}
   function when you are done using the Cairo context. This function will always
   return a valid pointer. If memory cannot be allocated, a special Cairo context
-  will be returned on which the @fun{cairo:status} function returns
-  @code{:no-memory}. If you attempt to target a surface which does not support
-  writing, then a @code{:write-error} will be raised. You can use this object
-  normally, but no drawing will be done.
+  will be returned on which the @fun{cairo:status} function returns the
+  @code{:no-memory} value. If you attempt to target a surface which does not
+  support writing, then a @code{:write-error} value will be raised. You can use
+  this object normally, but no drawing will be done.
 
   This function references @arg{target}, so you can immediately call the
   @fun{cairo:surface-destroy} function on it if you do not need to maintain a
@@ -483,14 +488,14 @@
 
 (cffi:defcfun ("cairo_reference" reference) (:pointer (:struct context-t))
  #+liber-documentation
- "@version{2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
-  @return{The referenced @symbol{cairo:context-t} context.}
+ "@version{2024-1-17}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
+  @return{The referenced @symbol{cairo:context-t} instance.}
   @begin{short}
     Increases the reference count on @arg{cr} by one.
   @end{short}
-  This prevents @arg{cr} from being destroyed until a matching call to the
-  @fun{cairo:destroy} function is made. The number of references to a Cairo
+  This prevents the Cairo context from being destroyed until a matching call to
+  the @fun{cairo:destroy} function is made. The number of references to a Cairo
   context can be get using the @fun{cairo:reference-count} function.
   @see-symbol{cairo:context-t}
   @see-function{cairo:destroy}
@@ -505,13 +510,13 @@
 
 (cffi:defcfun ("cairo_destroy" destroy) :void
  #+liber-documentation
- "@version{2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-17}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{short}
-    Decreases the reference count on @arg{cr} by one.
+    Decreases the reference count on the Cairo context by one.
   @end{short}
-  If the result is zero, then @arg{cr} and all associated resources are freed.
-  See the @fun{cairo:reference} function.
+  If the result is zero, then the Cairo context and all associated resources
+  are freed. See the @fun{cairo:reference} function.
   @see-symbol{cairo:context-t}
   @see-function{cairo:reference}"
   (cr (:pointer (:struct context-t))))
@@ -524,10 +529,9 @@
 
 (cffi:defcfun ("cairo_status" status) status-t
  #+liber-documentation
- "@version{2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
-  @return{The @symbol{cairo:status-t} value for the current status of the Cairo
-    context.}
+ "@version{2024-1-17}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
+  @return{The @symbol{cairo:status-t} value for the current status of @arg{cr}.}
   @begin{short}
     Checks whether an error has previously occurred for the Cairo context.
   @end{short}
@@ -544,14 +548,14 @@
 
 (cffi:defcfun ("cairo_save" save) :void
  #+liber-documentation
- "@version{2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-17}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{short}
     Makes a copy of the current state of @arg{cr} and saves it on an internal
     stack of saved states for @arg{cr}.
   @end{short}
-  When the @fun{cairo:restore} function is called, @arg{cr} will be restored
-  to the saved state. Multiple calls to the @fun{cairo:save} and
+  When the @fun{cairo:restore} function is called, the Cairo context will be
+  restored to the saved state. Multiple calls to the @fun{cairo:save} and
   @fun{cairo:restore} functions can be nested. Each call to the
   @fun{cairo:restore} function restores the state from the matching paired
   @fun{cairo:save} call.
@@ -573,8 +577,8 @@
 
 (cffi:defcfun ("cairo_restore" restore) :void
  #+liber-documentation
- "@version{2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-17}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{short}
     Restores @arg{cr} to the state saved by a preceding call to the
     @fun{cairo:save} function and removes that state from the stack of saved
@@ -592,8 +596,8 @@
 
 (cffi:defcfun ("cairo_get_target" target) (:pointer (:struct surface-t))
  #+liber-documentation
- "@version{2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-17}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{return}
     The @symbol{cairo:surface-t} target surface. This object is owned by Cairo.
   @end{return}
@@ -620,13 +624,13 @@
 
 (cffi:defcfun ("cairo_push_group" push-group) :void
  #+liber-documentation
-"@version{#2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+"@version{#2024-1-17}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{short}
     Temporarily redirects drawing to an intermediate surface known as a group.
   @end{short}
   The redirection lasts until the group is completed by a call to the
-  @fun{cairo:pop-group} or @fun{cairo:pop-group-to-source} functions. These
+  @fun{cairo:pop-group} or @fun{cairo:pop-group-to-source} function. These
   calls provide the result of any drawing to the group as a pattern, either as
   an explicit object, or set as the source pattern.
 
@@ -678,22 +682,21 @@
 
 (cffi:defcfun ("cairo_push_group_with_content" push-group-with-content) :void
  #+liber-documentation
- "@version{#2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
-  @argument[content]{a value of the @symbol{cairo:content-t} enumeration
-    indicating the type of group that will be created}
+ "@version{#2024-1-22}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
+  @argument[content]{a @symbol{cairo:content-t} value indicating the type of
+    group that will be created}
   @begin{short}
     Temporarily redirects drawing to an intermediate surface known as a group.
   @end{short}
   The redirection lasts until the group is completed by a call to the
-  @fun{cairo:pop-group} or @fun{cairo:pop-group-to-source} functions. These
+  @fun{cairo:pop-group} or @fun{cairo:pop-group-to-source} function. These
   calls provide the result of any drawing to the group as a pattern, either as
   an explicit object, or set as the source pattern.
 
-  The group will have a content type of @arg{content}. The ability to control
-  this content type is the only distinction between this function and the
-  @fun{cairo:push-group} function which you should see for a more detailed
-  description of group rendering.
+  The ability to control the content type is the only distinction between this
+  function and the @fun{cairo:push-group} function which you should see for a
+  more detailed description of group rendering.
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:content-t}
   @see-function{cairo:pop-group}
@@ -710,8 +713,8 @@
 
 (cffi:defcfun ("cairo_pop_group" pop-group) (:pointer (:struct pattern-t))
  #+liber-documentation
- "@version{#2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{#2024-1-18}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{return}
     A newly created @symbol{cairo:pattern-t} instance containing the results of
     all drawing operations performed to the group. The caller owns the returned
@@ -720,7 +723,7 @@
   @end{return}
   @begin{short}
     Terminates the redirection begun by a call to the @fun{cairo:push-group}
-    or @fun{cairo:push-group-with-content} functions and returns a new pattern
+    or @fun{cairo:push-group-with-content} function and returns a new pattern
     containing the results of all drawing operations performed to the group.
   @end{short}
 
@@ -745,14 +748,14 @@
 
 (cffi:defcfun ("cairo_pop_group_to_source" pop-group-to-source) :void
  #+liber-documentation
- "@version{#2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{#2024-1-17}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{short}
     Terminates the redirection begun by a call to the @fun{cairo:push-group}
-    or @fun{cairo:push-group-with-content} functions and installs the
+    or @fun{cairo:push-group-with-content} function and installs the
     resulting pattern as the source pattern in the given Cairo context.
   @end{short}
-  The behavior of this function is equivalent to the sequence of operations:
+  The behavior of this function is equivalent to the sequence of operations
   @begin{pre}
 (setf group (cairo:pop-group cr))
 (setf (cairo:source cr) group)
@@ -782,8 +785,8 @@
 (cffi:defcfun ("cairo_get_group_target" group-target)
     (:pointer (:struct surface-t))
  #+liber-documentation
- "@version{#2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{#2024-1-17}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{return}
     The @symbol{cairo:surface-t} target surface. This object is owned by Cairo.
     To keep a reference to it, you must call the @fun{cairo:surface-reference}
@@ -799,7 +802,7 @@
 
   This function will always return a valid pointer, but the result can be a
   \"nil\" surface if @arg{cr} is already in an error state. A \"nil\" surface
-  is indicated by a value not equal to @code{:success} of the
+  is indicated by a value not equal to the @code{:success} value of the
   @symbol{cairo:status-t} enumeration.
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:surface-t}
@@ -818,13 +821,13 @@
 
 (defun set-source-rgb (cr red green blue)
  #+liber-documentation
- "@version{2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-17}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[red]{a number with the red component of the color}
   @argument[green]{a number with the green component of the color}
   @argument[blue]{a number with the blue component of the color}
   @begin{short}
-    Sets the source pattern within @arg{cr} to an opaque color.
+    Sets the source pattern within the Cairo context to an opaque color.
   @end{short}
   This opaque color will then be used for any subsequent drawing operation
   until a new source pattern is set. The color components are floating point
@@ -855,14 +858,14 @@
 
 (defun set-source-rgba (cr red green blue alpha)
  #+liber-documentation
- "@version{2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
-  @argument[red]{a double float red component of the color}
+ "@version{2024-1-17}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
+  @argument[red]{a number with the red component of the color}
   @argument[green]{a number with the green component of the color}
   @argument[blue]{a number with the blue component of the color}
   @argument[alpha]{a number with the alpha component of the color}
   @begin{short}
-    Sets the source pattern within @arg{cr} to a translucent color.
+    Sets the source pattern within the Cairo context to a translucent color.
   @end{short}
   This color will then be used for any subsequent drawing operation until a new
   source pattern is set. The color and alpha components are floating point
@@ -902,10 +905,10 @@
 
 (cffi:defcfun ("cairo_get_source" source) (:pointer (:struct pattern-t))
  #+liber-documentation
- "@version{2023-1-11}
-  @syntax[]{(cairo:source cr) => source}
-  @syntax[]{(setf (cairo:source cr) source)}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-17}
+  @syntax{(cairo:source cr) => source}
+  @syntax{(setf (cairo:source cr) source)}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[source]{a @symbol{cairo:pattern-t} instance to be used as the
     source for subsequent drawing operations}
   @begin{short}
@@ -944,8 +947,8 @@
 
 (defun set-source-surface (cr surface x y)
  #+liber-documentation
- "@version{#2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-26}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[surface]{a @symbol{cairo:surface-t} instance to be used to set
     the source pattern}
   @argument[x]{a number with the user-space x coordinate for surface origin}
@@ -999,10 +1002,10 @@
 
 (cffi:defcfun ("cairo_get_antialias" antialias) antialias-t
  #+liber-documentation
- "@version{2023-1-11}
-  @syntax[]{(cairo:antialias context) => antialias}
-  @syntax[]{(setf (cairo:antialias context) antialias)}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-17}
+  @syntax{(cairo:antialias context) => antialias}
+  @syntax{(setf (cairo:antialias context) antialias)}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[antialias]{a @symbol{cairo:antialias-t} value}
   @begin{short}
     The @fun{cairo:antialias} function gets the current shape antialiasing
@@ -1030,25 +1033,19 @@
 (cffi:defcfun ("cairo_set_dash" %set-dash) :void
   (cr (:pointer (:struct context-t)))
   (dashes (:pointer :double))
-  (num-dashes :int)
+  (n :int)
   (offset :double))
 
-;; TODO: Improve the implementation and return a list of double floats
-
 (defun (setf dash) (dashes cr offset)
-  (let ((num-dashes (length dashes)))
-    (cffi:with-foreign-object (dashes-array :double num-dashes)
-      ;; TODO: Change the code to use the loop marcro
-      (let ((i 0))
-        (map nil
-             (lambda (x)
-               (setf (cffi:mem-aref dashes-array :double i)
-                     (coerce x 'double-float))
-               (incf i))
-             dashes))
+  (let ((n (length dashes)))
+    (cffi:with-foreign-object (dashes-array :double n)
+      (iter (for i from 0)
+            (for dash in dashes)
+            (setf (cffi:mem-aref dashes-array :double i)
+                  (coerce dash 'double-float)))
       (%set-dash cr
                  dashes-array
-                 num-dashes
+                 n
                  (coerce offset 'double-float))))
   (values dashes offset))
 
@@ -1059,10 +1056,10 @@
 
 (defun dash (cr)
  #+liber-documentation
- "@version{2023-1-11}
-  @syntax[]{(cairo:dash cr) => dashes, offset}
-  @syntax[]{(setf (cairo:dash cr offset) dashes)}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-18}
+  @syntax{(cairo:dash cr) => dashes, offset}
+  @syntax{(setf (cairo:dash cr offset) dashes)}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[dashes]{a list of numbers coerced to double floats specifying
     alternate lengths of on and off stroke portions}
   @argument[offset]{a number coerced to a double float with an offset into the
@@ -1094,14 +1091,11 @@
   @end{dictionary}
   @see-symbol{cairo:context-t}
   @see-function{cairo:stroke}"
-  (let ((count (dash-count cr))
-        (dashes '()))
-    (cffi:with-foreign-objects ((dash-array :double count) (offset :double))
+  (let ((n (dash-count cr)))
+    (cffi:with-foreign-objects ((dash-array :double n) (offset :double))
       (%get-dash cr dash-array offset)
-      ;; TODO: Use the loop macro
-      (dotimes (i count)
-        (push (cffi:mem-aref dash-array :double i) dashes))
-      (values (nreverse dashes)
+      (values (iter (for i below n)
+                    (collect (cffi:mem-aref dash-array :double i)))
               (cffi:mem-ref offset :double)))))
 
 (export 'dash)
@@ -1112,10 +1106,10 @@
 
 (cffi:defcfun ("cairo_get_dash_count" dash-count) :int
  #+liber-documentation
- "@version{2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-18}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{return}
-    An integer with the length of the dash array, or 0 if no dash array is set.
+    The integer with the length of the dash array, or 0 if no dash array is set.
   @end{return}
   @begin{short}
     This function returns the length of the dash array in @arg{cr}, 0 if
@@ -1142,10 +1136,10 @@
 
 (cffi:defcfun ("cairo_get_fill_rule" fill-rule) fill-rule-t
  #+liber-documentation
- "@version{2023-1-11}
-  @syntax[]{(cairo:fill-rule cr) => rule}
-  @syntax[]{(setf (cairo:fill-rule cr) rule)}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-18}
+  @syntax{(cairo:fill-rule cr) => rule}
+  @syntax{(setf (cairo:fill-rule cr) rule)}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[rule]{a @symbol{cairo:fill-rule-t} value for the fill rule}
   @begin{short}
     The @fun{cairo:fill-rule} function gets the current fill rule.
@@ -1159,7 +1153,7 @@
   @symbol{cairo:fill-rule-t} enumeration for details on the semantics of each
   available fill rule.
 
-  The default fill rule is @code{:winding}.
+  The default fill rule is the @code{:winding} value.
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:fill-rule-t}
   @see-function{cairo:fill}
@@ -1182,10 +1176,10 @@
 
 (cffi:defcfun ("cairo_get_line_cap" line-cap) line-cap-t
  #+liber-documentation
- "@version{2023-1-11}
-  @syntax[]{(cairo:line-cap cr) => cap}
-  @syntax[]{(setf (cairo:line-cap cr) cap)}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-18}
+  @syntax{(cairo:line-cap cr) => cap}
+  @syntax{(setf (cairo:line-cap cr) cap)}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[cap]{a @symbol{cairo:line-cap-t} value for the line cap style}
   @begin{short}
     The @fun{cairo:line-cap} function gets the current line cap style.
@@ -1198,7 +1192,7 @@
   by the @fun{cairo:stroke} and @fun{cairo:stroke-extents} functions, but
   does not have any effect during path construction.
 
-  The default line cap style is @code{:butt}.
+  The default line cap style is the @code{:butt} value.
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:line-cap-t}
   @see-function{cairo:stroke}
@@ -1221,10 +1215,10 @@
 
 (cffi:defcfun ("cairo_get_line_join" line-join) line-join-t
  #+liber-documentation
- "@version{2023-1-11}
-  @syntax[]{(cairo:line-join cr) => join}
-  @syntax[]{(setf (cairo:line-join cr) join)}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-18}
+  @syntax{(cairo:line-join cr) => join}
+  @syntax{(setf (cairo:line-join cr) join)}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[join]{a @symbol{cairo:line-join-t} value for the line join style}
   @begin{short}
     The @fun{cairo:line-join} funcion gets the current line join style.
@@ -1237,7 +1231,7 @@
   by the @fun{cairo:stroke} and @fun{cairo:stroke-extents} functions, but
   does not have any effect during path construction.
 
-  The default line join style is @code{:miter}.
+  The default line join style is the @code{:miter} value.
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:line-join-t}
   @see-function{cairo:stroke}
@@ -1260,18 +1254,18 @@
 
 (cffi:defcfun ("cairo_get_line_width" line-width) :double
  #+liber-documentation
- "@version{2023-1-11}
-  @syntax[]{(cairo:line-width cr) => width}
-  @syntax[]{(setf (cairo:line-width cr) width)}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-18}
+  @syntax{(cairo:line-width cr) => width}
+  @syntax{(setf (cairo:line-width cr) width)}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[width]{a number coerced to a double float with the line width}
   @begin{short}
     The @fun{cairo:line-width} function returns the current line width value.
   @end{short}
   The @setf{cairo:line-width} function sets the current line width within the
-  Cairo context. Note that the value is unchanged even if the CTM has changed
-  between the calls to the @fun{cairo:line-width} and @setf{cairo:line-width}
-  functions.
+  Cairo context. Note that the value is unchanged even if the Coordinate
+  Transformation Matrix (CTM) has changed between the calls to the
+  @fun{cairo:line-width} and @setf{cairo:line-width} functions.
 
   The line width value specifies the diameter of a pen that is circular in user
   space, though device-space pen may be an ellipse in general due to
@@ -1314,10 +1308,10 @@
 
 (cffi:defcfun ("cairo_get_miter_limit" miter-limit) :double
  #+liber-documentation
- "@version{2023-1-11}
-  @syntax[]{(cairo:miter-limit cr) => limit}
-  @syntax[]{(setf (cairo:miter-limit cr) limit)}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-18}
+  @syntax{(cairo:miter-limit cr) => limit}
+  @syntax{(setf (cairo:miter-limit cr) limit)}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[limit]{a number coerced to a double float with the miter limit}
   @begin{short}
     The @fun{cairo:miter-limit} function gets the current miter limit.
@@ -1326,7 +1320,7 @@
   The @setf{cairo:miter-limit} function sets the current miter limit within the
   Cairo context.
 
-  If the current line join style is set to @code{:miter}, see the
+  If the current line join style is set to the @code{:miter} value, see the
   @fun{cairo:line-join} function, the miter limit is used to determine
   whether the lines should be joined with a bevel instead of a miter. Cairo
   divides the length of the miter by the line width. If the result is greater
@@ -1367,10 +1361,10 @@
 
 (cffi:defcfun ("cairo_get_operator" operator) operator-t
  #+liber-documentation
- "@version{2023-1-11}
-  @syntax[]{(cairo:operator cr) => op}
-  @syntax[]{(setf (cairo:operator cr) op)}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-18}
+  @syntax{(cairo:operator cr) => op}
+  @syntax{(setf (cairo:operator cr) op)}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[op]{a compositing operator, specified as a @symbol{cairo:operator-t}
     value}
   @begin{short}
@@ -1381,7 +1375,7 @@
   for all drawing operations. See the @symbol{cairo:operator-t} enumeration for
   details on the semantics of each available compositing operator.
 
-  The default operator is @code{:over}.
+  The default operator is the @code{:over} value.
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:operator-t}"
   (cr (:pointer (:struct context-t))))
@@ -1403,10 +1397,10 @@
 
 (cffi:defcfun ("cairo_get_tolerance" tolerance) :double
  #+liber-documentation
- "@version{2023-1-11}
-  @syntax[]{(cairo:tolerance cr) => tolerance}
-  @syntax[]{(setf (cairo:tolerance cr) tolerance)}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-18}
+  @syntax{(cairo:tolerance cr) => tolerance}
+  @syntax{(setf (cairo:tolerance cr) tolerance)}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[tolerance]{a number coerced to a double float with the tolerance,
     in device units, typically pixels}
   @begin{short}
@@ -1434,8 +1428,8 @@
 
 (cffi:defcfun ("cairo_clip" clip) :void
  #+liber-documentation
- "@version{#2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-26}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{short}
     Establishes a new clip region by intersecting the current clip region with
     the current path as it would be filled by the @fun{cairo:fill} function
@@ -1473,8 +1467,8 @@
 
 (cffi:defcfun ("cairo_clip_preserve" clip-preserve) :void
  #+liber-documentation
- "@version{#2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{#2024-1-18}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{short}
     Establishes a new clip region by intersecting the current clip region with
     the current path as it would be filled by the @fun{cairo:fill} function
@@ -1518,8 +1512,8 @@
 
 (defun clip-extents (cr)
  #+liber-documentation
- "@version{#2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-26}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{return}
     @arg{x1} -- a double float for the left of the resulting extents @br{}
     @arg{y1} -- a double float for the top of the resulting extents @br{}
@@ -1549,8 +1543,8 @@
 
 (defun in-clip (cr x y)
  #+liber-documentation
- "@version{#2024-1-12}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-26}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[x]{a number coerced to a double float with the x coordinate of the
     point to test}
   @argument[y]{a number coerced to a double float with the y coordinate of the
@@ -1581,8 +1575,8 @@
 
 (cffi:defcfun ("cairo_reset_clip" reset-clip) :void
  #+liber-documentation
- "@version{2023-2-3}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-26}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{short}
     Reset the current clip region to its original, unrestricted state.
   @end{short}
@@ -1604,12 +1598,12 @@
 (export 'reset-clip)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_rectangle_list_destroy () -> rectangle-list-destroy
+;;; cairo_rectangle_list_destroy ()                        not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_rectangle_list_destroy" rectangle-list-destroy) :void
  #+liber-documentation
- "@version{#2023-1-11}
+ "@version{2024-1-19}
   @argument[rectangles]{a pointer to a @symbol{cairo:rectangle-list-t} instance,
     as obtained from the @fun{cairo:copy-clip-rectangle-list} function}
   @begin{short}
@@ -1621,33 +1615,76 @@
   @see-function{cairo:copy-clip-rectangle-list}"
   (rectangles (:pointer (:struct rectangle-list-t))))
 
-(export 'rectangle-list-destroy)
-
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_copy_clip_rectangle_list () -> copy-clip-rectangle-list
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("cairo_copy_clip_rectangle_list" copy-clip-rectangle-list)
+(cffi:defcfun ("cairo_copy_clip_rectangle_list" %copy-clip-rectangle-list)
     (:pointer (:struct rectangle-list-t))
+  (cr (:pointer (:struct context-t))))
+
+(defun copy-clip-rectangle-list (cr)
  #+liber-documentation
- "@version{#2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-19}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{return}
-    The current clip region as a list of rectangles in user coordinates, which
-    should be destroyed using the @fun{cairo:rectangle-list-destroy} function.
+    The current clip region as a list of rectangles in user coordinates. Each
+    rectangle is represented by a list with the @arg{x}, @arg{y}, @arg{width},
+    @arg{height} values of the rectangle.
   @end{return}
   @begin{short}
     Gets the current clip region as a list of rectangles in user coordinates.
   @end{short}
-  Never returns NULL.
-
-  The status in the list may be @code{:clip-not-representable} to indicate that
-  the clip region cannot be represented as a list of user-space rectangles. The
-  status may have other values to indicate other errors.
-  @see-symbol{cairo:context-t}
-  @see-symbol{cairo:rectangle-list-t}
-  @see-function{cairo:rectangle-list-destroy}"
-  (cr (:pointer (:struct context-t))))
+  If the clip region cannot be represented as a list of user-space rectangles
+  the @code{nil} value is returned.
+  @begin[Example]{dictionary}
+    @begin{pre}
+;; Creat a recording surface
+(cairo:with-recording-surface (surface :color)
+  :; Create a context for the recording surface
+  (cairo:with-context (context surface)
+    ;; Two rectangles
+    (cairo:rectangle context 10 10 15 15)
+    (cairo:rectangle context 20 20 10 10)
+    ;; Clip the context
+    (cairo:clip context)
+    ;; Get the current clip region
+    (cairo:copy-clip-rectangle-list context)))
+=> ((10.0d0 10.0d0 15.0d0 10.0d0)
+    (10.0d0 20.0d0 20.0d0 5.0d0)
+    (20.0d0 25.0d0 10.0d0 5.0d0))
+    @end{pre}
+  @end{dictionary}
+  @see-symbol{cairo:context-t}"
+  (let ((rectlist (%copy-clip-rectangle-list cr)))
+    (when (eq :success
+              (cffi:foreign-slot-value rectlist
+                                       '(:struct rectangle-list-t)
+                                       'status))
+      (let ((n (cffi:foreign-slot-value rectlist
+                                        '(:struct rectangle-list-t)
+                                        'num-rectangles))
+            (rectangles (cffi:foreign-slot-value rectlist
+                                                 '(:struct rectangle-list-t)
+                                                 'rectangles)))
+        (prog1
+          (iter (for i from 0 below n)
+                (for rectangle = (cffi:mem-aptr rectangles
+                                                '(:struct rectangle-t)
+                                                i))
+                (collect (list (cffi:foreign-slot-value rectangle
+                                                        '(:struct rectangle-t)
+                                                        'x)
+                               (cffi:foreign-slot-value rectangle
+                                                        '(:struct rectangle-t)
+                                                        'y)
+                               (cffi:foreign-slot-value rectangle
+                                                        '(:struct rectangle-t)
+                                                        'width)
+                               (cffi:foreign-slot-value rectangle
+                                                        '(:struct rectangle-t)
+                                                        'height))))
+          (rectangle-list-destroy rectlist))))))
 
 (export 'copy-clip-rectangle-list)
 
@@ -1657,8 +1694,8 @@
 
 (cffi:defcfun ("cairo_fill" fill) :void
  #+liber-documentation
- "@version{2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-18}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{short}
     A drawing operator that fills the current path according to the current
     fill rule, each sub-path is implicitly closed before being filled.
@@ -1679,8 +1716,8 @@
 
 (cffi:defcfun ("cairo_fill_preserve" fill-preserve) :void
  #+liber-documentation
- "@version{#2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-18}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{short}
     A drawing operator that fills the current path according to the current
     fill rule, each sub-path is implicitly closed before being filled.
@@ -1710,7 +1747,7 @@
 (defun fill-extents (cr)
  #+liber-documentation
  "@version{#2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{return}
     @arg{x1} -- a double float with the left of the resulting extents @br{}
     @arg{y1} -- a double float with the top of the resulting extents @br{}
@@ -1759,8 +1796,8 @@
 
 (defun in-fill (cr x y)
  #+liber-documentation
- "@version{#2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{#2024-1-18}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[x]{a number coerced to a double float with the x coordinate of the
     point to test}
   @argument[y]{a number coerced to a double float with the y coordinate of the
@@ -1793,8 +1830,8 @@
 
 (cffi:defcfun ("cairo_mask" mask) :void
  #+liber-documentation
- "@version{2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-18}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[pattern]{a @symbol{cairo:pattern-t} instance}
   @begin{short}
     A drawing operator that paints the current source using the alpha channel
@@ -1821,8 +1858,8 @@
 
 (defun mask-surface (cr surface x y)
  #+liber-documentation
- "@version{#2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{#2024-1-18}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
   @argument[x]{a number coerced to a double float with the x coordinate at
     which to place the origin of @arg{surface}}
@@ -1849,8 +1886,8 @@
 
 (cffi:defcfun ("cairo_paint" paint) :void
  #+liber-documentation
- "@version{2023-1-14}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-18}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{short}
     A drawing operator that paints the current source everywhere within the
     current clip region.
@@ -1874,8 +1911,8 @@
 
 (defun paint-with-alpha (cr alpha)
  #+liber-documentation
- "@version{2023-1-14}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-18}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[alpha]{a number coerced to a double float with the alpha value,
     between 0.0 (transparent) and 1.0 (opaque)}
   @begin{short}
@@ -1899,7 +1936,7 @@
 (cffi:defcfun ("cairo_stroke" stroke) :void
  #+liber-documentation
  "@version{2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{short}
     A drawing operator that strokes the current path according to the current
     line width, line join, line cap, and dash settings.
@@ -1952,8 +1989,8 @@
 
 (cffi:defcfun ("cairo_stroke_preserve" stroke-preserve) :void
  #+liber-documentation
- "@version{#2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{#2024-1-18}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{short}
     A drawing operator that strokes the current path according to the current
     line width, line join, line cap, and dash settings.
@@ -1986,8 +2023,8 @@
 
 (defun stroke-extents (cr)
  #+liber-documentation
- "@version{#2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{#2024-1-18}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{return}
     @arg{x1} -- a double float with the left of the resulting extents @br{}
     @arg{y1} -- a double float with the top of the resulting extents @br{}
@@ -2041,8 +2078,8 @@
 
 (defun in-stroke (cr x y)
  #+liber-documentation
- "@version{#2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{#2024-1-18}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[x]{a number coerced to a double float with the x coordinate of the
     point to test}
   @argument[y]{a number coerced to a double float with the y coordinate of the
@@ -2079,8 +2116,8 @@
 
 (cffi:defcfun ("cairo_copy_page" copy-page) :void
  #+liber-documentation
- "@version{#2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{#2024-1-18}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{short}
     Emits the current page for backends that support multiple pages, but does
     not clear it, so, the contents of the current page will be retained for the
@@ -2104,8 +2141,8 @@
 
 (cffi:defcfun ("cairo_show_page" show-page) :void
  #+liber-documentation
- "@version{2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-1-18}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{short}
    Emits and clears the current page for backends that support multiple pages.
   @end{short}
@@ -2126,15 +2163,13 @@
 
 (cffi:defcfun ("cairo_get_reference_count" reference-count) :uint
  #+liber-documentation
- "@version{2023-1-11}
-  @argument[cr]{a @symbol{cairo:context-t} context}
-  @begin{return}
-    The current reference count of @arg{cr}. If the Cairo context is a \"nil\"
-    context, 0 will be returned.
-  @end{return}
+ "@version{2024-1-17}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
+  @return{The current reference count of @arg{cr}.}
   @begin{short}
-    Returns the current reference count of @arg{cr}.
+    Returns the current reference count of the Cairo context.
   @end{short}
+  If the Cairo context is a \"nil\" context, 0 will be returned.
   @see-symbol{cairo:context-t}
   @see-function{cairo:reference}"
   (cr (:pointer (:struct context-t))))
@@ -2189,59 +2224,56 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
+;;; cairo_get_hairline ()
 ;;; cairo_set_hairline ()
-;;;
-;;; void
-;;; cairo_set_hairline (cairo_t *cr,
-;;;                     cairo_bool_t set_hairline);
-;;;
-;;; Sets lines within the cairo context to be hairlines. Hairlines are logically
-;;; zero-width lines that are drawn at the thinnest renderable width possible in
-;;; the current context.
-;;;
-;;; On surfaces with native hairline support, the native hairline functionality
-;;; will be used. Surfaces that support hairlines include:
-;;;
-;;; pdf/ps: Encoded as 0-width line.
-;;;
-;;; win32_printing: Rendered with PS_COSMETIC pen.
-;;;
-;;; svg: Encoded as 1px non-scaling-stroke.
-;;;
-;;; script: Encoded with set-hairline function.
-;;;
-;;; Cairo will always render hairlines at 1 device unit wide, even if an
-;;; anisotropic scaling was applied to the stroke width. In the wild, handling
-;;; of this situation is not well-defined. Some PDF, PS, and SVG renderers match
-;;; Cairo's output, but some very popular implementations (Acrobat, Chrome,
-;;; rsvg) will scale the hairline unevenly. As such, best practice is to reset
-;;; any anisotropic scaling before calling cairo_stroke(). See
-;;; https://cairographics.org/cookbook/ellipses/ for an example.
-;;;
-;;; cr
-;;;     a cairo_t
-;;;
-;;; set_hairline
-;;;     whether or not to set hairline mode
-;;;
-;;; Since 1.18
 ;;; ----------------------------------------------------------------------------
 
-;;; ----------------------------------------------------------------------------
-;;; cairo_get_hairline ()
-;;;
-;;; cairo_bool_t
-;;; cairo_get_hairline (cairo_t *cr);
-;;;
-;;; Returns whether or not hairline mode is set, as set by cairo_set_hairline().
-;;;
-;;; cr
-;;;     a cairo context
-;;;
-;;; Returns
-;;;     whether hairline mode is set.
-;;;
-;;; Since 1.18
-;;; ----------------------------------------------------------------------------
+#+cairo-1-18
+(defun (setf hairline) (value cr)
+  (cffi:foreign-funcall "cairo_set_hairline"
+                        (:pointer (:struct context-t)) cr
+                        :bool value
+                        :void)
+  value)
+
+#+cairo-1-18
+(cffi:defcfun ("cairo_get_hairline" hairline) :bool
+ #+liber-documentation
+ "@version{2024-1-18}
+  @syntax{(cairo:hairline cr) => setting}
+  @syntax{(setf (cairo:hairline cr) setting)}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
+  @argument[setting]{a boolean whether hairline mode is set}
+  @begin{short}
+    The @fun{cairo:hairline} function returns whether or not hairline mode is
+    set.
+  @end{short}
+  The @setf{cairo:hairline} functon sets lines within the Cairo context to be
+  hairlines. Hairlines are logically zero-width lines that are drawn at the
+  thinnest renderable width possible in the current Cairo context.
+
+  On surfaces with native hairline support, the native hairline functionality
+  will be used. Surfaces that support hairlines include:
+  @begin[arg]{table}
+    @entry[pdf/ps]{Encoded as 0-width line.}
+    @entry[win32_printing]{Rendered with the @code{PS_COSMETIC} pen.}
+    @entry[svg]{Encoded as 1 px non-scaling-stroke.}
+    @entry[script]{Encoded with the @code{set-hairline} function.}
+  @end{table}
+  Cairo will always render hairlines at 1 device unit wide, even if an
+  anisotropic scaling was applied to the stroke width. In the wild, handling
+  of this situation is not well-defined. Some PDF, PS, and SVG renderers match
+  Cairo's output, but some very popular implementations (Acrobat, Chrome,
+  rsvg) will scale the hairline unevenly. As such, best practice is to reset
+  any anisotropic scaling before calling the @fun{cairo:stroke} function. See
+  @url[https://cairographics.org/cookbook/ellipses/]{Ellipses With Uniform
+  Stroke Width} for an example.
+
+  Since 1.18
+  @see-symbol{cairo:context-t}
+  @see-function{cairo:stroke}"
+  (cr (:pointer (:struct context-t))))
+
+(export 'hairline)
 
 ;;; --- End of file cairo.context.lisp -----------------------------------------

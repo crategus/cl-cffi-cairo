@@ -10,9 +10,6 @@
 ;;;     cairo_line_cap_t
 ;;;     cairo_line_join_t
 ;;;     cairo_operator_t
-;;;
-;;;     cairo_rectangle_t
-;;;     cairo_rectangle_list_t
 
 ;;;     cairo_t
 
@@ -23,23 +20,41 @@
 (test cairo-create.1
   (let* ((surface (cairo:image-surface-create :rgb24 100 150))
          (context (cairo:create surface)))
-    (is (cffi:pointerp context))
+    ;; Check the surface
+    (is (eq :success (cairo:surface-status surface)))
+    (is (= 3 (cairo:surface-reference-count surface)))
+    ;; Check the context
     (is (eq :success (cairo:status context)))
+    (is (= 1 (cairo:reference-count context)))
+    ;; Destroy the context
     (is-false (cairo:destroy context))
-    (is-false (cairo:surface-destroy surface))))
+    (is (= 0 (cairo:reference-count context)))
+    ;; Check the surface and destroy it
+    (is (= 1 (cairo:surface-reference-count surface)))
+    (is-false (cairo:surface-destroy surface))
+    (is (= 0 (cairo:surface-reference-count surface)))))
 
 (test cairo-create.2
   (cairo:with-image-surface (surface :rgb24 100 150)
     (let ((context (cairo:create surface)))
-      (is (cffi:pointerp context))
+      ;; Check the surface
+      (is (eq :success (cairo:surface-status surface)))
+      (is (= 3 (cairo:surface-reference-count surface)))
+      ;; Check the context
       (is (eq :success (cairo:status context)))
+      (is (= 1 (cairo:reference-count context)))
+      ;; Destroy the context
       (is-false (cairo:destroy context)))))
 
 (test cairo-create.3
   (cairo:with-image-surface (surface :rgb24 100 150)
     (cairo:with-context (context surface)
-      (is (cffi:pointerp context))
-      (is (eq :success (cairo:status context))))))
+      ;; Check the surface
+      (is (eq :success (cairo:surface-status surface)))
+      (is (= 3 (cairo:surface-reference-count surface)))
+      ;; Check the context
+      (is (eq :success (cairo:status context)))
+      (is (= 1 (cairo:reference-count context))))))
 
 ;;;     cairo_reference
 ;;;     cairo_destroy
@@ -47,7 +62,6 @@
 (test cairo-reference/destroy
   (cairo:with-image-surface (surface :rgb24 100 150)
     (let ((context (cairo:create surface)))
-      (is (cffi:pointerp context))
       (is (eq :success (cairo:status context)))
       (is (= 1 (cairo:reference-count context)))
       (is (cffi:pointerp (cairo:reference context)))
@@ -56,6 +70,18 @@
       (is (= 1 (cairo:reference-count context)))
       (is-false (cairo:destroy context))
       (is (= 0 (cairo:reference-count context))))))
+
+;;;     cairo_get_reference_count
+
+(test cairo-reference-count
+  (cairo:with-image-surface (surface :rgb24 100 150)
+    (let ((context (cairo:create surface)))
+      (is (= 1 (cairo:reference-count context)))
+      (is (cffi:pointer-eq context (cairo:reference context)))
+      (is (= 2 (cairo:reference-count context)))
+      (is-false (cairo:destroy context))
+      (is (= 1 (cairo:reference-count context)))
+      (is-false (cairo:destroy context)))))
 
 ;;;     cairo_status
 
@@ -79,19 +105,70 @@
   (cairo:with-image-surface (surface :rgb24 150 100)
     (cairo:with-context (context surface)
       (is (eq :success (cairo:status context)))
+      (is (= 3 (cairo:surface-reference-count surface)))
+      (is (= 3 (cairo:surface-reference-count (cairo:target context))))
       (is (cffi:pointer-eq surface (cairo:target context))))))
 
 ;;;     cairo_push_group
 ;;;     cairo_push_group_with_content
 ;;;     cairo_pop_group
 ;;;     cairo_pop_group_to_source
-
 ;;;     cairo_get_group_target
+
 ;;;     cairo_set_source_rgb
+
+(test cairo-set-source-rgb
+  (cairo:with-context-for-recording-surface (context :color)
+    (is (eq :success (cairo:status context)))
+    (is (eq :success (cairo:pattern-status (cairo:source context))))
+    (is (eq :solid (cairo:pattern-type (cairo:source context))))
+    ;; Default source
+    (is (equal '(0.0d0 0.0d0 0.0d0 1.0d0)
+               (multiple-value-list
+                 (cairo:pattern-rgba (cairo:source context)))))
+    ;; Set new source
+    (is-false (cairo:set-source-rgb context 0.5 1/2 1))
+    (is (equal '(0.5d0 0.5d0 1.0d0 1.0d0)
+               (multiple-value-list
+                 (cairo:pattern-rgba (cairo:source context)))))))
+
 ;;;     cairo_set_source_rgba
-;;;     cairo_set_source
-;;;     cairo_set_source_surface
+
+(test cairo-set-source-rgba
+  (cairo:with-context-for-recording-surface (context :color)
+    (is (eq :success (cairo:status context)))
+    (is (eq :success (cairo:pattern-status (cairo:source context))))
+    (is (eq :solid (cairo:pattern-type (cairo:source context))))
+    ;; Default source
+    (is (equal '(0.0d0 0.0d0 0.0d0 1.0d0)
+               (multiple-value-list
+                 (cairo:pattern-rgba (cairo:source context)))))
+    ;; Set new source
+    (is-false (cairo:set-source-rgba context 0.5 1/2 1 0.1d0))
+    (is (equal '(0.5d0 0.5d0 1.0d0 0.1d0)
+               (multiple-value-list
+                 (cairo:pattern-rgba (cairo:source context)))))))
+
 ;;;     cairo_get_source
+;;;     cairo_set_source
+
+(test cairo-source
+  (cairo:with-context-for-recording-surface (context :color)
+    (let ((pattern (cairo:pattern-create-rgb 1 1/2 0.5)))
+      (is (cffi:pointer-eq pattern (setf (cairo:source context) pattern)))
+      (is (cffi:pointer-eq pattern (cairo:source context)))
+      (is (equal '(1.0d0 0.5d0 0.5d0 1.0d0)
+                 (multiple-value-list
+                   (cairo:pattern-rgba (cairo:source context)))))
+      (is-false (cairo:pattern-destroy pattern)))))
+
+;;;     cairo_set_source_surface
+
+(test cairo-set-source-surface
+  (cairo:with-context-for-recording-surface (context :color)
+    (cairo:with-image-surface (surface :argb32 200 100)
+      (is-false (cairo:set-source-surface context surface 200 100))
+      (is (eq :surface (cairo:pattern-type (cairo:source context)))))))
 
 ;;;     cairo_set_antialias
 ;;;     cairo_get_antialias
@@ -197,6 +274,16 @@
       (is (= 3.0d0 (setf (cairo:line-width context) 3.0d0)))
       (is (= 3.0d0 (cairo:line-width context))))))
 
+;;;     cairo_set_hairline                                 Since 1.18
+;;;     cairo_get_hairline                                 Since 1.18
+
+(test cairo-hairline
+  (cairo:with-image-surface (surface :rgb24 100 150)
+    (cairo:with-context (context surface)
+      (is-false (cairo:hairline context))
+      (is-true (setf (cairo:hairline context) t))
+      (is-true (cairo:hairline context)))))
+
 ;;;     cairo_set_miter_limit
 ;;;     cairo_get_miter_limit
 
@@ -232,8 +319,76 @@
 ;;;     cairo_clip_extents
 ;;;     cairo_in_clip
 ;;;     cairo_reset_clip
+
+(test cairo-clip-extents
+  (cairo:with-context-for-recording-surface (context :color 0 0 200 300)
+    (is-false (cairo:rectangle context 0 0 100 200))
+    (is-false (cairo:clip context))
+    (is (equal '(0.0d0 0.0d0 100.0d0 200.0d0)
+               (multiple-value-list (cairo:clip-extents context))))
+    (is-true (cairo:in-clip context 50 50))
+    (is-false (cairo:in-clip context 1000 1000))
+    (is-false (cairo:reset-clip context))
+    (is (equal '(0.0d0 0.0d0 200.0d0 300.0d0)
+               (multiple-value-list (cairo:clip-extents context))))))
+
 ;;;     cairo_rectangle_list_destroy
 ;;;     cairo_copy_clip_rectangle_list
+
+(test cairo-copy-clip-rectangle-list.1
+  (cairo:with-recording-surface (surface :color)
+    (cairo:with-context (context surface)
+      (cairo:save context)
+      (cairo:rectangle context 10 10 70 70)
+      (cairo:clip context)
+      (is (equal '(10.0d0 10.0d0 80.d0 80.d0)
+                 (multiple-value-list (cairo:clip-extents context))))
+      (is (equal '((10.0d0 10.0d0 70.0d0 70.0d0))
+                 (cairo:copy-clip-rectangle-list context)))
+      (cffi:with-foreign-object (rectlist '(:struct cairo::rectangle-list-t))
+        (is (cffi:pointerp (setf rectlist
+                                 (cairo::%copy-clip-rectangle-list context))))
+        (is (eq :success
+                (cffi:foreign-slot-value rectlist
+                                         '(:struct cairo::rectangle-list-t)
+                                         'cairo::status)))
+        (is (cffi:pointerp
+                (cffi:foreign-slot-value rectlist
+                                         '(:struct cairo::rectangle-list-t)
+                                         'cairo::rectangles)))
+        (is (= 1
+               (cffi:foreign-slot-value rectlist
+                                        '(:struct cairo::rectangle-list-t)
+                                        'cairo::num-rectangles)))
+        (cffi:with-foreign-object (rect '(:struct cairo::rectangle-t))
+          (setf rect (cffi:foreign-slot-value rectlist
+                                              '(:struct cairo::rectangle-list-t)
+                                              'cairo::rectangles))
+          (is (= 10.0d0 (cffi:foreign-slot-value rect
+                                                 '(:struct cairo::rectangle-t)
+                                                 'cairo::x)))
+          (is (= 10.0d0 (cffi:foreign-slot-value rect
+                                                 '(:struct cairo::rectangle-t)
+                                                 'cairo::y)))
+          (is (= 70.0d0 (cffi:foreign-slot-value rect
+                                                 '(:struct cairo::rectangle-t)
+                                                 'cairo::width)))
+          (is (= 70.0d0 (cffi:foreign-slot-value rect
+                                                 '(:struct cairo::rectangle-t)
+                                                 'cairo::height))))))))
+
+;; Test the example from the documentation
+(test cairo-copy-clip-rectangle-list.2
+  (is (equal '((10.0d0 10.0d0 15.0d0 10.0d0)
+               (10.0d0 20.0d0 20.0d0 5.0d0)
+               (20.0d0 25.0d0 10.0d0 5.0d0))
+             (cairo:with-recording-surface (surface :color)
+               (cairo:with-context (context surface)
+                 (cairo:rectangle context 10 10 15 15)
+                 (cairo:rectangle context 20 20 10 10)
+                 (cairo:clip context)
+                 (cairo:copy-clip-rectangle-list context))))))
+
 ;;;     cairo_fill
 ;;;     cairo_fill_preserve
 ;;;     cairo_fill_extents
@@ -249,22 +404,7 @@
 ;;;     cairo_copy_page
 ;;;     cairo_show_page
 
-;;;     cairo_get_reference_count
-
-(test cairo-reference-count
-  (let* ((surface (cairo:image-surface-create :rgb24 100 150))
-         (context (cairo:create surface)))
-    (is (= 1 (cairo:reference-count context)))
-    (is (cffi:pointer-eq context (cairo:reference context)))
-    (is (= 2 (cairo:reference-count context)))
-    (is-false (cairo:destroy context))
-    (is (= 1 (cairo:reference-count context)))
-    (is-false (cairo:destroy context))
-    (is (= 0 (cairo:reference-count context)))))
-
 ;;;     cairo_set_user_data
 ;;;     cairo_get_user_data
-;;;     cairo_set_hairline                                 Since 1.18
-;;;     cairo_get_hairline                                 Since 1.18
 
-;;; 2024-1-12
+;;; 2024-1-25

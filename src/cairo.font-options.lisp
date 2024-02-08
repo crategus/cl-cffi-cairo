@@ -50,6 +50,7 @@
 ;;;     cairo_font_options_merge
 ;;;     cairo_font_options_hash
 ;;;     cairo_font_options_equal
+;;;
 ;;;     cairo_font_options_set_antialias
 ;;;     cairo_font_options_get_antialias
 ;;;     cairo_font_options_set_subpixel_order
@@ -60,57 +61,15 @@
 ;;;     cairo_font_options_get_hint_metrics
 ;;;     cairo_font_options_get_variations
 ;;;     cairo_font_options_set_variations
-;;;
 ;;;     cairo_font_options_set_color_mode                  Since 1.18
 ;;;     cairo_font_options_get_color_mode                  Since 1.18
 ;;;     cairo_font_options_set_color_palette               Since 1.18
 ;;;     cairo_font_options_get_color_palette               Since 1.18
 ;;;     cairo_font_options_set_custom_palette_color        Since 1.18
 ;;;     cairo_font_options_get_custom_palette_color        Since 1.18
-;;;
-;;; Description
-;;;
-;;; The font options specify how fonts should be rendered. Most of the time the
-;;; font options implied by a surface are just right and do not need any
-;;; changes, but for pixel-based targets tweaking font options may result in
-;;; superior output on a particular display.
 ;;; ----------------------------------------------------------------------------
 
 (in-package :cairo)
-
-;;; ----------------------------------------------------------------------------
-;;; cairo_font_options_t
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcstruct font-options-t)
-
-#+liber-documentation
-(setf (liber:alias-for-symbol 'font-options-t)
-      "CStruct"
-      (liber:symbol-documentation 'font-options-t)
- #+liber-documentation
- "@version{#2021-10-27}
-  @begin{short}
-    An opaque structure holding all options that are used when rendering fonts.
-  @end{short}
-  Individual features of a @symbol{cairo:font-options-t} instance can be set or
-  accessed using accessor functions named
-  @code{cairo:font-options-feature-name}, like the
-  @fun{cairo:font-options-antialias} function.
-
-  New features may be added to a @symbol{cairo:font-options-t} structure in the
-  future. For this reason, the @fun{cairo:font-options-copy},
-  @fun{cairo:font-options-equal}, @fun{cairo:font-options-merge}, and
-  @fun{cairo:font-options-hash} functions should be used to copy, check for
-  equality, merge, or compute a hash value of @symbol{cairo:font-options-t}
-  instances.
-  @see-function{cairo:font-options-copy}
-  @see-function{cairo:font-options-equal}
-  @see-function{cairo:font-options-merge}
-  @see-function{cairo:font-options-hash}
-  @see-function{cairo:font-options-antialias}")
-
-(export 'font-options-t)
 
 ;;; ----------------------------------------------------------------------------
 ;;; enum cairo_subpixel_order_t
@@ -127,7 +86,7 @@
 (setf (liber:alias-for-symbol 'subpixel-order-t)
       "CEnum"
       (liber:symbol-documentation 'subpixel-order-t)
- "@version{#2021-10-27}
+ "@version{2024-1-28}
   @begin{short}
     The subpixel order specifies the order of color elements within each pixel
     on the display device when rendering with an antialiasing mode of
@@ -153,7 +112,7 @@
       top.}
   @end{table}
   @see-symbol{cairo:font-options-t}
-  @see-symbol{cairo:antialias-t}")
+  @see-function{cairo:font-options-subpixel-order}")
 
 (export 'subpixel-order-t)
 
@@ -172,7 +131,7 @@
 (setf (liber:alias-for-symbol 'hint-style-t)
       "CEnum"
       (liber:symbol-documentation 'hint-style-t)
- "@version{#2021-10-27}
+ "@version{2024-1-28}
   @begin{short}
     Specifies the type of hinting to do on font outlines.
   @end{short}
@@ -201,7 +160,8 @@
       between fidelity to the original shapes and contrast.}
     @entry[:full]{Hint outlines to maximize contrast.}
   @end{table}
-  @see-symbol{cairo:font-options-t}")
+  @see-symbol{cairo:font-options-t}
+  @see-function{cairo:font-options-hint-style}")
 
 (export 'hint-style-t)
 
@@ -218,7 +178,7 @@
 (setf (liber:alias-for-symbol 'hint-metrics-t)
       "CEnum"
       (liber:symbol-documentation 'hint-metrics-t)
- "@version{#2021-10-27}
+ "@version{2024-1-28}
   @begin{short}
     Specifies whether to hint font metrics.
   @end{short}
@@ -238,32 +198,53 @@
     @entry[:off]{Do not hint font metrics.}
     @entry[:on]{Hint font metrics.}
   @end{table}
-  @see-symbol{cairo:font-options-t}")
+  @see-symbol{cairo:font-options-t}
+  @see-function{cairo:font-options-hint-metrics}")
 
 (export 'hint-metrics-t)
 
 ;;; ----------------------------------------------------------------------------
 ;;; enum cairo_color_mode_t
-;;;
-;;; Specifies if color fonts are to be rendered using the color glyphs or
-;;; outline glyphs. Glyphs that do not have a color presentation, and non-color
-;;; fonts are not affected by this font option.
-;;;
-;;; CAIRO_COLOR_MODE_DEFAULT
-;;;     Use the default color mode for font backend and target device,
-;;;     since 1.18.
-;;;
-;;; CAIRO_COLOR_MODE_NO_COLOR
-;;;     Disable rendering color glyphs. Glyphs are always rendered as outline
-;;;     glyphs, since 1.18.
-;;;
-;;; CAIRO_COLOR_MODE_COLOR
-;;;     Enable rendering color glyphs. If the font contains a color presentation
-;;;     for a glyph, and when supported by the font backend, the glyph will be
-;;;     rendered in color, since 1.18.
-;;;
-;;; Since 1.18
 ;;; ----------------------------------------------------------------------------
+
+#+cairo-1-18
+(cffi:defcenum color-mode-t
+  :default
+  :no-color
+  :color)
+
+#+(and cairo-1-18 liber-documentation)
+(setf (liber:alias-for-symbol 'color-mode-t)
+      "CEnum"
+      (liber:symbol-documentation 'color-mode-t)
+ "@version{2024-1-28}
+  @begin{short}
+    Specifies if color fonts are to be rendered using the color glyphs or
+    outline glyphs.
+  @end{short}
+  Glyphs that do not have a color presentation, and non-color fonts are not
+  affected by this font option.
+  @begin{pre}
+(cffi:defcenum color-mode-t
+  :default
+  :no-color
+  :color)
+  @end{pre}
+  @begin[code]{table}
+    @entry[:default]{Use the default color mode for font backend and target
+      device.}
+    @entry[:no-color]{Disable rendering color glyphs. Glyphs are always rendered
+      as outline glyphs.}
+    @entry[:color]{Enable rendering color glyphs. If the font contains a color
+      presentation for a glyph, and when supported by the font backend, the
+      glyph will be rendered in color.}
+  @end{table}
+  Since 1.18
+  @see-symbol{cairo:font-options-t}
+  @see-function{cairo:font-options-color-mode}")
+
+#+cairo-1-18
+(export 'color-mode-t)
 
 ;;; ----------------------------------------------------------------------------
 ;;; CAIRO_COLOR_PALETTE_DEFAULT
@@ -276,13 +257,47 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
+;;; cairo_font_options_t
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcstruct font-options-t)
+
+#+liber-documentation
+(setf (liber:alias-for-symbol 'font-options-t)
+      "CStruct"
+      (liber:symbol-documentation 'font-options-t)
+ #+liber-documentation
+ "@version{2024-1-28}
+  @begin{short}
+    An opaque structure holding all options that are used when rendering fonts.
+  @end{short}
+  Individual features of a @symbol{cairo:font-options-t} instance can be set or
+  accessed using accessor functions named
+  @code{cairo:font-options-feature-name}, like the
+  @fun{cairo:font-options-antialias} function.
+
+  New features may be added to a @symbol{cairo:font-options-t} structure in the
+  future. For this reason, the @fun{cairo:font-options-copy},
+  @fun{cairo:font-options-equal}, @fun{cairo:font-options-merge}, and
+  @fun{cairo:font-options-hash} functions should be used to copy, check for
+  equality, merge, or compute a hash value of @symbol{cairo:font-options-t}
+  instances.
+  @see-function{cairo:font-options-copy}
+  @see-function{cairo:font-options-equal}
+  @see-function{cairo:font-options-merge}
+  @see-function{cairo:font-options-hash}
+  @see-function{cairo:font-options-antialias}")
+
+(export 'font-options-t)
+
+;;; ----------------------------------------------------------------------------
 ;;; cairo_font_options_create ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_font_options_create" font-options-create)
     (:pointer (:struct font-options-t))
  #+liber-documentation
- "@version{#2021-10-27}
+ "@version{2024-1-28}
   @return{The newly allocated @symbol{cairo:font-options-t} instance.}
   @begin{short}
     Allocates a new font options object with all options initialized to default
@@ -305,7 +320,7 @@
 (cffi:defcfun ("cairo_font_options_copy" font-options-copy)
     (:pointer (:struct font-options-t))
  #+liber-documentation
- "@version{#2021-10-27}
+ "@version{2024-1-28}
   @argument[options]{a @symbol{cairo:font-options-t} instance}
   @return{The newly allocated @symbol{cairo:font-options-t} instance.}
   @begin{short}
@@ -328,7 +343,7 @@
 
 (cffi:defcfun ("cairo_font_options_destroy" font-options-destroy) :void
  #+liber-documentation
- "@version{#2021-10-27}
+ "@version{2024-1-28}
   @argument[options]{a @symbol{cairo:font-options-t} instance}
   @begin{short}
     Destroys a @symbol{cairo:font-options-t} instance created with the
@@ -347,7 +362,7 @@
 
 (cffi:defcfun ("cairo_font_options_status" font-options-status) status-t
  #+liber-documentation
- "@version{#2021-10-27}
+ "@version{2024-1-28}
   @argument[options]{a @symbol{cairo:font-options-t} instance}
   @return{The @code{:success} or @code{:no-memory} values of the
     @symbol{cairo:status-t} enumeration.}
@@ -367,7 +382,7 @@
 
 (cffi:defcfun ("cairo_font_options_merge" font-options-merge) :void
  #+liber-documentation
- "@version{#2021-10-27}
+ "@version{2024-1-28}
   @argument[options]{a @symbol{cairo:font-options-t} instance}
   @argument[other]{another @symbol{cairo:font-options-t} instance}
   @begin{short}
@@ -389,7 +404,7 @@
 
 (cffi:defcfun ("cairo_font_options_hash" font-options-hash) :ulong
  #+liber-documentation
- "@version{#2021-10-27}
+ "@version{2024-1-28}
   @argument[options]{a @symbol{cairo:font-options-t} instance}
   @return{The unsigned long integer with the hash value for the font options
     object.}
@@ -409,7 +424,7 @@
 
 (cffi:defcfun ("cairo_font_options_equal" font-options-equal) :bool
  #+liber-documentation
- "@version{#2021-10-27}
+ "@version{2024-1-28}
   @argument[options]{a @symbol{cairo:font-options-t} instance}
   @argument[other]{another @symbol{cairo:font-options-t} instance}
   @return{@em{True} if all fields of the two font options instances match. Note
@@ -425,11 +440,11 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_font_options_get_antialias ()
-;;; cairo_font_options_set_antialias () -> font-options-antialias
+;;; cairo_font_options_set_antialias ()
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf font-options-antialias) (antialias options)
-  (cffi:foreign-funcall "cairo_font_options_antialias"
+  (cffi:foreign-funcall "cairo_font_options_set_antialias"
                         (:pointer (:struct font-options-t)) options
                         antialias-t antialias
                         :void)
@@ -438,11 +453,11 @@
 (cffi:defcfun ("cairo_font_options_get_antialias" font-options-antialias)
     antialias-t
  #+liber-documentation
- "@version{#2021-10-27}
-  @syntax[]{(cairo:font-options-antialias options) => antialias}
-  @syntax[]{(setf (cairo:font-options-antialias options) antialias)}
+ "@version{2024-1-28}
+  @syntax{(cairo:font-options-antialias options) => antialias}
+  @syntax{(setf (cairo:font-options-antialias options) antialias)}
   @argument[options]{a @symbol{cairo:font-options-t} instance}
-  @argument[antialias]{a value of the @symbol{cairo:antialias-t} enumeration}
+  @argument[antialias]{a @symbol{cairo:antialias-t} value}
   @begin{short}
     The @fun{cairo:font-options-antialias} function gets the antialiasing mode
     for the font options instance.
@@ -458,7 +473,6 @@
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_font_options_get_subpixel_order ()
 ;;; cairo_font_options_set_subpixel_order ()
-;;; -> font-options-subpixel-order
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf font-options-subpixel-order) (order options)
@@ -471,11 +485,11 @@
 (cffi:defcfun ("cairo_font_options_get_subpixel_order"
                font-options-subpixel-order) subpixel-order-t
  #+liber-documentation
- "@version{#2021-10-28}
-  @syntax[]{(cairo:font-options-subpixel-order options) => order}
-  @syntax[]{(setf (cairo:font-options-subpixel-order options) order)}
+ "@version{2024-1-28}
+  @syntax{(cairo:font-options-subpixel-order options) => order}
+  @syntax{(setf (cairo:font-options-subpixel-order options) order)}
   @argument[options]{a @symbol{cairo:font-options-t} instance}
-  @argument[order]{a value of the @symbol{cairo:subpixel-order-t} enumeration}
+  @argument[order]{a @symbol{cairo:subpixel-order-t} value}
   @begin{short}
     The @fun{cairo:font-options-subpixel-order} function gets the subpixel order
     for the font options instance.
@@ -493,7 +507,7 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_font_options_get_hint_style ()
-;;; cairo_font_options_set_hint_style () -> font-options-hint-style
+;;; cairo_font_options_set_hint_style ()
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf font-options-hint-style) (style options)
@@ -506,11 +520,11 @@
 (cffi:defcfun ("cairo_font_options_get_hint_style" font-options-hint-style)
     hint-style-t
  #+liber-documentation
- "@version{#2021-10-28}
-  @syntax[]{(cairo:font-options-hint-style options) => style}
-  @syntax[]{(setf (cairo:font-options-hint-style options) style)}
+ "@version{2024-1-28}
+  @syntax{(cairo:font-options-hint-style options) => style}
+  @syntax{(setf (cairo:font-options-hint-style options) style)}
   @argument[options]{a @symbol{cairo:font-options-t} instance}
-  @argument[style]{a value of the @symbol{cairo:hint-style-t} enumeration}
+  @argument[style]{a @symbol{cairo:hint-style-t} value}
   @begin{short}
     The @fun{cairo:font-options-hint-style} function gets the hint style for
     font outlines for the font options instance.
@@ -528,7 +542,7 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_font_options_get_hint_metrics ()
-;;; cairo_font_options_set_hint_metrics () -> font-options-hint-metrics
+;;; cairo_font_options_set_hint_metrics ()
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf font-options-hint-metrics) (metrics options)
@@ -541,11 +555,11 @@
 (cffi:defcfun ("cairo_font_options_get_hint_metrics"
                font-options-hint-metrics) hint-metrics-t
  #+liber-documentation
- "@version{#2021-10-28}
-  @syntax[]{(cairo:font-options-hint-metrics options) => metrics}
-  @syntax[]{(setf (cairo:font-options-hint-metrics options) metrics)}
+ "@version{2024-1-28}
+  @syntax{(cairo:font-options-hint-metrics options) => metrics}
+  @syntax{(setf (cairo:font-options-hint-metrics options) metrics)}
   @argument[options]{a @symbol{cairo:font-options-t} instance}
-  @argument[metrics]{a value of the @symbol{cairo:hint-metrics-t} enumeration}
+  @argument[metrics]{a @symbol{cairo:hint-metrics-t} value}
   @begin{short}
     The @fun{cairo:font-options-hint-metrics} function gets the metrics hinting
     mode for the font options instance.
@@ -562,7 +576,7 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_font_options_get_variations ()
-;;; cairo_font_options_set_variations () -> font-options-variations
+;;; cairo_font_options_set_variations ()
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf font-options-variations) (variations options)
@@ -575,9 +589,9 @@
 (cffi:defcfun ("cairo_font_options_get_variations" font-options-variations)
     :string
  #+liber-documentation
- "@version{#2021-10-28}
-  @syntax[]{(cairo:font-options-variations options) => variations}
-  @syntax[]{(setf (cairo:font-options-variations options) variations)}
+ "@version{2024-1-28}
+  @syntax{(cairo:font-options-variations options) => variations}
+  @syntax{(setf (cairo:font-options-variations options) variations)}
   @argument[options]{a @symbol{cairo:font-options-t} instance}
   @argument[variations]{a string with the font variations, or @code{nil}}
   @begin{short}
@@ -606,165 +620,165 @@
 (export 'font-options-variations)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_font_options_set_color_mode ()
-;;;
-;;; void
-;;; cairo_font_options_set_color_mode (cairo_font_options_t *options,
-;;;                                    cairo_color_mode_t color_mode);
-;;;
-;;; Sets the color mode for the font options object. This controls whether color
-;;; fonts are to be rendered in color or as outlines. See the documentation for
-;;; cairo_color_mode_t for full details.
-;;;
-;;; options
-;;;     a cairo_font_options_t
-;;;
-;;; color_mode
-;;;     the new color mode
-;;;
-;;; Since 1.18
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
 ;;; cairo_font_options_get_color_mode ()
-;;;
-;;; cairo_color_mode_t
-;;; cairo_font_options_get_color_mode (const cairo_font_options_t *options);
-;;;
-;;; Gets the color mode for the font options object. See the documentation for
-;;; cairo_color_mode_t for full details.
-;;;
-;;; options
-;;;     a cairo_font_options_t
-;;;
-;;; Returns
-;;;     the color mode for the font options object
-;;;
-;;; Since 1.18
+;;; cairo_font_options_set_color_mode ()
 ;;; ----------------------------------------------------------------------------
 
-;;; ----------------------------------------------------------------------------
-;;; cairo_font_options_set_color_palette ()
-;;;
-;;; void
-;;; cairo_font_options_set_color_palette (cairo_font_options_t *options,
-;;;                                       unsigned int palette_index);
-;;;
-;;; Sets the OpenType font color palette for the font options object. OpenType
-;;; color fonts with a CPAL table may contain multiple palettes. The default
-;;; color palette index is CAIRO_COLOR_PALETTE_DEFAULT.
-;;;
-;;; If palette_index is invalid, the default palette is used.
-;;;
-;;; Individual colors within the palette may be overriden with
-;;; cairo_font_options_set_custom_palette_color().
-;;;
-;;; options
-;;;     a cairo_font_options_t
-;;;
-;;; palette_index
-;;;     the palette index in the CPAL table
-;;;
-;;; Since 1.18
-;;; ----------------------------------------------------------------------------
+#+cairo-1-18
+(defun (setf font-options-color-mode) (value options)
+  (cffi:foreign-funcall "cairo_font_options_set_color_mode"
+                        (:pointer (:struct font-options-t)) options
+                        color-mode-t value
+                        :void)
+  value)
+
+#+cairo-1-18
+(cffi:defcfun ("cairo_font_options_get_color_mode" font-options-color-mode)
+    color-mode-t
+ #+liber-documentation
+ "@version{2024-1-28}
+  @syntax{(cairo:font-options-color-mode options) => mode}
+  @syntax{(setf (cairo:font-options-color-mode options) mode)}
+  @argument[options]{a @symbol{cairo:font-options-t} instance}
+  @argument[mode]{a @symbol{cairo:color-mode-t} value for the color mode for
+    the font options instance}
+  @begin{short}
+    The @fun{cairo:font-options-color-mode} function gets the color mode for
+    the font options instance.
+  @end{short}
+  The @setf{cairo:font-options-color-mode} function sets the color mode. This
+  controls whether color fonts are to be rendered in color or as outlines. See
+  the documentation for the @symbol{cairo:color-mode-t} enumeration for full
+  details.
+
+  Since 1.18
+  @see-symbol{cairo:font-options-t}
+  @see-symbol{cairo:color-mode-t}"
+  (options (:pointer (:struct font-options-t))))
+
+#+cairo-1-18
+(export 'font-options-color-mode)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_font_options_get_color_palette ()
-;;;
-;;; unsigned int
-;;; cairo_font_options_get_color_palette (const cairo_font_options_t *options);
-;;;
-;;; Gets the current OpenType color font palette for the font options object.
-;;;
-;;; options
-;;;     a cairo_font_options_t
-;;;
-;;; Returns
-;;;     the palette index
-;;;
-;;; Since 1.18
+;;; cairo_font_options_set_color_palette ()
 ;;; ----------------------------------------------------------------------------
 
-;;; ----------------------------------------------------------------------------
-;;; cairo_font_options_set_custom_palette_color ()
-;;;
-;;; void
-;;; cairo_font_options_set_custom_palette_color
-;;;                                (cairo_font_options_t *options,
-;;;                                 unsigned int index,
-;;;                                 double red,
-;;;                                 double green,
-;;;                                 double blue,
-;;;                                 double alpha);
-;;;
-;;; Sets a custom palette color for the font options object. This overrides the
-;;; palette color at the specified color index. This override is independent of
-;;; the selected palette index and will remain in place even if
-;;; cairo_font_options_set_color_palette() is called to change the palette
-;;; index.
-;;;
-;;; It is only possible to override color indexes already in the font palette.
-;;;
-;;; options
-;;;     a cairo_font_options_t
-;;;
-;;; index
-;;;     the index of the color to set
-;;;
-;;; red
-;;;     red component of color
-;;;
-;;; green
-;;;     green component of color
-;;;
-;;; blue
-;;;     blue component of color
-;;;
-;;; alpha
-;;;     alpha component of color
-;;;
-;;; Since 1.18
-;;; ----------------------------------------------------------------------------
+#+cairo-1-18
+(defun (setf font-options-color-palette) (value options)
+  (cffi:foreign-funcall "cairo_font_options_set_color_palette"
+                        (:pointer (:struct font-options-t)) options
+                        :uint value
+                        :void)
+  value)
+
+#+cairo-1-18
+(cffi:defcfun ("cairo_font_options_get_color_palette"
+               font-options-color-palette) :uint
+ #+liber-documentation
+ "@version{2024-1-28}
+  @syntax{(cairo:font-options-color-palette options) => index}
+  @syntax{(setf (cairo:font-options-color-palette options) index)}
+  @argument[options]{a @symbol{cairo:font-options-t} instance}
+  @argument[index]{an unsigned integer with the palette index}
+  @begin{short}
+    The @fun{cairo:font-options-color-palette} function gets the current
+    OpenType color font palette for the font options instance.
+  @end{short}
+  The @setf{cairo:font-options-color-palette} function sets the OpenType font
+  color palette. OpenType color fonts with a CPAL table may contain multiple
+  palettes. The default color palette index is 0.
+
+  If @arg{index} is invalid, the default palette is used.
+
+  Individual colors within the palette may be overriden with the
+  @fun{cairo:font-options-custom-palette-color} function.
+
+  Since 1.18
+  @see-symbol{cairo:font-options-t}
+  @see-function{cairo:font-options-custom-palette-color}"
+  (options (:pointer (:struct font-options-t))))
+
+#+cairo-1-18
+(export 'font-options-color-palette)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_font_options_get_custom_palette_color ()
-;;;
-;;; cairo_status_t
-;;; cairo_font_options_get_custom_palette_color
-;;;                                (cairo_font_options_t *options,
-;;;                                 unsigned int index,
-;;;                                 double *red,
-;;;                                 double *green,
-;;;                                 double *blue,
-;;;                                 double *alpha);
-;;;
-;;; Gets the custom palette color for the color index for the font options
-;;; object.
-;;;
-;;; options
-;;;     a cairo_font_options_t
-;;;
-;;; index
-;;;     the index of the color to get
-;;;
-;;; red
-;;;     return location for red component of color
-;;;
-;;; green
-;;;     return location for green component of color
-;;;
-;;; blue
-;;;     return location for blue component of color
-;;;
-;;; alpha
-;;;     return location for alpha component of color
-;;;
-;;; Returns
-;;;     CAIRO_STATUS_SUCCESS if a custom palette color is returned,
-;;;     CAIRO_STATUS_INVALID_INDEX if no custom color exists for the color
-;;;     index.
-;;;
-;;; Since 1.18
+;;; cairo_font_options_set_custom_palette_color ()
 ;;; ----------------------------------------------------------------------------
+
+#+cairo-1-18
+(defun (setf font-options-custom-palette-color) (value options index)
+  (destructuring-bind (red green blue alpha) value
+    (setf red (coerce red 'double-float))
+    (setf green (coerce green 'double-float))
+    (setf blue (coerce blue 'double-float))
+    (setf alpha (coerce alpha 'double-float))
+    (cffi:foreign-funcall "cairo_font_options_set_custom_palette_color"
+                          (:pointer (:struct font-options-t)) options
+                          :uint index
+                          :double red
+                          :double green
+                          :double blue
+                          :double alpha
+                          :void)
+    (values red green blue alpha)))
+
+#+cairo-1-18
+(cffi:defcfun ("cairo_font_options_get_custom_palette_color"
+               %font-options-custom-palette-color) status-t
+  (options (:pointer (:struct font-options-t)))
+  (index :uint)
+  (red (:pointer :double))
+  (green (:pointer :double))
+  (blue (:pointer :double))
+  (alpha (:pointer :double)))
+
+#+cairo-1-18
+(defun font-options-custom-palette-color (options index)
+ #+liber-documentation
+ "@version{2024-1-28}
+  @syntax{(cairo:font-options-custom-palette-color options) => red, green,
+    blue, alpha}
+  @syntax{(setf (cairo:font-options-custom-palette-color options)
+    (list red green blue alpha))}
+  @argument[options]{a @symbol{cairo:font-options-t} instance}
+  @argument[index]{an unsigned integer with the index of the color to get}
+  @argument[red]{a double float with the red component of color}
+  @argument[green]{a double float with the green component of color}
+  @argument[blue]{a double float with the blue component of color}
+  @argument[alpha]{a double float with the alpha component of color}
+  @begin{short}
+    The @fun{cairo:font-options-custom-palette-color} function gets the custom
+    palette color for the color index for the font options instance.
+  @end{short}
+  Returns @code{nil} if no custom color exists for the color index.
+
+  The @setf{cairo:font-options-custom-palette-color} function sets a custom
+  palette color for the font options instance. This overrides the palette color
+  at the specified color index. This override is independent of the selected
+  palette index and will remain in place even if the
+  @fun{cairo:font-options-color-palette} function is called to change the
+  palette index.
+
+  It is only possible to override color indexes already in the font palette.
+
+  Since 1.18
+  @see-symbol{cairo:font-options-t}
+  @see-function{cairo:font-options-color-palette}"
+  (cffi:with-foreign-objects ((red :double) (green :double) (blue :double)
+                              (alpha :double))
+    (when (eq :sucess
+              (%font-options-custom-palette-color options
+                                                  index
+                                                  red green blue
+                                                  alpha))
+      (values (cffi:mem-ref red :double)
+              (cffi:mem-ref green :double)
+              (cffi:mem-ref blue :double)
+              (cffi:mem-ref alpha :double)))))
+
+#+cairo-1-18
+(export 'font-options-custom-palette-color)
 
 ;;; --- cairo.font-options.lisp ------------------------------------------------

@@ -538,21 +538,30 @@
 ;;; cairo:path-data-lo-list
 ;;; ----------------------------------------------------------------------------
 
+;; TODO: Improve the implementation to get a nicer loop. Add documentation for
+;; the symbols in the list for the path data.
+
 (defun path-data-to-list (path)
  #+liber-documentation
- "@version{2024-1-23}
+ "@version{2024-2-3}
   @argument[path]{a @symbol{cairo:path-t} instance}
   @return{The list with the path.}
   @begin{short}
     Creates a list with the path information from a @symbol{cairo:path-t}
     instance.
   @end{short}
+  See the @fun{cairo:copy-path} and @fun{cairo:copy-path-flat} functions.
+  @begin[Note]{dictionary}
+    There is no Lisp API exported which gives direct access to the internal
+    path data, nor has the Lisp API functions to create from scratch path data
+    information.
+  @end{dictionary}
   @begin[Example]{dictionary}
     @begin{pre}
 (cairo:with-recording-surface (surface :color)
   (cairo:with-context (context surface)
     (cairo:new-path context)
-    (cairo:rectangle context  10 20 30 40)
+    (cairo:rectangle context 10 20 30 40)
     (let ((path (cairo:copy-path-flat context)))
       (prog1
         (cairo:path-data-to-list path)
@@ -566,50 +575,52 @@
     (:MOVE-TO 10.0d0 20.0d0))
     @end{pre}
   @end{dictionary}
-  @see-symbol{cairo:path-t}"
-  (loop with count = 0
-        with numdata = (path-numdata path)
-        with element = :path
-        with data = (path-data path)
-        with size = (cffi:foreign-type-size '(:struct path-data-t))
-        collect element
-        while (< count numdata)
-        do (cond ((eq :move-to (header-data-type data))
-                  (setf element (list :move-to))
-                  (setf count (incf count (header-length data)))
-                  (setf data (cffi:inc-pointer data size))
-                  (push (point-x data) element)
-                  (push (point-y data) element)
-                  (setf element (reverse element))
-                  (setf data (cffi:inc-pointer data size)))
-                 ((eq :line-to (header-data-type data))
-                  (setf element (list :line-to))
-                  (setf count (incf count (header-length data)))
-                  (setf data (cffi:inc-pointer data size))
-                  (push (point-x data) element)
-                  (push (point-y data) element)
-                  (setf element (reverse element))
-                  (setf data (cffi:inc-pointer data size)))
-                 ((eq :curve-to (header-data-type data))
-                  (setf element (list :curve-to))
-                  (setf count (incf count (header-length data)))
-                  (setf data (cffi:inc-pointer data size))
-                  (push (point-x data) element)
-                  (push (point-y data) element)
-                  (setf data (cffi:inc-pointer data size))
-                  (push (point-x data) element)
-                  (push (point-y data) element)
-                  (setf data (cffi:inc-pointer data size))
-                  (push (point-x data) element)
-                  (push (point-y data) element)
-                  (setf element (reverse element))
-                  (setf data (cffi:inc-pointer data size)))
-                 ((eq :close-path (header-data-type data))
-                  (setf element (list :close-path))
-                  (setf count (incf count (header-length data)))
-                  (setf data (cffi:inc-pointer data size)))
-                 (t (error "KEYWORD ~a not known to PATH-DATA-TYPE-T"
-                           (header-data-type data))))))
+  @see-symbol{cairo:path-t}
+  @see-function{cairo:copy-path}
+  @see-function{cairo:copy-path-flat}"
+  (iter (with count = 0)
+        (with numdata = (path-numdata path))
+        (with element = :path)
+        (with data = (path-data path))
+        (with size = (cffi:foreign-type-size '(:struct path-data-t)))
+        (collect element)
+        (while (< count numdata))
+        (cond ((eq :move-to (header-data-type data))
+               (setf element (list :move-to))
+               (setf count (incf count (header-length data)))
+               (setf data (cffi:inc-pointer data size))
+               (push (point-x data) element)
+               (push (point-y data) element)
+               (setf element (reverse element))
+               (setf data (cffi:inc-pointer data size)))
+              ((eq :line-to (header-data-type data))
+               (setf element (list :line-to))
+               (setf count (incf count (header-length data)))
+               (setf data (cffi:inc-pointer data size))
+               (push (point-x data) element)
+               (push (point-y data) element)
+               (setf element (reverse element))
+               (setf data (cffi:inc-pointer data size)))
+              ((eq :curve-to (header-data-type data))
+               (setf element (list :curve-to))
+               (setf count (incf count (header-length data)))
+               (setf data (cffi:inc-pointer data size))
+               (push (point-x data) element)
+               (push (point-y data) element)
+               (setf data (cffi:inc-pointer data size))
+               (push (point-x data) element)
+               (push (point-y data) element)
+               (setf data (cffi:inc-pointer data size))
+               (push (point-x data) element)
+               (push (point-y data) element)
+               (setf element (reverse element))
+               (setf data (cffi:inc-pointer data size)))
+              ((eq :close-path (header-data-type data))
+               (setf element (list :close-path))
+               (setf count (incf count (header-length data)))
+               (setf data (cffi:inc-pointer data size)))
+              (t (error "KEYWORD ~a not known to PATH-DATA-TYPE-T"
+                        (header-data-type data))))))
 
 (export 'path-data-to-list)
 
@@ -1275,7 +1286,7 @@ fill     stroke
 (export 'arc-negative)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_glyph_path () -> glyph-path
+;;; cairo_glyph_path ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_glyph_path" %glyph-path) :void
@@ -1285,15 +1296,50 @@ fill     stroke
 
 (defun glyph-path (cr glyphs)
  #+liber-documentation
- "@version{2024-1-23}
+ "@version{2024-2-7}
   @argument[cr]{a @symbol{cairo:context-t} instance}
-  @argument[glyphs]{a list with glyphs, each glyph is represented by
-    @code{(index x y)} values}
+  @argument[glyphs]{a list of glyphs, each glyph is represented by an item that
+    is a list with the @code{(index x y)} glyph values}
+  @argument[index]{an unsigned integer with the glyph index in the font}
+  @argument[x]{a number coerced to a double float with the offset in the x
+    direction between the origin used for drawing the string and the
+    orgin of this glyph}
+  @argument[y]{a number coerced to a double float with the y direction between
+    the orgin used for drawing the string and the origin of this glyph}
   @begin{short}
     Adds closed paths for the glyphs to the current path.
   @end{short}
   The generated path if filled, achieves an effect similar to that of the
   @fun{cairo:show-glyphs} function.
+  @begin[Example]{dictionary}
+    Get and show the path for the glyph representing the #\\0 character.
+    @begin{pre}
+(cairo:with-context-for-recording-surface (context :color)
+  (cairo:glyph-path context '((20 0 10))) ; #\\0
+  (cairo:path-data-to-list (cairo:copy-path context))
+)
+=>
+(:PATH (:MOVE-TO 3.7265625d0 10.0d0)
+       (:LINE-TO 2.84765625d0 10.0d0)
+       (:LINE-TO 2.84765625d0 4.3984375d0)
+       (:CURVE-TO 2.63671875d0 4.6015625d0
+                  2.359375d0 4.8046875d0
+                  2.015625d0 5.00390625d0)
+       (:CURVE-TO 1.671875d0 5.20703125d0
+                  1.36328125d0 5.359375d0
+                  1.08984375d0 5.4609375d0)
+       (:LINE-TO 1.08984375d0 4.609375d0)
+       (:CURVE-TO 1.58203125d0 4.37890625d0
+                  2.01171875d0 4.09765625d0
+                  2.37890625d0 3.76953125d0)
+       (:CURVE-TO 2.74609375d0 3.44140625d0
+                  3.0078125d0 3.12109375d0
+                  3.16015625d0 2.8125d0)
+       (:LINE-TO 3.7265625d0 2.8125d0)
+       (:CLOSE-PATH)
+       (:MOVE-TO 3.7265625d0 10.0d0))
+    @end{pre}
+  @end{dictionary}
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:glyph-t}
   @see-function{cairo:show-glyphs}"

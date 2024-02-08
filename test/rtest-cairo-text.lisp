@@ -1,7 +1,7 @@
 (in-package :cairo-test)
 
-(def-suite cairo-text :in cairo-suite)
-(in-suite cairo-text)
+(def-suite cairo-text-suite :in cairo-suite)
+(in-suite cairo-text-suite)
 
 ;;; --- Types and Values -------------------------------------------------------
 
@@ -20,7 +20,10 @@
   (cairo:with-toy-font-face (face "" :normal :normal)
     (is (string= "" (cairo:toy-font-face-family face)))
     (is (eq :normal (cairo:toy-font-face-slant face)))
-    (is (eq :normal (cairo:toy-font-face-weight face))))
+    (is (eq :normal (cairo:toy-font-face-weight face)))))
+
+#-windows
+(test cairo-with-toy-font-face.2
   (cairo:with-toy-font-face (face "Sans" :normal :normal)
     (is (string= "Sans" (cairo:toy-font-face-family face)))
     (is (eq :normal (cairo:toy-font-face-slant face)))
@@ -31,21 +34,24 @@
   (cairo:with-toy-font-face (face "" :normal :normal)
     (is (string= "Arial" (cairo:toy-font-face-family face)))
     (is (eq :normal (cairo:toy-font-face-slant face)))
-    (is (eq :normal (cairo:toy-font-face-weight face))))
+    (is (eq :normal (cairo:toy-font-face-weight face)))))
+
+#+windows
+(test cairo-with-toy-font-face.2
   (cairo:with-toy-font-face (face "Sans" :normal :normal)
     (is (string= "Sans" (cairo:toy-font-face-family face)))
     (is (eq :normal (cairo:toy-font-face-slant face)))
     (is (eq :normal (cairo:toy-font-face-weight face)))))
 
 #-windows
-(test with-toy-font-face.2
+(test with-toy-font-face.3
   (cairo:with-toy-font-face (face "" :italic :bold)
     (is (string= "" (cairo:toy-font-face-family face)))
     (is (eq :italic (cairo:toy-font-face-slant face)))
     (is (eq :bold (cairo:toy-font-face-weight face)))))
 
 #+windows
-(test with-toy-font-face.2
+(test with-toy-font-face.3
   (cairo:with-toy-font-face (face "" :italic :bold)
     (is (string= "Arial" (cairo:toy-font-face-family face)))
     (is (eq :italic (cairo:toy-font-face-slant face)))
@@ -53,57 +59,177 @@
 
 ;;;     cairo_select_font_face
 
+#-windows
 (test cairo-select-font-face
-  (cairo:with-context-for-image-surface (context :rgb24 400 300)
-    (is-false (cairo:select-font-face context "Courier" :weight :bold))
-    (is (cffi:pointerp (cairo:font-face context)))
-    (is (eq :success (cairo:font-face-status (cairo:font-face context))))
-    (is (eq :toy (cairo:font-face-type (cairo:font-face context))))
-    (let ((options (cairo:font-options context)))
-      (is (cffi:pointerp options))
+  (let (face font (options (cairo:font-options-create)))
+    (cairo:with-context-for-recording-surface (context :color)
+      ;; Select font face
+      (is-false (cairo:select-font-face context "Courier" :weight :bold))
+
+      ;; Check font face
+      (setf face (cairo:font-face context))
+      (is (eq :success (cairo:font-face-status face)))
+      (is (eq :toy (cairo:font-face-type face)))
+
+      ;; Check scaled font
+      (setf font (cairo:scaled-font context))
+      (is (cffi:pointer-eq face (cairo:scaled-font-font-face font)))
+      (is (eq :success (cairo:scaled-font-status font)))
+      (is (eq :ft (cairo:scaled-font-type font)))
+
+      ;; Check font options
+      (setf options (cairo:font-options context options))
+      (is (cffi:pointer-eq options (cairo:scaled-font-font-options font options)))
       (is (eq :default (cairo:font-options-antialias options)))
       (is (eq :default (cairo:font-options-subpixel-order options)))
       (is (eq :default (cairo:font-options-hint-style options)))
       (is (eq :default (cairo:font-options-hint-metrics options)))
-      (is-false (cairo:font-options-variations options)))))
+      (is-false (cairo:font-options-variations options))
+
+      ;; Destroy font options
+      (is-false (cairo:font-options-destroy options)))))
+
+#+windows
+(test cairo-select-font-face
+  (let (face font (options (cairo:font-options-create)))
+    (cairo:with-context-for-recording-surface (context :color)
+      ;; Select font face
+      (is-false (cairo:select-font-face context "Courier" :weight :bold))
+
+      ;; Check font face
+      (setf face (cairo:font-face context))
+      (is (eq :success (cairo:font-face-status face)))
+      (is (eq :toy (cairo:font-face-type face)))
+
+      ;; Check scaled font
+      (setf font (cairo:scaled-font context))
+      (is (cffi:pointer-eq face (cairo:scaled-font-font-face font)))
+      (is (eq :success (cairo:scaled-font-status font)))
+      (is (eq :dwrite (cairo:scaled-font-type font)))
+
+      ;; Check font options
+      (setf options (cairo:font-options context options))
+      (is (cffi:pointer-eq options (cairo:scaled-font-font-options font options)))
+      (is (eq :default (cairo:font-options-antialias options)))
+      (is (eq :default (cairo:font-options-subpixel-order options)))
+      (is (eq :default (cairo:font-options-hint-style options)))
+      (is (eq :default (cairo:font-options-hint-metrics options)))
+      (is-false (cairo:font-options-variations options))
+
+      ;; Destroy font options
+      (is-false (cairo:font-options-destroy options)))))
 
 ;;;     cairo_set_font_size
 
+(test cairo-set-font-size
+  (cairo:with-matrix (matrix)
+    (cairo:with-context-for-recording-surface (context :color)
+      ;; Select font face
+      (is-false (cairo:select-font-face context "Courier" :weight :bold))
+      ;; Check font matrix
+      (is (equal '(10.0d0 0.0d0 0.0d0 10.0d0 0.0d0 0.0d0)
+                 (cairo:matrix-to-float (cairo:font-matrix context matrix))))
+      ;; Set font size
+      (is-false (cairo:set-font-size context 18))
+      ;; Check font matrix again
+      (is (equal '(18.0d0 0.0d0 0.0d0 18.0d0 0.0d0 0.0d0)
+                 (cairo:matrix-to-float (cairo:font-matrix context matrix)))))))
+
 ;;;     cairo_set_font_matrix
 ;;;     cairo_get_font_matrix
+
+(test cairo-font-matrix
+  (cairo:with-matrix (matrix)
+    (cairo:with-context-for-recording-surface (context :color)
+      ;; Select font face
+      (is-false (cairo:select-font-face context "Courier" :weight :bold))
+      ;; Get font matrix
+      (is (cffi:pointer-eq matrix (cairo:font-matrix context matrix)))
+      (is (equal '(10.0d0 0.0d0 0.0d0 10.0d0 0.0d0 0.0d0)
+                 (cairo:matrix-to-float (cairo:font-matrix context matrix))))
+      ;; Set font matrix
+      (is (cffi:pointer-eq matrix (cairo:matrix-scale matrix 2 2)))
+      (is (cffi:pointer-eq matrix
+                           (setf (cairo:font-matrix context) matrix)))
+      ;; Check font matrix again
+      (is (equal '(20.0d0 0.0d0 0.0d0 20.0d0 0.0d0 0.0d0)
+                 (cairo:matrix-to-float (cairo:font-matrix context matrix)))))))
 
 ;;;     cairo_set_font_options
 ;;;     cairo_get_font_options
 
 (test cairo-font-options
-  (cairo:with-context-for-image-surface (context :rgb24 400 300)
-    (let ((options (cairo:font-options context)))
-      (is (cffi:pointerp options))
-      (is (eq :default (cairo:font-options-antialias options)))
-      (is (eq :default (cairo:font-options-subpixel-order options)))
-      (is (eq :default (cairo:font-options-hint-style options)))
-      (is (eq :default (cairo:font-options-hint-metrics options)))
-      (is-false (cairo:font-options-variations options)))))
+  (cairo:with-context-for-recording-surface (context :color)
+    (let* ((options (cairo:font-options-create)))
+      ;; Set values for font options
+      (is (eq :good (setf (cairo:font-options-antialias options) :good)))
+      (is (eq :rgb (setf (cairo:font-options-subpixel-order options) :rgb)))
+      (is (eq :full (setf (cairo:font-options-hint-style options) :full)))
+      (is (eq :on (setf (cairo:font-options-hint-metrics options) :on)))
+      ;; Set font options on context
+      (is (cffi:pointer-eq options (setf (cairo:font-options context) options)))
+      ;; Get font options from context
+      (is (cffi:pointer-eq options (cairo:font-options context options)))
+      ;; Check font options
+      (is (eq :good (cairo:font-options-antialias options)))
+      (is (eq :rgb (cairo:font-options-subpixel-order options)))
+      (is (eq :full (cairo:font-options-hint-style options)))
+      (is (eq :on (cairo:font-options-hint-metrics options)))
+      ;; Destroy font options
+      (is-false (cairo:font-options-destroy options)))))
 
 ;;;     cairo_set_font_face
 ;;;     cairo_get_font_face
 
+(test cairo-font-face
+  (cairo:with-context-for-recording-surface (context :color)
+    (cairo:with-toy-font-face (face "Sans" :normal :normal)
+      (is (cffi:pointer-eq face (setf (cairo:font-face context) face)))
+      (is (cffi:pointer-eq face (cairo:font-face context))))))
+
 ;;;     cairo_set_scaled_font
 ;;;     cairo_get_scaled_font
 
+(test cairo-scaled-font
+  (let ((options (cairo:font-options-create)))
+    (cairo:with-matrices (matrix ctm)
+      (cairo:with-toy-font-face (face "Sans" :normal :normal)
+        (cairo:with-scaled-font (font face matrix ctm options)
+          (cairo:with-context-for-recording-surface (context :color)
+
+            (is (cffi:pointer-eq font (setf (cairo:scaled-font context) font)))
+            ;; TODO: Does not return the same pointer, check this more closely
+            (is (cffi:pointerp (cairo:scaled-font context)))))))))
+
 ;;;     cairo_show_text
 
-(test cairo-show-text
-  (cairo:with-context-for-image-surface (context :rgb24 400 300)
+(test cairo-show-text.1
+  (cairo:with-context-for-recording-surface (context :color)
     (is-false (cairo:show-text context ""))
-    (is-false (cairo:show-text context "Ägypten"))
     (is-false (cairo:show-text context nil))
-    (is-false (cairo:show-text context (cffi:null-pointer)))))
+    (is-false (cairo:show-text context (cffi:null-pointer)))
+    (is-false (cairo:show-text context "Ägypten"))))
+
+(test cairo-show-text.2
+  (cairo:with-context-for-image-surface (context :rgb24 300 200)
+    ;; Draw background in white color
+    (cairo:set-source-rgb context 1.0 1.0 1.0)
+    (cairo:paint context)
+    ;; Draw text in black ink
+    (cairo:set-source-rgba context 0.0 0.0 0.0 1.0)
+    ;; Choose a font type and set its size
+    (cairo:with-toy-font-face (face "monospace" :normal :bold)
+      (setf (cairo:font-face context) face)
+      (cairo:set-font-size context 18.0)
+      (cairo:move-to context 50 50)
+      (is-false (cairo:show-text context "Ägypten"))
+      (cairo:surface-write-to-png (cairo:target context)
+                                  (sys-path "out/text.png")))))
 
 ;;;     cairo_show_glyphs
 
 (test cairo-show-glyphs.1
-  (cairo:with-context-for-image-surface (context :rgb24 400 300)
+  (cairo:with-context-for-image-surface (context :rgb24 300 200)
     (let* ((glyphs '((35 10 30) (36 30 30) (37 50 30)))
            (num-glyphs (length glyphs)))
       (cffi:with-foreign-object (glyphs-ptr '(:struct cairo:glyph-t) num-glyphs)
@@ -127,16 +253,17 @@
         ;; Clear surface
         (cairo:set-source-rgb context 1.0 1.0 1.0)
         (cairo:paint context)
-        ;; Draw in black ink.
+        ;; Draw in black ink
         (cairo:set-source-rgba context 0.0 0.0 0.0 1.0)
-        ;; Choose a font type and set its size.
-        (cairo:select-font-face context "Sans")
-        (cairo:set-font-size context 18.0)
-        ;; Show the array of glyphs
-        (cairo::%show-glyphs context glyphs-ptr num-glyphs)
-        ;; Create and save the PNG image.
-        (cairo:surface-write-to-png (cairo:target context)
-                                    (sys-path "out/image1.png"))))))
+        ;; Choose a font type and set its size
+        (cairo:with-toy-font-face (face "monospace" :normal :bold)
+          (setf (cairo:font-face context) face)
+          (cairo:set-font-size context 18.0)
+          ;; Show the array of glyphs
+          (cairo::%show-glyphs context glyphs-ptr num-glyphs)
+          ;; Create and save the PNG image
+          (cairo:surface-write-to-png (cairo:target context)
+                                      (sys-path "out/glyphs.png")))))))
 
 (test cairo-show-glyphs.2
   (cairo:with-context-for-image-surface (context :rgb24 400 300)
@@ -146,14 +273,15 @@
       (cairo:paint context)
       ;; Draw in black ink.
       (cairo:set-source-rgba context 0.0 0.0 0.0 1.0)
-      ;; Choose a font type and set its size.
-      (cairo:select-font-face context "Sans")
-      (cairo:set-font-size context 18.0)
-      ;; Show the list of glyphs
-      (cairo:show-glyphs context glyphs)
-      ;; Create and save the PNG image.
-      (cairo:surface-write-to-png (cairo:target context)
-                                  (sys-path "out/image2.png")))))
+      ;; Choose a font type and set its size
+      (cairo:with-toy-font-face (face "Sans" :normal :bold)
+        (setf (cairo:font-face context) face)
+        (cairo:set-font-size context 18.0)
+        ;; Show the list of glyphs
+        (cairo:show-glyphs context glyphs)
+        ;; Create and save the PNG image
+        (cairo:surface-write-to-png (cairo:target context)
+                                    (sys-path "out/glyphs.png"))))))
 
 ;;;     cairo_show_text_glyphs
 
@@ -287,4 +415,4 @@
 ;;;     cairo_text_cluster_allocate
 ;;;     cairo_text_cluster_free
 
-;;; 2024-1-12
+;;; 2024-2-3

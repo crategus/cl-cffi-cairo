@@ -44,25 +44,18 @@
 ;;;     cairo_user_to_device_distance
 ;;;     cairo_device_to_user
 ;;;     cairo_device_to_user_distance
-;;;
-;;; Description
-;;;
-;;; The current transformation matrix, ctm, is a two-dimensional affine
-;;; transformation that maps all coordinates and other drawing instruments from
-;;; the user space into the surface's canonical coordinate system, also known
-;;; as the device space.
 ;;; ----------------------------------------------------------------------------
 
 (in-package :cairo)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_translate () -> translate
+;;; cairo_translate ()
 ;;; ----------------------------------------------------------------------------
 
 (defun translate (cr tx ty)
  #+liber-documentation
- "@version{2023-12-26}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-2-3}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[tx]{a number coerced to a double float with the amount to translate
     in the x direction}
   @argument[ty]{a number coerced to a double float with the amount to translate
@@ -80,13 +73,12 @@
                         (:pointer (:struct context-t)) cr
                         :double (coerce tx 'double-float)
                         :double (coerce ty 'double-float)
-                        :void)
-  cr)
+                        :void))
 
 (export 'translate)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_scale () -> scale
+;;; cairo_scale ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_scale" %scale) :void
@@ -96,8 +88,8 @@
 
 (defun scale (cr sx sy)
  #+liber-documentation
- "@version{2023-12-26}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-2-3}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[sx]{a number coerced to a double float with the scale factor for
     the x dimension}
   @argument[sy]{a number coerced to a double float with the scale factor for
@@ -114,7 +106,7 @@
 (export 'scale)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_rotate () -> rotate
+;;; cairo_rotate ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_rotate" %rotate) :void
@@ -123,8 +115,8 @@
 
 (defun rotate (cr angle)
  #+liber-documentation
- "@version{2023-12-26}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-2-3}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[angle]{a number coerced to a double float with an angle in radians
     by which the user-space axes will be rotated}
   @begin{short}
@@ -140,15 +132,15 @@
 (export 'rotate)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_transform () -> transform
+;;; cairo_transform ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_transform" transform) :void
  #+liber-documentation
- "@version{#2020-12-15}
-  @argument[cr]{a @symbol{cairo:context-t} context}
-  @argument[matrix]{a @symbol{cairo:matrix-t} transformation to be applied to
-    the user-space axes}
+ "@version{2024-2-3}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
+  @argument[matrix]{a @symbol{cairo:matrix-t} instance  with the transformation
+    to be applied to the user-space axes}
   @begin{short}
     Modifies the current transformation matrix (CTM) by applying @arg{matrix}
     as an additional transformation.
@@ -164,7 +156,7 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_get_matrix ()
-;;; cairo_set_matrix () -> matrix
+;;; cairo_set_matrix ()
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf matrix) (matrix cr)
@@ -176,10 +168,10 @@
 
 (defun matrix (cr matrix)
  #+liber-documentation
- "@version{#2020-12-15}
-  @syntax[]{(ctm-matrix cr matrix) => matrix}
-  @syntax[]{(setf (ctm-matrix cr) matrix)}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-2-3}
+  @syntax{(cairo:matrix cr matrix) => matrix}
+  @syntax{(setf (cairo:matrix cr) matrix)}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[matrix]{a @symbol{cairo:matrix-t} transformation matrix from user
     space to device space}
   @begin{short}
@@ -188,6 +180,12 @@
   @end{short}
   The @setf{cairo:matrix} function modifies the current transformation matrix
   (CTM) by setting it equal to @arg{matrix}.
+  @begin[Note]{dictionary}
+    The @symbol{cairo:matrix-t} structure is a foreign CFFI structure,
+    therefore we pass in a valid @symbol{cairo:matrix-t} instance to the
+    @fun{cairo:matrix} function which is filled with the current transformation
+    matrix.
+  @end{dictionary}
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:matrix-t}"
   (cffi:foreign-funcall "cairo_get_matrix"
@@ -199,13 +197,13 @@
 (export 'matrix)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_identity_matrix () -> identity-matrix
+;;; cairo_identity_matrix ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_identity_matrix" identity-matrix) :void
  #+liber-documentation
- "@version{#2020-12-15}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-2-3}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{short}
     Resets the current transformation matrix (CTM) by setting it equal to the
     identity matrix.
@@ -218,7 +216,7 @@
 (export 'identity-matrix)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_user_to_device () -> user-to-device
+;;; cairo_user_to_device ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_user_to_device" %user-to-device) :void
@@ -228,11 +226,11 @@
 
 (defun user-to-device (cr x y)
  #+liber-documentation
- "@version{#2020-12-26}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-2-3}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{return}
-    @code{x} -- a double float x value of coordinate (in/out parameter) @br{}
-    @code{y} -- a double float y value of coordinate (in/out parameter)
+    @arg{x} -- a double float x value of coordinate @br{}
+    @arg{y} -- a double float y value of coordinate
   @end{return}
   @begin{short}
     Transform a coordinate from user space to device space by multiplying the
@@ -252,7 +250,7 @@
 (export 'user-to-device)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_user_to_device_distance () -> user-to-device-distance
+;;; cairo_user_to_device_distance ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_user_to_device_distance" %user-to-device-distance) :void
@@ -262,20 +260,18 @@
 
 (defun user-to-device-distance (cr dx dy)
  #+liber-documentation
- "@version{#2020-12-26}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-2-3}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{return}
-    @code{dx} -- a double float x component of a distance vector
-      (in/out parameter) @br{}
-    @code{dy} -- a double float y component of a distance vector
-      (in/out parameter)
+    @arg{dx} -- a double float x component of a distance vector @br{}
+    @arg{dy} -- a double float y component of a distance vector
   @end{return}
   @begin{short}
     Transform a distance vector from user space to device space.
   @end{short}
   This function is similar to the @fun{cairo:user-to-device} function except
   that the translation components of the CTM will be ignored when transforming
-  (@code{dx}, @code{dy}).
+  (@arg{dx}, @arg{dy}).
   @see-symbol{cairo:context-t}
   @see-function{cairo:user-to-device}"
   (cffi:with-foreign-objects ((dx-new :double) (dy-new :double))
@@ -290,7 +286,7 @@
 (export 'user-to-device-distance)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_device_to_user () -> device-to-user
+;;; cairo_device_to_user ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_device_to_user" %device-to-user) :void
@@ -300,11 +296,11 @@
 
 (defun device-to-user (cr x y)
  #+liber-documentation
- "@version{#2020-12-26}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-2-3}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{return}
-    @code{x} -- a double float x value of coordinate (in/out parameter) @br{}
-    @code{y} -- a double float y value of coordinate (in/out parameter)
+    @arg{x} -- a double float x value of coordinate @br{}
+    @arg{y} -- a double float y value of coordinate
   @end{return}
   @begin{short}
     Transform a coordinate from device space to user space by multiplying the
@@ -324,7 +320,7 @@
 (export 'device-to-user)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_device_to_user_distance () -> device-to-user-distance
+;;; cairo_device_to_user_distance ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_device_to_user_distance" %device-to-user-distance) :void
@@ -334,20 +330,18 @@
 
 (defun device-to-user-distance (cr dx dy)
  #+liber-documentation
- "@version{#2020-12-26}
-  @argument[cr]{a @symbol{cairo:context-t} context}
+ "@version{2024-2-3}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{return}
-    @code{dx} -- a double float x component of a distance vector
-      (in/out parameter) @br{}
-    @code{dy} -- a double float y component of a distance vector
-      (in/out parameter)
+    @arg{dx} -- a double float x component of a distance vector @br{}
+    @arg{dy} -- a double float y component of a distance vector
   @end{return}
   @begin{short}
     Transform a distance vector from device space to user space.
   @end{short}
   This function is similar to the @fun{cairo:device-to-user} function except
   that the translation components of the inverse CTM will be ignored when
-  transforming (@code{dx},@code{dy}).
+  transforming (@arg{dx},@arg{dy}).
   @see-symbol{cairo:context-t}
   @see-function{cairo:device-to-user}"
   (cffi:with-foreign-objects ((dx-new :double) (dy-new :double))

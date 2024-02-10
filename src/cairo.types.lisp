@@ -81,7 +81,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_rectangle_t
+;;; cairo_rectangle_t                                      not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct rectangle-t
@@ -115,10 +115,8 @@
   @see-symbol{cairo:rectangle-int-t}
   @see-symbol{cairo:rectangle-list-t}")
 
-(export 'rectangle-t)
-
 ;;; ----------------------------------------------------------------------------
-;;; cairo_rectangle_list_t
+;;; cairo_rectangle_list_t                                 not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct rectangle-list-t
@@ -148,10 +146,8 @@
   @end{table}
   @see-symbol{cairo:rectangle-t}")
 
-(export 'rectangle-list-t)
-
 ;;; ----------------------------------------------------------------------------
-;;; cairo_rectangle_int_t
+;;; cairo_rectangle_int_t                                  not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct rectangle-int-t
@@ -182,8 +178,6 @@
     @entry[height]{An integer with the height of the rectangle.}
   @end{table}
   @see-symbol{cairo:rectangle-t}")
-
-(export 'rectangle-int-t)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_destroy_func_t ()

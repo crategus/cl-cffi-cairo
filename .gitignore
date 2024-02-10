@@ -1,9 +1,9 @@
+test/out/*
+example/out/*
 *.tmp
 *.png
 *.svg
 *.pdf
 *.script
 *.gresource
-file/*
 TODO
-

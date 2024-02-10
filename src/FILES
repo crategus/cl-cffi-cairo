@@ -3,55 +3,56 @@ Cairo 1.18
     *   : needs update
     +   : needs work
     -   : deprecated
+    .   : not implemented
     %   : not or not fully implemented
     &   : objects and structures are implemented, some functions are missing
 
 Drawing
 
-  cairo.context-lisp               cairo_t                          Cairo 1.18 +
-  cairo.path.lisp                  Paths                            Cairo 1.18 +
+  cairo.context-lisp               cairo_t                          Cairo 1.18
+  cairo.path.lisp                  Paths                            Cairo 1.18
   cairo.pattern.lisp               cairo_pattern_t                  Cairo 1.18
-  cairo.region.lisp                Regions                          Cairo 1.18
+  cairo.region.lisp                Regions                          Cairo 1.18 +
   cairo.transformation.lisp        Transformations                  Cairo 1.18
   cairo.text.lisp                  Text                             Cairo 1.18
-  cairo.raster-source.lisp         Raster Sources                   Cairo 1.18 +
-  cairo.tag.lisp                   Tags and Links                   Cairo 1.18 +
+  cairo.raster-source.lisp         Raster Sources                   Cairo 1.18 .
+  cairo.tag.lisp                   Tags and Links                   Cairo 1.18 .
 
 Fonts
 
   cairo.font-face.lisp             cairo_font_face_t                Cairo 1.18
   cairo.scaled-font.lisp           cairo_scaled_font_t              Cairo 1.18
-  cairo.font-options.lisp          cairo_font_options_t             Cairo 1.18 +
-  cairo.freetype-font.lisp         FreeType Fonts                   Cairo 1.18 +
-  cairo.win32-font.lisp            Win32 Fonts                      Cairo 1.18 +
-  cairo.dwrite-font.lisp           DWrite Fonts                     Cairo 1.18 +
-  cairo.quartz-font.lisp           Quartz (CGFont) Fonts            Cairo 1.18 +
-  cairo.user-font.lisp             User Fonts                       Cairo 1.18 +
+  cairo.font-options.lisp          cairo_font_options_t             Cairo 1.18
+  cairo.freetype-font.lisp         FreeType Fonts                   Cairo 1.18 .
+  cairo.win32-font.lisp            Win32 Fonts                      Cairo 1.18 .
+  cairo.dwrite-font.lisp           DWrite Fonts                     Cairo 1.18 .
+  cairo.quartz-font.lisp           Quartz (CGFont) Fonts            Cairo 1.18 .
+  cairo.user-font.lisp             User Fonts                       Cairo 1.18 .
 
 Surfaces
 
   cairo.device.lisp                cairo_device_t                   Cairo 1.18 +
   cairo.surface.lisp               cairo_surface_t                  Cairo 1.18 +
-  cairo.image-surface.lisp         Image Surfaces                   Cairo 1.18
+  cairo.image-surface.lisp         Image Surfaces                   Cairo 1.18 +
   cairo.pdf-surface.lisp           PDF Surfaces                     Cairo 1.18 +
   cairo.png-surface.lisp           PNG Support                      Cairo 1.18 +
   cairo.ps-surface.lisp            PostScript Surfaces              Cairo 1.18 +
   cairo.recording-surface.lisp     Recording Surfaces               Cairo 1.18 +
-  cairo.win32-surface.lisp         Win32 Surfaces                   Cairo 1.18 +
+  cairo.win32-surface.lisp         Win32 Surfaces                   Cairo 1.18 .
   cairo.svg-surface.lisp           SVG Surfaces                     Cairo 1.18 +
-  cairo.quartz-surface.lisp        Quartz Surfaces                  Cairo 1.18 +
-  cairo.xcb-surface.lisp           XCB Surfaces                     Cairo 1.18 +
-  cairo.xlib-surface.lisp          XLib Surfaces                    Cairo 1.18 +
-  cairo.xlib-xrender-surface.lisp  XLib-XRender Backend             Cairo 1.18 +
-  cairo.script-surface.lisp        Script Surfaces                  Cairo 1.18
-  cairo.surface-oberserver.lisp    Surface Observer                 Cairo 1.18 +
-  cairo.tee-surface.lisp           Tee surface                      Cairo 1.18 +
+  cairo.quartz-surface.lisp        Quartz Surfaces                  Cairo 1.18 .
+  cairo.xcb-surface.lisp           XCB Surfaces                     Cairo 1.18 .
+  cairo.xlib-surface.lisp          XLib Surfaces                    Cairo 1.18 .
+  cairo.xlib-xrender-surface.lisp  XLib-XRender Backend             Cairo 1.18 .
+  cairo.script-surface.lisp        Script Surfaces                  Cairo 1.18 +
+  cairo.surface-oberserver.lisp    Surface Observer                 Cairo 1.18 .
+  cairo.tee-surface.lisp           Tee surface                      Cairo 1.18 .
 
 Utilities
 
   cairo.matrix.lisp                cairo_matrix_t                   Cairo 1.18
-  cairo.status.lisp                Error handling                   Cairo 1.18 +
+  cairo.status.lisp                Error handling                   Cairo 1.18
   cairo.version.lisp               Version Information              Cairo 1.18
-  cairo.types.lisp                 Types                            Cairo 1.18 +
+  cairo.types.lisp                 Types                            Cairo 1.18
 
-2024-1-13
+2024-2-10

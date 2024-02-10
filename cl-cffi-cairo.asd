@@ -48,12 +48,6 @@
      (:file "cairo.font-face")
      (:file "cairo.scaled-font")
 
-     (:file "cairo.freetype-font")
-     (:file "cairo.dwrite-font"                  :if-feature cairo-1-18)
-     (:file "cairo.win32-font")
-     (:file "cairo.quartz-font")
-     (:file "cairo.user-font")
-
      ;; Surfaces
      (:file "cairo.device")
      (:file "cairo.surface")
@@ -62,25 +56,14 @@
      (:file "cairo.pdf-surface")
      (:file "cairo.ps-surface")
      (:file "cairo.recording-surface")
-     (:file "cairo.win32-surface")
      (:file "cairo.svg-surface")
-     (:file "cairo.quartz-surface")
-     (:file "cairo.xcb-surface")
-     (:file "cairo.xlib-surface")
-     (:file "cairo.xlib-xrender-surface")
      (:file "cairo.script-surface")
-     (:file "cairo.surface-observer")
-     (:file "cairo.tee-surface")
 
      ;; Drawing
      (:file "cairo.pattern")
-     (:file "cairo.context")
      (:file "cairo.region")
+     (:file "cairo.context")
      (:file "cairo.transformation")
-     (:file "cairo.raster-source")
-     (:file "cairo.tag")
-
-     ;; More Drawing
      (:file "cairo.text")
      (:file "cairo.path")
     )))
@@ -98,23 +81,31 @@
   :serial t
   :components ((:file "rtest-cairo")
 
+               ;; Utilities
                (:file "rtest-cairo-version")
                (:file "rtest-cairo-status")
                (:file "rtest-cairo-matrix")
 
+               ;; Fonts
                (:file "rtest-cairo-font-options")
+               (:file "rtest-cairo-font-face")
                (:file "rtest-cairo-scaled-font")
 
+               ;; Surfaces
                (:file "rtest-cairo-device")
                (:file "rtest-cairo-surface")
                (:file "rtest-cairo-image-surface")
+               (:file "rtest-cairo-png-surface")
                (:file "rtest-cairo-pdf-surface")
+               (:file "rtest-cairo-ps-surface")
+               (:file "rtest-cairo-recording-surface")
                (:file "rtest-cairo-script-surface")
+               (:file "rtest-cairo-svg-surface")
 
+               ;; Drawing
                (:file "rtest-cairo-pattern")
                (:file "rtest-cairo-context")
                (:file "rtest-cairo-transformation")
-
                (:file "rtest-cairo-text")
                (:file "rtest-cairo-path"))
   :perform

@@ -2,11 +2,11 @@
 ;;; cairo.enumerations.lisp
 ;;;
 ;;; The documentation of the file is taken from the Cairo Reference Manual
-;;; Version 1.16 and modified to document the Lisp binding to the Cairo
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo
 ;;; library. See <http://cairographics.org>. The API documentation of the
 ;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2023 Dieter Kaiser
+;;; Copyright (C) 2023 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -46,24 +46,21 @@
 (setf (liber:alias-for-symbol 'antialias-t)
       "CEnum"
       (liber:symbol-documentation 'antialias-t)
- "@version{2023-1-11}
+ "@version{2024-1-17}
   @begin{short}
-    The @symbol{cairo:antialias-t} enumeration specifies the type of 
+    The @symbol{cairo:antialias-t} enumeration specifies the type of
     antialiasing to do when rendering text or shapes.
   @end{short}
   As it is not necessarily clear from the above what advantages a particular
-  antialias method provides, there is also a set of hints:
-  @begin[code]{table}
-    @entry[:fast]{Allow the backend to degrade raster quality for speed.}
-    @entry[:good·]{A balance between speed and quality.}
-    @entry[:best]{A high-fidelity, but potentially slow, raster mode.}
-  @end{table}
+  antialias method provides, there is also a set of hints.
+
   These make no guarantee on how the backend will perform its rasterisation,
   if it even rasterises, nor that they have any differing effect other than to
-  enable some form of antialiasing. In the case of glyph rendering, @code{:fast}
-  and @code{:good} will be mapped to @code{:gray}, with @code{:best} being
-  equivalent to @code{:subpixel}. The interpretation of @code{:default} is left
-  entirely up to the backend, typically this will be similar to @code{:good}.
+  enable some form of antialiasing. In the case of glyph rendering, the
+  @code{:fast} and @code{:good} values will be mapped to the @code{:gray} value,
+  with the @code{:best} value being equivalent to the @code{:subpixel} value.
+  The interpretation of the @code{:default} value is left entirely up to the
+  backend, typically this will be similar to the @code{:good} value.
   @begin{pre}
 (cffi:defcenum antialias-t
   :default

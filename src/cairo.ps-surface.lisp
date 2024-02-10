@@ -98,64 +98,105 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; enum cairo_ps_level_t
-;;;
-;;; cairo_ps_level_t is used to describe the language level of the PostScript
-;;; Language Reference that a generated PostScript file will conform to.
-;;;
-;;; CAIRO_PS_LEVEL_2 :
-;;;     The language level 2 of the PostScript specification.
-;;;
-;;; CAIRO_PS_LEVEL_3 :
-;;;     The language level 3 of the PostScript specification.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcenum ps-level-t
   :level-2
   :level-3)
 
+#+liber-documentation
+(setf (liber:alias-for-symbol 'ps-level-t)
+      "CEnum"
+      (liber:symbol-documentation 'ps-level-t)
+ "@version{2024-1-15}
+  @begin{short}
+    The @symbol{cairo:ps-level-t} enumeration is used to describe the language
+    level of the PostScript Language Reference that a generated PostScript file
+    will conform to.
+  @end{short}
+  @begin{pre}
+(cffi:defcenum ps-level-t
+  :level-2
+  :level-3)
+  @end{pre}
+  @begin[code]{table}
+    @entry[:level-2]{The language level 2 of the PostScript specification.}
+    @entry[:level-3]{The language level 3 of the PostScript specification.}
+  @end{table}
+  @see-function{cairo:ps-surface-restrict-to-level}")
+
 (export 'ps-level-t)
 
 ;;; ----------------------------------------------------------------------------
+;;; cairo:with-ps-surface
+;;; ----------------------------------------------------------------------------
+
+(defmacro with-ps-surface ((surface path width height) &body body)
+ #+liber-documentation
+ "@version{2024-1-15}
+  @syntax{(cairo:with-ps-surface (surface path width height) body) => result}
+  @argument[surface]{a PostScript @symbol{cairo:surface-t} instance}
+  @argument[path]{a path or namestring with a filename for the PS output,
+    @code{nil} may be used to specify no output, this will generate a PS surface
+    that may be queried and used as a source, without generating a temporary
+    file}
+  @argument[width]{a number coerced to a double float with the width of the
+    surface, in points (1 point == 1/72 inch)}
+  @argument[height]{a number coerced to a double float with the height of the
+    surface, in points (1 point == 1/72 inch)}
+
+  @begin{short}
+    The @symbol{cairo:with-ps-surface} macro allocates a new PostScript
+    @symbol{cairo:surface-t} instance with the given @arg{path}, @arg{width},
+    and @arg{height} and executes the body that uses the PostScript surface.
+  @end{short}
+  After execution of the body the allocated memory for the PostScript surface
+  is released.
+  @see-symbol{cairo:surface-t}"
+  `(let ((,surface (ps-surface-create ,path ,width ,height)))
+     (unwind-protect
+       (progn ,@body)
+       (surface-destroy ,surface))))
+
+(export 'with-ps-surface)
+
+;;; ----------------------------------------------------------------------------
 ;;; cairo_ps_surface_create ()
-;;;
-;;; cairo_surface_t *
-;;; cairo_ps_surface_create (const char *filename,
-;;;                          double width_in_points,
-;;;                          double height_in_points);
-;;;
-;;; Creates a PostScript surface of the specified size in points to be written
-;;; to filename . See cairo_ps_surface_create_for_stream() for a more flexible
-;;; mechanism for handling the PostScript output than simply writing it to a
-;;; named file.
-;;;
-;;; Note that the size of individual pages of the PostScript output can vary.
-;;; See cairo_ps_surface_set_size().
-;;;
-;;; filename :
-;;;     a filename for the PS output (must be writable), NULL may be used to
-;;;     specify no output. This will generate a PS surface that may be queried
-;;;     and used as a source, without generating a temporary file.
-;;;
-;;; width_in_points :
-;;;     width of the surface, in points (1 point == 1/72.0 inch)
-;;;
-;;; height_in_points :
-;;;     height of the surface, in points (1 point == 1/72.0 inch)
-;;;
-;;; Returns :
-;;;     a pointer to the newly created surface. The caller owns the surface and
-;;;     should call cairo_surface_destroy() when done with it.
-;;;
-;;;     This function always returns a valid pointer, but it will return a
-;;;     pointer to a "nil" surface if an error such as out of memory occurs.
-;;;     You can use cairo_surface_status() to check for this.
 ;;; ----------------------------------------------------------------------------
 
 (defun ps-surface-create (path width height)
+ #+liber-documentation
+ "@version{2024-1-15}
+  @argument[path]{a path or namestring with a filename for the PS output,
+    @code{nil} may be used to specify no output, this will generate a PS surface
+    that may be queried and used as a source, without generating a temporary
+    file}
+  @argument[width]{a number coerced to a double float with the width of the
+    surface, in points (1 point == 1/72 inch)}
+  @argument[height]{a number coerced to a double float with the height of the
+    surface, in points (1 point == 1/72 inch)}
+  @return{The newly created PostScript @symbol{cairo:surface-t} instance.}
+  @begin{short}
+    Creates a PostScript surface of the specified size in points to be written
+    to @arg{path}.
+  @end{short}
+  The caller owns the surface and should call the @fun{cairo:surface-destroy}
+  function when done with it.
+
+  This function always returns a valid pointer, but it will return a pointer to
+  a \"nil\" surface if an error such as out of memory occurs. You can use the
+  @fun{cairo:surface-status} function to check for this.
+
+  Note that the size of individual pages of the PostScript output can vary.
+  See the @fun{cairo:ps-surface-set-size} function.
+  @see-symbol{cairo:surface-t}
+  @see-function{cairo:surface-destroy}
+  @see-function{cairo:surface-status}"
   (cffi:foreign-funcall "cairo_ps_surface_create"
                         :string (if path (namestring path) (cffi:null-pointer))
                         :double (coerce width 'double-float)
-                        :double (coerce height 'double-float)))
+                        :double (coerce height 'double-float)
+                        (:pointer (:struct surface-t))))
 
 (export 'ps-surface-create)
 
@@ -201,27 +242,26 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_ps_surface_restrict_to_level ()
-;;;
-;;; void
-;;; cairo_ps_surface_restrict_to_level (cairo_surface_t *surface,
-;;;                                     cairo_ps_level_t level);
-;;;
-;;; Restricts the generated PostSript file to level . See cairo_ps_get_levels()
-;;; for a list of available level values that can be used here.
-;;;
-;;; This function should only be called before any drawing operations have been
-;;; performed on the given surface. The simplest way to do this is to call this
-;;; function immediately after creating the surface.
-;;;
-;;; surface :
-;;;     a PostScript cairo_surface_t
-;;;
-;;; level :
-;;;     PostScript level
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_ps_surface_restrict_to_level"
                ps-surface-restrict-to-level) :void
+ #+liber-documentation
+ "@version{2024-1-15}
+  @argument[surface]{a PostScript @symbol{cairo:surface-t} instance}
+  @argument[level]{a @symbol{cairo:ps-level-t} value}
+  @begin{short}
+    Restricts the generated PostSript file to @arg{level}.
+  @end{short}
+  See the @fun{cairo:ps-levels} function for a list of available level values
+  that can be used here.
+
+  This function should only be called before any drawing operations have been
+  performed on the given surface. The simplest way to do this is to call this
+  function immediately after creating the surface.
+  @see-symbol{cairo:surface-t}
+  @see-symbol{cairo:ps-level-t}
+  @see-function{cairo:ps-levels}"
   (surface (:pointer (:struct surface-t)))
   (level ps-level-t))
 
@@ -229,19 +269,6 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_ps_get_levels ()
-;;;
-;;; void
-;;; cairo_ps_get_levels (cairo_ps_level_t const **levels,
-;;;                      int *num_levels);
-;;;
-;;; Used to retrieve the list of supported levels. See
-;;; cairo_ps_surface_restrict_to_level().
-;;;
-;;; levels :
-;;;     supported level list
-;;;
-;;; num_levels :
-;;;     list length
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_ps_get_levels" %ps-levels) :void
@@ -249,6 +276,15 @@
   (num :pointer))
 
 (defun ps-levels ()
+ #+liber-documentation
+ "@version{2024-1-15}
+  @return{The list with the supported levels.}
+  @begin{short}
+    Used to retrieve the list of supported levels.
+  @end{short}
+  See the @fun{cairo:ps-surface-restrict-to-level} function.
+  @see-symbol{cairo:surface-t}
+  @see-function{cairo:ps-surface-restrict-to-level}"
   (cffi:with-foreign-objects ((ptr :pointer) (num :int))
     (%ps-levels ptr num)
     (iter (with levels = (cffi:mem-ref ptr :pointer))
@@ -259,45 +295,34 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_ps_level_to_string ()
-;;;
-;;; const char *
-;;; cairo_ps_level_to_string (cairo_ps_level_t level);
-;;;
-;;; Get the string representation of the given level id. This function will
-;;; return NULL if level id isn't valid. See cairo_ps_get_levels() for a way to
-;;; get the list of valid level ids.
-;;;
-;;; level :
-;;;     a level id
-;;;
-;;; Returns :
-;;;     the string associated to given level.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_ps_level_to_string" ps-level-to-string) :string
+ #+liber-documentation
+ "@version{2024-1-15}
+  @argument[level]{an integer with the level ID}
+  @return{The string associated to the given @arg{level}.}
+  @begin{short}
+    Get the string representation of the given level ID.
+  @end{short}
+  This function will return @code{nil} if level ID is not valid. See the
+  @fun{cairo:ps-levels} function for a way to get the list of valid level IDs.
+  @begin[Example]{dictionary}
+    Get the string representations for the supported levels.
+    @begin{pre}
+(mapcar #'cairo:ps-level-to-string (cairo:ps-levels))
+=> (\"PS Level 2\" \"PS Level 3\")
+    @end{pre}
+  @end{dictionary}
+  @see-symbol{cairo:surface-t}
+  @see-function{cairo:ps-levels}"
   (level ps-level-t))
 
 (export 'ps-level-to-string)
 
 ;;; ----------------------------------------------------------------------------
+;;; cairo_ps_surface_get_eps ()
 ;;; cairo_ps_surface_set_eps ()
-;;;
-;;; void
-;;; cairo_ps_surface_set_eps (cairo_surface_t *surface,
-;;;                           cairo_bool_t eps);
-;;;
-;;; If eps is TRUE, the PostScript surface will output Encapsulated PostScript.
-;;;
-;;; This function should only be called before any drawing operations have been
-;;; performed on the current page. The simplest way to do this is to call this
-;;; function immediately after creating the surface. An Encapsulated PostScript
-;;; file should never contain more than one page.
-;;;
-;;; surface :
-;;;     a PostScript cairo_surface_t
-;;;
-;;; eps :
-;;;     TRUE to output EPS format PostScript
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf ps-surface-eps) (eps surface )
@@ -307,53 +332,55 @@
                         :void)
   eps)
 
-;;; ----------------------------------------------------------------------------
-;;; cairo_ps_surface_get_eps ()
-;;;
-;;; cairo_bool_t
-;;; cairo_ps_surface_get_eps (cairo_surface_t *surface);
-;;;
-;;; Check whether the PostScript surface will output Encapsulated PostScript.
-;;;
-;;; surface :
-;;;     a PostScript cairo_surface_t
-;;;
-;;; Returns :
-;;;     TRUE if the surface will output Encapsulated PostScript.
-;;; ----------------------------------------------------------------------------
-
 (cffi:defcfun ("cairo_ps_surface_get_eps" ps-surface-eps) :bool
+ #+liber-documentation
+ "@version{2024-1-15}
+  @syntax{(cairo:ps-surface-eps surface) => eps}
+  @syntax{(setf (cairo:ps-surface-eps surface) eps)}
+  @argument[surface]{a PostScript @symbol{cairo:surface-t} instance}
+  @argument[eps]{@em{true} if the surface will output Encasulated PostScript}
+  @begin{short}
+    The @fun{cairo:ps-surface-eps} function checks whether the PostScript
+    surface will output Encapsulated PostScript.
+  @end{short}
+  The @setf{cairo:ps-surface-eps} function will set if the PostScript surface
+  will ouput Encapsulated PostScript.
+
+  This function should only be called before any drawing operations have been
+  performed on the current page. The simplest way to do this is to call this
+  function immediately after creating the surface. An Encapsulated PostScript
+  file should never contain more than one page.
+  @see-symbol{cairo:surface-t}"
+
   (surface (:pointer (:struct surface-t))))
 
 (export 'ps-surface-eps)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_ps_surface_set_size ()
-;;;
-;;; void
-;;; cairo_ps_surface_set_size (cairo_surface_t *surface,
-;;;                            double width_in_points,
-;;;                            double height_in_points);
-;;;
-;;; Changes the size of a PostScript surface for the current (and subsequent)
-;;; pages.
-;;;
-;;; This function should only be called before any drawing operations have been
-;;; performed on the current page. The simplest way to do this is to call this
-;;; function immediately after creating the surface or immediately after
-;;; completing a page with either cairo_show_page() or cairo_copy_page().
-;;;
-;;; surface :
-;;;     a PostScript cairo_surface_t
-;;;
-;;; width_in_points :
-;;;     new surface width, in points (1 point == 1/72.0 inch)
-;;;
-;;; height_in_points :
-;;;     new surface height, in points (1 point == 1/72.0 inch)
 ;;; ----------------------------------------------------------------------------
 
 (defun ps-surface-set-size (surface width height)
+ #+liber-documentation
+ "@version{2024-1-15}
+  @argument[surface]{a PostScript @symbol{cairo:surface-t} instance}
+  @argument[width]{a number coerced to a double float with the surface width,
+    in points (1 point == 1/72 inch}
+  @argument[height]{a number coerced to a double float with the surface height,
+    in points}
+  @begin{short}
+    Changes the size of a PostScript surface for the current and subsequent
+    pages.
+  @end{short}
+
+  This function should only be called before any drawing operations have been
+  performed on the current page. The simplest way to do this is to call this
+  function immediately after creating the surface or immediately after
+  completing a page with either the @fun{cairo:show-page} or
+  @fun{cairo:copy-page} function.
+  @see-symbol{cairo:surface-t}
+  @see-function{cairo:show-page}
+  @see-function{cairo:copy-page}"
   (cffi:foreign-funcall "cairo_ps_surface_set_size"
                         (:pointer (:struct surface-t)) surface
                         :double (coerce width 'double-float)
@@ -364,148 +391,166 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_ps_surface_dsc_begin_setup ()
-;;;
-;;; void
-;;; cairo_ps_surface_dsc_begin_setup (cairo_surface_t *surface);
-;;;
-;;; This function indicates that subsequent calls to
-;;; cairo_ps_surface_dsc_comment() should direct comments to the Setup section
-;;; of the PostScript output.
-;;;
-;;; This function should be called at most once per surface, and must be called
-;;; before any call to cairo_ps_surface_dsc_begin_page_setup() and before any
-;;; drawing is performed to the surface.
-;;;
-;;; See cairo_ps_surface_dsc_comment() for more details.
-;;;
-;;; surface :
-;;;     a PostScript cairo_surface_t
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_ps_surface_dsc_begin_setup" ps-surface-dsc-begin-setup)
     :void
+ #+liber-documentation
+ "@version{2024-1-15}
+  @argument[surface]{a PostScript @symbol{cairo:surface-t} instance}
+  @begin{short}
+    This function indicates that subsequent calls to the
+    @fun{cairo:ps-surface-dsc-comment} function should direct comments to the
+    Setup section of the PostScript output.
+  @end{short}
+  This function should be called at most once per surface, and must be called
+  before any call to the @fun{cairo:ps-surface-dsc-begin-page-setup} function
+  and before any drawing is performed to the surface.
+
+  See the @fun{cairo:ps-surface-dsc-comment} function for more details.
+  @see-symbol{cairo:surface-t}
+  @see-function{cairo:ps-surface-dsc-comment}
+  @see-function{cairo:ps-surface-dsc-begin-page-setup}"
   (surface (:pointer (:struct surface-t))))
 
 (export 'ps-surface-dsc-begin-setup)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_ps_surface_dsc_begin_page_setup ()
-;;;
-;;; void
-;;; cairo_ps_surface_dsc_begin_page_setup (cairo_surface_t *surface);
-;;;
-;;; This function indicates that subsequent calls to
-;;; cairo_ps_surface_dsc_comment() should direct comments to the PageSetup
-;;; section of the PostScript output.
-;;;
-;;; This function call is only needed for the first page of a surface. It should
-;;; be called after any call to cairo_ps_surface_dsc_begin_setup() and before
-;;; any drawing is performed to the surface.
-;;;
-;;; See cairo_ps_surface_dsc_comment() for more details.
-;;;
-;;; surface :
-;;;     a PostScript cairo_surface_t
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_ps_surface_dsc_begin_page_setup"
                ps-surface-dsc-begin-page-setup) :void
+ #+liber-documentation
+ "@version{2024-1-15}
+  @argument[surface]{a PostScript @symbol{cairo:surface-t} instance}
+  @begin{short}
+    This function indicates that subsequent calls to the
+    @fun{cairo:ps-surface-dsc-comment} function should direct comments to the
+    PageSetup section of the PostScript output.
+  @end{short}
+
+  This function call is only needed for the first page of a surface. It should
+  be called after any call to the @fun{cairo:ps-surface-dsc-begin-setup} and
+  before any drawing is performed to the surface.
+
+  See the @fun{cairo:ps-surface-dsc-comment} function for more details.
+  @see-symbol{cairo:surface-t}
+  @see-function{cairo:ps-surface-dsc-comment}
+  @see-function{cairo:ps-surface-dsc-begin-setup}"
   (surface (:pointer (:struct surface-t))))
 
 (export 'ps-surface-dsc-begin-page-setup)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_ps_surface_dsc_comment ()
-;;;
-;;; void
-;;; cairo_ps_surface_dsc_comment (cairo_surface_t *surface,
-;;;                               const char *comment);
-;;;
-;;; Emit a comment into the PostScript output for the given surface.
-;;;
-;;; The comment is expected to conform to the PostScript Language Document
-;;; Structuring Conventions (DSC). Please see that manual for details on the
-;;; available comments and their meanings. In particular, the %%IncludeFeature
-;;; comment allows a device-independent means of controlling printer device
-;;; features. So the PostScript Printer Description Files Specification will
-;;; also be a useful reference.
-;;;
-;;; The comment string must begin with a percent character (%) and the total
-;;; length of the string (including any initial percent characters) must not
-;;; exceed 255 characters. Violating either of these conditions will place
-;;; surface into an error state. But beyond these two conditions, this function
-;;; will not enforce conformance of the comment with any particular
-;;; specification.
-;;;
-;;; The comment string should not have a trailing newline.
-;;;
-;;; The DSC specifies different sections in which particular comments can
-;;; appear. This function provides for comments to be emitted within three
-;;; sections: the header, the Setup section, and the PageSetup section. Comments
-;;; appearing in the first two sections apply to the entire document while
-;;; comments in the BeginPageSetup section apply only to a single page.
-;;;
-;;; For comments to appear in the header section, this function should be called
-;;; after the surface is created, but before a call to
-;;; cairo_ps_surface_dsc_begin_setup().
-;;;
-;;; For comments to appear in the Setup section, this function should be called
-;;; after a call to cairo_ps_surface_dsc_begin_setup() but before a call to
-;;; cairo_ps_surface_dsc_begin_page_setup().
-;;;
-;;; For comments to appear in the PageSetup section, this function should be
-;;; called after a call to cairo_ps_surface_dsc_begin_page_setup().
-;;;
-;;; Note that it is only necessary to call
-;;; cairo_ps_surface_dsc_begin_page_setup() for the first page of any surface.
-;;; After a call to cairo_show_page() or cairo_copy_page() comments are
-;;; unambiguously directed to the PageSetup section of the current page. But it
-;;; doesn't hurt to call this function at the beginning of every page as that
-;;; consistency may make the calling code simpler.
-;;;
-;;; As a final note, cairo automatically generates several comments on its own.
-;;; As such, applications must not manually generate any of the following
-;;; comments:
-;;;
-;;; Header section: %!PS-Adobe-3.0, %%Creator, %%CreationDate, %%Pages,
-;;; %%BoundingBox, %%DocumentData, %%LanguageLevel, %%EndComments.
-;;;
-;;; Setup section: %%BeginSetup, %%EndSetup
-;;;
-;;; PageSetup section: %%BeginPageSetup, %%PageBoundingBox, %%EndPageSetup.
-;;;
-;;; Other sections: %%BeginProlog, %%EndProlog, %%Page, %%Trailer, %%EOF
-;;;
-;;; Here is an example sequence showing how this function might be used:
-;;;
-;;; cairo_surface_t *surface = cairo_ps_surface_create (filename, width, height)
-;;; ...
-;;; cairo_ps_surface_dsc_comment (surface, "%%Title: My excellent document");
-;;; cairo_ps_surface_dsc_comment (surface, "%%Copyright: Copyright (C) 2006 Cairo Lover")
-;;; ...
-;;; cairo_ps_surface_dsc_begin_setup (surface);
-;;; cairo_ps_surface_dsc_comment (surface, "%%IncludeFeature: *MediaColor White");
-;;; ...
-;;; cairo_ps_surface_dsc_begin_page_setup (surface);
-;;; cairo_ps_surface_dsc_comment (surface, "%%IncludeFeature: *PageSize A3");
-;;; cairo_ps_surface_dsc_comment (surface, "%%IncludeFeature: *InputSlot LargeCapacity");
-;;; cairo_ps_surface_dsc_comment (surface, "%%IncludeFeature: *MediaType Glossy");
-;;; cairo_ps_surface_dsc_comment (surface, "%%IncludeFeature: *MediaColor Blue");
-;;; ... draw to first page here ..
-;;; cairo_show_page (cr);
-;;; ...
-;;; cairo_ps_surface_dsc_comment (surface, "%%IncludeFeature: *PageSize A5");
-;;; ...
-;;;
-;;; surface :
-;;;     a PostScript cairo_surface_t
-;;;
-;;; comment :
-;;;     a comment string to be emitted into the PostScript output
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_ps_surface_dsc_comment" ps-surface-dsc-comment) :void
-  (surface (:pointer (:struct surface-t))))
+ #+liber-documentation
+ "@version{2024-1-14}
+  @argument[surface]{a PostScript @symbol{cairo:surface-t} instance}
+  @argument[comment]{a comment string to be emitted into the PostScript output}
+  @begin{short}
+    Emit a comment into the PostScript output for the given surface.
+  @end{short}
+  The comment is expected to conform to the PostScript Language Document
+  Structuring Conventions (DSC). Please see that manual for details on the
+  available comments and their meanings. In particular, the %%IncludeFeature
+  comment allows a device-independent means of controlling printer device
+  features. So the PostScript Printer Description Files Specification will
+  also be a useful reference.
+
+  The comment string must begin with a percent character (%) and the total
+  length of the string (including any initial percent characters) must not
+  exceed 255 characters. Violating either of these conditions will place
+  @arg{surface} into an error state. But beyond these two conditions, this
+  function will not enforce conformance of the comment with any particular
+  specification.
+
+  The comment string should not have a trailing newline.
+
+  The DSC specifies different sections in which particular comments can appear.
+  This function provides for comments to be emitted within three sections: the
+  header, the Setup section, and the PageSetup section. Comments appearing in
+  the first two sections apply to the entire document while comments in the
+  BeginPageSetup section apply only to a single page.
+
+  For comments to appear in the header section, this function should be called
+  after the surface is created, but before a call to the
+  @fun{cairo:ps-surface-dsc-begin-setup} function.
+
+  For comments to appear in the Setup section, this function should be called
+  after a call to the @fun{cairo:ps-surface-dsc-begin-setup} function but before
+  a call to the @fun{cairo:ps-surface-dsc-begin-page-setup} function.
+
+  For comments to appear in the PageSetup section, this function should be
+  called after a call to the @fun{cairo:ps-surface-dsc-begin-page-setup}
+  function.
+
+  Note that it is only necessary to call the
+  @fun{cairo:ps-surface-dsc-begin-page-setup} function for the first page of any
+  surface. After a call to the @fun{cairo:show-page} or @fun{cairo:copy-page}
+  functions comments are unambiguously directed to the PageSetup section of the
+  current page. But it does not hurt to call this function at the beginning of
+  every page as that consistency may make the calling code simpler.
+
+  As a final note, Cairo automatically generates several comments on its own.
+  As such, applications must not manually generate any of the following
+  comments:
+  @begin[]{table}
+    @entry[Header section:]{%!PS-Adobe-3.0, %%Creator, %%CreationDate, %%Pages,
+      %%BoundingBox, %%DocumentData, %%LanguageLevel, %%EndComments.}
+    @entry[Setup section:]{%%BeginSetup, %%EndSetup}
+    @entry[PageSetup section:]{%%BeginPageSetup, %%PageBoundingBox,
+      %%EndPageSetup.}
+    @entry[Other sections:]{%%BeginProlog, %%EndProlog, %%Page, %%Trailer,
+      %%EOF}
+  @end{table}
+  Here is an example sequence showing how this function might be used:
+  @begin{pre}
+(test cairo-ps-surface-dsc-comment
+  (let* ((path (sys-path \"out/comment.ps\"))
+         (width 100) (height 200)
+         (surface (cairo:ps-surface-create path width height)))
+    ;; Create a context for the surface
+    (cairo:with-context (context surface)
+      ;; Header page 1
+      (cairo:ps-surface-dsc-comment surface \"%%Title: My document\")
+      (cairo:ps-surface-dsc-comment surface
+                                    \"%%Copyright: Copyright (C) 2014 Crategus\")
+      ;; Setup page 1
+      (cairo:ps-surface-dsc-begin-setup surface)
+      (cairo:ps-surface-dsc-comment surface
+                                    \"%%IncludeFeature: *MediaColor White\")
+      ;; Page setup page 1
+      (cairo:ps-surface-dsc-begin-page-setup surface)
+      (cairo:ps-surface-dsc-comment surface
+                                    \"%%IncludeFeature: *PageSize A3\")
+      (cairo:ps-surface-dsc-comment surface
+                                    \"%%IncludeFeature: *InputSlot Capacity\")
+      (cairo:ps-surface-dsc-comment surface
+                                    \"%%IncludeFeature: *MediaType Glossy\")
+      (cairo:ps-surface-dsc-comment surface
+                                    \"%%IncludeFeature: *MediaColor Blue\")
+      ;; Draw to first page here
+      ...
+      ;; Show first page
+      (cairo:show-page context)
+      ;; Header page 2
+      (cairo:ps-surface-dsc-comment surface
+                                    \"%%IncludeFeature: *PageSize A5\")
+      ;; Draw to second page here
+      ...
+      ;; Show second page
+      (cairo:show-page context))
+    (cairo:surface-destroy surface)))
+  @end{pre}
+  @see-symbol{cairo:surface-t}
+  @see-function{cairo:ps-surface-dsc-begin-setup}
+  @see-function{cairo:ps-surface-dsc-begin-page-setup}"
+  (surface (:pointer (:struct surface-t)))
+  (comment :string))
 
 (export 'ps-surface-dsc-comment)
 

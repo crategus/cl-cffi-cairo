@@ -30,6 +30,7 @@
 ;;;     cairo_surface_create_similar
 ;;;     cairo_surface_create_similar_image
 ;;;     cairo_surface_create_for_rectangle
+
 ;;;     cairo_surface_reference
 ;;;     cairo_surface_destroy
 ;;;     cairo_surface_status

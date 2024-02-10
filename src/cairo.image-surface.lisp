@@ -60,7 +60,7 @@
 (defmacro with-image-surface ((surface &rest args) &body body)
  #+liber-documentation
  "@version{2023-2-3}
-  @syntax[]{(cairo:with-image-surface (surface format width height) body) =>
+  @syntax{(cairo:with-image-surface (surface format width height) body) =>
     result}
   @argument[surface]{a @symbol{cairo:surface-t} instance to create and
     initialize}
@@ -93,7 +93,7 @@
 (defmacro with-context-for-image-surface ((context &rest args) &body body)
  #+liber-documentation
  "@version{2023-2-3}
-  @syntax[]{(cairo:with-context-for-image-surface (context format width height)
+  @syntax{(cairo:with-context-for-image-surface (context format width height)
     body) => result}
   @argument[context]{a @symbol{cairo:context-t} instance to create and
     initialize}

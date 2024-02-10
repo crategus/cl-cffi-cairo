@@ -5,8 +5,20 @@
 
 ;;; --- Types and Values -------------------------------------------------------
 
-;;;     cairo_device_t
 ;;;     cairo_device_type_t
+
+(test cairo-device-type-t
+  (is (eq :invalid (cffi:foreign-enum-keyword 'cairo:device-type-t -1)))
+  (is (eq :drm (cffi:foreign-enum-keyword 'cairo:device-type-t 0)))
+  (is (eq :gl (cffi:foreign-enum-keyword 'cairo:device-type-t 1)))
+  (is (eq :script (cffi:foreign-enum-keyword 'cairo:device-type-t 2)))
+  (is (eq :xcb (cffi:foreign-enum-keyword 'cairo:device-type-t 3)))
+  (is (eq :xlib (cffi:foreign-enum-keyword 'cairo:device-type-t 4)))
+  (is (eq :xml (cffi:foreign-enum-keyword 'cairo:device-type-t 5)))
+  (is (eq :cogl (cffi:foreign-enum-keyword 'cairo:device-type-t 6)))
+  (is (eq :win32 (cffi:foreign-enum-keyword 'cairo:device-type-t 7))))
+
+;;;     cairo_device_t
 
 ;;; --- Functions --------------------------------------------------------------
 

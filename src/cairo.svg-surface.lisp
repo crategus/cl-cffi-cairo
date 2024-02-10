@@ -321,8 +321,8 @@
                svg-surface-document-unit) svg-unit-t
  #+liber-documentation
  "@version{#2023-1-9}
-  @syntax[]{(svg-surface-document-unit surface) => unit}
-  @syntax[]{(setf (svg-surface-document-unit surface) unit)}
+  @syntax{(cairo:svg-surface-document-unit surface) => unit}
+  @syntax{(setf (cairo:svg-surface-document-unit surface) unit)}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
   @argument[unit]{a @symbol{cairo:svg-unit-t} value}
   @begin{short}

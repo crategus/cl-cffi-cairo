@@ -1,0 +1,37 @@
+(in-package :cairo-example)
+
+(defun draw-text-align-center (context width height)
+  (let* ((size 256)
+         (scale (/ (min width height) size))
+         (tx (* 0.5 (- width (* scale size))))
+         (ty (* 0.5 (- height (* scale size))))
+         (str "Crategus")
+         x y)
+    (cairo:save context)
+    (cairo:translate context tx ty)
+    (cairo:scale context scale scale)
+
+    (cairo:select-font-face context "cursiv" :slant :normal :weight :normal)
+    (cairo:set-font-size context 52)
+    (cairo:set-source-rgb context 0.0 0.0 0.0)
+
+    (multiple-value-bind (xbearing ybearing w h xadvance yadvance)
+        (cairo:text-extents context str)
+      (declare (ignore xadvance yadvance))
+      (setf x (- 128 (+ (/ w 2) xbearing)))
+      (setf y (- 128 (+ (/ h 2) ybearing)))
+
+      (cairo:move-to context x y)
+      (cairo:show-text context str)
+
+      (cairo:set-source-rgba context 1 0.0 0.0 1.0)
+      (setf (cairo:hairline context) t)
+      (cairo:arc context x y 3 0 (* 2 pi))
+      (cairo:fill context)
+      (cairo:move-to context 128 10)
+      (cairo:rel-line-to context 0 236)
+      (cairo:move-to context 10 128)
+      (cairo:rel-line-to context 236 0)
+      (cairo:stroke context)
+
+    (cairo:restore context))))

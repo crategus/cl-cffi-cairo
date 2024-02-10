@@ -1,32 +1,32 @@
+;;;; Draw a dashed curve
+;;;;
+;;;; 2024-1-21
+
 (in-package :cairo-example)
 
-(defun cairo-draw-dash (context width height)
-  (cairo:save context)
-  ;; Clear surface
-  (cairo:set-source-rgb context 1.0 1.0 1.0)
-  (cairo:paint context)
-  ;; Example is in 1.0 x 1.0 coordinate space
-  (cairo:scale context width height)
-  ;; Drawing code goes here
-  (let* ((scale 300)
-         (dashes (list (/ 50.0 scale)
-                       (/ 10.0 scale)
-                       (/ 10.0 scale)
-                       (/ 10.0 scale)))
-         (offset (/ -50.0 scale)))
+(defun draw-dash (context width height)
+  (let* (;; Parameters to scale and translate the context
+         (size 256)
+         (scale (/ (min width height) size))
+         (tx (* 0.5 (- width (* scale size))))
+         (ty (* 0.5 (- height (* scale size))))
+         ;; Parameters that define the dashes
+         (dashes (list 50.0 10.0 10.0 10.0))
+         (offset -50.0)
+         (linewidth (* 0.03 size)))
+    ;; Save the context
+    (cairo:save context)
+    ;; Translate and scale the context
+    (cairo:translate context tx ty)
+    (cairo:scale context scale scale)
+    ;; Draw a dashed curve
     (cairo:set-source-rgb context 0.0 0.0 0.0)
     (setf (cairo:dash context offset) dashes)
-    (setf (cairo:line-width context) (/ 10.0 scale))
-    (cairo:move-to context (/ 128.0 scale) (/ 25.6 scale))
-    (cairo:line-to context (/ 230.4 scale) (/ 230.4 scale))
-    (cairo:rel-line-to context (/ -102.4 scale) 0.0)
-    (cairo:curve-to context (/ 51.2 scale)
-                            (/ 230.4 scale)
-                            (/ 51.2 scale)
-                            (/ 128.0 scale)
-                            (/ 128.0 scale)
-                            (/ 128.0 scale))
+    (setf (cairo:line-width context) linewidth)
+    (cairo:move-to context 128.0 25.6)
+    (cairo:line-to context 230.4 230.4)
+    (cairo:rel-line-to context -102.4 0.0)
+    (cairo:curve-to context 51.2 230.4 51.2 128.0 128.0 128.0)
     (cairo:stroke context))
-  (cairo:restore context))
-
-;;; --- 2023-2-12 --------------------------------------------------------------
+    ;; Restore the context
+    (cairo:restore context))

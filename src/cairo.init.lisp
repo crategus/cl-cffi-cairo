@@ -100,4 +100,13 @@
     (- (truncate (/ +cairo-version+ 100))
        (* 100 (truncate (/ +cairo-version+ 10000)))))
 
+;;; ----------------------------------------------------------------------------
+
+(declaim (inline mklist))
+
+(defun mklist (obj)
+  (if (listp obj)
+      obj
+      (list obj)))
+
 ;;; --- End of file cairo.init.lisp --------------------------------------------

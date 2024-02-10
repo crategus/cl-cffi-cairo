@@ -47,9 +47,8 @@
  "Cairo is a software library used to provide a vector graphics-based,
   device-independent API for software developers. It is designed to provide
   primitives for 2-dimensional drawing across a number of different backends.
-  Cairo is designed to use hardware acceleration when available.
-
-  This is the API documentation of a Lisp binding to Cairo.
+  Cairo is designed to use hardware acceleration when available. This is the API
+  documentation of a Lisp binding to Cairo.
   @begin[Drawing]{section}
     @begin[The Cairo drawing context]{subsection}
       The @symbol{cairo:context-t} structure is the main object used when
@@ -95,6 +94,7 @@
       @about-function{line-cap}
       @about-function{line-join}
       @about-function{line-width}
+      @about-function{hairline}
       @about-function{miter-limit}
       @about-function{operator}
       @about-function{tolerance}
@@ -120,19 +120,11 @@
       @about-function{copy-page}
       @about-function{show-page}
       @about-function{user-data}
-      @about-function{hairline}
     @end{subsection}
     @begin[Paths]{subsection}
       Creating paths and manipulating path data. Paths are the most basic
       drawing tools and are primarily used to implicitly generate simple masks.
       @about-symbol{path-data-type-t}
-      @about-symbol{path-data-t}
-      @about-function{path-data-header}
-      @about-function{path-data-point}
-      @about-function{header-data-type}
-      @about-function{header-length}
-      @about-function{point-x}
-      @about-function{point-y}
       @about-symbol{path-t}
       @about-function{path-status}
       @about-function{path-data}
@@ -140,24 +132,25 @@
       @about-function{copy-path}
       @about-function{copy-path-flat}
       @about-function{path-destroy}
+      @about-function{path-data-to-list}
       @about-function{append-path}
       @about-function{has-current-point}
       @about-function{current-point}
       @about-function{new-path}
       @about-function{new-sub-path}
       @about-function{close-path}
+      @about-function{path-extents}
+      @about-function{move-to}
+      @about-function{rel-move-to}
+      @about-function{line-to}
+      @about-function{rel-line-to}
+      @about-function{curve-to}
+      @about-function{rel-curve-to}
+      @about-function{rectangle}
       @about-function{arc}
       @about-function{arc-negative}
-      @about-function{curve-to}
-      @about-function{line-to}
-      @about-function{move-to}
-      @about-function{rectangle}
       @about-function{glyph-path}
       @about-function{text-path}
-      @about-function{rel-curve-to}
-      @about-function{rel-line-to}
-      @about-function{rel-move-to}
-      @about-function{path-extents}
     @end{subsection}
     @begin[Pattern]{subsection}
       The @symbol{cairo:pattern-t} structure is the paint with which Cairo
@@ -166,10 +159,18 @@
       too. A Cairo pattern is created by using one of the many constructors, of
       the form @sym{cairo:pattern-create-type} or implicitly through the
       @sym{cairo:set-source-type} functions.
-      @about-symbol{pattern-t}
       @about-symbol{extend-t}
       @about-symbol{filter-t}
       @about-symbol{pattern-type-t}
+      @about-symbol{pattern-t}
+      @about-function{pattern-reference}
+      @about-function{pattern-reference-count}
+      @about-function{pattern-destroy}
+      @about-function{pattern-status}
+      @about-function{pattern-type}
+      @about-function{pattern-extend}
+      @about-function{pattern-filter}
+      @about-function{pattern-matrix}
       @about-function{pattern-add-color-stop-rgb}
       @about-function{pattern-add-color-stop-rgba}
       @about-function{pattern-color-stop-count}
@@ -189,21 +190,13 @@
       @about-function{mesh-pattern-move-to}
       @about-function{mesh-pattern-line-to}
       @about-function{mesh-pattern-curve-to}
+      @about-function{mesh-pattern-control-point}
       @about-function{mesh-pattern-set-control-point}
+      @about-function{mesh-pattern-corner-color-rgba}
       @about-function{mesh-pattern-set-corner-color-rgb}
       @about-function{mesh-pattern-set-corner-color-rgba}
       @about-function{mesh-pattern-patch-count}
       @about-function{mesh-pattern-path}
-      @about-function{mesh-pattern-get-control-point}
-      @about-function{mesh-pattern-get-corner-color-rgba}
-      @about-function{pattern-reference}
-      @about-function{pattern-destroy}
-      @about-function{pattern-status}
-      @about-function{pattern-extend}
-      @about-function{pattern-filter}
-      @about-function{pattern-matrix}
-      @about-function{pattern-type}
-      @about-function{pattern-reference-count}
       @about-function{pattern-user-data}
     @end{subsection}
     @begin[Regions]{subsection}
@@ -277,8 +270,7 @@
       @about-symbol{text-cluster-flags-t}
       @about-function{select-font-face}
       @about-function{set-font-size}
-      @about-function{set-font-matrix}
-      @about-function{get-font-matrix}
+      @about-function{font-matrix}
       @about-function{font-options}
       @about-function{font-face}
       @about-function{scaled-font}
@@ -298,27 +290,6 @@
       @about-function{text-cluster-allocate}
       @about-function{text-cluster-free}
     @end{subsection}
-    @begin[Raster Source]{subsection}
-      Supplying arbitrary image data.
-      @about-function{pattern-create-raster-source}
-      @about-function{raster-source-pattern-set-callback-data}
-      @about-function{raster-source-pattern-get-callback-data}
-      @about-function{raster-source-pattern-set-acquire}
-      @about-function{raster-source-pattern-get-acquire}
-      @about-function{raster-source-pattern-set-snapshot}
-      @about-function{raster-source-pattern-get-snapshot}
-      @about-function{raster-source-pattern-set-copy}
-      @about-function{raster-source-pattern-get-copy}
-      @about-function{raster-source-pattern-set-finish}
-      @about-function{raster-source-pattern-get-finish}
-    @end{subsection}
-    @begin[Tags and Links]{subsection}
-      Hyperlinks and document structure.
-      @see-symbol{CAIRO_TAG_DEST}
-      @see-symbol{CAIRO_TAG_LINK}
-      @see-function{tag-begin}
-      @see-function{tag-end}
-    @end{subsection}
   @end{section}
   @begin[Fonts]{section}
     @begin[Font Faces]{subsection}
@@ -330,13 +301,13 @@
       of the form @code{cairo:backend-font-face-create}, or implicitly using the
       toy text API by way of the @fun{cairo:select-font-face} function. The
       resulting face can be accessed using the @fun{cairo:font-face} function.
-      @about-symbol{font-face-t}
       @about-symbol{font-type-t}
+      @about-symbol{font-face-t}
       @about-function{font-face-reference}
+     @about-function{font-face-reference-count}
       @about-function{font-face-destroy}
       @about-function{font-face-status}
       @about-function{font-face-type}
-      @about-function{font-face-reference-count}
       @about-function{font-face-user-data}
     @end{subsection}
     @begin[Scaled Fonts]{subsection}
@@ -346,21 +317,22 @@
       @about-symbol{font-extents-t}
       @about-symbol{text-extents-t}
       @about-symbol{scaled-font-t}
+      @about-macro{with-scaled-font}
       @about-function{scaled-font-create}
       @about-function{scaled-font-reference}
+      @about-function{scaled-font-reference-count}
       @about-function{scaled-font-destroy}
       @about-function{scaled-font-status}
-      @about-function{scaled-font-extents}
-      @about-function{scaled-font-text-extents}
-      @about-function{scaled-font-glyph-extents}
-      @about-function{scaled-font-text-to-glyphs}
+      @about-function{scaled-font-type}
       @about-function{scaled-font-font-face}
       @about-function{scaled-font-font-options}
       @about-function{scaled-font-font-matrix}
       @about-function{scaled-font-ctm}
       @about-function{scaled-font-scale-matrix}
-      @about-function{scaled-font-type}
-      @about-function{scaled-font-reference-count}
+      @about-function{scaled-font-extents}
+      @about-function{scaled-font-text-extents}
+      @about-function{scaled-font-glyph-extents}
+      @about-function{scaled-font-text-to-glyphs}
       @about-function{scaled-font-user-data}
     @end{subsection}
     @begin[Font Options]{subsection}
@@ -368,6 +340,10 @@
       the font options implied by a surface are just right and do not need any
       changes, but for pixel-based targets tweaking font options may result in
       superior output on a particular display.
+      @about-symbol{subpixel-order-t}
+      @about-symbol{hint-style-t}
+      @about-symbol{hint-metrics-t}
+      @about-symbol{color-mode-t}
       @about-symbol{font-options-t}
       @about-function{font-options-create}
       @about-function{font-options-copy}
@@ -377,25 +353,13 @@
       @about-function{font-options-hash}
       @about-function{font-options-equal}
       @about-function{font-options-antialias}
-      @about-symbol{subpixel-order-t}
       @about-function{font-options-subpixel-order}
-      @about-symbol{hint-style-t}
       @about-function{font-options-hint-style}
-      @about-symbol{hint-metrics-t}
       @about-function{font-options-hint-metrics}
       @about-function{font-options-variations}
-    @end{subsection}
-    @begin[FreeType Fonts]{subsection}
-      Font support for FreeType
-    @end{subsection}
-    @begin[Win32 Fonts]{subsection}
-      Font support for Microsoft Windows
-    @end{subsection}
-    @begin[Quartz Fonts]{subsection}
-      Font support via CGFont on OS X
-    @end{subsection}
-    @begin[User Fonts]{subsection}
-      Font support with font data provided by the user
+      @about-function{font-options-color-mode}
+      @about-function{font-options-color-palette}
+      @about-function{font-options-custom-palette-color}
     @end{subsection}
   @end{section}
   @begin[Surfaces]{section}
@@ -422,33 +386,28 @@
       Putting this all together, a function that works with devices should look
       something like this:
       @begin{pre}
-void
-my_device_modifying_function (cairo_device_t *device)
-{
-  cairo_status_t status;
+(defun my-device-modifying-function (device)
+  (let (status)
+    ;; Ensure the device is properly reset
+    (cairo:device-flush device)
+    ;; Try to aquire the device
+    (unless (eq :success
+                (setf status
+                      (cairo:device-aquire device)))
+      (warn \"Failed to aquire the device: ~a\" (cairo:status-to-string status))
+      (return-from my-device-modifying-function))
 
-  // Ensure the device is properly reset
-  cairo_device_flush (device);
-  // Try to acquire the device
-  status = cairo_device_acquire (device);
-  if (status != CAIRO_STATUS_SUCCESS) {
-    printf (\"Failed to acquire the device: %s\n\",
-            cairo_status_to_string (status));
-    return;
-  @}
+    ;; Do the custom operations on the device here.
+    ;; But do not call any Cairo functions that might acquire devices.
 
-  // Do the custom operations on the device here.
-  // But do not call any Cairo functions that might acquire devices.
-
-  // Release the device when done.
-  cairo_device_release (device);
-@}
+    ;; Release the device when done.
+    (cairo:device-release device)))
       @end{pre}
       @b{Note:} Please refer to the documentation of each backend for additional
       usage requirements, guarantees provided, and interactions with existing
       surface API of the device functions for surfaces of that type.
-      @about-symbol{device-t}
       @about-symbol{device-type-t}
+      @about-symbol{device-t}
       @about-function{device-reference}
       @about-function{device-destroy}
       @about-function{device-status}
@@ -468,9 +427,9 @@ my_device_modifying_function (cairo_device_t *device)
       @about-function{device-observer-stroke-elapsed}
     @end{subsection}
     @begin[Cairo Surfaces]{subsection}
-      A @symbol{cairo:surface-t} structure is the abstract type representing all
-      different drawing targets that cairo can render to. The actual drawings
-      are performed using a Cairo context.
+      The @symbol{cairo:surface-t} structure is the abstract type representing
+      all different drawing targets that cairo can render to. The actual
+      drawings are performed using a Cairo context.
 
       A Cairo surface is created by using backend-specific constructors,
       typically of the form @code{cairo:backend-surface-create}.
@@ -481,27 +440,22 @@ my_device_modifying_function (cairo_device_t *device)
       the surface and that you must use the @fun{cairo:surface-mark-dirty}
       function after modifying it.
 
-      @b{Example 1.} Directly modifying an image surface
+      @b{Example.} Directly modifying an image surface
       @begin{pre}
- void
- modify_image_surface (cairo_surface_t *surface)
- {
-   unsigned char *data;
-   int width, height, stride;
+(defun modify-image-surface (surface)
+  (let ((data (cairo:image-surface-data surface))
+        (width (cairo:image-surface-width surface))
+        (height (cairo:image-surface-height surface))
+        (stride (cairo:image-surface-stride surface)))
 
-   // flush to ensure all writing to the image was done
-   cairo_surface_flush (surface);
+    ;; flush to ensure all writing to the image was done
+    (cairo:surface-flush surface)
 
-   // modify the image
-   data = cairo_image_surface_get_data (surface);
-   width = cairo_image_surface_get_width (surface);
-   height = cairo_image_surface_get_height (surface);
-   stride = cairo_image_surface_get_stride (surface);
-   modify_image_data (data, width, height, stride);
+    ;; modify the image
+    (modify-image-data data width height stride)
 
-   // mark the image dirty so Cairo clears its caches.
-   cairo_surface_mark_dirty (surface);
- @}
+    ;; mark the image dirty so Cairo clears its caches
+    (cairo:surface-mark-dirty surface)))
       @end{pre}
       Note that for other surface types it might be necessary to acquire the
       surface's device first. See the @fun{cairo:device-acquire} function for a
@@ -512,9 +466,9 @@ my_device_modifying_function (cairo_device_t *device)
       @about-symbol{CAIRO_MIME_TYPE_PNG}
       @about-symbol{CAIRO_MIME_TYPE_URI}
       @about-symbol{CAIRO_MIME_TYPE_UNIQUE_ID}
-      @about-symbol{surface-t}
       @about-symbol{content-t}
       @about-symbol{surface-type-t}
+      @about-symbol{surface-t}
       @about-function{surface-create-similar}
       @about-function{surface-create-similar-image}
       @about-function{surface-create-for-rectangle}
@@ -657,7 +611,7 @@ my_device_modifying_function (cairo_device_t *device)
       @about-function{surface-write-to-png-stream}
     @end{subsection}
     @begin[PostScript Surfaces]{subsection}
-      The PostScript surface is used to render cairo graphics to Adobe
+      The PostScript surface is used to render Cairo graphics to Adobe
       PostScript files and is a multi-page vector surface backend.
 
       The following mime types are supported: @code{CAIRO_MIME_TYPE_JPEG},
@@ -668,30 +622,31 @@ my_device_modifying_function (cairo_device_t *device)
 
       Source surfaces used by the PostScript surface that have a
       @code{CAIRO_MIME_TYPE_UNIQUE_ID} mime type will be stored in PostScript
-      printer memory for the duration of the print job.
-      @code{CAIRO_MIME_TYPE_UNIQUE_ID} should only be used for small frequently
-      used sources.
+      printer memory for the duration of the print job. The
+      @code{CAIRO_MIME_TYPE_UNIQUE_ID} mime type should only be used for small
+      frequently used sources.
 
       The @code{CAIRO_MIME_TYPE_CCITT_FAX} and
       @code{CAIRO_MIME_TYPE_CCITT_FAX_PARAMS} mime types are documented in
       CCITT Fax Images.
 
-      Embedding EPS files
-
+      @subheading{Embedding EPS files}
       Encapsulated PostScript files can be embedded in the PS output by setting
-      the CAIRO_MIME_TYPE_EPS mime data on a surface to the EPS data and
+      the @code{CAIRO_MIME_TYPE_EPS} mime data on a surface to the EPS data and
       painting the surface. The EPS will be scaled and translated to the extents
       of the surface the EPS data is attached to.
 
-      The CAIRO_MIME_TYPE_EPS mime type requires the
+      The @code{CAIRO_MIME_TYPE_EPS} mime type requires the
       @code{CAIRO_MIME_TYPE_EPS_PARAMS} mime data to also be provided in order
       to specify the embeddding parameters. @code{CAIRO_MIME_TYPE_EPS_PARAMS}
-      mime data must contain a string of the form \"bbox=[llx lly urx ury]\"
-      that specifies the bounding box (in PS coordinates) of the EPS graphics.
-      The parameters are: lower left x, lower left y, upper right x, upper
-      right y. Normally the bbox data is identical to the %%BoundingBox data in
+      mime data must contain a string of the form
+      @code{\"bbox=[llx lly urx ury]\"} that specifies the bounding box (in PS
+      coordinates) of the EPS graphics. The parameters are: @code{lower left x},
+      @code{lower left y}, @code{upper right x}, @code{upper right y}. Normally
+      the @code{bbox} data is identical to the @code{%%BoundingBox} data in
       the EPS file.
       @about-symbol{ps-level-t}
+      @about-macro{with-ps-surface}
       @about-function{ps-surface-create}
       @about-function{ps-surface-create-for-stream}
       @about-function{ps-surface-restrict-to-level}
@@ -706,21 +661,19 @@ my_device_modifying_function (cairo_device_t *device)
     @begin[Recording Surfaces]{subsection}
       A recording surface is a surface that records all drawing operations at
       the highest level of the surface backend interface, that is, the level
-      of paint, mask, stroke, fill, and show_text_glyphs. The recording surface
-      can then be \"replayed\" against any target surface by using it as a
-      source surface.
+      of paint, mask, stroke, fill, and text glyphs. The recording surface can
+      then be \"replayed\" against any target surface by using it as a source
+      surface.
 
       If you want to replay a surface so that the results in target will be
       identical to the results that would have been obtained if the original
       operations applied to the recording surface had instead been applied to
       the target surface, you can use code like this:
       @begin{pre}
-cairo_t *cr;
-
-cr = cairo_create (target);
-cairo_set_source_surface (cr, recording_surface, 0.0, 0.0);
-cairo_paint (cr);
-cairo_destroy (cr);
+(cairo:with-context (context target)
+  (cairo:set-source-surface context recording-surface 0.0 0.0)
+  (cairo:paint context)
+  ...)
       @end{pre}
       A recording surface is logically unbounded, i.e. it has no implicit
       constraint on the size of the drawing surface. However, in practice this
@@ -730,16 +683,12 @@ cairo_destroy (cr);
 
       The recording phase of the recording surface is careful to snapshot all
       necessary objects, paths, patterns, etc., in order to achieve accurate
-      replay. The efficiency of the recording surface could be improved by
-      improving the implementation of snapshot for the various objects. For
-      example, it would be nice to have a copy-on-write implementation for
-      @code{_cairo_surface_snapshot}.
+      replay.
+      @about-macro{with-recording-surface}
+      @about-macro{with-context-for-recording-surface}
       @about-function{recording-surface-create}
       @about-function{recording-surface-ink-extents}
       @about-function{recording-surface-extents}
-    @end{subsection}
-    @begin[Win32 Surfaces]{subsection}
-      Microsoft Windows surface support
     @end{subsection}
     @begin[SVG Surfaces]{subsection}
       The SVG surface is used to render Cairo graphics to SVG files and is a
@@ -752,18 +701,6 @@ cairo_destroy (cr);
       @about-function{svg-surface-restrict-to-version}
       @about-function{svg-versions}
       @about-function{svg-version-to-string}
-    @end{subsection}
-    @begin[Quartz Surfaces]{subsection}
-      Rendering to Quartz surfaces
-    @end{subsection}
-    @begin[XCB Surfaces]{subsection}
-      X Window System rendering using the XCB library
-    @end{subsection}
-    @begin[XLib Surfaces]{subsection}
-      X Window System rendering using XLib
-    @end{subsection}
-    @begin[XLib-XRender Backend]{subsection}
-      X Window System rendering using the X Render extension
     @end{subsection}
     @begin[Script Surfaces]{subsection}
       The script surface provides the ability to render to a native script that
@@ -785,6 +722,8 @@ cairo_destroy (cr);
     @begin[Generic matrix operations]{subsection}
       Generic matrix operations.
       @about-symbol{matrix-t}
+      @about-macro{with-matrix}
+      @about-macro{with-matrices}
       @about-function{matrix-init}
       @about-function{matrix-init-identity}
       @about-function{matrix-init-translate}
@@ -822,14 +761,6 @@ cairo_destroy (cr);
       @about-function{version-encode}
       @about-function{version}
       @about-function{version-string}
-    @end{subsection}
-    @begin[Types]{subsection}
-      This section lists generic data types used in the Cairo API.
-      @about-symbol{bool-t}
-      @about-symbol{user-data-key-t}
-      @about-symbol{rectangle-t}
-      @about-symbol{rectangle-list-t}
-      @about-symbol{rectangle-int-t}
     @end{subsection}
   @end{section}")
 

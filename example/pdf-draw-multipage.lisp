@@ -29,8 +29,8 @@
     (funcall #'cairo-draw-fill context width height)
     (cairo:surface-show-page surface)
 
-    (cairo:pdf-surface-set-page-label surface "Cairo text")
-    (funcall #'cairo-draw-text context width height)
+    (cairo:pdf-surface-set-page-label surface "Cairo text letter")
+    (funcall #'cairo-draw-text-letter context width height)
     (cairo:show-page context)
 
     (cairo:pdf-surface-set-page-label surface "Cairo paint")
@@ -57,7 +57,7 @@
     (cairo:surface-show-page surface)
 
     (cairo:pdf-surface-set-page-label surface "Cairo dash")
-    (funcall #'cairo-draw-dash context width height)
+    (funcall #'draw-dash context width height)
     (cairo:surface-show-page surface)
 
     ;; Destroy the resources

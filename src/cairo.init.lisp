@@ -109,4 +109,16 @@
       obj
       (list obj)))
 
+(defun flatten (tree)
+  (let (lst)
+    (labels ((traverse (subtree)
+               (when subtree
+                 (if (consp subtree)
+                     (progn
+                       (traverse (car subtree))
+                       (traverse (cdr subtree)))
+                     (push subtree lst)))))
+      (traverse tree))
+    (nreverse lst)))
+
 ;;; --- End of file cairo.init.lisp --------------------------------------------

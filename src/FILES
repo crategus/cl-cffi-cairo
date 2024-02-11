@@ -12,7 +12,7 @@ Drawing
   cairo.context-lisp               cairo_t                          Cairo 1.18
   cairo.path.lisp                  Paths                            Cairo 1.18
   cairo.pattern.lisp               cairo_pattern_t                  Cairo 1.18
-  cairo.region.lisp                Regions                          Cairo 1.18 +
+  cairo.region.lisp                Regions                          Cairo 1.18
   cairo.transformation.lisp        Transformations                  Cairo 1.18
   cairo.text.lisp                  Text                             Cairo 1.18
   cairo.raster-source.lisp         Raster Sources                   Cairo 1.18 .

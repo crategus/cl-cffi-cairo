@@ -104,6 +104,7 @@
 
                ;; Drawing
                (:file "rtest-cairo-pattern")
+               (:file "rtest-cairo-region")
                (:file "rtest-cairo-context")
                (:file "rtest-cairo-transformation")
                (:file "rtest-cairo-text")

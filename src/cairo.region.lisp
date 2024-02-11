@@ -50,9 +50,9 @@
 ;;;     cairo_region_get_rectangle
 ;;;     cairo_region_is_empty
 ;;;     cairo_region_contains_point
-;;;
 ;;;     cairo_region_contains_rectangle
 ;;;     cairo_region_equal
+;;;
 ;;;     cairo_region_translate
 ;;;     cairo_region_intersect
 ;;;     cairo_region_intersect_rectangle
@@ -62,12 +62,6 @@
 ;;;     cairo_region_union_rectangle
 ;;;     cairo_region_xor
 ;;;     cairo_region_xor_rectangle
-;;;
-;;; Description
-;;;
-;;; Regions are a simple graphical data type representing an area of
-;;; integer-aligned rectangles. They are often used on raster surfaces to track
-;;; areas of interest, such as change or clip areas.
 ;;; ----------------------------------------------------------------------------
 
 (in-package :cairo)
@@ -85,7 +79,7 @@
 (setf (liber:alias-for-symbol 'region-overlap-t)
       "Enum"
       (liber:symbol-documentation 'region-overlap-t)
- "@version{#2020-12-26}
+ "@version{2024-2-10}
   @begin{short}
     Used as the return value for the @fun{cairo:region-contains-rectangle}
     function.
@@ -111,16 +105,20 @@
 (setf (liber:alias-for-symbol 'region-t)
       "CStruct"
       (liber:symbol-documentation 'region-t)
- "@version{#2020-12-14}
+ "@version{2024-2-10}
   @begin{short}
     A @symbol{cairo:region-t} structure represents a set of integer-aligned
     rectangles.
   @end{short}
-  It allows operations like the functions @fun{cairo:region-union} and
-  @fun{cairo:region-intersect} to be performed on them.
+  It allows operations like the @fun{cairo:region-union} and
+  @fun{cairo:region-intersect} functions to be performed on them.
 
-  Memory management of @symbol{cairo:region-t} structure is done with the
+  Memory management of the @symbol{cairo:region-t} structure is done with the
   @fun{cairo:region-reference} and @fun{cairo:region-destroy} functions.
+  @see-constructor{cairo:region-create}
+  @see-constructor{cairo:region-create-rectangle}
+  @see-constructor{cairo:region-create-rectangles}
+  @see-constructor{cairo:region-copy}
   @see-function{cairo:region-union}
   @see-function{cairo:region-intersect}
   @see-function{cairo:region-reference}
@@ -135,15 +133,15 @@
 (cffi:defcfun ("cairo_region_create" region-create)
     (:pointer (:struct region-t))
  #+liber-documentation
- "@version{2023-2-3}
-  @begin{return}
-    The newly allocated @symbol{cairo:region-t} instance. Free with the
-    @fun{cairo:region-destroy} function. This function always returns a valid
-    pointer. If memory cannot be allocated, then a special error object is
-    returned where all operations on the object do nothing. You can check for
-    this with the @fun{cairo:region-status} function.
-  @end{return}
-  @short{Allocates a new empty region instance.}
+ "@version{2024-2-10}
+  @return{The newly allocated @symbol{cairo:region-t} instance.}
+  @begin{short}
+    Allocates a new empty region instance.
+  @end{short}
+  Free with the @fun{cairo:region-destroy} function. This function always
+  returns a valid instance. If memory cannot be allocated, then a special error
+  object is returned where all operations on the object do nothing. You can
+  check for this with the @fun{cairo:region-status} function.
   @see-symbol{cairo:region-t}
   @see-function{cairo:region-destroy}
   @see-function{cairo:region-status}")
@@ -154,26 +152,38 @@
 ;;; cairo_region_create_rectangle ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("cairo_region_create_rectangle" region-create-rectangle)
+(cffi:defcfun ("cairo_region_create_rectangle" %region-create-rectangle)
     (:pointer (:struct region-t))
+  (rect :pointer)) ; pointer to type rectangle-int-t
+
+(defun region-create-rectangle (x y width height)
  #+liber-documentation
- "@version{#2020-12-26}
-  @argument[rect]{a @symbol{cairo:rectangle-int-t} structure}
-  @begin{return}
-    A newly allocated @symbol{cairo:region-t} instance. Free with the function
-    @fun{cairo:region-destroy}. This function always returns a valid pointer.
-    If memory cannot be allocated, then a special error object is returned where
-    all operations on the object do nothing. You can check for this with the
-    function @fun{cairo:region-status}.
-  @end{return}
+ "@version{2024-2-10}
+  @argument[x]{an integer with the x coordinate of the left side of the
+    rectangle}
+  @argument[y]{an integer with the y coordinate of the top side of the
+    rectangle}
+  @argument[width]{an integer with the width of the rectangle}
+  @argument[height]{an integer with the height of the rectangle}
+  @return{The newly allocated @symbol{cairo:region-t} instance.}
   @begin{short}
-    Allocates a new region instance containing @arg{rect}.
+    Allocates a new region instance containing the given rectangle.
   @end{short}
+  Free with the @fun{cairo:region-destroy} function. This function always
+  returns a valid instance. If memory cannot be allocated, then a special error
+  object is returned where all operations on the object do nothing. You can
+  check for this with the @fun{cairo:region-status} function.
   @see-symbol{cairo:region-t}
-  @see-symbol{cairo:rectangle-int-t}
   @see-function{cairo:region-destroy}
   @see-function{cairo:region-status}"
-  (rect :pointer)) ; pointer to type rectangle-int-t
+  (cffi:with-foreign-object (rect '(:struct rectangle-int-t))
+    (setf (cffi:foreign-slot-value rect '(:struct rectangle-int-t) 'x) x)
+    (setf (cffi:foreign-slot-value rect '(:struct rectangle-int-t) 'y) y)
+    (setf (cffi:foreign-slot-value rect '(:struct rectangle-int-t) 'width)
+          width)
+    (setf (cffi:foreign-slot-value rect '(:struct rectangle-int-t) 'height)
+          height)
+    (%region-create-rectangle rect)))
 
 (export 'region-create-rectangle)
 
@@ -181,29 +191,46 @@
 ;;; cairo_region_create_rectangles ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("cairo_region_create_rectangles" region-create-rectangles)
+(cffi:defcfun ("cairo_region_create_rectangles" %region-create-rectangles)
     (:pointer (:struct region-t))
+  (rects (:pointer (:pointer (:struct rectangle-int-t))))
+  (count :int))
+
+(defun region-create-rectangles (&rest rects)
  #+liber-documentation
- "@version{#2020-12-26}
-  @argument[rects]{an array of count @symbol{cairo:rectangle-int-t} structures}
-  @argument[count]{an integer with the number of rectangles}
+ "@version{2024-2-10}
+  @argument[rects]{rectangles, each rectangle is represented as a
+    @code{(x y width height)} list with the values for the rectangle}
   @begin{return}
-    A newly allocated @symbol{cairo:region-t} instance. Free with the function
-    @fun{cairo:region-destroy}. This function always returns a valid pointer;
-    if memory cannot be allocated, then a special error object is returned
-    where all operations on the object do nothing. You can check for this with
-    the function @fun{cairo:region-status}.
+    A newly allocated @symbol{cairo:region-t} instance.
   @end{return}
   @begin{short}
     Allocates a new region instance containing the union of all given
-    @arg{rects}.
+    rectangles.
   @end{short}
+  Free with the @fun{cairo:region-destroy} function. This function always
+  returns a valid instance. If memory cannot be allocated, then a special error
+  object is returned where all operations on the object do nothing. You can
+  check for this with the @fun{cairo:region-status} function.
   @see-symbol{cairo:region-t}
-  @see-symbol{cairo:rectangle-int-t}
   @see-function{cairo:region-destroy}
   @see-function{cairo:status}"
-  (rects (:pointer (:pointer (:struct rectangle-int-t))))
-  (count :int))
+  (let ((n (length rects)))
+    (cffi:with-foreign-object (rects-ptr '(:struct rectangle-int-t) n)
+      (iter (for i from 0)
+            (for (x y width height) in rects)
+            (for ptr = (cffi:mem-aptr rects-ptr '(:struct rectangle-int-t) i))
+            (setf (cffi:foreign-slot-value ptr '(:struct rectangle-int-t) 'x)
+                  x
+                  (cffi:foreign-slot-value ptr '(:struct rectangle-int-t) 'y)
+                  y
+                  (cffi:foreign-slot-value ptr
+                                           '(:struct rectangle-int-t) 'width)
+                  width
+                  (cffi:foreign-slot-value ptr
+                                           '(:struct rectangle-int-t) 'height)
+                  height))
+      (%region-create-rectangles rects-ptr n))))
 
 (export 'region-create-rectangles)
 
@@ -213,18 +240,16 @@
 
 (cffi:defcfun ("cairo_region_copy" region-copy) (:pointer (:struct region-t))
  #+liber-documentation
- "@version{#2020-12-26}
+ "@version{2024-2-10}
   @argument[region]{a @symbol{cairo:region-t} instance}
-  @begin{return}
-    A newly allocated @symbol{cairo:region-t} instance. Free with the function
-    @fun{cairo:region-destroy}. This function always returns a valid pointer.
-    If memory cannot be allocated, then a special error object is returned
-    where all operations on the object do nothing. You can check for this with
-    the function @fun{cairo:region-status}.
-  @end{return}
+  @return{The newly allocated @symbol{cairo:region-t} instance.}
   @begin{short}
     Allocates a new region instance copying the area from @arg{region}.
   @end{short}
+  Free with the @fun{cairo:region-destroy} function. This function always
+  returns a valid instance. If memory cannot be allocated, then a special error
+  object is returned where all operations on the object do nothing. You can
+  check for this with the @fun{cairo:region-status} function.
   @see-symbol{cairo:region-t}
   @see-function{cairo:region-destroy}
   @see-function{cairo:region-status}"
@@ -239,14 +264,14 @@
 (cffi:defcfun ("cairo_region_reference" region-reference)
     (:pointer (:struct region-t))
  #+liber-documentation
- "@version{#2020-12-26}
+ "@version{2024-2-10}
   @argument[region]{a @symbol{cairo:region-t} instance}
   @return{The referenced @symbol{cairo:region-t} instance.}
   @begin{short}
     Increases the reference count on @arg{region} by one.
   @end{short}
   This prevents @arg{region} from being destroyed until a matching call to
-  the function @fun{cairo:region-destroy} is made.
+  the @fun{cairo:region-destroy} function is made.
   @see-symbol{cairo:region-t}
   @see-function{cairo:region-destroy}"
   (region (:pointer (:struct region-t))))
@@ -259,17 +284,11 @@
 
 (cffi:defcfun ("cairo_region_destroy" region-destroy) :void
  #+liber-documentation
- "@version{2023-2-3}
+ "@version{2024-2-10}
   @argument[region]{a @symbol{cairo:region-t} instance}
-  @begin{short}
-    Destroys a @symbol{cairo:region-t} instance created with the
-    @fun{cairo:region-create}, @fun{cairo:region-copy}, or
-    @fun{cairo:region-create-rectangle} functions.
-  @end{short}
+  @short{Destroys a @symbol{cairo:region-t} instance.}
   @see-symbol{cairo:region-t}
-  @see-function{cairo:region-create}
-  @see-function{cairo:region-copy}
-  @see-function{cairo:region-create-rectangle}"
+  @see-function{cairo:region-reference}"
   (region (:pointer (:struct region-t))))
 
 (export 'region-destroy)
@@ -280,9 +299,10 @@
 
 (cffi:defcfun ("cairo_region_status" region-status) status-t
  #+liber-documentation
- "@version{#2020-12-26}
+ "@version{2024-2-10}
   @argument[region]{a @symbol{cairo:region-t} instance}
-  @return{@code{:success} or @code{:no-memory}}
+  @return{A @symbol{cairo:status-t} value that is @code{:success} or
+    @code{:no-memory}.}
   @begin{short}
     Checks whether an error has previous occurred for this region instance.
   @end{short}
@@ -293,23 +313,35 @@
 (export 'region-status)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_region_get_extents () -> region-extents
+;;; cairo_region_get_extents ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("cairo_region_get_extents" region-extents) :void
- #+liber-documentation
- "@version{#2020-12-26}
-  @argument[region]{a @symbol{cairo:region-t} instance}
-  @argument[extents]{a @symbol{cairo:rectangle-int-t} instance into which to
-    store the extents}
-  @begin{short}
-    Gets the bounding rectangle of @arg{region} as a
-    @symbol{cairo:rectangle-int-t} instance.
-  @end{short}
-  @see-symbol{cairo:region-t}
-  @see-symbol{cairo:rectangle-int-t}"
+(cffi:defcfun ("cairo_region_get_extents" %region-extents) :void
   (region (:pointer (:struct region-t)))
   (extents (:pointer (:struct rectangle-int-t))))
+
+(defun region-extents (region)
+ #+liber-documentation
+ "@version{2024-2-10}
+  @syntax{(cairo:region-extents region) => (list x y width height)}
+  @argument[region]{a @symbol{cairo:region-t} instance}
+  @argument[x]{an integer with the x coordinate of the left side of the
+    rectangle}
+  @argument[y]{an integer with the y coordinate of the top side of the
+    rectangle}
+  @argument[width]{an integer with the width of the rectangle}
+  @argument[height]{an integer with the height of the rectangle}
+  @return{The @code{(x y width height)} list with the coordinates of the
+    bounding rectangle.}
+  @begin{short}
+    Gets the bounding rectangle of @arg{region} as a list of the coordinates.
+  @end{short}
+  @see-symbol{cairo:region-t}"
+  (cffi:with-foreign-object (rect '(:struct rectangle-int-t))
+    (%region-extents region rect)
+    (cffi:with-foreign-slots ((x y width height)
+                              rect (:struct rectangle-int-t))
+    (values (list x y width height)))))
 
 (export 'region-extents)
 
@@ -319,7 +351,7 @@
 
 (cffi:defcfun ("cairo_region_num_rectangles" region-num-rectangles) :int
  #+liber-documentation
- "@version{#2020-12-15}
+ "@version{2024-2-10}
   @argument[region]{a @symbol{cairo:region-t} instance}
   @return{The integer with the number of rectangles contained in @arg{region}.}
   @begin{short}
@@ -334,21 +366,37 @@
 ;;; cairo_region_get_rectangle () -> region-rectangle
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("cairo_region_get_rectangle" region-rectangle) :void
- #+liber-documentation
- "@version{#2020-12-15}
-  @argument[region]{a @symbol{cairo:region-t} instance}
-  @argument[nth]{an integer number indicating which rectangle should be
-    returned}
-  @argument[rectangle]{return location for a @symbol{cairo:rectangle-int-t}}
-  @begin{short}
-    Stores the nth rectangle from the region in @arg{rectangle}.
-  @end{short}
-  @see-symbol{cairo:region-t}
-  @see-symbol{cairo:rectangle-int-t}"
+(cffi:defcfun ("cairo_region_get_rectangle" %region-rectangle) :void
   (region (:pointer (:struct region-t)))
   (nth :int)
   (rectangle (:pointer (:struct rectangle-int-t))))
+
+(defun region-rectangle (region nth)
+ #+liber-documentation
+ "@version{2024-2-10}
+  @syntax{(cairo:region-rectangle region nth) => (list x y width height)}
+  @argument[region]{a @symbol{cairo:region-t} instance}
+  @argument[nth]{an integer number indicating which rectangle should be
+    returned}
+  @argument[x]{an integer with the x coordinate of the left side of the
+    rectangle}
+  @argument[y]{an integer with the y coordinate of the top side of the
+    rectangle}
+  @argument[width]{an integer with the width of the rectangle}
+  @argument[height]{an integer with the height of the rectangle}
+  @return{The @code{(x y width height)} list with the coordinates of the nth
+    rectangle.}
+  @begin{short}
+    Returns the nth rectangle from the region as a list with the coordinates of
+    the rectangle.
+  @end{short}
+  @see-symbol{cairo:region-t}"
+  (cffi:with-foreign-object (rect '(:struct rectangle-int-t))
+    (%region-rectangle region nth rect)
+    (cffi:with-foreign-slots ((x y width height)
+                              rect (:struct rectangle-int-t))
+    (values (list x y width height))
+)))
 
 (export 'region-rectangle)
 
@@ -358,7 +406,7 @@
 
 (cffi:defcfun ("cairo_region_is_empty" region-is-empty) :bool
  #+liber-documentation
- "@version{#2020-12-15}
+ "@version{2024-2-10}
   @argument[region]{a @symbol{cairo:region-t} instance}
   @return{@em{True} if @arg{region} is empty, @em{false} if it is not.}
   @short{Checks whether @arg{region} is empty.}
@@ -373,14 +421,15 @@
 
 (cffi:defcfun ("cairo_region_contains_point" region-contains-point) :bool
  #+liber-documentation
- "@version{#2020-12-15}
+ "@version{2024-2-10}
   @argument[region]{a @symbol{cairo:region-t} instance}
   @argument[x]{an integer with the x coordinate of a point}
   @argument[y]{an integer with the y coordinate of a point}
   @begin{return}
-    @em{True} if (x, y) is contained in @arg{region}, @em{false} if it is not.
+    @em{True} if @arg{(x, y)} is contained in @arg{region}, @em{false} if it
+    is not.
   @end{return}
-  @short{Checks whether (x, y) is contained in @arg{region}.}
+  @short{Checks whether @arg{(x, y)} is contained in @arg{region}.}
   @see-symbol{cairo:region-t}"
   (region (:pointer (:struct region-t)))
   (x :int)
@@ -392,25 +441,42 @@
 ;;; cairo_region_contains_rectangle ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("cairo_region_contains_rectangle" region-contains-rectangle)
+(cffi:defcfun ("cairo_region_contains_rectangle" %region-contains-rectangle)
     region-overlap-t
- #+liber-documentation
- "@version{#2020-12-15}
-  @argument[region]{a @symbol{cairo:region-t} instance}
-  @argument[rectangle]{a @symbol{cairo:rectangle-int-t} instance}
-  @begin{return}
-    @code{:in} if @arg{rectangle} is entirely inside @arg{region}, @code{:out}
-    if @arg{rectangle} is entirely outside @arg{region}, or @code{:part} if
-    @arg{rectangle} is partially inside and partially outside @arg{region}.
-  @end{return}
-  @begin{short}
-    Checks whether @arg{rectangle} is inside, outside or partially contained in
-    @arg{region}.
-  @end{short}
-  @see-symbol{cairo:region-t}
-  @see-symbol{cairo:rectangle-int-t}"
   (region (:pointer (:struct region-t)))
   (rectangle (:pointer (:struct rectangle-int-t))))
+
+(defun region-contains-rectangle (region x y width height)
+ #+liber-documentation
+ "@version{2024-2-10}
+  @argument[region]{a @symbol{cairo:region-t} instance}
+  @argument[x]{an integer with the x coordinate of the left side of the
+    rectangle}
+  @argument[y]{an integer with the y coordinate of the top side of the
+    rectangle}
+  @argument[width]{an integer with the width of the rectangle}
+  @argument[height]{an integer with the height of the rectangle}
+  @begin{return}
+    The @symbol{cairo:region-overlap-t} value.
+  @end{return}
+  @begin{short}
+    Checks whether the given rectangle is inside, outside or partially contained
+    in @arg{region}.
+  @end{short}
+  Returns the @code{:in} value if @arg{rectangle} is entirely inside
+  @arg{region}, the @code{:out} value if @arg{rectangle} is entirely outside
+  @arg{region}, or the @code{:part} value if @arg{rectangle} is partially inside
+  and partially outside @arg{region}.
+  @see-symbol{cairo:region-t}
+  @see-symbol{cairo:region-overlap-t}"
+  (cffi:with-foreign-object (rect '(:struct rectangle-int-t))
+    (setf (cffi:foreign-slot-value rect '(:struct rectangle-int-t) 'x) x
+          (cffi:foreign-slot-value rect '(:struct rectangle-int-t) 'y) y
+          (cffi:foreign-slot-value rect '(:struct rectangle-int-t) 'width)
+          width
+          (cffi:foreign-slot-value rect '(:struct rectangle-int-t) 'height)
+          height)
+      (%region-contains-rectangle region rect)))
 
 (export 'region-contains-rectangle)
 
@@ -420,20 +486,19 @@
 
 (cffi:defcfun ("cairo_region_equal" region-equal) :bool
  #+liber-documentation
- "@version{#2020-12-15}
-  @argument[region-a]{a @symbol{cairo:region-t} instance}
-  @argument[region-b]{a @symbol{cairo:region-t} instance}
+ "@version{2024-2-10}
+  @argument[region1]{a @symbol{cairo:region-t} instance}
+  @argument[region2]{a @symbol{cairo:region-t} instance}
   @begin{return}
     @em{True} if both regions contained the same coverage, @em{false} if it is
     not or any region is in an error status.
   @end{return}
   @begin{short}
-    Compares whether @arg{region-a} is equivalent to @arg{region-b}. NULL as an
-    argument is equal to itself, but not to any non-NULL region.
+    Compares whether @arg{region1} is equivalent to @arg{region2}.
   @end{short}
   @see-symbol{cairo:region-t}"
-  (region-a (:pointer (:struct region-t)))
-  (region-b (:pointer (:struct region-t))))
+  (region1 (:pointer (:struct region-t)))
+  (region2 (:pointer (:struct region-t))))
 
 (export 'region-equal)
 
@@ -443,11 +508,11 @@
 
 (cffi:defcfun ("cairo_region_translate" region-translate) :void
  #+liber-documentation
- "@version{#2020-12-15}
+ "@version{2024-2-10}
   @argument[region]{a @symbol{cairo:region-t} instance}
   @argument[dx]{an integer with the amount to translate in the x direction}
   @argument[dy]{an integer with the amount to translate in the y direction}
-  @short{Translates region by (dx, dy).}
+  @short{Translates the region by @arg{(dx, dy)}.}
   @see-symbol{cairo:region-t}"
   (region (:pointer (:struct region-t)))
   (dx :int)
@@ -459,20 +524,25 @@
 ;;; cairo_region_intersect ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("cairo_region_intersect" region-intersect) status-t
+(cffi:defcfun ("cairo_region_intersect" %region-intersect) status-t
+  (region (:pointer (:struct region-t)))
+  (other (:pointer (:struct region-t))))
+
+(defun region-intersect (region other)
  #+liber-documentation
- "@version{#2020-12-15}
+ "@version{2024-2-10}
   @argument[region]{a @symbol{cairo:region-t} instance}
   @argument[other]{another @symbol{cairo:region-t} instance}
-  @return{@code{:success} or @code{:no-memory}}
+  @return{The passed in @arg{region} with the intersection or @code{nil} if an
+    error occured.}
   @begin{short}
     Computes the intersection of @arg{region} with @arg{other} and places the
     result in @arg{region}.
   @end{short}
-  @see-symbol{cairo:region-t}
-  @see-symbol{cairo:status-t}"
-  (region (:pointer (:struct region-t)))
-  (other (:pointer (:struct region-t))))
+  @see-symbol{cairo:region-t}"
+  (when (eq :success
+            (%region-intersect region other))
+    region))
 
 (export 'region-intersect)
 
@@ -480,21 +550,38 @@
 ;;; cairo_region_intersect_rectangle ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("cairo_region_intersect_rectangle" region-intersect-rectangle)
+(cffi:defcfun ("cairo_region_intersect_rectangle" %region-intersect-rectangle)
     status-t
- #+liber-documentation
- "@version{#2020-12-15}
-  @argument[region]{a @symbol{cairo:region-t} instance}
-  @argument[rectangle]{a @symbol{cairo:rectangle-int-t} instance}
-  @return{@code{:success} or @code{:no-memory}}
-  @begin{short}
-    Computes the intersection of @arg{region} with @arg{rectangle} and places
-    the result in @arg{region}.
-  @end{short}
-  @see-symbol{cairo:region-t}
-  @see-symbol{cairo:rectangle-int-t}"
   (region (:pointer (:struct region-t)))
   (rectangle (:pointer (:struct rectangle-int-t))))
+
+(defun region-intersect-rectangle (region x y width height)
+ #+liber-documentation
+ "@version{2024-2-10}
+  @argument[region]{a @symbol{cairo:region-t} instance}
+  @argument[x]{an integer with the x coordinate with the left side of the
+    rectangle}
+  @argument[y]{an integer with the y coordinate with the top side of the
+    rectangle}
+  @argument[width]{an integer with the width of the rectangle}
+  @argument[height]{an integer with the height of the rectangle}
+  @return{The passed in @arg{region} with the intersection or @code{nil} if an
+    error occured.}
+  @begin{short}
+    Computes the intersection of @arg{region} with the given rectangle and
+    places the result in @arg{region}.
+  @end{short}
+  @see-symbol{cairo:region-t}"
+  (cffi:with-foreign-object (rect '(:struct rectangle-int-t))
+    (setf (cffi:foreign-slot-value rect '(:struct rectangle-int-t) 'x) x
+          (cffi:foreign-slot-value rect '(:struct rectangle-int-t) 'y) y
+          (cffi:foreign-slot-value rect '(:struct rectangle-int-t) 'width)
+          width
+          (cffi:foreign-slot-value rect '(:struct rectangle-int-t) 'height)
+          height)
+    (when (eq :success
+              (%region-intersect-rectangle region rect))
+      region)))
 
 (export 'region-intersect-rectangle)
 
@@ -502,19 +589,25 @@
 ;;; cairo_region_subtract ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("cairo_region_subtract" region-subtract) status-t
+(cffi:defcfun ("cairo_region_subtract" %region-subtract) status-t
+  (region (:pointer (:struct region-t)))
+  (other (:pointer (:struct region-t))))
+
+(defun region-subtract (region other)
  #+liber-documentation
- "@version{#2020-12-15}
+ "@version{2024-2-10}
   @argument[region]{a @symbol{cairo:region-t} instance}
   @argument[other]{another @symbol{cairo:region-t} instance}
-  @return{@code{:success} or @code{:no-memory}}
+  @return{The passed in @arg{region} with the result or @code{nil} if an error
+    occured.}
   @begin{short}
     Subtracts @arg{other} from @arg{region} and places the result in
     @arg{region.}
   @end{short}
   @see-symbol{cairo:region-t}"
-  (region (:pointer (:struct region-t)))
-  (other (:pointer (:struct region-t))))
+  (when (eq :success
+            (%region-subtract region other))
+    region))
 
 (export 'region-subtract)
 
@@ -522,21 +615,36 @@
 ;;; cairo_region_subtract_rectangle ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("cairo_region_subtract_rectangle" region-subtract-rectangle)
+(cffi:defcfun ("cairo_region_subtract_rectangle" %region-subtract-rectangle)
     status-t
+  (region (:pointer (:struct region-t)))
+  (rectangle (:pointer (:struct rectangle-int-t))))
+
+(defun region-subtract-rectangle (region x y width height)
  #+liber-documentation
- "@version{#2020-12-15}
+ "@version{2024-2-10}
   @argument[region]{a @symbol{cairo:region-t} instance}
-  @argument[rectangle]{a @symbol{cairo:rectangle-int-t} instance}
-  @return{@code{:success} or @code{:no-memory}}
+  @argument[x]{an integer with the x coordinate}
+  @argument[y]{an integer with the y coordinate}
+  @argument[width]{an integer with the width of the rectangle}
+  @argument[height]{an integer with the height of the rectangle}
+  @return{The passed in @arg{region} with the result or @code{nil} if an error
+    occured.}
   @begin{short}
     Subtracts @arg{rectangle} from @arg{region} and places the result in
     @arg{region}.
   @end{short}
-  @see-symbol{cairo:region-t}
-  @see-symbol{cairo:rectangle-int-t}"
-  (region (:pointer (:struct region-t)))
-  (rectangle (:pointer (:struct rectangle-int-t))))
+  @see-symbol{cairo:region-t}"
+  (cffi:with-foreign-object (rect '(:struct rectangle-int-t))
+    (setf (cffi:foreign-slot-value rect '(:struct rectangle-int-t) 'x) x
+          (cffi:foreign-slot-value rect '(:struct rectangle-int-t) 'y) y
+          (cffi:foreign-slot-value rect '(:struct rectangle-int-t) 'width)
+          width
+          (cffi:foreign-slot-value rect '(:struct rectangle-int-t) 'height)
+          height)
+    (when (eq :success
+              (%region-subtract-rectangle region rect))
+      region)))
 
 (export 'region-subtract-rectangle)
 
@@ -544,20 +652,25 @@
 ;;; cairo_region_union ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("cairo_region_union" region-union) status-t
+(cffi:defcfun ("cairo_region_union" %region-union) status-t
+  (region (:pointer (:struct region-t)))
+  (other (:pointer (:struct region-t))))
+
+(defun region-union (region other)
  #+liber-documentation
- "@version{#2020-12-15}
+ "@version{2024-2-10}
   @argument[region]{a @symbol{cairo:region-t} instance}
   @argument[other]{another @symbol{cairo:region-t} instance}
-  @return{@code{:success} or @code{:no-memory}}
+  @return{The passed in @arg{region} with the result or @code{nil} if an error
+    occured.}
   @begin{short}
     Computes the union of @arg{region} with @arg{other} and places the result
     in @arg{region}.
   @end{short}
-  @see-symbol{cairo:region-t}
-  @see-symbol{cairo:status-t}"
-  (region (:pointer (:struct region-t)))
-  (other (:pointer (:struct region-t))))
+  @see-symbol{cairo:region-t}"
+  (when (eq :success
+            (%region-union region other))
+    region))
 
 (export 'region-union)
 
@@ -565,20 +678,35 @@
 ;;; cairo_region_union_rectangle ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("cairo_region_union_rectangle" region-union-rectangle) status-t
+(cffi:defcfun ("cairo_region_union_rectangle" %region-union-rectangle) status-t
+  (region (:pointer (:struct region-t)))
+  (rectangle (:pointer (:struct rectangle-int-t))))
+
+(defun region-union-rectangle (region x y width height)
  #+liber-documentation
- "@version{#2020-12-15}
+ "@version{2024-2-10}
   @argument[region]{a @symbol{cairo:region-t} instance}
-  @argument[rectangle]{a @symbol{cairo:rectangle-int-t} instance}
-  @return{@code{:success} or @code{:no-memory}}
+  @argument[x]{an integer with the x coordinate}
+  @argument[y]{an integer with the y coordinate}
+  @argument[width]{an integer with the width of the rectangle}
+  @argument[height]{an integer with the height of the rectangle}
+  @return{The passed in @arg{region} with the result or @code{nil} if an error
+    occured.}
   @begin{short}
     Computes the union of @arg{region} with @arg{rectangle} and places the
     result in @arg{region}.
   @end{short}
-  @see-symbol{cairo:region-t}
-  @see-symbol{cairo:rectangle-int-t}"
-  (region (:pointer (:struct region-t)))
-  (rectangle (:pointer (:struct rectangle-int-t))))
+  @see-symbol{cairo:region-t}"
+  (cffi:with-foreign-object (rect '(:struct rectangle-int-t))
+    (setf (cffi:foreign-slot-value rect '(:struct rectangle-int-t) 'x) x
+          (cffi:foreign-slot-value rect '(:struct rectangle-int-t) 'y) y
+          (cffi:foreign-slot-value rect '(:struct rectangle-int-t) 'width)
+          width
+          (cffi:foreign-slot-value rect '(:struct rectangle-int-t) 'height)
+          height)
+    (when (eq :success
+              (%region-union-rectangle region rect))
+      region)))
 
 (export 'region-union-rectangle)
 
@@ -586,12 +714,17 @@
 ;;; cairo_region_xor ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("cairo_region_xor" region-xor) status-t
+(cffi:defcfun ("cairo_region_xor" %region-xor) status-t
+  (region (:pointer (:struct region-t)))
+  (other (:pointer (:struct region-t))))
+
+(defun region-xor (region other)
  #+liber-documentation
- "@version{#2020-12-15}
+ "@version{2024-2-10}
   @argument[region]{a @symbol{cairo:region-t} instance}
   @argument[other]{another @symbol{cairo:region-t} instance}
-  @return{@code{:success} or @code{:no-memory}}
+  @return{The passed in @arg{region} with the result or @code{nil} if an error
+    occured.}
   @begin{short}
     Computes the exclusive difference of @arg{region} with @arg{other} and
     places the result in @arg{region}.
@@ -599,8 +732,9 @@
   That is, @arg{region} will be set to contain all areas that are either in
   @arg{region} or in @arg{other}, but not in both.
   @see-symbol{cairo:region-t}"
-  (region (:pointer (:struct region-t)))
-  (other (:pointer (:struct region-t))))
+  (when (eq :success
+            (%region-xor region other))
+    region))
 
 (export 'region-xor)
 
@@ -608,12 +742,16 @@
 ;;; cairo_region_xor_rectangle ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("cairo_region_xor_rectangle" region-xor-rectangle) status-t
+(cffi:defcfun ("cairo_region_xor_rectangle" %region-xor-rectangle) status-t
  #+liber-documentation
  "@version{#2020-12-15}
   @argument[region]{a @symbol{cairo:region-t} instance}
-  @argument[rectangle]{a @symbol{cairo:rectangle-int-t} instance}
-  @return{@code{:success} or @code{:no-memory}}
+  @argument[x]{an integer with the x coordinate}
+  @argument[y]{an integer with the y coordinate}
+  @argument[width]{an integer with the width of the rectangle}
+  @argument[height]{an integer with the height of the rectangle}
+  @return{The passed in @arg{region} with the result or @code{nil} if an error
+    occured.}
   @begin{short}
     Computes the exclusive difference of @arg{region} with @arg{rectangle} and
     places the result in @arg{region}.
@@ -624,6 +762,18 @@
   @see-symbol{cairo:rectangle-int-t}"
   (region (:pointer (:struct region-t)))
   (rectangle (:pointer (:struct rectangle-int-t))))
+
+(defun region-xor-rectangle (region x y width height)
+  (cffi:with-foreign-object (rect '(:struct rectangle-int-t))
+    (setf (cffi:foreign-slot-value rect '(:struct rectangle-int-t) 'x) x
+          (cffi:foreign-slot-value rect '(:struct rectangle-int-t) 'y) y
+          (cffi:foreign-slot-value rect '(:struct rectangle-int-t) 'width)
+          width
+          (cffi:foreign-slot-value rect '(:struct rectangle-int-t) 'height)
+          height)
+    (when (eq :success
+              (%region-xor-rectangle region rect))
+      region)))
 
 (export 'region-xor-rectangle)
 

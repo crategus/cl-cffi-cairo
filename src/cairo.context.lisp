@@ -48,6 +48,7 @@
 ;;;
 ;;;     cairo_create
 ;;;     cairo_reference
+;;;     cairo_get_reference_count
 ;;;     cairo_destroy
 ;;;     cairo_status
 ;;;     cairo_save
@@ -79,13 +80,15 @@
 ;;;     cairo_get_line_join
 ;;;     cairo_set_line_width
 ;;;     cairo_get_line_width
+;;;     cairo_set_hairline                                 Since 1.18
+;;;     cairo_get_hairline                                 Since 1.18
 ;;;     cairo_set_miter_limit
 ;;;     cairo_get_miter_limit
-;;;
 ;;;     cairo_set_operator
 ;;;     cairo_get_operator
 ;;;     cairo_set_tolerance
 ;;;     cairo_get_tolerance
+;;;
 ;;;     cairo_clipstatus
 ;;;     cairo_clip_preserve
 ;;;     cairo_clip_extents
@@ -109,11 +112,8 @@
 ;;;     cairo_in_stroke
 ;;;     cairo_copy_page
 ;;;     cairo_show_page
-;;;     cairo_get_reference_count
 ;;;     cairo_set_user_data                                not implemented
 ;;;     cairo_get_user_data                                not implemented
-;;;     cairo_set_hairline                                 Since 1.18
-;;;     cairo_get_hairline                                 Since 1.18
 ;;; ----------------------------------------------------------------------------
 
 (in-package :cairo)
@@ -392,7 +392,7 @@
 (setf (liber:alias-for-symbol 'context-t)
       "CStruct"
       (liber:symbol-documentation 'context-t)
- "@version{2024-1-17}
+ "@version{2024-2-13}
   @begin{short}
     The @symbol{cairo:context-t} structure contains the current state of the
     rendering device, including coordinates of yet to be drawn shapes.
@@ -405,6 +405,7 @@
   create a Cairo context for a target surface. Memory management of the
   @symbol{cairo:context-t} instance is done with the @fun{cairo:reference} and
   @fun{cairo:destroy} functions.
+  @see-constructor{cairo:create}
   @see-function{cairo:create}
   @see-macro{cairo:with-context}
   @see-function{cairo:destroy}
@@ -444,12 +445,12 @@
 (export 'with-context)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_create () -> create
+;;; cairo_create ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_create" create) (:pointer (:struct context-t))
  #+liber-documentation
- "@version{2024-1-17}
+ "@version{2024-2-13}
   @argument[target]{a @symbol{cairo:surface-t} target surface for the Cairo
     context}
   @return{A newly allocated @symbol{cairo:context-t} instance.}
@@ -462,7 +463,7 @@
 
   The initial reference count should be released with the @fun{cairo:destroy}
   function when you are done using the Cairo context. This function will always
-  return a valid pointer. If memory cannot be allocated, a special Cairo context
+  return a valid context. If memory cannot be allocated, a special Cairo context
   will be returned on which the @fun{cairo:status} function returns the
   @code{:no-memory} value. If you attempt to target a surface which does not
   support writing, then a @code{:write-error} value will be raised. You can use
@@ -483,7 +484,7 @@
 (export 'create)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_reference () -> reference
+;;; cairo_reference ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_reference" reference) (:pointer (:struct context-t))
@@ -505,7 +506,26 @@
 (export 'reference)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_destroy () -> destroy
+;;; cairo_get_reference_count ()
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("cairo_get_reference_count" reference-count) :uint
+ #+liber-documentation
+ "@version{2024-2-13}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
+  @return{The unsigned integer with the current reference count of @arg{cr}.}
+  @begin{short}
+    Returns the current reference count of the Cairo context.
+  @end{short}
+  If the Cairo context is a \"nil\" context, 0 will be returned.
+  @see-symbol{cairo:context-t}
+  @see-function{cairo:reference}"
+  (cr (:pointer (:struct context-t))))
+
+(export 'reference-count)
+
+;;; ----------------------------------------------------------------------------
+;;; cairo_destroy ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_destroy" destroy) :void
@@ -524,7 +544,7 @@
 (export 'destroy)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_status () -> status
+;;; cairo_status ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_status" status) status-t
@@ -543,7 +563,7 @@
 (export 'status)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_save () -> save
+;;; cairo_save ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_save" save) :void
@@ -572,7 +592,7 @@
 (export 'save)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_restore () -> restore
+;;; cairo_restore ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_restore" restore) :void
@@ -591,7 +611,7 @@
 (export 'restore)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_get_target () -> target
+;;; cairo_get_target ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_get_target" target) (:pointer (:struct surface-t))
@@ -619,7 +639,7 @@
 (export 'target)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_push_group () -> push-group
+;;; cairo_push_group ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_push_group" push-group) :void
@@ -677,7 +697,7 @@
 (export 'push-group)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_push_group_with_content () -> push-group-with-content
+;;; cairo_push_group_with_content ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_push_group_with_content" push-group-with-content) :void
@@ -708,7 +728,7 @@
 (export 'push-group-with-content)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_pop_group () -> pop-group
+;;; cairo_pop_group ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_pop_group" pop-group) (:pointer (:struct pattern-t))
@@ -743,7 +763,7 @@
 (export 'pop-group)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_pop_group_to_source () -> pop-group-to-source
+;;; cairo_pop_group_to_source ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_pop_group_to_source" pop-group-to-source) :void
@@ -779,13 +799,13 @@
 (export 'pop-group-to-source)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_get_group_target () -> group-target
+;;; cairo_get_group_target ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_get_group_target" group-target)
     (:pointer (:struct surface-t))
  #+liber-documentation
- "@version{#2024-1-17}
+ "@version{#2024-2-13}
   @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{return}
     The @symbol{cairo:surface-t} target surface. This object is owned by Cairo.
@@ -800,7 +820,7 @@
   started by the most recent call to the @fun{cairo:push-group} or
   @fun{cairo:push-group-with-content} functions.
 
-  This function will always return a valid pointer, but the result can be a
+  This function will always return a valid surface, but the result can be a
   \"nil\" surface if @arg{cr} is already in an error state. A \"nil\" surface
   is indicated by a value not equal to the @code{:success} value of the
   @symbol{cairo:status-t} enumeration.
@@ -816,7 +836,7 @@
 (export 'group-target)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_set_source_rgb () -> set-source-rgb
+;;; cairo_set_source_rgb ()
 ;;; ----------------------------------------------------------------------------
 
 (defun set-source-rgb (cr red green blue)
@@ -853,7 +873,7 @@
 (export 'set-source-rgb)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_set_source_rgba () -> set-source-rgba
+;;; cairo_set_source_rgba ()
 ;;; ----------------------------------------------------------------------------
 
 (defun set-source-rgba (cr red green blue alpha)
@@ -893,7 +913,7 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_get_source ()
-;;; cairo_set_source () -> source
+;;; cairo_set_source ()
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf source) (source cr)
@@ -905,7 +925,7 @@
 
 (cffi:defcfun ("cairo_get_source" source) (:pointer (:struct pattern-t))
  #+liber-documentation
- "@version{2024-1-17}
+ "@version{2024-2-13}
   @syntax{(cairo:source cr) => source}
   @syntax{(setf (cairo:source cr) source)}
   @argument[cr]{a @symbol{cairo:context-t} instance}
@@ -929,8 +949,9 @@
   @begin[Note]{dictionary}
     The transformation matrix of the pattern will be locked to the user space
     in effect at the time of the call of the @setf{cairo:source} function. This
-    means that further modifications of the current transformation matrix will
-    not affect the source pattern. See the @fun{cairo:pattern-matrix} function.
+    means that further modifications of the current transformation matrix CTM
+    will not affect the source pattern. See the @fun{cairo:pattern-matrix}
+    function.
   @end{dictionary}
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:pattern-t}
@@ -942,7 +963,7 @@
 (export 'source)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_set_source_surface () -> set-source-surface
+;;; cairo_set_source_surface ()
 ;;; ----------------------------------------------------------------------------
 
 (defun set-source-surface (cr surface x y)
@@ -990,7 +1011,7 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_get_antialias ()
-;;; cairo_set_antialias () -> antialias
+;;; cairo_set_antialias ()
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf antialias) (value cr)
@@ -1027,7 +1048,7 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_get_dash ()
-;;; cairo_set_dash () -> dash
+;;; cairo_set_dash ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_set_dash" %set-dash) :void
@@ -1101,7 +1122,7 @@
 (export 'dash)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_get_dash_count () -> dash-count
+;;; cairo_get_dash_count ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_get_dash_count" dash-count) :int
@@ -1124,7 +1145,7 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_get_fill_rule ()
-;;; cairo_set_fill_rule () -> fill-rule
+;;; cairo_set_fill_rule ()
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf fill-rule) (rule cr)
@@ -1164,7 +1185,7 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_get_line_cap ()
-;;; cairo_set_line_cap () -> line-cap
+;;; cairo_set_line_cap ()
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf line-cap) (cap cr)
@@ -1203,7 +1224,7 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_get_line_join ()
-;;; cairo_set_line_join () -> line-join
+;;; cairo_set_line_join ()
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf line-join) (join cr)
@@ -1242,7 +1263,7 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_get_line_width ()
-;;; cairo_set_line_width () -> line-width
+;;; cairo_set_line_width ()
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf line-width) (width cr)
@@ -1294,8 +1315,61 @@
 (export 'line-width)
 
 ;;; ----------------------------------------------------------------------------
+;;; cairo_get_hairline ()
+;;; cairo_set_hairline ()
+;;; ----------------------------------------------------------------------------
+
+#+cairo-1-18
+(defun (setf hairline) (value cr)
+  (cffi:foreign-funcall "cairo_set_hairline"
+                        (:pointer (:struct context-t)) cr
+                        :bool value
+                        :void)
+  value)
+
+#+cairo-1-18
+(cffi:defcfun ("cairo_get_hairline" hairline) :bool
+ #+liber-documentation
+ "@version{2024-2-13}
+  @syntax{(cairo:hairline cr) => setting}
+  @syntax{(setf (cairo:hairline cr) setting)}
+  @argument[cr]{a @symbol{cairo:context-t} instance}
+  @argument[setting]{a boolean whether hairline mode is set}
+  @begin{short}
+    The @fun{cairo:hairline} function returns whether or not hairline mode is
+    set.
+  @end{short}
+  The @setf{cairo:hairline} functon sets lines within the Cairo context to be
+  hairlines. Hairlines are logically zero-width lines that are drawn at the
+  thinnest renderable width possible in the current Cairo context.
+
+  On surfaces with native hairline support, the native hairline functionality
+  will be used. Surfaces that support hairlines include:
+  @begin[arg]{table}
+    @entry[pdf/ps]{Encoded as 0-width line.}
+    @entry[win32_printing]{Rendered with the @code{PS_COSMETIC} pen.}
+    @entry[svg]{Encoded as 1 px non-scaling-stroke.}
+    @entry[script]{Encoded with the @code{set-hairline} function.}
+  @end{table}
+  Cairo will always render hairlines at 1 device unit wide, even if an
+  anisotropic scaling was applied to the stroke width. In the wild, handling
+  of this situation is not well-defined. Some PDF, PS, and SVG renderers match
+  the output of Cairo, but some very popular implementations (Acrobat, Chrome,
+  rsvg) will scale the hairline unevenly. As such, best practice is to reset
+  any anisotropic scaling before calling the @fun{cairo:stroke} function. See
+  @url[https://cairographics.org/cookbook/ellipses/]{Ellipses With Uniform
+  Stroke Width} for an example.
+
+  Since 1.18
+  @see-symbol{cairo:context-t}
+  @see-function{cairo:stroke}"
+  (cr (:pointer (:struct context-t))))
+
+(export 'hairline)
+
+;;; ----------------------------------------------------------------------------
 ;;; cairo_get_miter_limit ()
-;;; cairo_set_miter_limit () -> miter-limit
+;;; cairo_set_miter_limit ()
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf miter-limit) (limit cr)
@@ -1349,7 +1423,7 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_get_operator ()
-;;; cairo_set_operator () -> operator
+;;; cairo_set_operator ()
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf operator) (op cr)
@@ -1384,7 +1458,7 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_get_tolerance ()
-;;; cairo_set_tolerance () -> tolerance
+;;; cairo_set_tolerance ()
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf tolerance) (tolerance cr)
@@ -1423,7 +1497,7 @@
 (export 'tolerance)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_clip () -> clip
+;;; cairo_clip ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_clip" clip) :void
@@ -1462,7 +1536,7 @@
 (export 'clip)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_clip_preserve () -> clip-preserve
+;;; cairo_clip_preserve ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_clip_preserve" clip-preserve) :void
@@ -1500,7 +1574,7 @@
 (export 'clip-preserve)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_clip_extents () -> clip-extents
+;;; cairo_clip_extents ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_clip_extents" %clip-extents) :void
@@ -1538,7 +1612,7 @@
 (export 'clip-extents)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_in_clip () -> in-clip
+;;; cairo_in_clip ()
 ;;; ----------------------------------------------------------------------------
 
 (defun in-clip (cr x y)
@@ -1570,7 +1644,7 @@
 (export 'in-clip)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_reset_clip () -> reset-clip
+;;; cairo_reset_clip ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_reset_clip" reset-clip) :void
@@ -1616,7 +1690,7 @@
   (rectangles (:pointer (:struct rectangle-list-t))))
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_copy_clip_rectangle_list () -> copy-clip-rectangle-list
+;;; cairo_copy_clip_rectangle_list ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_copy_clip_rectangle_list" %copy-clip-rectangle-list)
@@ -1689,7 +1763,7 @@
 (export 'copy-clip-rectangle-list)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_fill () -> fill
+;;; cairo_fill ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_fill" fill) :void
@@ -1711,7 +1785,7 @@
 (export 'fill)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_fill_preserve () -> fill-preserve
+;;; cairo_fill_preserve ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_fill_preserve" fill-preserve) :void
@@ -1734,7 +1808,7 @@
 (export 'fill-preserve)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_fill_extents () -> fill-extents
+;;; cairo_fill_extents ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_fill_extents" %fill-extents) :void
@@ -1791,7 +1865,7 @@
 (export 'fill-extents)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_in_fill () -> in-fill
+;;; cairo_in_fill ()
 ;;; ----------------------------------------------------------------------------
 
 (defun in-fill (cr x y)
@@ -1825,7 +1899,7 @@
 (export 'in-fill)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_mask () -> mask
+;;; cairo_mask ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_mask" mask) :void
@@ -1847,7 +1921,7 @@
 (export 'mask)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_mask_surface () -> mask-surface
+;;; cairo_mask_surface ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_mask_surface" %mask-surface) :void
@@ -1881,19 +1955,19 @@
 (export 'mask-surface)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_paint () -> paint
+;;; cairo_paint ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_paint" paint) :void
  #+liber-documentation
- "@version{2024-1-18}
+ "@version{2024-2-13}
   @argument[cr]{a @symbol{cairo:context-t} instance}
   @begin{short}
     A drawing operator that paints the current source everywhere within the
     current clip region.
   @end{short}
   @begin[Example]{dictionary}
-    Code fragement to paint the background with a given color.
+    Code fragment to paint the background with a given color.
     @begin{pre}
 ;; Paint the white color on the background
 (cairo:set-source-rgb cr 1.0 1.0 1.0)
@@ -1906,7 +1980,7 @@
 (export 'paint)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_paint_with_alpha () -> paint-with-alpha
+;;; cairo_paint_with_alpha ()
 ;;; ----------------------------------------------------------------------------
 
 (defun paint-with-alpha (cr alpha)
@@ -1930,7 +2004,7 @@
 (export 'paint-with-alpha)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_stroke () -> stroke
+;;; cairo_stroke ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_stroke" stroke) :void
@@ -1984,7 +2058,7 @@
 (export 'stroke)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_stroke_preserve () -> stroke-preserve
+;;; cairo_stroke_preserve ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_stroke_preserve" stroke-preserve) :void
@@ -2011,7 +2085,7 @@
 (export 'stroke-preserve)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_stroke_extents () -> stroke-extents
+;;; cairo_stroke_extents ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_stroke_extents" %stroke-extents) :void
@@ -2073,7 +2147,7 @@
 (export 'stroke-extents)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_in_stroke () -> in-stroke
+;;; cairo_in_stroke ()
 ;;; ----------------------------------------------------------------------------
 
 (defun in-stroke (cr x y)
@@ -2111,7 +2185,7 @@
 (export 'in-stroke)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_copy_page () -> copy-page
+;;; cairo_copy_page ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_copy_page" copy-page) :void
@@ -2136,7 +2210,7 @@
 (export 'copy-page)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_show_page () -> show-page
+;;; cairo_show_page ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_show_page" show-page) :void
@@ -2156,25 +2230,6 @@
   (cr (:pointer (:struct context-t))))
 
 (export 'show-page)
-
-;;; ----------------------------------------------------------------------------
-;;; cairo_get_reference_count () -> reference-count
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("cairo_get_reference_count" reference-count) :uint
- #+liber-documentation
- "@version{2024-1-17}
-  @argument[cr]{a @symbol{cairo:context-t} instance}
-  @return{The current reference count of @arg{cr}.}
-  @begin{short}
-    Returns the current reference count of the Cairo context.
-  @end{short}
-  If the Cairo context is a \"nil\" context, 0 will be returned.
-  @see-symbol{cairo:context-t}
-  @see-function{cairo:reference}"
-  (cr (:pointer (:struct context-t))))
-
-(export 'reference-count)
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo_set_user_data ()
@@ -2222,58 +2277,5 @@
 ;;; Returns :
 ;;;     the user data previously attached or NULL.
 ;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; cairo_get_hairline ()
-;;; cairo_set_hairline ()
-;;; ----------------------------------------------------------------------------
-
-#+cairo-1-18
-(defun (setf hairline) (value cr)
-  (cffi:foreign-funcall "cairo_set_hairline"
-                        (:pointer (:struct context-t)) cr
-                        :bool value
-                        :void)
-  value)
-
-#+cairo-1-18
-(cffi:defcfun ("cairo_get_hairline" hairline) :bool
- #+liber-documentation
- "@version{2024-1-18}
-  @syntax{(cairo:hairline cr) => setting}
-  @syntax{(setf (cairo:hairline cr) setting)}
-  @argument[cr]{a @symbol{cairo:context-t} instance}
-  @argument[setting]{a boolean whether hairline mode is set}
-  @begin{short}
-    The @fun{cairo:hairline} function returns whether or not hairline mode is
-    set.
-  @end{short}
-  The @setf{cairo:hairline} functon sets lines within the Cairo context to be
-  hairlines. Hairlines are logically zero-width lines that are drawn at the
-  thinnest renderable width possible in the current Cairo context.
-
-  On surfaces with native hairline support, the native hairline functionality
-  will be used. Surfaces that support hairlines include:
-  @begin[arg]{table}
-    @entry[pdf/ps]{Encoded as 0-width line.}
-    @entry[win32_printing]{Rendered with the @code{PS_COSMETIC} pen.}
-    @entry[svg]{Encoded as 1 px non-scaling-stroke.}
-    @entry[script]{Encoded with the @code{set-hairline} function.}
-  @end{table}
-  Cairo will always render hairlines at 1 device unit wide, even if an
-  anisotropic scaling was applied to the stroke width. In the wild, handling
-  of this situation is not well-defined. Some PDF, PS, and SVG renderers match
-  Cairo's output, but some very popular implementations (Acrobat, Chrome,
-  rsvg) will scale the hairline unevenly. As such, best practice is to reset
-  any anisotropic scaling before calling the @fun{cairo:stroke} function. See
-  @url[https://cairographics.org/cookbook/ellipses/]{Ellipses With Uniform
-  Stroke Width} for an example.
-
-  Since 1.18
-  @see-symbol{cairo:context-t}
-  @see-function{cairo:stroke}"
-  (cr (:pointer (:struct context-t))))
-
-(export 'hairline)
 
 ;;; --- End of file cairo.context.lisp -----------------------------------------

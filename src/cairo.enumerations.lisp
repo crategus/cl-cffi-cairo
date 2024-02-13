@@ -46,21 +46,23 @@
 (setf (liber:alias-for-symbol 'antialias-t)
       "CEnum"
       (liber:symbol-documentation 'antialias-t)
- "@version{2024-1-17}
+ "@version{2024-2-13}
   @begin{short}
     The @symbol{cairo:antialias-t} enumeration specifies the type of
     antialiasing to do when rendering text or shapes.
   @end{short}
   As it is not necessarily clear from the above what advantages a particular
-  antialias method provides, there is also a set of hints.
+  antialias method provides, there is also a set of hints that have the
+  @code{:fast}, @code{:good}, and @code{:best} values.
 
-  These make no guarantee on how the backend will perform its rasterisation,
-  if it even rasterises, nor that they have any differing effect other than to
-  enable some form of antialiasing. In the case of glyph rendering, the
-  @code{:fast} and @code{:good} values will be mapped to the @code{:gray} value,
-  with the @code{:best} value being equivalent to the @code{:subpixel} value.
-  The interpretation of the @code{:default} value is left entirely up to the
-  backend, typically this will be similar to the @code{:good} value.
+  These hints make no guarantee on how the backend will perform its
+  rasterisation, if it even rasterises, nor that they have any differing effect
+  other than to enable some form of antialiasing. In the case of glyph
+  rendering, the @code{:fast} and @code{:good} values will be mapped to the
+  @code{:gray} value, with the @code{:best} value being equivalent to the
+  @code{:subpixel} value. The interpretation of the @code{:default} value is
+  left entirely up to the backend, typically this will be similar to the
+  @code{:good} value.
   @begin{pre}
 (cffi:defcenum antialias-t
   :default
@@ -81,7 +83,8 @@
       subpixel elements on devices such as LCD panels.}
     @entry[:fast]{Hint that the backend should perform some antialiasing but
       prefer speed over quality.}
-    @entry[:good]{The backend should balance quality against performance.}
+    @entry[:good]{Hint that the backend should balance quality against
+      performance.}
     @entry[:best]{Hint that the backend should render at the highest quality,
       sacrificing speed if necessary.}
   @end{table}

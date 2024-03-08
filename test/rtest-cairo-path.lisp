@@ -176,12 +176,15 @@
     (is-false (cairo:curve-to context 50 60 70 80 90 100))
     (is-false (cairo:close-path context))
     (let ((path (cairo:copy-path context)))
+      (is (eq :success (cairo:path-status path)))
+      (is (cffi:pointerp (cairo:path-data path)))
+      (is (= 11 (cairo:path-numdata path)))
       (is (equal '(:PATH (:MOVE-TO 10.0d0 20.0d0)
                          (:LINE-TO 30.0d0 40.0d0)
                          (:CURVE-TO 50.0d0 60.0d0 70.0d0 80.0d0 90.0d0 100.0d0)
                          (:CLOSE-PATH) (:MOVE-TO 10.0d0 20.0d0))
                  (cairo:path-data-to-list path)))
-    (is-false (cairo:path-destroy path)))))
+      (is-false (cairo:path-destroy path)))))
 
 (test cairo-copy-path-flat
   (cairo:with-context-for-image-surface (context :rgb24 400 300)
@@ -637,4 +640,4 @@
                    (cairo:path-data-to-list path)))
       (is-false (cairo:path-destroy path))))))
 
-;;; 2024-1-23
+;;; 2024-2-14

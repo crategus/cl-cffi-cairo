@@ -41,14 +41,14 @@
 ;; no device for image surface
 (test cairo-device-reference/destroy.1
   (let ((surface (cairo:image-surface-create :rgb24 100 150)))
-    (is (cffi:null-pointer-p (cairo:surface-device surface)))
+    (is-false (cairo:surface-device surface))
     (is-false (cairo:surface-destroy surface))))
 
 ;; no device for pdf surface
 (test cairo-device-reference/destroy.2
   (let* ((path (sys-path "out/tmp.pdf"))
          (surface (cairo:pdf-surface-create path 100 150)))
-    (is (cffi:null-pointer-p (cairo:surface-device surface)))
+    (is-false (cairo:surface-device surface))
     (is-false (cairo:surface-destroy surface))))
 
 ;; Example with device for script surface
@@ -105,6 +105,23 @@
 ;;;     cairo_device_acquire
 ;;;     cairo_device_release
 
+(test cairo-device-acquire/release
+  (let* ((filename (sys-path "out/tmp.script"))
+         (script (cairo:script-create filename))
+         (surface (cairo:script-surface-create script :color 100 150)))
+    ;; Acquire the device
+    (is (eq :success (cairo:device-acquire script)))
+
+    (is (cffi:pointerp script))
+    (is (cffi:pointerp surface))
+    (is (cffi:pointer-eq script (cairo:surface-device surface)))
+    (is (eq :script (cairo:device-type script)))
+    ;; Release the device
+    (is-false (cairo:device-release script))
+
+    (is-false (cairo:device-destroy script))
+    (is-false (cairo:surface-destroy surface))))
+
 ;;;     cairo_device_observer_elapsed ()
 ;;;     cairo_device_observer_fill_elapsed ()
 ;;;     cairo_device_observer_glyphs_elapsed ()
@@ -113,4 +130,4 @@
 ;;;     cairo_device_observer_print ()
 ;;;     cairo_device_observer_stroke_elapsed ()
 
-;;; 2024-1-12
+;;; 2024-2-11

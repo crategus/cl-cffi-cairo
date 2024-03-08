@@ -627,9 +627,9 @@
 
 (defun scaled-font-text-extents (font utf8)
  #+liber-documentation
- "@version{2024-2-8}
-  @syntax{(cairo:scaled-font-text-extents font utf8) => x-bearing, y-bearing,
-    width, height, x-advance, y-advance}
+ "@version{2024-2-19}
+  @syntax{(cairo:scaled-font-text-extents font utf8) => xbearing, ybearing,
+    width, height, xadvance, yadvance}
   @argument[font]{a @symbol{cairo:scaled-font-t} instance}
   @argument[utf8]{a string of text, encoded in UTF-8}
   @return{The double float values of the @symbol{cairo:text-extents-t} instance
@@ -642,15 +642,15 @@
   the @fun{cairo:show-text} function if the Cairo graphics state were set to
   the same @code{cairo:font-face}, @code{cairo:set-font-matrix}, @code{ctm},
   and @code{cairo:font-options} as @arg{font}. Additionally, the
-  @arg{x-advance} and @arg{y-advance} values indicate the amount by which the
+  @arg{xadvance} and @arg{yadvance} values indicate the amount by which the
   current point would be advanced by the @fun{cairo:show-text} function.
 
   Note that whitespace characters do not directly contribute to the size of
   the rectangle @arg{width} and @arg{height} values. They do contribute
   indirectly by changing the position of non-whitespace characters. In
   particular, trailing whitespace characters are likely to not affect the size
-  of the rectangle, though they will affect the @arg{x-advance} and
-  @arg{y-advance} values.
+  of the rectangle, though they will affect the @arg{xadvance} and
+  @arg{yadvance} values.
   @see-symbol{cairo:scaled-font-t}
   @see-type{cairo:text-extents-t}
   @see-function{cairo:show-text}"

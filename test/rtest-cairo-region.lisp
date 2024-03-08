@@ -278,4 +278,17 @@
 
 ;;;     cairo_region_xor_rectangle
 
-;;; 2024-2-10
+(test cairo-region-xor-rectangle
+  (let ((region (cairo:region-create-rectangle 0 0 100 100)))
+    (is (equal '(0 0 100 100) (cairo:region-extents region)))
+    (is (cffi:pointer-eq region
+                         (cairo:region-xor-rectangle region 50 50 10 100)))
+    (is (equal '(0 0 100 150) (cairo:region-extents region)))
+    (is (= 4 (cairo:region-num-rectangles region)))
+    (is (equal '(0 0 100 50) (cairo:region-rectangle region 0)))
+    (is (equal '(0 50 50 50) (cairo:region-rectangle region 1)))
+    (is (equal '(60 50 40 50) (cairo:region-rectangle region 2)))
+    (is (equal '(50 100 10 50) (cairo:region-rectangle region 3)))
+    (is-false (cairo:region-destroy region))))
+
+;;; 2024-3-7

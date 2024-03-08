@@ -674,8 +674,8 @@
   the rectangle @arg{width} and @arg{height} values. They do contribute
   indirectly by changing the position of non-whitespace characters. In
   particular, trailing whitespace characters are likely to not affect the size
-  of the rectangle, though they will affect the @arg{x-advance} and
-  @arg{y-advance} values.
+  of the rectangle, though they will affect the @arg{xadvance} and
+  @arg{yadvance} values.
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:text-extents-t}
   @see-function{cairo:show-text}"

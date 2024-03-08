@@ -260,6 +260,38 @@
 (export 'pdf-version-t)
 
 ;;; ----------------------------------------------------------------------------
+;;; cairo:with-pdf-surface
+;;; ----------------------------------------------------------------------------
+
+(defmacro with-pdf-surface ((surface path width height) &body body)
+ #+liber-documentation
+ "@version{#2024-2-11}
+  @syntax{(cairo:with-pdf-surface (surface path width height) body) => result}
+  @argument[surface]{a PDF @symbol{cairo:surface-t} instance}
+  @argument[path]{a path or namestring with a filename for the PDF output,
+    @code{nil} may be used to specify no output, this will generate a PDF
+    surface that may be queried and used as a source, without generating a
+    temporary file}
+  @argument[width]{a number coerced to a double float with the width of the
+    surface, in points (1 point == 1/72 inch)}
+  @argument[height]{a number coerced to a double float with the height of the
+    surface, in points (1 point == 1/72 inch)}
+  @begin{short}
+    The @symbol{cairo:with-pdf-surface} macro allocates a new PDF
+    @symbol{cairo:surface-t} instance with the given @arg{path}, @arg{width},
+    and @arg{height} and executes the body that uses the PDF surface.
+  @end{short}
+  After execution of the body the allocated memory for the PDF surface
+  is released.
+  @see-symbol{cairo:surface-t}"
+  `(let ((,surface (pdf-surface-create ,path ,width ,height)))
+     (unwind-protect
+       (progn ,@body)
+       (surface-destroy ,surface))))
+
+(export 'with-pdf-surface)
+
+;;; ----------------------------------------------------------------------------
 ;;; cairo_pdf_surface_create ()
 ;;; ----------------------------------------------------------------------------
 

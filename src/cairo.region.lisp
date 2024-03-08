@@ -743,8 +743,12 @@
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_region_xor_rectangle" %region-xor-rectangle) status-t
+  (region (:pointer (:struct region-t)))
+  (rectangle (:pointer (:struct rectangle-int-t))))
+
+(defun region-xor-rectangle (region x y width height)
  #+liber-documentation
- "@version{#2020-12-15}
+ "@version{2024-2-15}
   @argument[region]{a @symbol{cairo:region-t} instance}
   @argument[x]{an integer with the x coordinate}
   @argument[y]{an integer with the y coordinate}
@@ -760,10 +764,6 @@
   @arg{region} or in @arg{rectangle}, but not in both.
   @see-symbol{cairo:region-t}
   @see-symbol{cairo:rectangle-int-t}"
-  (region (:pointer (:struct region-t)))
-  (rectangle (:pointer (:struct rectangle-int-t))))
-
-(defun region-xor-rectangle (region x y width height)
   (cffi:with-foreign-object (rect '(:struct rectangle-int-t))
     (setf (cffi:foreign-slot-value rect '(:struct rectangle-int-t) 'x) x
           (cffi:foreign-slot-value rect '(:struct rectangle-int-t) 'y) y

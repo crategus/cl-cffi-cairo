@@ -125,6 +125,7 @@
       Creating paths and manipulating path data. Paths are the most basic
       drawing tools and are primarily used to implicitly generate simple masks.
       @about-symbol{path-data-type-t}
+      @about-symbol{path-data-t}
       @about-symbol{path-t}
       @about-function{path-status}
       @about-function{path-data}
@@ -409,12 +410,12 @@
       @about-symbol{device-type-t}
       @about-symbol{device-t}
       @about-function{device-reference}
+      @about-function{device-reference-count}
       @about-function{device-destroy}
       @about-function{device-status}
+      @about-function{device-type}
       @about-function{device-finish}
       @about-function{device-flush}
-      @about-function{device-type}
-      @about-function{device-reference-count}
       @about-function{device-user-data}
       @about-function{device-acquire}
       @about-function{device-release}
@@ -429,10 +430,9 @@
     @begin[Cairo Surfaces]{subsection}
       The @symbol{cairo:surface-t} structure is the abstract type representing
       all different drawing targets that cairo can render to. The actual
-      drawings are performed using a Cairo context.
-
-      A Cairo surface is created by using backend-specific constructors,
-      typically of the form @code{cairo:backend-surface-create}.
+      drawings are performed using a Cairo context. A Cairo surface is created
+      by using backend-specific constructors, typically of the form
+      @code{cairo:backend-surface-create}.
 
       Most surface types allow accessing the surface without using Cairo
       functions. If you do this, keep in mind that it is mandatory that you call
@@ -458,8 +458,8 @@
     (cairo:surface-mark-dirty surface)))
       @end{pre}
       Note that for other surface types it might be necessary to acquire the
-      surface's device first. See the @fun{cairo:device-acquire} function for a
-      discussion of devices.
+      device of the surface first. See the @fun{cairo:device-acquire} function
+      for a discussion of devices.
       @about-symbol{CAIRO_HAS_MIME_SURFACE}
       @about-symbol{CAIRO_MIME_TYPE_JP2}
       @about-symbol{CAIRO_MIME_TYPE_JPEG}
@@ -469,12 +469,16 @@
       @about-symbol{content-t}
       @about-symbol{surface-type-t}
       @about-symbol{surface-t}
+      @about-macro{with-surface}
+      @about-macro{with-context-for-surface}
       @about-function{surface-create-similar}
       @about-function{surface-create-similar-image}
       @about-function{surface-create-for-rectangle}
       @about-function{surface-reference}
+      @about-function{surface-reference-count}
       @about-function{surface-destroy}
       @about-function{surface-status}
+      @about-function{surface-type}
       @about-function{surface-finish}
       @about-function{surface-flush}
       @about-function{surface-device}
@@ -485,8 +489,6 @@
       @about-function{surface-device-offset}
       @about-function{surface-device-scale}
       @about-function{surface-fallback-resolution}
-      @about-function{surface-type}
-      @about-function{surface-reference-count}
       @about-function{surface-user-data}
       @about-function{surface-copy-page}
       @about-function{surface-show-page}
@@ -501,7 +503,6 @@
       allocated by Cairo or by the calling code. The supported image formats
       are those defined in the @symbol{cairo:format-t} enumeration.
       @about-symbol{format-t}
-      @about-function{format-stride-for-width}
       @about-macro{with-image-surface}
       @about-macro{with-context-for-image-surface}
       @about-function{image-surface-create}
@@ -511,6 +512,7 @@
       @about-function{image-surface-width}
       @about-function{image-surface-height}
       @about-function{image-surface-stride}
+      @about-function{format-stride-for-width}
     @end{subsection}
     @begin[PDF Surfaces]{subsection}
       The PDF surface is used to render Cairo graphics to Adobe PDF files and
@@ -582,6 +584,7 @@
       @about-symbol{pdf-outline-flags-t}
       @about-symbol{pdf-metadata-t}
       @about-symbol{pdf-version-t}
+      @about-macro{with-pdf-surface}
       @about-function{pdf-surface-create}
       @about-function{pdf-surface-create-for-stream}
       @about-function{pdf-surface-restrict-to-version}

@@ -31,9 +31,9 @@ Fonts
 
 Surfaces
 
-  cairo.device.lisp                cairo_device_t                   Cairo 1.18 +
-  cairo.surface.lisp               cairo_surface_t                  Cairo 1.18 +
-  cairo.image-surface.lisp         Image Surfaces                   Cairo 1.18 +
+  cairo.device.lisp                cairo_device_t                   Cairo 1.18 &
+  cairo.surface.lisp               cairo_surface_t                  Cairo 1.18 &
+  cairo.image-surface.lisp         Image Surfaces                   Cairo 1.18
   cairo.pdf-surface.lisp           PDF Surfaces                     Cairo 1.18 +
   cairo.png-surface.lisp           PNG Support                      Cairo 1.18 +
   cairo.ps-surface.lisp            PostScript Surfaces              Cairo 1.18 +

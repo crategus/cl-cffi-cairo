@@ -24,7 +24,7 @@
 
 (defsystem :cl-cffi-cairo
   :name "cl-cffi-cairo"
-  :version "0.5.0"
+  :version "0.6.0"
   :author  "Dieter Kaiser"
   :license "MIT"
   :components
@@ -74,7 +74,7 @@
 
 (defsystem :cl-cffi-cairo/test
   :name "cl-cffi-cairo/test"
-  :version "0.5.0"
+  :version "0.6.0"
   :author  "Dieter Kaiser"
   :license "MIT"
   :pathname "test/"

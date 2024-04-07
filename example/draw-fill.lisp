@@ -1,3 +1,7 @@
+;;;; Cairo Fill
+;;;;
+;;;; 2024-4-6
+
 (in-package :cairo-example)
 
 (defun cairo-draw-fill (context width height)
@@ -12,5 +16,3 @@
   (cairo:rectangle context 0.25 0.25 0.5 0.5)
   (cairo:fill context)
   (cairo:restore context))
-
-;;; --- 2023-2-12 --------------------------------------------------------------

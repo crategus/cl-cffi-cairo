@@ -1,3 +1,7 @@
+;;;; Cairo Text Letter
+;;;;
+;;;; 2024-4-6
+
 (in-package :cairo-example)
 
 (defun cairo-draw-text-letter (context width height)
@@ -19,5 +23,3 @@
                    (- 0.5 (/ theight 2) ybearing))
      (cairo:show-text context "a"))
   (cairo:restore context))
-
-;;; --- 2023-2-12 --------------------------------------------------------------

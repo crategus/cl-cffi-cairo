@@ -1,3 +1,7 @@
+;;;; Multi Caps
+;;;;
+;;;; 2024-4-6
+
 (in-package :cairo-example)
 
 (defun draw-multi-caps (context width height)

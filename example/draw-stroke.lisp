@@ -1,3 +1,7 @@
+;;;; Cairo Stroke
+;;;;
+;;;; 2024-4-6
+
 (in-package :cairo-example)
 
 (defun cairo-draw-stroke (context width height)
@@ -13,5 +17,3 @@
   (cairo:rectangle context 0.25 0.25 0.5 0.5)
   (cairo:stroke context)
   (cairo:restore context))
-
-;;; 2024-1-13

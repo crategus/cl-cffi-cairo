@@ -13,11 +13,11 @@
 ;;;     cairo_version
 
 (test cairo-version
-  (is (= 11800 (cairo:version))))
+  (is (= 11802 (cairo:version))))
 
 ;;;     cairo_version_string
 
 (test cairo-version-string
-  (is (string= "1.18.0" (cairo:version-string))))
+  (is (string= "1.18.2" (cairo:version-string))))
 
-;;; 2024-1-27
+;;; 2024-10-13

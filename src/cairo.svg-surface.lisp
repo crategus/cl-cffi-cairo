@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; cairo.svg-surface.lisp
 ;;;
-;;; The documentation of the file is taken from the Cairo Reference Manual
-;;; Version 1.18 and modified to document the Lisp binding to the Cairo
-;;; library. See <http://cairographics.org>. The API documentation of the
-;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the Cairo Reference Manual
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo library,
+;;; see <http://cairographics.org>. The API documentation of the Lisp binding
+;;; is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2020 - 2024 Dieter Kaiser
+;;; Copyright (C) 2020 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -20,8 +20,8 @@
 ;;;
 ;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 ;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-;;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 ;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
@@ -33,41 +33,24 @@
 ;;;
 ;;; Types and Values
 ;;;
-;;;     CAIRO_HAS_SVG_SURFACE
 ;;;     cairo_svg_version_t
 ;;;     cairo_svg_unit_t
 ;;;
 ;;; Functions
 ;;;
 ;;;     cairo_svg_surface_create
-;;;     cairo_svg_surface_create_for_stream
+;;;     cairo_svg_surface_create_for_stream                 not implemented
 ;;;     cairo_svg_surface_get_document_unit
 ;;;     cairo_svg_surface_set_document_unit
 ;;;     cairo_svg_surface_restrict_to_version
 ;;;     cairo_svg_get_versions
 ;;;     cairo_svg_version_to_string
-;;;
-;;; Description
-;;;
-;;; The SVG surface is used to render cairo graphics to SVG files and is a
-;;; multi-page vector surface backend.
 ;;; ----------------------------------------------------------------------------
 
 (in-package :cairo)
 
 ;;; ----------------------------------------------------------------------------
-;;; CAIRO_HAS_SVG_SURFACE
-;;;
-;;; #define CAIRO_HAS_SVG_SURFACE 1
-;;;
-;;; Defined if the SVG surface backend is available. This macro can be used to
-;;; conditionally compile backend-specific code.
-;;;
-;;; Since 1.2
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; enum cairo_svg_version_t
+;;; cairo_svg_version_t
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcenum svg-version-t
@@ -78,56 +61,28 @@
 (setf (liber:alias-for-symbol 'svg-version-t)
       "CEnum"
       (liber:symbol-documentation 'svg-version-t)
- "@version{#2023-1-9}
+ "@version{2025-1-13}
+  @begin{declaration}
+(cffi:defcenum svg-version-t
+  :version-1-1
+  :version-1-2)
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:version-1-1]{The version 1.1 of the SVG specification.}
+      @entry[:version-1-2]{The version 1.2 of the SVG specification.}
+    @end{table}
+  @end{values}
   @begin{short}
     The @symbol{cairo:svg-version-t} enumeration is used to describe the version
     number of the SVG specification that a generated SVG file will conform to.
   @end{short}
-  @begin{pre}
-(cffi:defcenum svg-version-t
-  :version-1-1
-  :version-1-2)
-  @end{pre}
-  @begin[code]{table}
-    @entry[:version-1-1]{The version 1.4 of the SVG specification.}
-    @entry[:version-1-2]{The version 1.5 of the SVG specification.}
-  @end{table}
   @see-function{cairo:svg-version-to-string}")
 
 (export 'svg-version-t)
 
 ;;; ----------------------------------------------------------------------------
-;;; enum cairo_svg_unit_t
-;;;
-;;; CAIRO_SVG_UNIT_USER :
-;;;     User unit, a value in the current coordinate system. If used in the root
-;;;     element for the initial coordinate systems it corresponds to pixels.
-;;;     (Since 1.16)
-;;; CAIRO_SVG_UNIT_EM : The size of the element's font. (Since 1.16)
-;;; CAIRO_SVG_UNIT_EX : The x-height of the element’s font. (Since 1.16)
-;;; CAIRO_SVG_UNIT_PX : Pixels (1px = 1/96th of 1in). (Since 1.16)
-;;; CAIRO_SVG_UNIT_IN : Inches (1in = 2.54cm = 96px). (Since 1.16)
-;;; CAIRO_SVG_UNIT_CM : Centimeters (1cm = 96px/2.54). (Since 1.16)
-;;; CAIRO_SVG_UNIT_MM : Millimeters (1mm = 1/10th of 1cm). (Since 1.16)
-;;; CAIRO_SVG_UNIT_PT : Points (1pt = 1/72th of 1in). (Since 1.16)
-;;; CAIRO_SVG_UNIT_PC : Picas (1pc = 1/6th of 1in). (Since 1.16)
-;;; CAIRO_SVG_UNIT_PERCENT :
-;;;     Percent, a value that is some fraction of another reference value.
-;;;     (Since 1.16)
-;;;
-;;;
-;;; CAIRO_SVG_UNIT_USER
-;;; CAIRO_SVG_UNIT_EM
-;;; CAIRO_SVG_UNIT_EX
-;;; CAIRO_SVG_UNIT_PX
-;;; CAIRO_SVG_UNIT_IN
-;;; CAIRO_SVG_UNIT_CM
-;;; CAIRO_SVG_UNIT_MM
-;;; CAIRO_SVG_UNIT_PT
-;;; CAIRO_SVG_UNIT_PC
-;;; CAIRO_SVG_UNIT_PERCENT
-;;;
-;;; Since 1.16
+;;; cairo_svg_unit_t
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcenum svg-unit-t
@@ -146,12 +101,8 @@
 (setf (liber:alias-for-symbol 'svg-unit-t)
       "CEnum"
       (liber:symbol-documentation 'svg-unit-t)
- "@version{#2023-1-9}
-  @begin{short}
-    The @symbol{cairo:svg-unit-t} enumeration is used to describe the units valid
-    for coordinates and lengths in the SVG specification.
-  @end{short}
-  @begin{pre}
+ "@version{2025-1-13}
+  @begin{declaration}
 (cffi:defcenum svg-unit-t
   :user
   :em
@@ -163,28 +114,36 @@
   :pt
   :pc
   :percent)
-  @end{pre}
-  @begin[code]{table}
-    @entry[:user]{User unit, a value in the current coordinate system. If used
-      in the root element for the initial coordinate systems it corresponds to
-      pixels.}
-    @entry[:em]{The size of the element's font.}
-    @entry[:ex]{The x-height of the element’s font.}
-    @entry[:px]{Pixels (1px = 1/96th of 1in).}
-    @entry[:in]{Inches (1in = 2.54cm = 96px).}
-    @entry[:cm]{Centimeters (1cm = 96px/2.54).}
-    @entry[:mm]{Millimeters (1mm = 1/10th of 1cm).}
-    @entry[:pt]{Points (1pt = 1/72th of 1in).}
-    @entry[:pc]{Picas (1pc = 1/6th of 1in).}
-    @entry[:percent]{Percent, a value that is some fraction of another
-      reference value.}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:user]{User unit, a value in the current coordinate system. If used
+        in the root element for the initial coordinate systems it corresponds to
+        pixels.}
+      @entry[:em]{The size of the element's font.}
+      @entry[:ex]{The x-height of the element’s font.}
+      @entry[:px]{Pixels (1px = 1/96th of 1in).}
+      @entry[:in]{Inches (1in = 2.54cm = 96px).}
+      @entry[:cm]{Centimeters (1cm = 96px/2.54).}
+      @entry[:mm]{Millimeters (1mm = 1/10th of 1cm).}
+      @entry[:pt]{Points (1pt = 1/72th of 1in).}
+      @entry[:pc]{Picas (1pc = 1/6th of 1in).}
+      @entry[:percent]{Percent, a value that is some fraction of another
+        reference value.}
+    @end{table}
+  @end{values}
+  @begin{short}
+    The @symbol{cairo:svg-unit-t} enumeration is used to describe the units
+    valid for coordinates and lengths in the SVG specification.
+  @end{short}
+
+  Since 1.16
   @see-function{cairo:svg-surface-document-unit}")
 
 (export 'svg-unit-t)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_svg_surface_create ()
+;;; cairo_svg_surface_create
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_svg_surface_create" %svg-surface-create)
@@ -195,30 +154,31 @@
 
 (defun svg-surface-create (path width height)
  #+liber-documentation
- "@version{2023-1-14}
-  @argument[path]{a namestring or pathname with a path for the SVG output (must
+ "@version{2025-1-13}
+  @argument[path]{a namestring or pathname for a path for the SVG output (must
     be writable), @code{nil} may be used to specify no output, this will
     generate a SVG surface that may be queried and used as a source, without
     generating a temporary file}
-  @argument[width]{a number coerced to a double float with the width of the
+  @argument[width]{a number coerced to a double float for the width of the
     surface, in points (1 point == 1/72.0 inch)}
-  @argument[height]{a number coerced to a double float with the height of the
+  @argument[height]{a number coerced to a double float for the height of the
     surface, in points (1 point == 1/72.0 inch)}
-  @return{The newly created @symbol{cairo:surface-t} instance. The caller owns the
-    surface and should call the @fun{cairo:surface-destroy} function when done
-    with it. This function always returns a valid pointer, but it will return a
-    pointer to a \"nil\" surface if an error such as out of memory occurs. You
-    can use the @fun{cairo:surface-status} function to check for this.}
+  @return{The newly created @symbol{cairo:surface-t} instance. The caller owns
+    the surface and should call the @fun{cairo:surface-destroy} function when
+    done with it. This function always returns a valid pointer, but it will
+    return a pointer to a \"nil\" surface if an error such as out of memory
+    occurs. You can use the @fun{cairo:surface-status} function to check for
+    this.}
   @begin{short}
     Creates a SVG surface of the specified size in points to be written to
     @arg{path}.
   @end{short}
   The SVG surface backend recognizes the following MIME types for the data
-  attached to a surface, see the @fun{cairo:surface-set-mime-data} function,
+  attached to a surface, see the @code{cairo_surface_set_mime_data()} function,
   when it is used as a source pattern for drawing on this surface:
   @code{CAIRO_MIME_TYPE_JPEG}, @code{CAIRO_MIME_TYPE_PNG}, and
-  @code{CAIRO_MIME_TYPE_URI}. If any of them is specified, the SVG backend emits
-  a href with the content of MIME data instead of a surface snapshot
+  @code{CAIRO_MIME_TYPE_URI}. If any of them is specified, the SVG backend
+  emits a href with the content of MIME data instead of a surface snapshot
   (PNG, Base64-encoded) in the corresponding image tag.
 
   The unofficial MIME type @code{CAIRO_MIME_TYPE_URI} is examined first. If
@@ -241,73 +201,15 @@
 (export 'svg-surface-create)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_svg_surface_create_for_stream ()
-;;;
-;;; cairo_surface_t *
-;;; cairo_svg_surface_create_for_stream (cairo_write_func_t write_func,
-;;;                                      void *closure,
-;;;                                      double width_in_points,
-;;;                                      double height_in_points);
+;;; cairo_svg_surface_create_for_stream
 ;;;
 ;;; Creates a SVG surface of the specified size in points to be written
 ;;; incrementally to the stream represented by write_func and closure .
-;;;
-;;; write_func :
-;;;     a cairo_write_func_t to accept the output data, may be NULL to indicate
-;;;     a no-op write_func . With a no-op write_func , the surface may be
-;;;     queried or used as a source without generating any temporary files.
-;;;
-;;; closure :
-;;;     the closure argument for write_func
-;;;
-;;; width_in_points :
-;;;     width of the surface, in points (1 point == 1/72.0 inch)
-;;;
-;;; height_in_points :
-;;;     height of the surface, in points (1 point == 1/72.0 inch)
-;;;
-;;; Returns :
-;;;     a pointer to the newly created surface. The caller owns the surface and
-;;;     should call cairo_surface_destroy() when done with it.
-;;;
-;;;     This function always returns a valid pointer, but it will return a
-;;;     pointer to a "nil" surface if an error such as out of memory occurs.
-;;;     You can use cairo_surface_status() to check for this.
-;;;
-;;; Since 1.2
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_svg_surface_get_document_unit ()
-;;;
-;;; cairo_svg_unit_t
-;;; cairo_svg_surface_get_document_unit (cairo_surface_t *surface);
-;;;
-;;;
-;;; surface :
-;;;     a SVG cairo_surface_t
-;;;
-;;; Returns :
-;;;     the SVG unit of the SVG surface.
-;;;
-;;; Since 1.16
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; cairo_svg_surface_set_document_unit ()
-;;;
-;;; void
-;;; cairo_svg_surface_set_document_unit (cairo_surface_t *surface,
-;;;                                      cairo_svg_unit_t unit);
-;;;
-;;;
-;;; surface :
-;;;     a SVG cairo_surface_t
-;;;
-;;; unit :
-;;;     SVG unit
-;;;
-;;; Since 1.16
+;;; cairo_svg_surface_get_document_unit
+;;; cairo_svg_surface_set_document_unit
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf svg-surface-document-unit) (unit surface)
@@ -320,7 +222,7 @@
 (cffi:defcfun ("cairo_svg_surface_get_document_unit"
                svg-surface-document-unit) svg-unit-t
  #+liber-documentation
- "@version{#2023-1-9}
+ "@version{#2025-1-13}
   @syntax{(cairo:svg-surface-document-unit surface) => unit}
   @syntax{(setf (cairo:svg-surface-document-unit surface) unit)}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
@@ -355,13 +257,13 @@
 (export 'svg-surface-document-unit)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_svg_surface_restrict_to_version ()
+;;; cairo_svg_surface_restrict_to_version
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_svg_surface_restrict_to_version"
                svg-surface-restrict-to-version) :void
  #+liber-documentation
- "@version{#2023-1-9}
+ "@version{#2025-1-13}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
   @argument[version]{a @symbol{cairo:svg-version-t} value}
   @begin{short}
@@ -380,7 +282,7 @@
 (export 'svg-surface-restrict-to-version)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_svg_get_versions ()
+;;; cairo_svg_get_versions
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_svg_get_versions" %svg-versions) :void
@@ -389,7 +291,7 @@
 
 (defun svg-versions ()
  #+liber-documentation
- "@version{#2023-1-9}
+ "@version{#2025-1-13}
   @return{The list of @symbol{cairo:svg-version-t} values with the supported
     versions.}
   @begin{short}
@@ -407,12 +309,12 @@
 (export 'svg-versions)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_svg_version_to_string ()
+;;; cairo_svg_version_to_string
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_svg_version_to_string" svg-version-to-string) :string
  #+liber-documentation
- "@version{#2023-1-9}
+ "@version{#2025-1-13}
   @argument[version]{a @symbol{cairo:svg-version-t} value}
   @return{The string with the given @arg{version}.}
   @begin{short}

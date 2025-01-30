@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; cairo.recording-surface.lisp
 ;;;
-;;; The documentation of the file is taken from the Cairo Reference Manual
-;;; Version 1.18 and modified to document the Lisp binding to the Cairo
-;;; library. See <http://cairographics.org>. The API documentation of the
-;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the Cairo Reference Manual
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo library,
+;;; see <http://cairographics.org>. The API documentation of the Lisp binding
+;;; is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2020 - 2024 Dieter Kaiser
+;;; Copyright (C) 2020 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -20,8 +20,8 @@
 ;;;
 ;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 ;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-;;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 ;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
@@ -31,63 +31,14 @@
 ;;;
 ;;;     Records all drawing operations
 ;;;
-;;; Types and Values
-;;;
-;;;     CAIRO_HAS_RECORDING_SURFACE
-;;;
 ;;; Functions
 ;;;
 ;;;     cairo_recording_surface_create
 ;;;     cairo_recording_surface_ink_extents
 ;;;     cairo_recording_surface_get_extents
-;;;
-;;; Description
-;;;
-;;; A recording surface is a surface that records all drawing operations at the
-;;; highest level of the surface backend interface, (that is, the level of
-;;; paint, mask, stroke, fill, and show_text_glyphs). The recording surface can
-;;; then be "replayed" against any target surface by using it as a source
-;;; surface.
-;;;
-;;; If you want to replay a surface so that the results in target will be
-;;; identical to the results that would have been obtained if the original
-;;; operations applied to the recording surface had instead been applied to the
-;;; target surface, you can use code like this:
-;;;
-;;; cairo_t *cr;
-;;;
-;;; cr = cairo_create (target);
-;;; cairo_set_source_surface (cr, recording_surface, 0.0, 0.0);
-;;; cairo_paint (cr);
-;;; cairo_destroy (cr);
-;;;
-;;; A recording surface is logically unbounded, i.e. it has no implicit
-;;; constraint on the size of the drawing surface. However, in practice this is
-;;; rarely useful as you wish to replay against a particular target surface with
-;;; known bounds. For this case, it is more efficient to specify the target
-;;; extents to the recording surface upon creation.
-;;;
-;;; The recording phase of the recording surface is careful to snapshot all
-;;; necessary objects (paths, patterns, etc.), in order to achieve accurate
-;;; replay. The efficiency of the recording surface could be improved by
-;;; improving the implementation of snapshot for the various objects. For
-;;; example, it would be nice to have a copy-on-write implementation for
-;;; _cairo_surface_snapshot.
 ;;; ----------------------------------------------------------------------------
 
 (in-package :cairo)
-
-;;; ----------------------------------------------------------------------------
-;;; CAIRO_HAS_RECORDING_SURFACE
-;;;
-;;; #define CAIRO_HAS_RECORDING_SURFACE 1
-;;;
-;;; Defined if the recording surface backend is available. The recording surface
-;;; backend is always built in. This macro was added for completeness in Cairo
-;;; 1.10.
-;;;
-;;; Since 1.10
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; cairo:with-recording-surface
@@ -95,17 +46,16 @@
 
 (defmacro with-recording-surface ((surface content &rest args) &body body)
  #+liber-documentation
- "@version{2024-1-14}
+ "@version{2025-1-29}
   @syntax{(cairo:with-recording-surface (surface content) body) => result}
   @syntax{(cairo:with-recording-surface (surface content x y width height)
     body) => result}
   @argument[surface]{a newly allocated @symbol{cairo:surface-t} instance}
   @argument[content]{a @symbol{cairo:content-t} value}
-  @argument[x]{a number coerced to a double float with the x coordinate}
-  @argument[y]{a number coerced to a double float with the y coordinate}
-  @argument[width]{a number coerced to a double float with the width in pixels}
-  @argument[height]{a number coerced to a double float with the height in
-    pixels}
+  @argument[x]{a number coerced to a double float for the x coordinate}
+  @argument[y]{a number coerced to a double float for the y coordinate}
+  @argument[width]{a number coerced to a double float for the width in pixels}
+  @argument[height]{a number coerced to a double float for the height in pixels}
   @begin{short}
     The @fun{cairo:with-recording-surface} macro allocates a new
     @symbol{cairo:surface-t} instance and executes the body that uses the Cairo
@@ -148,7 +98,7 @@
 
 (defmacro with-context-for-recording-surface ((context &rest args) &body body)
  #+liber-documentation
- "@version{2024-2-7}
+ "@version{2025-1-29}
   @syntax{(cairo:with-context-for-recording-surface (context content) body)
     => result}
   @syntax{(cairo:with-context-for-recording-surface (context content x y
@@ -156,11 +106,10 @@
   @argument[context]{a @symbol{cairo:context-t} instance to create and
     initialize}
   @argument[content]{a @symbol{cairo:content-t} value}
-  @argument[x]{a number coerced to a double float with the x coordinate}
-  @argument[y]{a number coerced to a double float with the y coordinate}
-  @argument[width]{a number coerced to a double float with the width in pixels}
-  @argument[height]{a number coerced to a double float with the height in
-    pixels}
+  @argument[x]{a number coerced to a double float for the x coordinate}
+  @argument[y]{a number coerced to a double float for the y coordinate}
+  @argument[width]{a number coerced to a double float for the width in pixels}
+  @argument[height]{a number coerced to a double float for the height in pixels}
   @begin{short}
     The @fun{cairo:with-context-for-recording-surface} macro allocates a new
     @symbol{cairo:context-t} instance, initializes the Cairo context with the
@@ -182,7 +131,7 @@
 (export 'with-context-for-recording-surface)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_recording_surface_create ()
+;;; cairo_recording_surface_create
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_recording_surface_create" %recording-surface-create)
@@ -195,15 +144,14 @@
                                               (width 0.0d0 width-supplied-p)
                                               (height 0.0d0 height-supplied-p))
  #+liber-documentation
- "@version{2024-1-14}
+ "@version{2025-1-29}
   @argument[content]{a @symbol{cairo:content-t} value}
-  @argument[x]{a number coerced to a double float with the x coordinate in
+  @argument[x]{a number coerced to a double float for the x coordinate in
     pixels}
-  @argument[y]{a number coerced to a double float with the y coordinate in
+  @argument[y]{a number coerced to a double float for the y coordinate in
     pixels}
-  @argument[width]{a number coerced to a double float with the width in pixels}
-  @argument[height]{a number coerced to a double float with the height in
-    pixels}
+  @argument[width]{a number coerced to a double float for the width in pixels}
+  @argument[height]{a number coerced to a double float for the height in pixels}
   @return{The newly created @symbol{cairo:surface-t} instance.}
   @begin{short}
     Creates a recording surface which can be used to record all drawing
@@ -241,7 +189,7 @@
 (export 'recording-surface-create)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_recording_surface_ink_extents ()
+;;; cairo_recording_surface_ink_extents
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_recording_surface_ink_extents"
@@ -254,7 +202,7 @@
 
 (defun recording-surface-ink-extents (surface)
  #+liber-documentation
- "@version{2024-1-14}
+ "@version{2025-1-29}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
   @begin{return}
     @arg{x} -- a double float with the x coordinate of the top-left of the ink
@@ -282,7 +230,7 @@
 (export 'recording-surface-ink-extents)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_recording_surface_get_extents ()
+;;; cairo_recording_surface_get_extents
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_recording_surface_get_extents" %recording-surface-extents)
@@ -292,7 +240,7 @@
 
 (defun recording-surface-extents (surface)
  #+liber-documentation
- "@version{2024-1-14}
+ "@version{2025-1-29}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
   @begin{return}
     @arg{x} -- a double float with the x coordinate of the top-left of the

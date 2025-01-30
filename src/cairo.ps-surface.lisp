@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; cairo.ps-surface.lisp
 ;;;
-;;; The documentation of the file is taken from the Cairo Reference Manual
-;;; Version 1.18 and modified to document the Lisp binding to the Cairo
-;;; library. See <http://cairographics.org>. The API documentation of the
-;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the Cairo Reference Manual
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo library,
+;;; see <http://cairographics.org>. The API documentation of the Lisp binding
+;;; is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2020 - 2024 Dieter Kaiser
+;;; Copyright (C) 2020 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -20,8 +20,8 @@
 ;;;
 ;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 ;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-;;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 ;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
@@ -33,13 +33,12 @@
 ;;;
 ;;; Types and Values
 ;;;
-;;;     CAIRO_HAS_PS_SURFACE
 ;;;     cairo_ps_level_t
 ;;;
 ;;; Functions
 ;;;
 ;;;     cairo_ps_surface_create
-;;;     cairo_ps_surface_create_for_stream
+;;;     cairo_ps_surface_create_for_stream                  not implemented
 ;;;     cairo_ps_surface_restrict_to_level
 ;;;     cairo_ps_get_levels
 ;;;     cairo_ps_level_to_string
@@ -49,55 +48,12 @@
 ;;;     cairo_ps_surface_dsc_begin_setup
 ;;;     cairo_ps_surface_dsc_begin_page_setup
 ;;;     cairo_ps_surface_dsc_comment
-;;;
-;;; Description
-;;;
-;;; The PostScript surface is used to render cairo graphics to Adobe PostScript
-;;; files and is a multi-page vector surface backend.
-
-;;; The following mime types are supported: CAIRO_MIME_TYPE_JPEG,
-;;; CAIRO_MIME_TYPE_UNIQUE_ID, CAIRO_MIME_TYPE_CCITT_FAX,
-;;; CAIRO_MIME_TYPE_CCITT_FAX_PARAMS, CAIRO_MIME_TYPE_CCITT_FAX,
-;;; CAIRO_MIME_TYPE_CCITT_FAX_PARAMS, CAIRO_MIME_TYPE_EPS,
-;;; CAIRO_MIME_TYPE_EPS_PARAMS.
-;;;
-;;; Source surfaces used by the PostScript surface that have a
-;;; CAIRO_MIME_TYPE_UNIQUE_ID mime type will be stored in PostScript printer
-;;; memory for the duration of the print job. CAIRO_MIME_TYPE_UNIQUE_ID should
-;;; only be used for small frequently used sources.
-;;;
-;;; The CAIRO_MIME_TYPE_CCITT_FAX and CAIRO_MIME_TYPE_CCITT_FAX_PARAMS mime
-;;; types are documented in CCITT Fax Images.
-;;;
-;;; Embedding EPS files
-;;;
-;;; Encapsulated PostScript files can be embedded in the PS output by setting
-;;; the CAIRO_MIME_TYPE_EPS mime data on a surface to the EPS data and painting
-;;; the surface. The EPS will be scaled and translated to the extents of the
-;;; surface the EPS data is attached to.
-;;;
-;;; The CAIRO_MIME_TYPE_EPS mime type requires the CAIRO_MIME_TYPE_EPS_PARAMS
-;;; mime data to also be provided in order to specify the embeddding parameters.
-;;; CAIRO_MIME_TYPE_EPS_PARAMS mime data must contain a string of the form
-;;; "bbox=[llx lly urx ury]" that specifies the bounding box (in PS coordinates)
-;;; of the EPS graphics. The parameters are: lower left x, lower left y, upper
-;;; right x, upper right y. Normally the bbox data is identical to the
-;;; %%BoundingBox data in the EPS file.
 ;;; ----------------------------------------------------------------------------
 
 (in-package :cairo)
 
 ;;; ----------------------------------------------------------------------------
-;;; CAIRO_HAS_PS_SURFACE
-;;;
-;;; #define CAIRO_HAS_PS_SURFACE 1
-;;;
-;;; Defined if the PostScript surface backend is available. This macro can be
-;;; used to conditionally compile backend-specific code.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; enum cairo_ps_level_t
+;;; cairo_ps_level_t
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcenum ps-level-t
@@ -108,21 +64,23 @@
 (setf (liber:alias-for-symbol 'ps-level-t)
       "CEnum"
       (liber:symbol-documentation 'ps-level-t)
- "@version{2024-1-15}
+ "@version{2025-1-29}
+  @begin{declaration}
+(cffi:defcenum ps-level-t
+  :level-2
+  :level-3)
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:level-2]{The language level 2 of the PostScript specification.}
+      @entry[:level-3]{The language level 3 of the PostScript specification.}
+    @end{table}
+  @end{values}
   @begin{short}
     The @symbol{cairo:ps-level-t} enumeration is used to describe the language
     level of the PostScript Language Reference that a generated PostScript file
     will conform to.
   @end{short}
-  @begin{pre}
-(cffi:defcenum ps-level-t
-  :level-2
-  :level-3)
-  @end{pre}
-  @begin[code]{table}
-    @entry[:level-2]{The language level 2 of the PostScript specification.}
-    @entry[:level-3]{The language level 3 of the PostScript specification.}
-  @end{table}
   @see-function{cairo:ps-surface-restrict-to-level}")
 
 (export 'ps-level-t)
@@ -133,18 +91,17 @@
 
 (defmacro with-ps-surface ((surface path width height) &body body)
  #+liber-documentation
- "@version{2024-1-15}
+ "@version{2025-1-29}
   @syntax{(cairo:with-ps-surface (surface path width height) body) => result}
   @argument[surface]{a PostScript @symbol{cairo:surface-t} instance}
-  @argument[path]{a path or namestring with a filename for the PS output,
+  @argument[path]{a path or namestring for a filename for the PS output,
     @code{nil} may be used to specify no output, this will generate a PS surface
     that may be queried and used as a source, without generating a temporary
     file}
-  @argument[width]{a number coerced to a double float with the width of the
+  @argument[width]{a number coerced to a double float for the width of the
     surface, in points (1 point == 1/72 inch)}
-  @argument[height]{a number coerced to a double float with the height of the
+  @argument[height]{a number coerced to a double float for the height of the
     surface, in points (1 point == 1/72 inch)}
-
   @begin{short}
     The @symbol{cairo:with-ps-surface} macro allocates a new PostScript
     @symbol{cairo:surface-t} instance with the given @arg{path}, @arg{width},
@@ -161,19 +118,19 @@
 (export 'with-ps-surface)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_ps_surface_create ()
+;;; cairo_ps_surface_create
 ;;; ----------------------------------------------------------------------------
 
 (defun ps-surface-create (path width height)
  #+liber-documentation
- "@version{2024-1-15}
-  @argument[path]{a path or namestring with a filename for the PS output,
+ "@version{2025-1-29}
+  @argument[path]{a path or namestring for a filename for the PS output,
     @code{nil} may be used to specify no output, this will generate a PS surface
     that may be queried and used as a source, without generating a temporary
     file}
-  @argument[width]{a number coerced to a double float with the width of the
+  @argument[width]{a number coerced to a double float for the width of the
     surface, in points (1 point == 1/72 inch)}
-  @argument[height]{a number coerced to a double float with the height of the
+  @argument[height]{a number coerced to a double float for the height of the
     surface, in points (1 point == 1/72 inch)}
   @return{The newly created PostScript @symbol{cairo:surface-t} instance.}
   @begin{short}
@@ -201,53 +158,20 @@
 (export 'ps-surface-create)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_ps_surface_create_for_stream ()
-;;;
-;;; cairo_surface_t *
-;;; cairo_ps_surface_create_for_stream (cairo_write_func_t write_func,
-;;;                                     void *closure,
-;;;                                     double width_in_points,
-;;;                                     double height_in_points);
+;;; cairo_ps_surface_create_for_stream
 ;;;
 ;;; Creates a PostScript surface of the specified size in points to be written
-;;; incrementally to the stream represented by write_func and closure . See
-;;; cairo_ps_surface_create() for a more convenient way to simply direct the
-;;; PostScript output to a named file.
-;;;
-;;; Note that the size of individual pages of the PostScript output can vary.
-;;; See cairo_ps_surface_set_size().
-;;;
-;;; write_func :
-;;;     a cairo_write_func_t to accept the output data, may be NULL to indicate
-;;;     a no-op write_func . With a no-op write_func , the surface may be
-;;;     queried or used as a source without generating any temporary files.
-;;;
-;;; closure :
-;;;     the closure argument for write_func
-;;;
-;;; width_in_points :
-;;;     width of the surface, in points (1 point == 1/72.0 inch)
-;;;
-;;; height_in_points :
-;;;     height of the surface, in points (1 point == 1/72.0 inch)
-;;;
-;;; Returns :
-;;;     a pointer to the newly created surface. The caller owns the surface and
-;;;     should call cairo_surface_destroy() when done with it.
-;;;
-;;;     This function always returns a valid pointer, but it will return a
-;;;     pointer to a "nil" surface if an error such as out of memory occurs.
-;;;     You can use cairo_surface_status() to check for this.
+;;; incrementally to the stream represented by write_func and closure .
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_ps_surface_restrict_to_level ()
+;;; cairo_ps_surface_restrict_to_level
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_ps_surface_restrict_to_level"
                ps-surface-restrict-to-level) :void
  #+liber-documentation
- "@version{2024-1-15}
+ "@version{2025-1-29}
   @argument[surface]{a PostScript @symbol{cairo:surface-t} instance}
   @argument[level]{a @symbol{cairo:ps-level-t} value}
   @begin{short}
@@ -268,7 +192,7 @@
 (export 'ps-surface-restrict-to-level)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_ps_get_levels ()
+;;; cairo_ps_get_levels
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_ps_get_levels" %ps-levels) :void
@@ -277,13 +201,15 @@
 
 (defun ps-levels ()
  #+liber-documentation
- "@version{2024-1-15}
-  @return{The list with the supported levels.}
+ "@version{2025-1-29}
+  @return{The list of @symbol{cairo:ps-level-t} values with the supported
+    levels.}
   @begin{short}
     Used to retrieve the list of supported levels.
   @end{short}
   See the @fun{cairo:ps-surface-restrict-to-level} function.
   @see-symbol{cairo:surface-t}
+  @see-symbol{cairo:ps-level-t}
   @see-function{cairo:ps-surface-restrict-to-level}"
   (cffi:with-foreign-objects ((ptr :pointer) (num :int))
     (%ps-levels ptr num)
@@ -294,12 +220,12 @@
 (export 'ps-levels)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_ps_level_to_string ()
+;;; cairo_ps_level_to_string
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_ps_level_to_string" ps-level-to-string) :string
  #+liber-documentation
- "@version{2024-1-15}
+ "@version{2025-1-29}
   @argument[level]{an integer with the level ID}
   @return{The string associated to the given @arg{level}.}
   @begin{short}
@@ -307,7 +233,7 @@
   @end{short}
   This function will return @code{nil} if level ID is not valid. See the
   @fun{cairo:ps-levels} function for a way to get the list of valid level IDs.
-  @begin[Example]{dictionary}
+  @begin[Examples]{dictionary}
     Get the string representations for the supported levels.
     @begin{pre}
 (mapcar #'cairo:ps-level-to-string (cairo:ps-levels))
@@ -321,8 +247,8 @@
 (export 'ps-level-to-string)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_ps_surface_get_eps ()
-;;; cairo_ps_surface_set_eps ()
+;;; cairo_ps_surface_get_eps
+;;; cairo_ps_surface_set_eps
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf ps-surface-eps) (eps surface )
@@ -334,7 +260,7 @@
 
 (cffi:defcfun ("cairo_ps_surface_get_eps" ps-surface-eps) :bool
  #+liber-documentation
- "@version{2024-1-15}
+ "@version{2025-1-29}
   @syntax{(cairo:ps-surface-eps surface) => eps}
   @syntax{(setf (cairo:ps-surface-eps surface) eps)}
   @argument[surface]{a PostScript @symbol{cairo:surface-t} instance}
@@ -357,16 +283,16 @@
 (export 'ps-surface-eps)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_ps_surface_set_size ()
+;;; cairo_ps_surface_set_size
 ;;; ----------------------------------------------------------------------------
 
 (defun ps-surface-set-size (surface width height)
  #+liber-documentation
- "@version{2024-1-15}
+ "@version{2025-1-29}
   @argument[surface]{a PostScript @symbol{cairo:surface-t} instance}
-  @argument[width]{a number coerced to a double float with the surface width,
+  @argument[width]{a number coerced to a double float for the surface width,
     in points (1 point == 1/72 inch}
-  @argument[height]{a number coerced to a double float with the surface height,
+  @argument[height]{a number coerced to a double float for the surface height,
     in points}
   @begin{short}
     Changes the size of a PostScript surface for the current and subsequent
@@ -390,13 +316,13 @@
 (export 'ps-surface-set-size)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_ps_surface_dsc_begin_setup ()
+;;; cairo_ps_surface_dsc_begin_setup
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_ps_surface_dsc_begin_setup" ps-surface-dsc-begin-setup)
     :void
  #+liber-documentation
- "@version{2024-1-15}
+ "@version{2025-1-29}
   @argument[surface]{a PostScript @symbol{cairo:surface-t} instance}
   @begin{short}
     This function indicates that subsequent calls to the
@@ -416,13 +342,13 @@
 (export 'ps-surface-dsc-begin-setup)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_ps_surface_dsc_begin_page_setup ()
+;;; cairo_ps_surface_dsc_begin_page_setup
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_ps_surface_dsc_begin_page_setup"
                ps-surface-dsc-begin-page-setup) :void
  #+liber-documentation
- "@version{2024-1-15}
+ "@version{2025-1-29}
   @argument[surface]{a PostScript @symbol{cairo:surface-t} instance}
   @begin{short}
     This function indicates that subsequent calls to the
@@ -443,12 +369,12 @@
 (export 'ps-surface-dsc-begin-page-setup)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_ps_surface_dsc_comment ()
+;;; cairo_ps_surface_dsc_comment
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_ps_surface_dsc_comment" ps-surface-dsc-comment) :void
  #+liber-documentation
- "@version{2024-1-14}
+ "@version{2025-1-29}
   @argument[surface]{a PostScript @symbol{cairo:surface-t} instance}
   @argument[comment]{a comment string to be emitted into the PostScript output}
   @begin{short}
@@ -507,8 +433,9 @@
     @entry[Other sections:]{%%BeginProlog, %%EndProlog, %%Page, %%Trailer,
       %%EOF}
   @end{table}
-  Here is an example sequence showing how this function might be used:
-  @begin{pre}
+  @begin[Examples]{dictionary}
+    Here is an example sequence showing how this function might be used:
+    @begin{pre}
 (test cairo-ps-surface-dsc-comment
   (let* ((path (sys-path \"out/comment.ps\"))
          (width 100) (height 200)
@@ -545,7 +472,8 @@
       ;; Show second page
       (cairo:show-page context))
     (cairo:surface-destroy surface)))
-  @end{pre}
+    @end{pre}
+  @end{dictionary}
   @see-symbol{cairo:surface-t}
   @see-function{cairo:ps-surface-dsc-begin-setup}
   @see-function{cairo:ps-surface-dsc-begin-page-setup}"

@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; cairo.surface.lisp
 ;;;
-;;; The documentation of the file is taken from the Cairo Reference Manual
-;;; Version 1.18 and modified to document the Lisp binding to the Cairo
-;;; library. See <http://cairographics.org>. The API documentation of the
-;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the Cairo Reference Manual
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo library,
+;;; see <http://cairographics.org>. The API documentation of the Lisp binding
+;;; is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2012 - 2024 Dieter Kaiser
+;;; Copyright (C) 2012 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -20,8 +20,8 @@
 ;;;
 ;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 ;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-;;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 ;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
@@ -32,20 +32,6 @@
 ;;;     Base class for surfaces
 ;;;
 ;;; Types and Values
-;;;
-;;;     CAIRO_HAS_MIME_SURFACE                             Deprecated 1.18
-;;;     CAIRO_MIME_TYPE_CCITT_FAX
-;;;     CAIRO_MIME_TYPE_CCITT_FAX_PARAMS
-;;;     CAIRO_MIME_TYPE_EPS
-;;;     CAIRO_MIME_TYPE_EPS_PARAMS
-;;;     CAIRO_MIME_TYPE_JBIG2
-;;;     CAIRO_MIME_TYPE_JBIG2_GLOBAL
-;;;     CAIRO_MIME_TYPE_JBIG2_GLOBAL_ID
-;;;     CAIRO_MIME_TYPE_JP2
-;;;     CAIRO_MIME_TYPE_JPEG
-;;;     CAIRO_MIME_TYPE_PNG
-;;;     CAIRO_MIME_TYPE_URI
-;;;     CAIRO_MIME_TYPE_UNIQUE_ID
 ;;;
 ;;;     cairo_surface_t
 ;;;     cairo_content_t
@@ -79,6 +65,7 @@
 ;;;
 ;;;     cairo_surface_set_user_data                        not implemented
 ;;;     cairo_surface_get_user_data                        not implemented
+;;;
 ;;;     cairo_surface_copy_page
 ;;;     cairo_surface_show_page
 ;;;
@@ -93,144 +80,7 @@
 (in-package :cairo)
 
 ;;; ----------------------------------------------------------------------------
-;;; CAIRO_HAS_MIME_SURFACE
-;;;
-;;; #define CAIRO_HAS_MIME_SURFACE 1
-;;;
-;;; CAIRO_HAS_MIME_SURFACE has been deprecated since version 1.18 and should not
-;;; be used in newly-written code. This symbol should not be used
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; CAIRO_MIME_TYPE_CCITT_FAX
-;;;
-;;; #define CAIRO_MIME_TYPE_CCITT_FAX "image/g3fax"
-;;;
-;;; Group 3 or Group 4 CCITT facsimile encoding (International Telecommunication
-;;; Union, Recommendations T.4 and T.6.)
-;;;
-;;; Since 1.16
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; CAIRO_MIME_TYPE_CCITT_FAX_PARAMS
-;;;
-;;; #define CAIRO_MIME_TYPE_CCITT_FAX_PARAMS "application/x-cairo.ccitt.params"
-;;;
-;;; Decode parameters for Group 3 or Group 4 CCITT facsimile encoding. See
-;;; CCITT Fax Images.
-;;;
-;;; Since 1.16
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; CAIRO_MIME_TYPE_EPS
-;;;
-;;; #define CAIRO_MIME_TYPE_EPS "application/postscript"
-;;;
-;;; Encapsulated PostScript file. Encapsulated PostScript File Format
-;;; Specification
-;;;
-;;; Since 1.16
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; CAIRO_MIME_TYPE_EPS_PARAMS
-;;;
-;;; #define CAIRO_MIME_TYPE_EPS_PARAMS "application/x-cairo.eps.params"
-;;;
-;;; Embedding parameters Encapsulated PostScript data. See Embedding EPS files.
-;;;
-;;; Since 1.16
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; CAIRO_MIME_TYPE_JBIG2
-;;;
-;;; #define CAIRO_MIME_TYPE_JBIG2 "application/x-cairo.jbig2"
-;;;
-;;; Joint Bi-level Image Experts Group image coding standard (ISO/IEC 11544).
-;;;
-;;; Since 1.14
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; CAIRO_MIME_TYPE_JBIG2_GLOBAL
-;;;
-;;; #define CAIRO_MIME_TYPE_JBIG2_GLOBAL "application/x-cairo.jbig2-global"
-;;;
-;;; Joint Bi-level Image Experts Group image coding standard (ISO/IEC 11544)
-;;; global segment.
-;;;
-;;; Since 1.14
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; CAIRO_MIME_TYPE_JBIG2_GLOBAL_ID
-;;;
-;;; #define CAIRO_MIME_TYPE_JBIG2_GLOBAL_ID
-;;;         "application/x-cairo.jbig2-global-id"
-;;;
-;;; An unique identifier shared by a JBIG2 global segment and all JBIG2 images
-;;; that depend on the global segment.
-;;;
-;;; Since 1.14
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; CAIRO_MIME_TYPE_JP2
-;;;
-;;; #define CAIRO_MIME_TYPE_JP2 "image/jp2"
-;;;
-;;; The Joint Photographic Experts Group (JPEG) 2000 image coding standard
-;;; (ISO/IEC 15444-1).
-;;;
-;;; Since 1.10
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; CAIRO_MIME_TYPE_JPEG
-;;;
-;;; #define CAIRO_MIME_TYPE_JPEG "image/jpeg"
-;;;
-;;; The Joint Photographic Experts Group (JPEG) image coding standard (ISO/IEC
-;;; 10918-1).
-;;;
-;;; Since 1.10
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; CAIRO_MIME_TYPE_PNG
-;;;
-;;; #define CAIRO_MIME_TYPE_PNG "image/png"
-;;;
-;;; The Portable Network Graphics image file format (ISO/IEC 15948).
-;;;
-;;; Since 1.10
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; CAIRO_MIME_TYPE_URI
-;;;
-;;; #define CAIRO_MIME_TYPE_URI "text/x-uri"
-;;;
-;;; URI for an image file (unofficial MIME type).
-;;;
-;;; Since 1.10
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; CAIRO_MIME_TYPE_UNIQUE_ID
-;;;
-;;; #define CAIRO_MIME_TYPE_UNIQUE_ID "application/x-cairo.uuid"
-;;;
-;;; Unique identifier for a surface (cairo specific MIME type).
-;;;
-;;; Since 1.12
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; enum cairo_format_t
+;;; cairo_format_t
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcenum format-t
@@ -250,12 +100,8 @@
 (setf (liber:alias-for-symbol 'format-t)
       "CEnum"
       (liber:symbol-documentation 'format-t)
- "@version{2024-2-11}
-  @begin{short}
-    The @symbol{cairo:format-t} enumeration is used to identify the memory
-    format of image data.
-  @end{short}
-  @begin{pre}
+ "@version{2025-1-18}
+  @begin{declaration}
 (cffi:defcenum format-t
   (:invalid -1)
   (:argb32 0)
@@ -266,34 +112,40 @@
   (:rgb30 5)
   (:rgb96f 6)
   (:rgba128f 7))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:invalid]{No such format exists or is supported.}
-    @entry[:argb32]{Each pixel is a 32-bit quantity, with alpha in the upper
-      8 bits, then red, then green, then blue. The 32-bit quantities are stored
-      native-endian. Pre-multiplied alpha is used. That is, 50 % transparent
-      red is 0x80800000, not 0x80ff0000.}
-    @entry[:rgb24]{Each pixel is a 32-bit quantity, with the upper 8 bits
-      unused. Red, Green, and Blue are stored in the remaining 24 bits in that
-      order.}
-    @entry[:a8]{Each pixel is a 8-bit quantity holding an alpha value.}
-    @entry[:a1]{Each pixel is a 1-bit quantity holding an alpha value. Pixels
-      are packed together into 32-bit quantities. The ordering of the bits
-      matches the endianess of the platform. On a big-endian machine, the first
-      pixel is in the uppermost bit, on a little-endian machine the first pixel
-      is in the least-significant bit.}
-    @entry[:rgb16-565]{Each pixel is a 16-bit quantity with red in the upper 5
-      bits, then green in the middle 6 bits, and blue in the lower 5 bits.}
-    @entry[:rgb30]{Like @code{:rgb24} but with 10 bpc.}
-    @entry[:rgb96f]{3 floats, R, G, B. Since 1.18}
-    @entry[:rgba128f]{4 floats, R, G, B, A. Since 1.18}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:invalid]{No such format exists or is supported.}
+      @entry[:argb32]{Each pixel is a 32-bit quantity, with alpha in the upper
+        8 bits, then red, then green, then blue. The 32-bit quantities are
+        stored native-endian. Pre-multiplied alpha is used. That is, 50 %
+        transparent red is @code{0x80800000}, not @code{0x80ff0000}.}
+      @entry[:rgb24]{Each pixel is a 32-bit quantity, with the upper 8 bits
+        unused. Red, Green, and Blue are stored in the remaining 24 bits in
+        that order.}
+      @entry[:a8]{Each pixel is a 8-bit quantity holding an alpha value.}
+      @entry[:a1]{Each pixel is a 1-bit quantity holding an alpha value. Pixels
+        are packed together into 32-bit quantities. The ordering of the bits
+        matches the endianess of the platform. On a big-endian machine, the
+        first pixel is in the uppermost bit, on a little-endian machine the
+        first pixel is in the least-significant bit.}
+      @entry[:rgb16-565]{Each pixel is a 16-bit quantity with red in the upper
+        5 bits, then green in the middle 6 bits, and blue in the lower 5 bits.}
+      @entry[:rgb30]{Like @code{:rgb24} but with 10 bpc.}
+      @entry[:rgb96f]{3 floats, R, G, B. Since 1.18}
+      @entry[:rgba128f]{4 floats, R, G, B, A. Since 1.18}
+    @end{table}
+  @end{values}
+  @begin{short}
+    The @symbol{cairo:format-t} enumeration is used to identify the memory
+    format of image data.
+  @end{short}
   @see-symbol{cairo:surface-t}")
 
 (export 'format-t)
 
 ;;; ----------------------------------------------------------------------------
-;;; enum cairo_content_t
+;;; cairo_content_t
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcenum content-t
@@ -305,24 +157,26 @@
 (setf (liber:alias-for-symbol 'content-t)
       "CEnum"
       (liber:symbol-documentation 'content-t)
- "@version{2024-2-11}
+ "@version{2025-1-18}
+  @begin{declaration}
+(cffi:defcenum content-t
+  (:color #x1000)
+  (:alpha #x2000)
+  (:color-alpha #x3000))
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:color]{The surface will hold color content only.}
+      @entry[:alpha]{The surface will hold alpha content only.}
+      @entry[:color-alpha]{The surface will hold color and alpha content.}
+    @end{table}
+  @end{values}
   @begin{short}
     The @symbol{cairo:content-t} enumeration is used to describe the content
     that a surface will contain, whether color information, alpha information
     (translucence vs. opacity), or both.
   @end{short}
-  @begin{pre}
-(cffi:defcenum content-t
-  (:color #x1000)
-  (:alpha #x2000)
-  (:color-alpha #x3000))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:color]{The surface will hold color content only.}
-    @entry[:alpha]{The surface will hold alpha content only.}
-    @entry[:color-alpha]{The surface will hold color and alpha content.}
-  @end{table}
-  @begin[Note]{dictionary}
+  @begin[Notes]{dictionary}
     The large values here are designed to keep @symbol{cairo:content-t} values
     distinct from @symbol{cairo:format-t} values so that the implementation can
     detect the error if users confuse the two types.
@@ -333,7 +187,7 @@
 (export 'content-t)
 
 ;;; ----------------------------------------------------------------------------
-;;; enum cairo_surface_type_t
+;;; cairo_surface_type_t
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcenum surface-type-t
@@ -367,27 +221,8 @@
 (setf (liber:alias-for-symbol 'surface-type-t)
       "CEnum"
       (liber:symbol-documentation 'surface-type-t)
- "@version{2024-2-11}
-  @begin{short}
-    The @symbol{cairo:surface-type-t} enumeration is used to describe the type
-    of a given surface.
-  @end{short}
-  The surface types are also known as \"backends\" or \"surface backends\"
-  within Cairo. The type of a surface is determined by the function used to
-  create it, which will generally be of the form
-  @code{cairo:type-surface-create}, though see the
-  @fun{cairo:surface-create-similar} function as well. The surface type can be
-  queried with the @fun{cairo:surface-type} function.
-
-  The various @symbol{cairo:surface-t} functions can be used with surfaces of
-  any type, but some backends also provide type-specific functions that must
-  only be called with a surface of the appropriate type. These functions have
-  names that begin with @code{cairo:type-surface} such as the
-  @fun{cairo:image-surface-width} function.
-
-  The behavior of calling a type-specific function with a surface of the wrong
-  type is undefined.
-  @begin{pre}
+ "@version{2025-1-18}
+  @begin{declaration}
 (cffi:defcenum surface-type-t
   :image
   :pdf
@@ -414,47 +249,71 @@
   :skia
   :subsurface
   :cogl)
-  @end{pre}
-  @begin[code]{table}
-    @entry[:image]{The surface is of type image.}
-    @entry[:pdf]{The surface is of type pdf.}
-    @entry[:ps]{The surface is of type ps.}
-    @entry[:xlib]{The surface is of type xlib.}
-    @entry[:xcb]{The surface is of type xcb.}
-    @entry[:glitz]{The surface is of type glitz. Deprecated 1.18: glitz support
-      have been removed, this surface type will never be set by Cairo.}
-    @entry[:quartz]{The surface is of type quartz.}
-    @entry[:win32]{The surface is of type win32.}
-    @entry[:beos]{The surface is of type beos. Deprecated 1.18: beos support
-      have been removed, this surface type will never be set by Cairo.}
-    @entry[:directfb]{The surface is of type directfb. Deprecated 1.18: directfb
-      support have been removed, this surface type will never be set by Cairo.}
-    @entry[:svg]{The surface is of type svg.}
-    @entry[:os2]{The surface is of type os2. Deprecated 1.18: os2 support have
-      been removed, this surface type will never be set by Cairo.}
-    @entry[:win32-printing]{The surface is a win32 printing surface.}
-    @entry[:quartz-image]{The surface is of type quartz_image.}
-    @entry[:script]{The surface is of type script.}
-    @entry[:qt]{The surface is of type Qt. Deprecated 1.18: Ot support have been
-      removed, this surface type will never be set by Cairo.}
-    @entry[:recording]{The surface is of type recording.}
-    @entry[:vg]{The surface is a OpenVG surface. Deprecated 1.18: OpenVG support
-      have been removed, this surface type will never be set by Cairo.}
-    @entry[:gl]{The surface is of type OpenGL. Deprecated 1.18: OpenGL support
-      have been removed, this surface type will never be set by Cairo.}
-    @entry[:drm]{The surface is of type Direct Render Manager. Deprecated 1.18:
-      DRM support have been removed, this surface type will never be set by
-      Cairo.}
-    @entry[:tee]{The surface is of type 'tee' (a multiplexing surface).}
-    @entry[:xml]{The surface is of type XML (for debugging).}
-    @entry[:skia]{The surface is of type Skia. Deprecated 1.18: Skia support
-      have been removed, this surface type will never be set by Cairo.}
-    @entry[:subsurface]{The surface is a subsurface created with the
-      @fun{cairo:surface-create-for-rectangle} function.}
-    @entry[:cogl]{This surface is of type Cogl. Deprecated 1.18: Cogl support
-      have been removed, this surface type will never be set by Cairo.}
-  @end{table}
-  @begin[Note]{dictionary}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:image]{The surface is of type image.}
+      @entry[:pdf]{The surface is of type pdf.}
+      @entry[:ps]{The surface is of type ps.}
+      @entry[:xlib]{The surface is of type xlib.}
+      @entry[:xcb]{The surface is of type xcb.}
+      @entry[:glitz]{The surface is of type glitz. Deprecated 1.18: glitz
+        support have been removed, this surface type will never be set by
+        Cairo.}
+      @entry[:quartz]{The surface is of type quartz.}
+      @entry[:win32]{The surface is of type win32.}
+      @entry[:beos]{The surface is of type beos. Deprecated 1.18: beos support
+        have been removed, this surface type will never be set by Cairo.}
+      @entry[:directfb]{The surface is of type directfb. Deprecated 1.18:
+        directfb support have been removed, this surface type will never be set
+        by Cairo.}
+      @entry[:svg]{The surface is of type svg.}
+      @entry[:os2]{The surface is of type os2. Deprecated 1.18: os2 support
+        have been removed, this surface type will never be set by Cairo.}
+      @entry[:win32-printing]{The surface is a win32 printing surface.}
+      @entry[:quartz-image]{The surface is of type quartz_image.}
+      @entry[:script]{The surface is of type script.}
+      @entry[:qt]{The surface is of type Qt. Deprecated 1.18: Ot support have
+        been removed, this surface type will never be set by Cairo.}
+      @entry[:recording]{The surface is of type recording.}
+      @entry[:vg]{The surface is a OpenVG surface. Deprecated 1.18: OpenVG
+        support have been removed, this surface type will never be set by
+        Cairo.}
+      @entry[:gl]{The surface is of type OpenGL. Deprecated 1.18: OpenGL support
+        have been removed, this surface type will never be set by Cairo.}
+      @entry[:drm]{The surface is of type Direct Render Manager. Deprecated
+        1.18: DRM support have been removed, this surface type will never be
+        set by Cairo.}
+      @entry[:tee]{The surface is of type 'tee' (a multiplexing surface).}
+      @entry[:xml]{The surface is of type XML (for debugging).}
+      @entry[:skia]{The surface is of type Skia. Deprecated 1.18: Skia support
+        have been removed, this surface type will never be set by Cairo.}
+      @entry[:subsurface]{The surface is a subsurface created with the
+        @fun{cairo:surface-create-for-rectangle} function.}
+      @entry[:cogl]{This surface is of type Cogl. Deprecated 1.18: Cogl support
+        have been removed, this surface type will never be set by Cairo.}
+    @end{table}
+  @end{values}
+  @begin{short}
+    The @symbol{cairo:surface-type-t} enumeration is used to describe the type
+    of a given surface.
+  @end{short}
+  The surface types are also known as \"backends\" or \"surface backends\"
+  within Cairo. The type of a surface is determined by the function used to
+  create it, which will generally be of the form
+  @code{cairo:type-surface-create}, though see the
+  @fun{cairo:surface-create-similar} function as well. The surface type can be
+  queried with the @fun{cairo:surface-type} function.
+
+  The various @symbol{cairo:surface-t} functions can be used with surfaces of
+  any type, but some backends also provide type-specific functions that must
+  only be called with a surface of the appropriate type. These functions have
+  names that begin with @code{cairo:type-surface} such as the
+  @fun{cairo:image-surface-width} function.
+
+  The behavior of calling a type-specific function with a surface of the wrong
+  type is undefined.
+  @begin[Notes]{dictionary}
     In the Lisp API support for the following surface types is currently
     available: @code{:image}, @code{:pdf}, @code{:ps}, @code{:svg},
     @code{:script}, @code{:recording}, and @code{:subsurface}.
@@ -477,7 +336,7 @@
 (setf (liber:alias-for-symbol 'surface-t)
       "CStruct"
       (liber:symbol-documentation 'surface-t)
- "@version{2024-2-11}
+ "@version{2025-1-18}
   @begin{short}
     The @symbol{cairo:surface-t} structure represents an image, either as the
     destination of a drawing operation or as source when drawing onto another
@@ -521,7 +380,7 @@
 
 (defmacro with-surface ((surface &rest args) &body body)
  #+liber-documentation
- "@version{2024-2-13}
+ "@version{2025-1-18}
   @syntax{(cairo:with-surface (surface target content width height) body) =>
     result}
   @syntax{(cairo:with-surface (surface target format width height) body) =>
@@ -529,21 +388,20 @@
   @syntax{(cairo:with-surface (surface target x y width height) body) => result}
   @argument[surface]{a @symbol{cairo:surface-t} instance to create and
     initialize}
-  @argument[target]{an existing @symbol{cairo:surface-t} instance used to select
-    the backend of the new surface}
+  @argument[target]{an existing @symbol{cairo:surface-t} instance used to
+    select the backend of the new surface}
   @argument[content]{a @symbol{cairo:content-t} value for the content for the
     new surface}
-  @argument[format]{a @symbol{cairo:format-t} value with the format of pixels
+  @argument[format]{a @symbol{cairo:format-t} value for the format of pixels
     in the surface to create}
-  @argument[x]{a number coerced to a double float with the x origin of the
+  @argument[x]{a number coerced to a double float for the x origin of the
     subsurface from the top-left of the target surface, in device-space units}
-  @argument[y]{a number coerced to a double float with the y origin of
-    the subsurface from the top-left of the target surface, in device-space
-    units}
-  @argument[width]{a number coerced to a double float with the width of the
-    subsurface, in device-space units}
-  @argument[height]{a number coerced to a double float with the height of the
-    subsurface, in device-space units}
+  @argument[y]{a number coerced to a double float for the y origin of the
+    subsurface from the top-left of the target surface, in device-space units}
+  @argument[width]{a number coerced to a double float for the width of
+    the subsurface, in device-space units}
+  @argument[height]{a number coerced to a double float for the height of
+    the subsurface, in device-space units}
   @begin{short}
     The @fun{cairo:with-surface} macro allocates a new @symbol{cairo:surface-t}
     instance, initializes the Cairo surface with the given values and executes
@@ -586,7 +444,7 @@
 
 (defmacro with-context-for-surface ((context &rest args) &body body)
  #+liber-documentation
- "@version{2024-2-13}
+ "@version{2025-1-18}
   @syntax{(cairo:with-context-for-surface (context target content width height)
     body) => result}
   @syntax{(cairo:with-context-for-surface (context target format width height)
@@ -601,17 +459,17 @@
     the backend of the new surface}
   @argument[content]{a @symbol{cairo:content-t} value for the content for the
     new surface}
-  @argument[format]{a @symbol{cairo:format-t} value with the format of pixels
+  @argument[format]{a @symbol{cairo:format-t} value for the format of pixels
     in the surface to create}
-  @argument[x]{a number coerced to a double float with the x origin of the
+  @argument[x]{a number coerced to a double float for the x origin of the
     subsurface from the top-left of the target surface, in device-space units}
-  @argument[y]{a number coerced to a double float with the y origin of
+  @argument[y]{a number coerced to a double float for the y origin of
     the subsurface from the top-left of the target surface, in device-space
     units}
-  @argument[width]{a number coerced to a double float with the width of the
-    subsurface, in device-space units}
-  @argument[height]{a number coerced to a double float with the height of the
-    subsurface, in device-space units}
+  @argument[width]{a number coerced to a double float for the width of
+    the subsurface, in device-space units}
+  @argument[height]{a number coerced to a double float for the height of
+    the subsurface, in device-space units}
   @begin{short}
     The @fun{cairo:with-context-for-surface} macro allocates a new
     @symbol{cairo:context-t} instance for a surface, initializes the
@@ -621,9 +479,9 @@
   After execution of the body the allocated memory for the Cairo context is
   released.
 
-  The context is created with the @fun{cairo:create} function and destroyed with
-  the @fun{cairo:destroy} function. The context uses a surface that is created
-  with one of the @fun{cairo:surface-create-similar},
+  The context is created with the @fun{cairo:create} function and destroyed
+  with the @fun{cairo:destroy} function. The context uses a surface that is
+  created with one of the @fun{cairo:surface-create-similar},
   @fun{cairo:surface-create-similar-image}, or
   @fun{cairo:surface-create-for-rectangle} functions. You can access the
   @symbol{cairo:surface-t} instance for the created context with the
@@ -644,20 +502,20 @@
 (export 'with-context-for-surface)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_surface_create_similar ()
+;;; cairo_surface_create_similar
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_surface_create_similar" surface-create-similar)
     (:pointer (:struct surface-t))
  #+liber-documentation
- "@version{2024-2-11}
+ "@version{2025-1-18}
   @argument[target]{an existing @symbol{cairo:surface-t} instance used to select
     the backend of the new surface}
   @argument[content]{a @symbol{cairo:content-t} value for the content for the
     new surface}
-  @argument[width]{an integer with the width of the new surface, in
+  @argument[width]{an integer for the width of the new surface, in
     device-space units}
-  @argument[height]{an integer with the height of the new surface, in
+  @argument[height]{an integer for the height of the new surface, in
     device-space units}
   @begin{return}
     The newly allocated @symbol{cairo:surface-t} instance. The caller owns the
@@ -693,19 +551,19 @@
 (export 'surface-create-similar)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_surface_create_similar_image ()
+;;; cairo_surface_create_similar_image
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_surface_create_similar_image"
                surface-create-similar-image) (:pointer (:struct surface-t))
  #+liber-documentation
- "@version{2024-2-11}
+ "@version{2025-1-18}
   @argument[target]{an existing @symbol{cairo:surface-t} instance used to select
     the preference of the new surface}
   @argument[format]{a @symbol{cairo:format-t} value for the new surface}
-  @argument[width]{an integer with the width of the new surface, in
+  @argument[width]{an integer for the width of the new surface, in
     device-space units}
-  @argument[height]{an integer with the height of the new surface, in
+  @argument[height]{an integer for the height of the new surface, in
     device-space units}
   @begin{return}
     The newly allocated image @symbol{cairo:surface-t} instance. The caller owns
@@ -737,7 +595,7 @@
 (export 'surface-create-similar-image)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_surface_create_for_rectangle ()
+;;; cairo_surface_create_for_rectangle
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_surface_create_for_rectangle"
@@ -750,18 +608,18 @@
 
 (defun surface-create-for-rectangle (target x y width height)
  #+liber-documentation
- "@version{2024-2-11}
+ "@version{2025-1-18}
   @argument[target]{an existing @symbol{cairo:surface-t} instance for which
     the subsurface will point to}
-  @argument[x]{a number coerced to a double float with the x origin of the
+  @argument[x]{a number coerced to a double float for the x origin of the
     subsurface from the top-left of the target surface, in device-space units}
-  @argument[y]{a number coerced to a double float with the y origin of
+  @argument[y]{a number coerced to a double float for the y origin of
     the subsurface from the top-left of the target surface, in device-space
     units}
-  @argument[width]{a number coerced to a double float with the width of the
-    subsurface, in device-space units}
-  @argument[height]{a number coerced to a double float with the height of the
-    subsurface, in device-space units}
+  @argument[width]{a number coerced to a double float for the width of
+    the subsurface, in device-space units}
+  @argument[height]{a number coerced to a double float for the height of
+    the subsurface, in device-space units}
   @begin{return}
     The newly allocated @symbol{cairo:surface-t} instance. The caller owns the
     surface and should call the @fun{cairo:surface-destroy} function when done
@@ -776,9 +634,9 @@
   the target surface. Nothing drawn via this subsurface outside of its bounds
   is drawn onto the target surface, making this a useful method for passing
   constrained child surfaces to library routines that draw directly onto the
-  parent surface, i.e. with no further backend allocations, double buffering
+  parent surface, that is with no further backend allocations, double buffering
   or copies.
-  @begin[Note]{dictionary}
+  @begin[Notes]{dictionary}
     The semantics of subsurfaces have not been finalized yet unless the
     rectangle is in full device units, is contained within the extents of the
     target surface, and the target or device of the subsurface transforms are
@@ -795,13 +653,13 @@
 (export 'surface-create-for-rectangle)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_surface_reference ()
+;;; cairo_surface_reference
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_surface_reference" surface-reference)
     (:pointer (:struct surface-t))
  #+liber-documentation
- "@version{2024-2-11}
+ "@version{2025-1-18}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
   @return{The referenced @symbol{cairo:surface-t} instance.}
   @begin{short}
@@ -820,13 +678,13 @@
 (export 'surface-reference)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_surface_get_reference_count ()
+;;; cairo_surface_get_reference_count
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_surface_get_reference_count" surface-reference-count)
     :uint
  #+liber-documentation
- "@version{2024-2-11}
+ "@version{2025-1-18}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
   @begin{return}
     The current reference count of @arg{surface}. If the instance is a
@@ -842,12 +700,12 @@
 (export 'surface-reference-count)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_surface_destroy ()
+;;; cairo_surface_destroy
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_surface_destroy" surface-destroy) :void
  #+liber-documentation
- "@version{2024-2-11}
+ "@version{2025-1-18}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
   @begin{short}
     Decreases the reference count on @arg{surface} by one.
@@ -861,12 +719,12 @@
 (export 'surface-destroy)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_surface_status ()
+;;; cairo_surface_status
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_surface_status" surface-status) status-t
  #+liber-documentation
- "@version{2024-2-11}
+ "@version{2025-1-18}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
   @return{The @symbol{cairo:status-t} value for @arg{surface}.}
   @begin{short}
@@ -882,12 +740,12 @@
 (export 'surface-status)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_surface_get_type ()
+;;; cairo_surface_get_type
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_surface_get_type" surface-type) surface-type-t
  #+liber-documentation
- "@version{2024-2-11}
+ "@version{2025-1-18}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
   @return{The @symbol{cairo:surface-type-t} value for @arg{surface}.}
   @begin{short}
@@ -901,12 +759,12 @@
 (export 'surface-type)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_surface_finish ()
+;;; cairo_surface_finish
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_surface_finish" surface-finish) :void
  #+liber-documentation
- "@version{#2024-2-11}
+ "@version{#2025-1-18}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
   @begin{short}
     This function finishes the surface and drops all references to external
@@ -931,12 +789,12 @@
 (export 'surface-finish)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_surface_flush ()
+;;; cairo_surface_flush
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_surface_flush" surface-flush) :void
  #+liber-documentation
- "@version{2024-2-11}
+ "@version{2025-1-18}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
   @begin{short}
     Do any pending drawing for the surface and also restore any temporary
@@ -951,7 +809,7 @@
 (export 'surface-flush)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_surface_get_device ()
+;;; cairo_surface_get_device
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_surface_get_device" %surface-device)
@@ -960,7 +818,7 @@
 
 (defun surface-device (surface)
  #+liber-documentation
- "@version{2024-2-11}
+ "@version{2025-1-18}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
   @return{The @symbol{cairo:device-t} instance with the device for @arg{surface}
     or @code{nil} if the surface does not have an associated device.}
@@ -977,7 +835,7 @@
 (export 'surface-device)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_surface_get_font_options ()
+;;; cairo_surface_get_font_options
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_surface_get_font_options" %surface-font-options) :void
@@ -986,7 +844,7 @@
 
 (defun surface-font-options (surface options)
  #+liber-documentation
- "@version{2024-2-11}
+ "@version{2025-1-18}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
   @argument[options]{a @symbol{cairo:font-options-t} instance into which to
     store the retrieved options, all existing values are overwritten}
@@ -1007,12 +865,12 @@
 (export 'surface-font-options)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_surface_get_content ()
+;;; cairo_surface_get_content
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_surface_get_content" surface-content) content-t
  #+liber-documentation
- "@version{2024-2-11}
+ "@version{2025-1-18}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
   @return{The @symbol{cairo:content-t} value with the content type of
     @arg{surface}.}
@@ -1028,12 +886,12 @@
 (export 'surface-content)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_surface_mark_dirty ()
+;;; cairo_surface_mark_dirty
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_surface_mark_dirty" surface-mark-dirty) :void
  #+liber-documentation
- "@version{#2024-2-11}
+ "@version{#2025-1-18}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
   @begin{short}
     Tells Cairo that drawing has been done to @arg{surface} using means other
@@ -1048,18 +906,18 @@
 (export 'surface-mark-dirty)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_surface_mark_dirty_rectangle ()
+;;; cairo_surface_mark_dirty_rectangle
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_surface_mark_dirty_rectangle"
                surface-mark-dirty-rectangle) :void
  #+liber-documentation
- "@version{#2024-2-11}
+ "@version{#2025-1-18}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
-  @argument[x]{an integer with the x coordinate of dirty rectangle}
-  @argument[y]{an integer with the y coordinate of dirty rectangle}
-  @argument[width]{an integer with the width of dirty rectangle}
-  @argument[height]{an integer with the height of dirty rectangle}
+  @argument[x]{an integerfor the x coordinate of dirty rectangle}
+  @argument[y]{an integer for the y coordinate of dirty rectangle}
+  @argument[width]{an integer for the width of dirty rectangle}
+  @argument[height]{an integer for the height of dirty rectangle}
   @begin{short}
     Like the @fun{cairo:surface-mark-dirty} function, but drawing has been done
     only to the specified rectangle, so that Cairo can retain cached contents
@@ -1078,8 +936,8 @@
 (export 'surface-mark-dirty-rectangle)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_surface_set_device_offset ()
-;;; cairo_surface_get_device_offset ()
+;;; cairo_surface_set_device_offset
+;;; cairo_surface_get_device_offset
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf surface-device-offset) (offset surface)
@@ -1100,20 +958,20 @@
 
 (defun surface-device-offset (surface)
  #+liber-documentation
- "@version{2024-2-11}
+ "@version{2025-1-18}
   @syntax{(cairo:surface-device-offset surface) => xoffset, yoffset}
   @syntax{(setf (cairo:surface-device-offset surface) (list xoffset yoffset))}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
-  @argument[xoffset]{a number coerced to a double float with the offset in the
-    x direction, in device units}
-  @argument[yoffset]{a number coerced to a double float with the offset in the
-    y direction, in device units}
+  @argument[xoffset]{a number coerced to a double float for the offset in
+    the x direction, in device units}
+  @argument[yoffset]{a number coerced to a double float for the offset in
+    the y direction, in device units}
   @begin{short}
     The @fun{cairo:surface-device-offset} functions returns the device offset.
   @end{short}
   The @setf{cairo:surface-device-offset} function sets an offset that is added
-  to the device coordinates determined by the transformation matrix CTM when
-  drawing to @arg{surface}.
+  to the device coordinates determined by the current transformation matrix CTM
+  when drawing to @arg{surface}.
 
   One use case for this function is when we want to create a
   @symbol{cairo:surface-t} instance that redirects drawing for a portion of an
@@ -1135,8 +993,8 @@
 (export 'surface-device-offset)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_surface_get_device_scale ()
-;;; cairo_surface_set_device_scale ()
+;;; cairo_surface_get_device_scale
+;;; cairo_surface_set_device_scale
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf surface-device-scale) (scale surface)
@@ -1157,20 +1015,20 @@
 
 (defun surface-device-scale (surface)
  #+liber-documentation
- "@version{2024-2-11}
+ "@version{2025-1-18}
   @syntax{(cairo:surface-device-scale surface) => xscale, yscale}
   @syntax{(setf (cairo:surface-device-scale surface) (list xscale yscale))}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
-  @argument[xscale]{a number coerced to a double float with the scale in the
-    x direction, in device units}
-  @argument[yscale]{a number coerced to a double float with the scale in the
-    y direction, in device units}
+  @argument[xscale]{a number coerced to a double float for the scale in
+    the x direction, in device units}
+  @argument[yscale]{a number coerced to a double float for the scale in
+    the y direction, in device units}
   @begin{short}
     The @fun{cairo:surface-device-scale} function returns the device scale.
   @end{short}
   The @setf{cairo:surface-device-scale} function sets a scale that is multiplied
-  to the device coordinates determined by the transformation matrix CTM when
-  drawing to @arg{surface}.
+  to the device coordinates determined by the current transformation matrix CTM
+  when drawing to @arg{surface}.
 
   One common use for this is to render to very high resolution display devices
   at a scale factor, so that code that assumes 1 pixel will be a certain size
@@ -1191,8 +1049,8 @@
 (export 'surface-device-scale)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_surface_get_fallback_resolution ()
-;;; cairo_surface_set_fallback_resolution ()
+;;; cairo_surface_get_fallback_resolution
+;;; cairo_surface_set_fallback_resolution
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf surface-fallback-resolution) (pixels surface)
@@ -1214,14 +1072,14 @@
 
 (defun surface-fallback-resolution (surface)
  #+liber-documentation
- "@version{2024-2-12}
+ "@version{2025-1-18}
   @syntax{(cairo:surface-fallback-resolution surface) => xpixels, ypixels}
   @syntax{(setf (cairo:surface-fallback-resolution surface)
     (list xpixels ypixels))}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
-  @argument[xpixels]{a number coerced to a double float with the horizontal
+  @argument[xpixels]{a number coerced to a double float for the horizontal
     pixels per inch}
-  @argument[ypixels]{a number coerced to a double float with the vertical
+  @argument[ypixels]{a number coerced to a double float for the vertical
     pixels per inch}
   @begin{short}
     The @fun{cairo:surface-fallback-resolution} function returns the fallback
@@ -1244,7 +1102,7 @@
   this function has no effect on those backends.
 
   The default fallback resoultion is 300 pixels per inch in both dimensions.
-  @begin[Note]{dictionary}
+  @begin[Notes]{dictionary}
     The fallback resolution only takes effect at the time of completing a
     page with the @fun{cairo:show-page} or @fun{cairo:copy-page} functions so
     there is currently no way to have more than one fallback resolution in
@@ -1261,66 +1119,24 @@
 (export 'surface-fallback-resolution)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_surface_set_user_data ()
+;;; cairo_surface_set_user_data
 ;;;
-;;; cairo_status_t cairo_surface_set_user_data
-;;;                                           (cairo_surface_t *surface,
-;;;                                            const cairo_user_data_key_t *key,
-;;;                                            void *user_data,
-;;;                                            cairo_destroy_func_t destroy);
-;;;
-;;; Attach user data to surface. To remove user data from a surface, call this
-;;; function with the key that was used to set it and NULL for data.
-;;;
-;;; surface :
-;;;     a cairo_surface_t
-;;;
-;;; key :
-;;;     the address of a cairo_user_data_key_t to attach the user data to
-;;;
-;;; user_data :
-;;;     the user data to attach to the surface
-;;;
-;;; destroy :
-;;;     a cairo_destroy_func_t which will be called when the surface is
-;;;     destroyed or when new user data is attached using the same key.
-;;;
-;;; Returns :
-;;;     CAIRO_STATUS_SUCCESS or CAIRO_STATUS_NO_MEMORY if a slot could not be
-;;;     allocated for the user data.
-;;;
-;;; Since 1.0
+;;; Attach user data to surface.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_surface_get_user_data ()
+;;; cairo_surface_get_user_data
 ;;;
-;;; void * cairo_surface_get_user_data (cairo_surface_t *surface,
-;;;                                     const cairo_user_data_key_t *key);
-;;;
-;;; Return user data previously attached to surface using the specified key. If
-;;; no user data has been attached with the given key this function returns
-;;; NULL.
-;;;
-;;; surface :
-;;;     a cairo_surface_t
-;;;
-;;; key :
-;;;     the address of the cairo_user_data_key_t the user data was attached to
-;;;
-;;; Returns :
-;;;     the user data previously attached or NULL.
-;;;
-;;; Since 1.0
+;;; Return user data previously attached to surface using the specified key.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_surface_copy_page ()
+;;; cairo_surface_copy_page
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_surface_copy_page" surface-copy-page) :void
  #+liber-documentation
- "@version{#2024-2-12}
+ "@version{#2025-1-18}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
   @begin{short}
     Emits the current page for backends that support multiple pages, but does
@@ -1341,12 +1157,12 @@
 (export 'surface-copy-page)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_surface_show_page ()
+;;; cairo_surface_show_page
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_surface_show_page" surface-show-page) :void
  #+liber-documentation
- "@version{2024-1-13}
+ "@version{2025-1-18}
   @argument[surface]{a @symbol{cairo:surface-t} instance}
   @begin{short}
     Emits and clears the current page for backends that support multiple pages.

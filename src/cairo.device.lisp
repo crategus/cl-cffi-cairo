@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; cairo.device.lisp
 ;;;
-;;; The documentation of the file is taken from the Cairo Reference Manual
-;;; Version 1.18 and modified to document the Lisp binding to the Cairo
-;;; library. See <http://cairographics.org>. The API documentation of the
-;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the Cairo Reference Manual
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo library,
+;;; see <http://cairographics.org>. The API documentation of the Lisp binding
+;;; is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2013 - 2024 Dieter Kaiser
+;;; Copyright (C) 2013 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -20,8 +20,8 @@
 ;;;
 ;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 ;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-;;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 ;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
@@ -46,24 +46,16 @@
 ;;;
 ;;;     cairo_device_get_type
 ;;;     cairo_device_get_reference_count
-;;;     cairo_device_set_user_data
-;;;     cairo_device_get_user_data
+;;;     cairo_device_set_user_data                          not implemented
+;;;     cairo_device_get_user_data                          not implemented
 ;;;     cairo_device_acquire
 ;;;     cairo_device_release
-;;;
-;;;     cairo_device_observer_elapsed
-;;;     cairo_device_observer_fill_elapsed
-;;;     cairo_device_observer_glyphs_elapsed
-;;;     cairo_device_observer_mask_elapsed
-;;;     cairo_device_observer_paint_elapsed
-;;;     cairo_device_observer_print
-;;;     cairo_device_observer_stroke_elapsed
 ;;; ----------------------------------------------------------------------------
 
 (in-package :cairo)
 
 ;;; ----------------------------------------------------------------------------
-;;; enum cairo_device_type_t
+;;; cairo_device_type_t
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcenum device-type-t
@@ -81,19 +73,8 @@
 (setf (liber:alias-for-symbol 'device-type-t)
       "CEnum"
       (liber:symbol-documentation 'device-type-t)
- "@version{2024-2-11}
-  @begin{short}
-    The @symbol{cairo:device-type-t} enumeration is used to describe the type
-    of a given device.
-  @end{short}
-  The device types are also known as \"backends\" within Cairo. The device type
-  can be queried with the @fun{cairo:device-type} function.
-
-  The various @symbol{cairo:device-t} functions can be used with devices of any
-  type, but some backends also provide type-specific functions that must only be
-  called with a device of the appropriate type. The behavior of calling a
-  type-specific function with a device of the wrong type is undefined.
-  @begin{pre}
+ "@version{2025-1-18}
+  @begin{declaration}
 (cffi:defcenum device-type-t
   :drm
   :gl
@@ -104,19 +85,32 @@
   :cogl
   :win32
   (:invalid -1))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:drm]{The device is of type Direct Render Manager.}
-    @entry[:gl]{The device is of type OpenGL.}
-    @entry[:script]{The device is of type script.}
-    @entry[:xcb]{The device is of type xcb.}
-    @entry[:xlib]{The device is of type xlib.}
-    @entry[:xml]{The device is of type XML.}
-    @entry[:cogl]{The device is of type cogl.}
-    @entry[:win32]{The device is of type win32.}
-    @entry[:invalid]{The device is invalid.}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:drm]{The device is of type Direct Render Manager.}
+      @entry[:gl]{The device is of type OpenGL.}
+      @entry[:script]{The device is of type script.}
+      @entry[:xcb]{The device is of type xcb.}
+      @entry[:xlib]{The device is of type xlib.}
+      @entry[:xml]{The device is of type XML.}
+      @entry[:cogl]{The device is of type cogl.}
+      @entry[:win32]{The device is of type win32.}
+      @entry[:invalid]{The device is invalid.}
   @end{table}
-  @begin[Note]{dictionary}
+  @end{values}
+  @begin{short}
+    The @symbol{cairo:device-type-t} enumeration is used to describe the type
+    of a given device.
+  @end{short}
+  The device types are also known as \"backends\" within Cairo. The device type
+  can be queried with the @fun{cairo:device-type} function.
+
+  The various @symbol{cairo:device-t} functions can be used with devices of any
+  type, but some backends also provide type specific functions that must only
+  be called with a device of the appropriate type. The behavior of calling a
+  type specific function with a device of the wrong type is undefined.
+  @begin[Notes]{dictionary}
     The only device type implemented in the Lisp API is the @code{:script}
     device type. See the @fun{cairo:with-script-surface} documentation for an
     example that uses a script surface.
@@ -137,7 +131,7 @@
 (setf (liber:alias-for-symbol 'device-t)
       "CStruct"
       (liber:symbol-documentation 'device-t)
- "@version{2024-1-16}
+ "@version{2025-1-18}
   @begin{short}
     The @symbol{cairo:device-t} structure represents the driver interface for
     drawing operations to a @symbol{cairo:surface-t} instance.
@@ -156,13 +150,13 @@
 (export 'device-t)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_device_reference ()
+;;; cairo_device_reference
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_device_reference" device-reference)
     (:pointer (:struct device-t))
  #+liber-documentation
- "@version{2024-2-11}
+ "@version{2025-1-18}
   @argument[device]{a @symbol{cairo:device-t} instance}
   @return{The referenced @symbol{cairo:device-t} instance.}
   @begin{short}
@@ -181,12 +175,12 @@
 (export 'device-reference)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_device_get_reference_count ()
+;;; cairo_device_get_reference_count
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_device_get_reference_count" device-reference-count) :uint
  #+liber-documentation
- "@version{2024-2-11}
+ "@version{2025-1-18}
   @argument[device]{a @symbol{cairo:device-t} instance}
   @begin{return}
     An unsigned integer with the current reference count of @arg{device}.
@@ -201,12 +195,12 @@
 (export 'device-reference-count)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_device_destroy ()
+;;; cairo_device_destroy
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_device_destroy" device-destroy) :void
  #+liber-documentation
- "@version{2024-1-16}
+ "@version{2025-1-18}
   @argument[device]{a @symbol{cairo:device-t} instance}
   @begin{short}
     Decreases the reference count on @arg{device} by one.
@@ -222,12 +216,12 @@
 (export 'device-destroy)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_device_status ()
+;;; cairo_device_status
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_device_status" device-status) status-t
  #+liber-documentation
- "@version{2024-1-16}
+ "@version{2025-1-18}
   @argument[device]{a @symbol{cairo:device-t} instance}
   @return{The @symbol{cairo:status-t} value with an error code if the device is
     in an error state.}
@@ -241,12 +235,12 @@
 (export 'device-status)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_device_get_type ()
+;;; cairo_device_get_type
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_device_get_type" device-type) device-type-t
  #+liber-documentation
- "@version{2024-1-16}
+ "@version{2025-1-18}
   @argument[device]{a @symbol{cairo:device-t} instance}
   @return{The @symbol{cairo:device-type-t} value for the type of @arg{device}.}
   @begin{short}
@@ -260,12 +254,12 @@
 (export 'device-type)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_device_finish ()
+;;; cairo_device_finish
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_device_finish" device-finish) :void
  #+liber-documentation
- "@version{2024-1-16}
+ "@version{2025-1-18}
   @argument[device]{a @symbol{cairo:device-t} instance to finish}
   @begin{short}
     This function finishes the device and drops all references to external
@@ -288,12 +282,12 @@
 (export 'device-finish)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_device_flush ()
+;;; cairo_device_flush
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_device_flush" device-flush) :void
  #+liber-documentation
- "@version{2024-2-11}
+ "@version{2025-1-18}
   @argument[device]{a @symbol{cairo:device-t} instance}
   @begin{short}
     Finish any pending operations for the device and also restore any temporary
@@ -310,65 +304,24 @@
 (export 'device-flush)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_device_set_user_data ()
+;;; cairo_device_set_user_data
 ;;;
-;;; cairo_status_t cairo_device_set_user_data (cairo_device_t *device,
-;;;                                            const cairo_user_data_key_t *key,
-;;;                                            void *user_data,
-;;;                                            cairo_destroy_func_t destroy);
-;;;
-;;; Attach user data to device. To remove user data from a surface, call this
-;;; function with the key that was used to set it and NULL for data.
-;;;
-;;; device :
-;;;     a cairo_device_t
-;;;
-;;; key :
-;;;     the address of a cairo_user_data_key_t to attach the user data to
-;;;
-;;; user_data :
-;;;     the user data to attach to the cairo_device_t
-;;;
-;;; destroy :
-;;;     a cairo_destroy_func_t which will be called when the cairo_t is
-;;;     destroyed or when new user data is attached using the same key.
-;;;
-;;; Returns :
-;;;     CAIRO_STATUS_SUCCESS or CAIRO_STATUS_NO_MEMORY if a slot could not be
-;;;     allocated for the user data.
-;;;
-;;; Since 1.10
+;;; Attach user data to device.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_device_get_user_data ()
+;;; cairo_device_get_user_data
 ;;;
-;;; void * cairo_device_get_user_data (cairo_device_t *device,
-;;;                                    const cairo_user_data_key_t *key);
-;;;
-;;; Return user data previously attached to device using the specified key. If
-;;; no user data has been attached with the given key this function returns
-;;; NULL.
-;;;
-;;; device :
-;;;     a cairo_device_t
-;;;
-;;; key :
-;;;     the address of the cairo_user_data_key_t the user data was attached to
-;;;
-;;; Returns :
-;;;     the user data previously attached or NULL.
-;;;
-;;; Since 1.10
+;;; Return user data previously attached to device using the specified key.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_device_acquire ()
+;;; cairo_device_acquire
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_device_acquire" device-acquire) status-t
  #+liber-documentation
- "@version{2024-2-11}
+ "@version{2025-1-29}
   @argument[device]{a @symbol{cairo:device-t} instance}
   @begin{return}
     The @symbol{cairo:status-t} value that is @code{:success} on success or an
@@ -386,7 +339,7 @@
   acquire it until a matching call to the @fun{cairo:device-release} function.
   It is allowed to recursively acquire the device multiple times from the same
   thread.
-  @begin[Note]{dictionary}
+  @begin[Notes]{dictionary}
     You must never acquire two different devices at the same time unless this
     is explicitly allowed. Otherwise the possibility of deadlocks exist.
 
@@ -403,12 +356,12 @@
 (export 'device-acquire)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_device_release ()
+;;; cairo_device_release
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_device_release" device-release) :void
  #+liber-documentation
- "@version{2024-2-11}
+ "@version{2025-1-29}
   @argument[device]{a @symbol{cairo:device-t} instance}
   @begin{short}
     Releases a device previously acquired using the @fun{cairo:device-acquire}
@@ -420,118 +373,5 @@
   (device (:pointer (:struct device-t))))
 
 (export 'device-release)
-
-;;; ----------------------------------------------------------------------------
-;;; cairo_device_observer_elapsed ()
-;;;
-;;; double
-;;; cairo_device_observer_elapsed (cairo_device_t *device);
-;;;
-;;; Returns the total elapsed time of the observation.
-;;;
-;;; abstract_device
-;;;     the observed cairo_device_t
-;;;
-;;; Returns
-;;;     the elapsed time, in nanoseconds.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; cairo_device_observer_fill_elapsed ()
-;;;
-;;; double
-;;; cairo_device_observer_fill_elapsed (cairo_device_t *device);
-;;;
-;;; Returns the elapsed time of the fill operations.
-;;;
-;;; abstract_device
-;;;     the observed cairo_device_t
-;;;
-;;; Returns
-;;;     the elapsed time, in nanoseconds.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; cairo_device_observer_glyphs_elapsed ()
-;;;
-;;; double
-;;; cairo_device_observer_glyphs_elapsed (cairo_device_t *device);
-;;;
-;;; Returns the elapsed time of the glyph operations.
-;;;
-;;; abstract_device
-;;;     the observed cairo_device_t
-;;;
-;;; Returns
-;;;     the elapsed time, in nanoseconds.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; cairo_device_observer_mask_elapsed ()
-;;;
-;;; double
-;;; cairo_device_observer_mask_elapsed (cairo_device_t *device);
-;;;
-;;; Returns the elapsed time of the mask operations.
-;;;
-;;; abstract_device
-;;;     the observed cairo_device_t
-;;;
-;;; Returns
-;;;     the elapsed time, in nanoseconds
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; cairo_device_observer_paint_elapsed ()
-;;;
-;;; double
-;;; cairo_device_observer_paint_elapsed (cairo_device_t *device);
-;;;
-;;; Returns the elapsed time of the paint operations.
-;;;
-;;; abstract_device
-;;;     the observed cairo_device_t
-;;;
-;;; Returns
-;;;     the elapsed time, in nanoseconds.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; cairo_device_observer_print ()
-;;;
-;;; cairo_status_t
-;;; cairo_device_observer_print (cairo_device_t *device,
-;;;                              cairo_write_func_t write_func,
-;;;                              void *closure);
-;;;
-;;; Prints the device log using the given function.
-;;;
-;;; abstract_device
-;;;     the observed cairo_device_t
-;;;
-;;; write_func
-;;;     the write function
-;;;
-;;; closure
-;;;     data to pass to the write_func
-;;;
-;;; Returns
-;;;     the status after the operation
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; cairo_device_observer_stroke_elapsed ()
-;;;
-;;; double
-;;; cairo_device_observer_stroke_elapsed (cairo_device_t *device);
-;;;
-;;; Returns the elapsed time of the stroke operations.
-;;;
-;;; abstract_device
-;;;     the observed cairo_device_t
-;;;
-;;; Returns
-;;;     the elapsed time, in nanoseconds.
-;;; ----------------------------------------------------------------------------
 
 ;;; --- End of file cairo.device.lisp ------------------------------------------

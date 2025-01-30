@@ -1,3 +1,21 @@
+;;;; Cairo Source Gradient
+;;;;
+;;;; Gradients describe a progression of colors by setting a start and stop
+;;;; reference location and a series of "stops" along the way. Linear gradients
+;;;; are built from two points which pass through parallel lines to define the
+;;;; start and stop locations. Radial gradients are also built from two points,
+;;;; but each has an associated radius of the circle on which to define the
+;;;; start and stop locations. Stops are added to the gradient with the
+;;;; <tt>cairo:add-color-stop-rgb</tt> and <tt>cairo:add-color-stop-rgba</tt>
+;;;; functions which take a color like the <tt>cairo:set-source-rgb</tt>
+;;;; function, as well as an offset to indicate where it lies between the
+;;;; reference locations. The colors between adjacent stops are averaged over
+;;;; space to form a smooth blend. Finally, the behavior beyond the reference
+;;;; locations can be controlled with the <tt>cairo:pattern-extend</tt>
+;;;; function.
+;;;;
+;;;; 2025-1-16
+
 (in-package :cairo-example)
 
 (defun cairo-draw-source-gradient (context width height)
@@ -31,5 +49,3 @@
     (setf (cairo:source context) linpat)
     (cairo:fill context))
   (cairo:restore context))
-
-;;; --- 2023-2-12 --------------------------------------------------------------

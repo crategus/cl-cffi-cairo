@@ -1,6 +1,14 @@
 ;;;; Cairo Fill
 ;;;;
-;;;; 2024-4-6
+;;;; The <tt>cairo:fill</tt> operation uses the path like the lines of a
+;;;; coloring book, and allows the source through the mask within the hole whose
+;;;; boundaries are the path. For complex paths (paths with multiple closed
+;;;; sub-paths—like a donut—or paths that self-intersect) this is influenced by
+;;;; the fill rule. Note that while stroking the path transfers the source for
+;;;; half of the line width on each side of the path, filling a path fills
+;;;; directly up to the edge of the path and no further.
+;;;;
+;;;; 2024-1-16
 
 (in-package :cairo-example)
 

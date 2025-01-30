@@ -1,3 +1,12 @@
+;;;; Cairo Source RGBA
+;;;;
+;;;; There are three main kinds of sources in cairo: colors, gradients, and
+;;;; images. Colors are the simplest; they use a uniform hue and opacity for the
+;;;; entire source. You can select these without any preparation with the
+;;;; <tt>cairo:set-source-rgb</tt> and <tt>cairo:set-source-rgba</tt> functions.
+;;;;
+;;;; 2025-1-16
+
 (in-package :cairo-example)
 
 (defun cairo-draw-source-rgba (context width height)
@@ -25,5 +34,3 @@
   (cairo:set-source-rgba context 0 0 1 0.40)
   (cairo:fill context)
   (cairo:restore context))
-
-;;; --- 2023-2-12 --------------------------------------------------------------

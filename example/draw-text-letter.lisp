@@ -1,5 +1,12 @@
 ;;;; Cairo Text Letter
 ;;;;
+;;;; The <tt>cairo:show-text</tt> operation forms the mask from text. It may be
+;;;; easier to think of the <tt>cairo:show-text</tt> operation as a shortcut for
+;;;; creating a path with the <tt>cairo:text-path</tt> function and then using
+;;;; the <tt>cairo:fill</tt> function to transfer it. Be aware the
+;;;; <tt>cairo:show-text</tt> function caches glyphs so is much more efficient
+;;;; if you work with a lot of text.
+;;;;
 ;;;; 2024-4-6
 
 (in-package :cairo-example)

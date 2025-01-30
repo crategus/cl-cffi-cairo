@@ -1,3 +1,13 @@
+;;;; Cairo Mask
+;;;;
+;;;; The <tt>cairo:mask</tt> and <tt>cairo:mask-surface</tt> operations allow
+;;;; transfer according to the transparency/opacity of a second source pattern
+;;;; or surface. Where the pattern or surface is opaque, the current source is
+;;;; transferred to the destination. Where the pattern or surface is
+;;;; transparent, nothing is transferred.
+;;;;
+;;;; 2025-1-16
+
 (in-package :cairo-example)
 
 (defun cairo-draw-mask (context width height)
@@ -20,5 +30,3 @@
     (cairo:pattern-destroy linpat)
     (cairo:pattern-destroy radpat))
   (cairo:restore context))
-
-;;; --- 2023-2-12 --------------------------------------------------------------

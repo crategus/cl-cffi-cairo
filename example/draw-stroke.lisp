@@ -1,6 +1,11 @@
 ;;;; Cairo Stroke
 ;;;;
-;;;; 2024-4-6
+;;;; The <tt>cairo:stroke</tt> operation takes a virtual pen along the path.
+;;;; It allows the source to transfer through the mask in a thin (or thick) line
+;;;; around the path, according to the pen's line width, dash style, and line
+;;;; caps.
+;;;;
+;;;; 2025-1-16
 
 (in-package :cairo-example)
 

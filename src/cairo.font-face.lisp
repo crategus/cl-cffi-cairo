@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; cairo.font-face.lisp
 ;;;
-;;; The documentation of the file is taken from the Cairo Reference Manual
-;;; Version 1.18 and modified to document the Lisp binding to the Cairo
-;;; library. See <http://cairographics.org>. The API documentation of the
-;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the Cairo Reference Manual
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo library,
+;;; see <http://cairographics.org>. The API documentation of the Lisp binding
+;;; is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2014 - 2024 Dieter Kaiser
+;;; Copyright (C) 2014 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -20,8 +20,8 @@
 ;;;
 ;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 ;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-;;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 ;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
@@ -51,7 +51,7 @@
 (in-package :cairo)
 
 ;;; ----------------------------------------------------------------------------
-;;; enum cairo_font_type_t
+;;; cairo_font_type_t
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcenum (font-type-t :int :allow-undeclared-values t)
@@ -67,7 +67,26 @@
 (setf (liber:alias-for-symbol 'font-type-t)
       "CEnum"
       (liber:symbol-documentation 'font-type-t)
- "@version{2024-1-28}
+ "@version{2025-1-29}
+  @begin{declaration}
+(cffi:defcenum font-type-t
+  :toy
+  :ft
+  :win32
+  :quartz
+  :user
+  :dwrite)
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:toy]{The font was created using Cairo's toy font API.}
+      @entry[:ft]{The font is of type FreeType.}
+      @entry[:win32]{The font is of type Win32.}
+      @entry[:quartz]{The font is of type Quartz.}
+      @entry[:user]{The font was created using Cairo's user font API.}
+      @entry[:dwrite]{The font is of type Win32 DWrite. Since 1.18}
+    @end{table}
+  @end{values}
   @begin{short}
     The @symbol{cairo:font-type-t} enumeration is used to describe the type of
     a given font face or scaled font.
@@ -93,25 +112,6 @@
 
   The behavior of calling a type-specific function with a scaled font of the
   wrong type is undefined.
-
-  New entries may be added in future versions.
-  @begin{pre}
-(cffi:defcenum font-type-t
-  :toy
-  :ft
-  :win32
-  :quartz
-  :user
-  :dwrite)
-  @end{pre}
-  @begin[code]{table}
-    @entry[:toy]{The font was created using Cairo's toy font API.}
-    @entry[:ft]{The font is of type FreeType.}
-    @entry[:win32]{The font is of type Win32.}
-    @entry[:quartz]{The font is of type Quartz.}
-    @entry[:user]{The font was create using Cairo's user font API.}
-    @entry{:dwrite]{The font is of type Win32 DWrite. Since 1.18}
-  @end{table}
   @see-symbol{cairo:font-face-t}
   @see-function{cairo:font-face-type}
   @see-function{cairo:scaled-font-create}
@@ -129,15 +129,15 @@
 (setf (liber:alias-for-symbol 'font-face-t)
       "CStruct"
       (liber:symbol-documentation 'font-face-t)
- "@version{2024-1-28}
+ "@version{2025-1-29}
   @begin{short}
-    A @symbol{cairo:font-face-t} structure specifies all aspects of a font other
-    than the size or font matrix.
+    The @symbol{cairo:font-face-t} structure specifies all aspects of a font
+    other than the size or font matrix.
   @end{short}
   A font matrix is used to distort a font by sheering it or scaling it unequally
   in the two directions. A font face can be set on a Cairo context by using the
   @fun{cairo:font-face} function. The size and font matrix are set with the
-  @fun{cairo:set-font-size} and @fun{cairo:set-font-matrix} functions.
+  @fun{cairo:set-font-size} and @fun{cairo:font-matrix} functions.
 
   There are various types of font faces, depending on the font backend they
   use. The type of a font face can be queried using the
@@ -148,13 +148,13 @@
   @see-symbol{cairo:context-t}
   @see-fun{cairo:font-face}
   @see-function{cairo:set-font-size}
-  @see-function{cairo:set-font-matrix}
+  @see-function{cairo:font-matrix}
   @see-function{cairo:font-face-type}")
 
 (export 'font-face-t)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_font_face_reference ()
+;;; cairo_font_face_reference
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_font_face_reference" %font-face-reference)
@@ -163,7 +163,7 @@
 
 (defun font-face-reference (face)
  #+liber-documentation
- "@version{2024-1-28}
+ "@version{2025-1-29}
   @argument[face]{a @symbol{cairo:font-face-t} instance, may be @code{nil} in
     which case this function does nothing}
   @return{The referenced @symbol{cairo:font-face-t} instance.}
@@ -184,17 +184,17 @@
 (export 'font-face-reference)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_font_face_get_reference_count ()
+;;; cairo_font_face_get_reference_count
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_font_face_get_reference_count" font-face-reference-count)
     :uint
  #+liber-documentation
- "@version{2024-1-28}
+ "@version{2025-1-29}
   @argument[face]{a @symbol{cairo:font-face-t} instance}
   @begin{return}
-    The current reference count of @arg{face}. If the object is a nil object,
-    0 will be returned.
+    The unsigned integer with the current reference count of @arg{face}. If the
+    object is a \"nil\" object, 0 will be returned.
   @end{return}
   @begin{short}
     Returns the current reference count of the font face.
@@ -205,12 +205,12 @@
 (export 'font-face-reference-count)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_font_face_destroy ()
+;;; cairo_font_face_destroy
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_font_face_destroy" font-face-destroy) :void
   #+liber-documentation
-  "@version{2024-1-28}
+  "@version{2025-1-29}
   @argument[face]{a @symbol{cairo:font-face-t} instance}
   @begin{short}
     Decreases the reference count on @arg{face} by one.
@@ -224,95 +224,55 @@
 (export 'font-face-destroy)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_font_face_status ()
+;;; cairo_font_face_status
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_font_face_status" font-face-status) status-t
  #+liber-documentation
- "@version{2024-1-28}
+ "@version{2025-1-29}
   @argument[face]{a @symbol{cairo:font-face-t} instance}
   @begin{return}
-    The @code{:success} value or another error such as the @code{:no-memory}
-    value.
+    The @code{:success} value of the @symbol{cairo:status-t} enumeration or
+    another error such as the @code{:no-memory} value.
   @end{return}
   @begin{short}
     Checks whether an error has previously occurred for this font face.
   @end{short}
-  @see-symbol{cairo:font-face-t}"
+  @see-symbol{cairo:font-face-t}
+  @see-symbol{cairo:status-t}"
   (face (:pointer (:struct font-face-t))))
 
 (export 'font-face-status)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_font_face_get_type ()
+;;; cairo_font_face_get_type
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_font_face_get_type" font-face-type) font-type-t
  #+liber-documentation
- "@version{2024-1-28}
+ "@version{2025-1-29}
   @argument[face]{a @symbol{cairo:font-face-t} font face}
-  @return{The @symbol{cairo:font-type-t} type of @arg{face}.}
+  @return{The @symbol{cairo:font-type-t} value with the type of @arg{face}.}
   @begin{short}
     This function returns the type of the backend used to create a font face.
   @end{short}
   See the @symbol{cairo:font-type-t} enumeration for available types.
-  @see-symbol{cairo:font-face-t}"
+  @see-symbol{cairo:font-face-t}
+  @see-symbol{cairo:font-type-t}"
   (face (:pointer (:struct font-face-t))))
 
 (export 'font-face-type)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_font_face_set_user_data ()
+;;; cairo_font_face_set_user_data
 ;;;
-;;; cairo_status_t cairo_font_face_set_user_data
-;;;                                           (cairo_font_face_t *font_face,
-;;;                                            const cairo_user_data_key_t *key,
-;;;                                            void *user_data,
-;;;                                            cairo_destroy_func_t destroy);
-;;;
-;;; Attach user data to font_face. To remove user data from a font face, call
-;;; this function with the key that was used to set it and NULL for data.
-;;;
-;;; font_face :
-;;;     a cairo_font_face_t
-;;;
-;;; key :
-;;;     the address of a cairo_user_data_key_t to attach the user data to
-;;;
-;;; user_data :
-;;;     the user data to attach to the font face
-;;;
-;;; destroy :
-;;;     a cairo_destroy_func_t which will be called when the font face is
-;;;     destroyed or when new user data is attached using the same key.
-;;;
-;;; Returns :
-;;;     CAIRO_STATUS_SUCCESS or CAIRO_STATUS_NO_MEMORY if a slot could not be
-;;;     allocated for the user data.
-;;;
-;;; Since 1.0
+;;; Attach user data to font_face.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_font_face_get_user_data ()
-;;;
-;;; void * cairo_font_face_get_user_data (cairo_font_face_t *font_face,
-;;;                                       const cairo_user_data_key_t *key);
+;;; cairo_font_face_get_user_data
 ;;;
 ;;; Return user data previously attached to font_face using the specified key.
-;;; If no user data has been attached with the given key this function returns
-;;; NULL.
-;;;
-;;; font_face :
-;;;     a cairo_font_face_t
-;;;
-;;; key :
-;;;     the address of the cairo_user_data_key_t the user data was attached to
-;;;
-;;; Returns :
-;;;     the user data previously attached or NULL.
-;;;
-;;; Since 1.0
 ;;; ----------------------------------------------------------------------------
 
 ;;; --- End of file cairo.font-face.lisp ---------------------------------------

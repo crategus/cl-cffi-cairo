@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; cairo.scaled-font.lisp
 ;;;
-;;; The documentation of the file is taken from the Cairo Reference Manual
-;;; Version 1.18 and modified to document the Lisp binding to the Cairo
-;;; library. See <http://cairographics.org>. The API documentation of the
-;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the Cairo Reference Manual
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo library,
+;;; see <http://cairographics.org>. The API documentation of the Lisp binding
+;;; is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2013 - 2024 Dieter Kaiser
+;;; Copyright (C) 2013 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -20,8 +20,8 @@
 ;;;
 ;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 ;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-;;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 ;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
@@ -56,7 +56,7 @@
 ;;;     cairo_scaled_font_extents
 ;;;     cairo_scaled_font_text_extents
 ;;;     cairo_scaled_font_glyph_extents
-;;;     cairo_scaled_font_text_to_glyphs                   not exported
+;;;     cairo_scaled_font_text_to_glyphs
 ;;;
 ;;;     cairo_scaled_font_set_user_data                    not implemented
 ;;;     cairo_scaled_font_get_user_data                    not implemented
@@ -77,7 +77,23 @@
 (setf (liber:alias-for-symbol 'glyph-t)
       "CStruct"
       (liber:symbol-documentation 'glyph-t)
- "@version{2024-2-7}
+ "@version{2025-1-29}
+  @begin{declaration}
+(cffi:defcstruct glyph-t
+  (index :ulong)
+  (x :double)
+  (y :double))
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[index]{Glyph index in the font. The exact interpretation of the
+        glyph index depends on the font technology being used.}
+      @entry[x]{The offset in the x direction between the origin used for
+        drawing or measuring the string and the origin of this glyph.}
+      @entry[y]{The offset in the y direction between the origin used for
+        drawing or measuring the string and the origin of this glyph.}
+    @end{table}
+  @end{values}
   @begin{short}
     The @symbol{cairo:glyph-t} structure holds information about a single glyph
     when drawing or measuring text.
@@ -93,21 +109,7 @@
   Note that the offsets given by @code{x} and @code{y} are not cumulative. When
   drawing or measuring text, each glyph is individually positioned with respect
   to the overall origin.
-  @begin{pre}
-(cffi:defcstruct glyph-t
-  (index :ulong)
-  (x :double)
-  (y :double))
-  @end{pre}
-  @begin[code]{table}
-    @entry[index]{Glyph index in the font. The exact interpretation of the
-      glyph index depends on the font technology being used.}
-    @entry[x]{The offset in the x direction between the origin used for drawing
-      or measuring the string and the origin of this glyph.}
-    @entry[y]{The offset in the y direction between the origin used for drawing
-      or measuring the string and the origin of this glyph.}
-  @end{table}
-  @begin[Note]{dictionary}
+  @begin[Notes]{dictionary}
     In the Lisp API, this structure is only used to implement functions that
     work with glyphs and accept or return a glyph or an array of glyphs. In the
     Lisp implementation a glyph is represented as a list:
@@ -139,7 +141,41 @@
 (setf (liber:alias-for-symbol 'font-extents-t)
       "CStruct"
       (liber:symbol-documentation 'font-extents-t)
- "@version{2024-2-8}
+ "@version{2025-1-29}
+  @begin{declaration}
+(cffi:defcstruct font-extents-t
+  (ascent :double)
+  (descent :double)
+  (height :double)
+  (max-xadvance :double)
+  (max-yadvance :double))
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[ascent]{The distance that the font extends above the baseline. Note
+        that this is not always exactly equal to the maximum of the extents of
+        all the glyphs in the font, but rather is picked to express the font
+        designer's intent as to how the font should align with elements above
+        it.}
+      @entry[descent]{The distance that the font extends below the baseline.
+        This value is positive for typical fonts that include portions below the
+        baseline. Note that this is not always exactly equal to the maximum of
+        the extents of all the glyphs in the font, but rather is picked to
+        express the font designer's intent as to how the font should align with
+        elements below it.}
+      @entry[height]{The recommended vertical distance between baselines when
+        setting consecutive lines of text with the font. This is greater than
+        @code{ascent} + @code{descent} by a quantity known as the line spacing
+        or external leading. When space is at a premium, most fonts can be set
+        with only a distance of @code{ascent} + @code{descent} between lines.}
+      @entry[max-xadvance]{The maximum distance in the x direction that the
+        origin is advanced for any glyph in the font.}
+      @entry[max-yadvance]{The maximum distance in the y direction that the
+        origin is advanced for any glyph in the font. This will be zero for
+        normal fonts used for horizontal writing. The scripts of East Asia are
+        sometimes written vertically.}
+    @end{table}
+  @end{values}
   @begin{short}
     The @symbol{cairo:font-extents-t} structure stores metric information for a
     font.
@@ -151,37 +187,6 @@
   reported text extents will not be doubled. They will change slightly due to
   hinting, so you can not assume that metrics are independent of the
   transformation matrix), but otherwise will remain unchanged.
-  @begin{pre}
-(cffi:defcstruct font-extents-t
-  (ascent :double)
-  (descent :double)
-  (height :double)
-  (max-xadvance :double)
-  (max-yadvance :double))
-  @end{pre}
-  @begin[code]{table}
-    @entry[ascent]{The distance that the font extends above the baseline. Note
-      that this is not always exactly equal to the maximum of the extents of
-      all the glyphs in the font, but rather is picked to express the font
-      designer's intent as to how the font should align with elements above it.}
-    @entry[descent]{The distance that the font extends below the baseline. This
-      value is positive for typical fonts that include portions below the
-      baseline. Note that this is not always exactly equal to the maximum of
-      the extents of all the glyphs in the font, but rather is picked to express
-      the font designer's intent as to how the font should align with elements
-      below it.}
-    @entry[height]{The recommended vertical distance between baselines when
-      setting consecutive lines of text with the font. This is greater than
-      @code{ascent} + @code{descent} by a quantity known as the line spacing or
-      external leading. When space is at a premium, most fonts can be set with
-      only a distance of @code{ascent} + @code{descent} between lines.}
-    @entry[max-xadvance]{The maximum distance in the x direction that the
-      origin is advanced for any glyph in the font.}
-    @entry[max-yadvance]{The maximum distance in the y direction that the origin
-      is advanced for any glyph in the font. This will be zero for normal fonts
-      used for horizontal writing. The scripts of East Asia are sometimes
-      written vertically.}
-  @end{table}
   @see-function{cairo:scale}
   @see-function{cairo:font-extents}")
 
@@ -203,18 +208,8 @@
 (setf (liber:alias-for-symbol 'text-extents-t)
       "CStruct"
       (liber:symbol-documentation 'text-extents-t)
- "@version{2024-2-8}
-  @begin{short}
-    The @symbol{cairo:text-extents-t} structure stores the extents of a single
-    glyph or a string of glyphs in user-space coordinates.
-  @end{short}
-  Because text extents are in user-space coordinates, they are mostly, but not
-  entirely, independent of the current transformation matrix. If you call
-  @code{(scale cr 2.0 2.0)}, text will be drawn twice as big, but the
-  reported text extents will not be doubled. They will change slightly due to
-  hinting, so you can not assume that metrics are independent of the
-  transformation matrix, but otherwise will remain unchanged.
-  @begin{pre}
+ "@version{2025-1-29}
+  @begin{declaration}
 (cffi:defcstruct text-extents-t
   (xbearing :double)
   (ybearing :double)
@@ -222,7 +217,8 @@
   (height :double)
   (xadvance :double)
   (yadvance :double))
-  @end{pre}
+  @end{declaration}
+  @begin{values}
   @begin[code]{table}
     @entry[xbearing]{The horizontal distance from the origin to the leftmost
       part of the glyphs as drawn. Positive if the glyphs lie entirely to the
@@ -238,6 +234,17 @@
       these glyphs. Will typically be zero except for vertical text layout as
       found in East-Asian languages.}
   @end{table}
+  @end{values}
+  @begin{short}
+    The @symbol{cairo:text-extents-t} structure stores the extents of a single
+    glyph or a string of glyphs in user-space coordinates.
+  @end{short}
+  Because text extents are in user-space coordinates, they are mostly, but not
+  entirely, independent of the current transformation matrix. If you call
+  @code{(scale cr 2.0 2.0)}, text will be drawn twice as big, but the
+  reported text extents will not be doubled. They will change slightly due to
+  hinting, so you can not assume that metrics are independent of the
+  transformation matrix, but otherwise will remain unchanged.
   @see-function{cairo:text-extents}
   @see-function{cairo:scaled-font-text-extents}")
 
@@ -253,12 +260,12 @@
 (setf (liber:alias-for-symbol 'scaled-font-t)
       "CStruct"
       (liber:symbol-documentation 'scaled-font-t)
- "@version{2023-1-28}
+ "@version{2025-1-29}
   @begin{short}
-    A @symbol{cairo:scaled-font-t} structure is a font scaled to a particular
+    The @symbol{cairo:scaled-font-t} structure is a font scaled to a particular
     size and device resolution.
   @end{short}
-  A @symbol{cairo:scaled-font-t} structure is most useful for low-level font
+  The @symbol{cairo:scaled-font-t} structure is most useful for low-level font
   usage where a library or application wants to cache a reference to a scaled
   font to speed up the computation of metrics.
 
@@ -281,18 +288,18 @@
 
 (defmacro with-scaled-font ((font face matrix ctm options) &body body)
  #+liber-documentation
- "@version{2024-1-28}
+ "@version{2025-1-29}
   @syntax{(cairo:with-scaled-font (font face matrix ctm options) body)
     => result}
   @argument[font]{a newly allocated @symbol{cairo:scaled-font-t} instance}
-  @argument[matrix]{a @symbol{cairo:matrix-t} matrix with the font space to
+  @argument[matrix]{a @symbol{cairo:matrix-t} matrix for the font space to
     user space transformation for the font, in the simplest case of a N point
     font, this matrix is just a scale by N, but it can also be used to shear
     the font or stretch it unequally along the two axes, see the
-    @fun{cairo:set-font-matrix} function}
-  @argument[ctm]{a @symbol{cairo:matrix-t} matrix with the user to device
+    @fun{cairo:font-matrix} function}
+  @argument[ctm]{a @symbol{cairo:matrix-t} matrix for the user to device
     transformation with which the font will be used}
-  @argument[options]{a @symbol{cairo:font-options-t} value with the options to
+  @argument[options]{a @symbol{cairo:font-options-t} value for the options to
     use when getting metrics for the font and rendering with it}
   @begin{short}
     The @symbol{cairo:with-scaled-font} macro allocates a new
@@ -308,6 +315,7 @@
   @see-symbol{cairo:scaled-font-t}
   @see-symbol{cairo:matrix-t}
   @see-symbol{cairo:font-options-t}
+  @see-function{cairo:font-matrix}
   @see-function{cairo:scaled-font-create}
   @see-function{cairo:scaled-font-destroy}"
   `(let ((,font (scaled-font-create ,face ,matrix ,ctm ,options)))
@@ -318,25 +326,25 @@
 (export 'with-scaled-font)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_scaled_font_create ()
+;;; cairo_scaled_font_create
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_scaled_font_create" scaled-font-create)
     (:pointer (:struct scaled-font-t))
  #+liber-documentation
- "@version{2024-1-28}
+ "@version{2025-1-29}
   @argument[face]{a @symbol{cairo:font-face-t} instance}
-  @argument[matrix]{a @symbol{cairo:matrix-t} matrix with the font space to
+  @argument[matrix]{a @symbol{cairo:matrix-t} matrix for the font space to
     user space transformation for the font, in the simplest case of a N point
     font, this matrix is just a scale by N, but it can also be used to shear
     the font or stretch it unequally along the two axes, see the
-    @fun{cairo:set-font-matrix} function}
-  @argument[ctm]{a @symbol{cairo:matrix-t} matrix with the user to device
+    @fun{cairo:font-matrix} function}
+  @argument[ctm]{a @symbol{cairo:matrix-t} matrix for the user to device
     transformation with which the font will be used}
-  @argument[options]{a @symbol{cairo:font-options-t} value with the options to
+  @argument[options]{a @symbol{cairo:font-options-t} value for the options to
     use when getting metrics for the font and rendering with it}
   @begin{return}
-    A newly created @symbol{cairo:scaled-font-t} instance. Destroy with the
+    The newly created @symbol{cairo:scaled-font-t} instance. Destroy with the
     @fun{cairo:scaled-font-destroy} function.
   @end{return}
   @begin{short}
@@ -347,7 +355,7 @@
   @see-symbol{cairo:font-face-t}
   @see-symbol{cairo:matrix-t}
   @see-symbol{cairo:font-options-t}
-  @see-function{cairo:set-font-matrix}"
+  @see-function{cairo:font-matrix}"
   (face (:pointer (:struct font-face-t)))
   (matrix (:pointer (:struct matrix-t)))
   (ctm (:pointer (:struct matrix-t)))
@@ -356,7 +364,7 @@
 (export 'scaled-font-create)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_scaled_font_reference ()
+;;; cairo_scaled_font_reference
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_scaled_font_reference" %scaled-font-reference)
@@ -365,7 +373,7 @@
 
 (defun scaled-font-reference (font)
  #+liber-documentation
- "@version{2024-1-28}
+ "@version{2025-1-29}
   @argument[font]{a @symbol{cairo:scaled-font-t} instance, may be @code{nil} in
     which case this function does nothing}
   @return{The referenced @symbol{cairo:scaled-font-t} instance.}
@@ -385,16 +393,16 @@
 (export 'scaled-font-reference)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_scaled_font_get_reference_count ()
+;;; cairo_scaled_font_get_reference_count
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_scaled_font_get_reference_count"
                scaled-font-reference-count) :uint
  #+liber-documentation
- "@version{2024-1-28}
+ "@version{2025-1-29}
   @argument[font]{a @symbol{cairo:scaled-font-t} instance}
-  @return{The integer with the current reference count of @arg{font}. If the
-    object is a nil object, 0 will be returned.}
+  @return{The unsigned integer with the current reference count of @arg{font}.
+    If the object is a \"nil\" object, 0 will be returned.}
   @begin{short}
     Returns the current reference count of @arg{font}.
   @end{short}
@@ -404,12 +412,12 @@
 (export 'scaled-font-reference-count)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_scaled_font_destroy ()
+;;; cairo_scaled_font_destroy
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_scaled_font_destroy" scaled-font-destroy) :void
  #+liber-documentation
- "@version{2024-1-28}
+ "@version{2025-1-29}
   @argument[font]{a @symbol{cairo:scaled-font-t} instance}
   @begin{short}
     Decreases the reference count on @arg{font} by one.
@@ -423,31 +431,33 @@
 (export 'scaled-font-destroy)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_scaled_font_status ()
+;;; cairo_scaled_font_status
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_scaled_font_status" scaled-font-status) status-t
  #+liber-documentation
- "@version{2024-1-28}
+ "@version{2025-1-29}
   @argument[font]{a @symbol{cairo:scaled-font-t} instance}
   @begin{return}
-    @code{:success} or another error such as @code{:no-memory}.
+    The @code{:success} value of the @symbol{cairo:status-t} enumeration or
+    another error such as @code{:no-memory}.
   @end{return}
   @begin{short}
     Checks whether an error has previously occurred for this scaled font.
   @end{short}
-  @see-symbol{cairo:scaled-font-t}"
+  @see-symbol{cairo:scaled-font-t}
+  @see-symbol{cairo:status-t}"
   (font (:pointer (:struct scaled-font-t))))
 
 (export 'scaled-font-status)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_scaled_font_get_type ()
+;;; cairo_scaled_font_get_type
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_scaled_font_get_type" scaled-font-type) font-type-t
  #+liber-documentation
- "@version{2024-1-28}
+ "@version{2025-1-29}
   @argument[font]{a @symbol{cairo:scaled-font-t} instance}
   @return{The @symbol{cairo:font-type-t} value of @arg{font}.}
   @begin{short}
@@ -462,13 +472,13 @@
 (export 'scaled-font-type)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_scaled_font_get_font_face ()
+;;; cairo_scaled_font_get_font_face
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_scaled_font_get_font_face" scaled-font-font-face)
     (:pointer (:struct font-face-t))
  #+liber-documentation
- "@version{2024-1-28}
+ "@version{2025-1-29}
   @argument[font]{a @symbol{cairo:scaled-font-t} instance}
   @return{The @symbol{cairo:font-face-t} instance with which @arg{font} was
     created. This object is owned by Cairo. To keep a reference to it, you must
@@ -487,16 +497,16 @@
 (export 'scaled-font-font-face)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_scaled_font_get_font_options ()
+;;; cairo_scaled_font_get_font_options
 ;;; ----------------------------------------------------------------------------
 
 (defun scaled-font-font-options (font options)
  #+liber-documentation
- "@version{2024-2-3}
+ "@version{2025-1-29}
   @argument[font]{a @symbol{cairo:scaled-font-t} instance}
   @argument[options]{a @symbol{cairo:font-options-t} instance for the
     return value}
-  @return{The @symbol{cairo:font-options-t} instance.}
+  @return{The @symbol{cairo:font-options-t} instance with the font options.}
   @begin{short}
     Stores the font options with which @arg{font} was created into
     @arg{options}.
@@ -512,14 +522,15 @@
 (export 'scaled-font-font-options)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_scaled_font_get_font_matrix ()
+;;; cairo_scaled_font_get_font_matrix
 ;;; ----------------------------------------------------------------------------
 
 (defun scaled-font-font-matrix (font matrix)
  #+liber-documentation
- "@version{2024-1-28}
+ "@version{2025-1-29}
   @argument[font]{a @symbol{cairo:scaled-font-t} instance}
   @argument[matrix]{a @symbol{cairo:matrix-t} instance}
+  @return{The @symbol{cairo:matrix-t} instance with the font matrix.}
   @begin{short}
     Stores the font matrix with which @arg{font} was created into @arg{matrix}.
   @end{short}
@@ -534,21 +545,22 @@
 (export 'scaled-font-font-matrix)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_scaled_font_get_ctm ()
+;;; cairo_scaled_font_get_ctm
 ;;; ----------------------------------------------------------------------------
 
 (defun scaled-font-ctm (font ctm)
  #+liber-documentation
- "@version{2024-1-28}
+ "@version{2025-1-29}
   @argument[font]{a @symbol{cairo:scaled-font-t} instance}
-  @argument[ctm]{a @symbol{cairo:matrix-t} instance for the return value for the
-    CTM}
+  @argument[ctm]{a @symbol{cairo:matrix-t} instance for the return value for
+    the CTM}
+  @return{The @symbol{cairo:matrix-t} instance with the CTM.}
   @begin{short}
     Stores the CTM with which @arg{font} was created into @arg{ctm}.
   @end{short}
-  Note that the translation offsets @code{(x0, y0)} of the CTM are ignored by
+  Note that the translation offsets @code{(x0,y0)} of the CTM are ignored by
   the @fun{cairo:scaled-font-create} function. So, the matrix this function
-  returns always has @code{(0, 0)} as @code{(x0, y0)}.
+  returns always has @code{(0,0)} as @code{(x0,y0)}.
   @see-symbol{cairo:scaled-font-t}
   @see-symbol{cairo:matrix-t}
   @see-function{cairo:scaled-font-create}"
@@ -561,14 +573,15 @@
 (export 'scaled-font-ctm)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_scaled_font_get_scale_matrix ()
+;;; cairo_scaled_font_get_scale_matrix
 ;;; ----------------------------------------------------------------------------
 
 (defun scaled-font-scale-matrix (font matrix)
  #+liber-documentation
- "@version{2024-1-28}
+ "@version{2025-1-29}
   @argument[font]{a @symbol{cairo:scaled-font-t} instance}
-  @argument[matrix]{a @symbol{cairo:matrix-t} instance for the matrix}
+  @argument[matrix]{a @symbol{cairo:matrix-t} instance for the scale matrix}
+  @return{The @symbol{cairo:matrix-t} instance with the scale matrix.}
   @begin{short}
     Stores the scale matrix of @arg{font} into @arg{matrix}.
   @end{short}
@@ -585,7 +598,7 @@
 (export 'scaled-font-scale-matrix)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_scaled_font_extents ()
+;;; cairo_scaled_font_extents
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_scaled_font_extents" %scaled-font-extents) :void
@@ -594,11 +607,11 @@
 
 (defun scaled-font-extents (font)
  #+liber-documentation
- "@version{2024-2-8}
+ "@version{2025-1-29}
   @syntax{(cairo:scaled-font-extents font) => ascent, descent, height,
     max-xadvance, max-yadvance}
   @argument[font]{a @symbol{cairo:scaled-font-t} instance}
-  @return{The double float values of the @symbol{cairo:font-extents-t} instance
+  @return{The double floats of the @symbol{cairo:font-extents-t} instance
     with the extents of @arg{font}.}
   @begin{short}
     Gets the metrics for a scaled font.
@@ -617,7 +630,7 @@
 (export 'scaled-font-extents)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_scaled_font_text_extents ()
+;;; cairo_scaled_font_text_extents
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_scaled_font_text_extents" %scaled-font-text-extents) :void
@@ -627,12 +640,12 @@
 
 (defun scaled-font-text-extents (font utf8)
  #+liber-documentation
- "@version{2024-2-19}
+ "@version{2025-1-29}
   @syntax{(cairo:scaled-font-text-extents font utf8) => xbearing, ybearing,
     width, height, xadvance, yadvance}
   @argument[font]{a @symbol{cairo:scaled-font-t} instance}
   @argument[utf8]{a string of text, encoded in UTF-8}
-  @return{The double float values of the @symbol{cairo:text-extents-t} instance
+  @return{The double floats of the @symbol{cairo:text-extents-t} instance
     with the extents of @arg{utf8}.}
   @begin{short}
     Gets the extents for a string of text.
@@ -667,7 +680,7 @@
 (export 'scaled-font-text-extents)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_scaled_font_glyph_extents ()
+;;; cairo_scaled_font_glyph_extents
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_scaled_font_glyph_extents" %scaled-font-glyph-extents)
@@ -679,19 +692,19 @@
 
 (defun scaled-font-glyph-extents (font glyphs)
  #+liber-documentation
- "@version{2024-2-8}
+ "@version{2025-1-29}
   @syntax{(cairo:scaled-font-glyph-extents font glyphs) => xbearing, ybearing,
     width, height, xadvance, yadvance}
   @argument[font]{a @symbol{cairo:scaled-font-t} instance}
   @argument[glyphs]{a list of glyphs, each glyph is represented by an item that
     is a list with the @code{(index x y)} glyph values}
-  @argument[index]{an unsigned integer with the glyph index in the font}
-  @argument[x]{a number coerced to a double float with the offset in the x
+  @argument[index]{an unsigned integer for the glyph index in the font}
+  @argument[x]{a number coerced to a double float for the offset in the x
     direction between the origin used for drawing the string and the
     orgin of this glyph}
-  @argument[y]{a number coerced to a double float with the y direction between
+  @argument[y]{a number coerced to a double float for the y direction between
     the orgin used for drawing the string and the origin of this glyph}
-  @return{The double float values of the @symbol{cairo:text-extents-t} instance
+  @return{The double floats of the @symbol{cairo:text-extents-t} instance
     with the extents of @arg{glyphs}.}
   @begin{short}
     Gets the extents for @arg{glyphs}.
@@ -734,7 +747,7 @@
 (export 'scaled-font-glyph-extents)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_scaled_font_text_to_glyphs ()
+;;; cairo_scaled_font_text_to_glyphs
 ;;; ----------------------------------------------------------------------------
 
 ;; TODO: Implementation of clusters is missing. Udate the documentation.
@@ -754,11 +767,11 @@
 
 (defun scaled-font-text-to-glyphs (font x y utf8)
  #+liber-documentation
- "@version{2024-2-8}
+ "@version{2025-1-29}
   @argument[font]{a @symbol{cairo:scaled-font-t} instance}
-  @argument[x]{a number coerced to a double float with the x position to place
+  @argument[x]{a number coerced to a double float for the x position to place
     first glyph}
-  @argument[y]{a number coerced to a double float with the y position to place
+  @argument[y]{a number coerced to a double float for the y position to place
     first glyph}
   @argument[utf8]{a string of text encoded in UTF8}
   @return{The list of glyphs for @arg{utf8} upon sucess, or @code{nil} if the
@@ -797,58 +810,16 @@
 (export 'scaled-font-text-to-glyphs)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_scaled_font_set_user_data ()
+;;; cairo_scaled_font_set_user_data
 ;;;
-;;; cairo_status_t
-;;; cairo_scaled_font_set_user_data (cairo_scaled_font_t *scaled_font,
-;;;                                  const cairo_user_data_key_t *key,
-;;;                                  void *user_data,
-;;;                                  cairo_destroy_func_t destroy);
-;;;
-;;; Attach user data to scaled_font. To remove user data from a surface, call
-;;; this function with the key that was used to set it and NULL for data.
-;;;
-;;; scaled_font :
-;;;     a cairo_scaled_font_t
-;;;
-;;; key :
-;;;     the address of a cairo_user_data_key_t to attach the user data to
-;;;
-;;; user_data :
-;;;     the user data to attach to the cairo_scaled_font_t
-;;;
-;;; destroy :
-;;;     a cairo_destroy_func_t which will be called when the cairo_t is
-;;;     destroyed or when new user data is attached using the same key.
-;;;
-;;; Returns :
-;;;     CAIRO_STATUS_SUCCESS or CAIRO_STATUS_NO_MEMORY if a slot could not be
-;;;     allocated for the user data.
-;;;
-;;; Since 1.4
+;;; Attach user data to scaled_font.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_scaled_font_get_user_data ()
-;;;
-;;; void *
-;;; cairo_scaled_font_get_user_data (cairo_scaled_font_t *scaled_font,
-;;;                                  const cairo_user_data_key_t *key);
+;;; cairo_scaled_font_get_user_data
 ;;;
 ;;; Return user data previously attached to scaled_font using the specified
-;;; key. If no user data has been attached with the given key this function
-;;; returns NULL.
-;;;
-;;; scaled_font :
-;;;     a cairo_scaled_font_t
-;;;
-;;; key :
-;;;     the address of the cairo_user_data_key_t the user data was attached to
-;;;
-;;; Returns :
-;;;     the user data previously attached or NULL.
-;;;
-;;; Since 1.4
+;;; key.
 ;;; ----------------------------------------------------------------------------
 
 ;;; --- End of file cairo.scaled-font.lisp -------------------------------------

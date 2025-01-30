@@ -5,20 +5,6 @@
 
 ;;; --- Types and Values -------------------------------------------------------
 
-;;;     CAIRO_HAS_MIME_SURFACE
-;;;     CAIRO_MIME_TYPE_CCITT_FAX
-;;;     CAIRO_MIME_TYPE_CCITT_FAX_PARAMS
-;;;     CAIRO_MIME_TYPE_EPS
-;;;     CAIRO_MIME_TYPE_EPS_PARAMS
-;;;     CAIRO_MIME_TYPE_JBIG2
-;;;     CAIRO_MIME_TYPE_JBIG2_GLOBAL
-;;;     CAIRO_MIME_TYPE_JBIG2_GLOBAL_ID
-;;;     CAIRO_MIME_TYPE_JP2
-;;;     CAIRO_MIME_TYPE_JPEG
-;;;     CAIRO_MIME_TYPE_PNG
-;;;     CAIRO_MIME_TYPE_URI
-;;;     CAIRO_MIME_TYPE_UNIQUE_ID
-
 ;;;     cairo_surface_t
 ;;;     cairo_content_t
 ;;;     cairo_surface_type_t

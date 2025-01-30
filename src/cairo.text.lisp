@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; cairo.text.lisp
 ;;;
-;;; The documentation of the file is taken from the Cairo Reference Manual
-;;; Version 1.18 and modified to document the Lisp binding to the Cairo
-;;; library. See <http://cairographics.org>. The API documentation of the
-;;; Lisp binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the Cairo Reference Manual
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo library,
+;;; see <http://cairographics.org>. The API documentation of the Lisp binding
+;;; is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2013 - 2024 Dieter Kaiser
+;;; Copyright (C) 2013 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -20,8 +20,8 @@
 ;;;
 ;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 ;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-;;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 ;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
@@ -36,8 +36,8 @@
 ;;;     cairo_glyph_t                            --> cairo.scaled-font.lisp
 ;;;     cairo_font_slant_t
 ;;;     cairo_font_weight_t
-;;;     cairo_text_cluster_t                               not exported
-;;;     cairo_text_cluster_flags_t                         not exported
+;;;     cairo_text_cluster_t                                not exported
+;;;     cairo_text_cluster_flags_t                          not exported
 ;;;
 ;;; Functions
 ;;;
@@ -53,7 +53,7 @@
 ;;;     cairo_get_scaled_font
 ;;;     cairo_show_text
 ;;;     cairo_show_glyphs
-;;;     cairo_show_text_glyphs                             not exported
+;;;     cairo_show_text_glyphs                              not exported
 ;;;     cairo_font_extents
 ;;;     cairo_text_extents
 ;;;     cairo_glyph_extents
@@ -63,16 +63,16 @@
 ;;;     cairo_toy_font_face_get_slant
 ;;;     cairo_toy_font_face_get_weight
 ;;;
-;;;     cairo_glyph_allocate                               not exported
-;;;     cairo_glyph_free                                   not exported
-;;;     cairo_text_cluster_allocate                        not exported
-;;;     cairo_text_cluster_free                            not exported
+;;;     cairo_glyph_allocate                                not exported
+;;;     cairo_glyph_free                                    not exported
+;;;     cairo_text_cluster_allocate                         not exported
+;;;     cairo_text_cluster_free                             not exported
 ;;; ----------------------------------------------------------------------------
 
 (in-package :cairo)
 
 ;;; ----------------------------------------------------------------------------
-;;; enum cairo_font_slant_t
+;;; cairo_font_slant_t
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcenum font-slant-t
@@ -84,26 +84,28 @@
 (setf (liber:alias-for-symbol 'font-slant-t)
       "CEnum"
       (liber:symbol-documentation 'font-slant-t)
- "@version{2024-2-6}
-  @short{Specifies variants of a font face based on their slant.}
-  @begin{pre}
+ "@version{2025-1-29}
+  @begin{declaration}
 (cffi:defcenum font-slant-t
   :normal
   :italic
   :oblique)
-  @end{pre}
-  @begin[code]{table}
-    @entry[:normal]{Upright font style.}
-    @entry[:italic]{Italic font style.}
-    @entry[:oblique]{Oblique font style.}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:normal]{Upright font style.}
+      @entry[:italic]{Italic font style.}
+      @entry[:oblique]{Oblique font style.}
+    @end{table}
+  @end{values}
+  @short{Specifies variants of a font face based on their slant.}
   @see-symbol{cairo:font-weight-t}
   @see-function{cairo:select-font-face}")
 
 (export 'font-slant-t)
 
 ;;; ----------------------------------------------------------------------------
-;;; enum cairo_font_weight_t
+;;; cairo_font_weight_t
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcenum font-weight-t
@@ -114,24 +116,26 @@
 (setf (liber:alias-for-symbol 'font-weight-t)
       "CEnum"
       (liber:symbol-documentation 'font-weight-t)
- "@version{2024-2-6}
-  @short{Specifies variants of a font face based on their weight.}
-  @begin{pre}
+ "@version{2025-1-29}
+  @begin{declaration}
 (cffi:defcenum font-slant-t
   :normal
   :bold)
-  @end{pre}
-  @begin[code]{table}
-    @entry[:normal]{Normal font weight.}
-    @entry[:bold]{Bold font weight.}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:normal]{Normal font weight.}
+      @entry[:bold]{Bold font weight.}
+    @end{table}
+  @end{values}
+  @short{Specifies variants of a font face based on their weight.}
   @see-symbol{cairo:font-slant-t}
   @see-function{cairo:select-font-face}")
 
 (export 'font-weight-t)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_text_cluster_t                                   not exported
+;;; cairo_text_cluster_t                                    not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct text-cluster-t
@@ -171,7 +175,7 @@
   @see-function{cairo:show-text-glyphs}")
 
 ;;; ----------------------------------------------------------------------------
-;;; enum cairo_text_cluster_flags_t                        not exported
+;;; cairo_text_cluster_flags_t                              not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcenum text-cluster-flags-t
@@ -194,7 +198,7 @@
   @see-symbol{cairo:text-cluster-t}")
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_select_font_face ()
+;;; cairo_select_font_face
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_select_font_face" %select-font-face) :void
@@ -205,12 +209,12 @@
 
 (defun select-font-face (cr family &key (slant :normal) (weight :normal))
  #+liber-documentation
- "@version{2024-2-8}
+ "@version{2025-1-29}
   @argument[cr]{a @symbol{cairo:context-t} instance}
-  @argument[family]{a string with the font family name, encoded in UTF-8}
-  @argument[slant]{a @symbol{cairo:font-slant-t} value with the slant, default
+  @argument[family]{a string for the font family name, encoded in UTF-8}
+  @argument[slant]{a @symbol{cairo:font-slant-t} value for the slant, default
     value is @code{:normal}}
-  @argument[weight]{a @symbol{cairo:font-weight-t} value with the  weight,
+  @argument[weight]{a @symbol{cairo:font-weight-t} value for the  weight,
     default value is @code{:normal}}
   @begin{short}
     Selects a family and style of font from a simplified description as a
@@ -236,7 +240,7 @@
 
   This function is equivalent to a call to the @fun{cairo:toy-font-face-create}
   function followed by the @fun{cairo:font-face} function.
-  @begin[Note]{dictionary}
+  @begin[Notes]{dictionary}
     The @fun{cairo:select-font-face} function is part of what the Cairo
     designers call the \"toy\" text API. It is convenient for short demos
     and simple programs, but it is not expected to be adequate for serious
@@ -256,7 +260,7 @@
 (export 'select-font-face)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_set_font_size ()
+;;; cairo_set_font_size
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_set_font_size" %set-font-size) :void
@@ -265,9 +269,9 @@
 
 (defun set-font-size (cr size)
  #+liber-documentation
- "@version{2024-2-8}
+ "@version{2025-1-29}
   @argument[cr]{a @symbol{cairo:context-t} instance}
-  @argument[size]{a number coerced to a double float with the new font size,
+  @argument[size]{a number coerced to a double float for the new font size,
     in user space units}
   @begin{short}
     Sets the current font matrix to a scale by a factor of @arg{size},
@@ -289,8 +293,8 @@
 (export 'set-font-size)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_set_font_matrix ()
-;;; cairo_get_font_matrix ()
+;;; cairo_set_font_matrix
+;;; cairo_get_font_matrix
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf font-matrix) (matrix cr)
@@ -306,7 +310,7 @@
 
 (defun font-matrix (cr matrix)
  #+liber-documentation
- "@version{2024-2-8}
+ "@version{2025-1-29}
   @syntax{(cairo:font-matrix cr matrix) => matrix}
   @syntax{(setf (cairo:font-matrix cr) matrix)}
   @argument[cr]{a @symbol{cairo:context-t} instance}
@@ -331,15 +335,15 @@
 (export 'font-matrix)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_get_font_options ()
-;;; cairo_set_font_options ()
+;;; cairo_get_font_options
+;;; cairo_set_font_options
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf font-options) (options cr)
   (cffi:foreign-funcall "cairo_set_font_options"
                         (:pointer (:struct context-t)) cr
                         (:pointer (:struct font-options-t))
-                          (if options options (cffi:null-pointer))
+                          (or options (cffi:null-pointer))
                         :void)
     options)
 
@@ -349,7 +353,7 @@
 
 (defun font-options (cr options)
  #+liber-documentation
- "@version{2024-2-8}
+ "@version{2025-1-29}
   @syntax{(cairo:font-options cr options) => options}
   @syntax{(setf (cairo:font-options cr) options)}
   @argument[cr]{a @symbol{cairo:context-t} instance}
@@ -376,12 +380,12 @@
 (export 'font-options)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_get_font_face ()
-;;; cairo_set_font_face ()
+;;; cairo_get_font_face
+;;; cairo_set_font_face
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf font-face) (face cr)
-  (let ((value (if face face (cffi:null-pointer))))
+  (let ((value (or face (cffi:null-pointer))))
     (cffi:foreign-funcall "cairo_set_font_face"
                           (:pointer (:struct context-t)) cr
                           (:pointer (:struct font-face-t)) value
@@ -390,7 +394,7 @@
 
 (cffi:defcfun ("cairo_get_font_face" font-face) (:pointer (:struct font-face-t))
  #+liber-documentation
- "@version{2024-2-8}
+ "@version{2025-1-29}
   @syntax{(cairo:font-face cr) => face}
   @syntax{(setf (cairo:font-face cr) face)}
   @argument[cr]{a @symbol{cairo:context-t} instance}
@@ -421,8 +425,8 @@
 (export 'font-face)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_get_scaled_font ()
-;;; cairo_set_scaled_font ()
+;;; cairo_get_scaled_font
+;;; cairo_set_scaled_font
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf scaled-font) (font cr)
@@ -435,7 +439,7 @@
 (cffi:defcfun ("cairo_get_scaled_font" scaled-font)
     (:pointer (:struct scaled-font-t))
  #+liber-documentation
- "@version{2024-2-8}
+ "@version{2025-1-29}
   @syntax{(cairo:scaled-font cr) => font}
   @syntax{(setf (cairo:scaled-font cr) font)}
   @argument[cr]{a @symbol{cairo:context-t} instance}
@@ -472,7 +476,7 @@
 (export 'scaled-font)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_show_text ()
+;;; cairo_show_text
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_show_text" %show-text) :void
@@ -481,7 +485,7 @@
 
 (defun show-text (cr utf8)
  #+liber-documentation
- "@version{2024-2-6}
+ "@version{2025-1-29}
   @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[utf8]{a string of text encoded in UTF-8, or @code{nil}}
   @begin{short}
@@ -500,7 +504,7 @@
   will be at the origin of the final glyph offset by its advance values. This
   allows for easy display of a single logical string with multiple calls to
   the @fun{cairo:show-text} function.
-  @begin[Note]{dictionary}
+  @begin[Notes]{dictionary}
     The @fun{cairo:show-text} function is part of what the Cairo designers call
     the \"toy\" text API. It is convenient for short demos and simple programs,
     but it is not expected to be adequate for serious text-using applications.
@@ -509,12 +513,12 @@
   @end{dictionary}
   @see-symbol{cairo:context-t}
   @see-function{cairo:show-glyphs}"
-  (%show-text cr (if utf8 utf8 (cffi:null-pointer))))
+  (%show-text cr (or utf8 (cffi:null-pointer))))
 
 (export 'show-text)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_show_glyphs ()
+;;; cairo_show_glyphs
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_show_glyphs" %show-glyphs) :void
@@ -524,15 +528,15 @@
 
 (defun show-glyphs (cr glyphs)
  #+liber-documentation
- "@version{2024-2-7}
+ "@version{2025-1-29}
   @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[glyphs]{a list of glyphs to show, each glyph is represented by an
-    item that is a list with the @code{(index x y)} glyph values}
-  @argument[index]{an unsigned integer with the glyph index in the font}
-  @argument[x]{a number coerced to a double float with the offset in the x
+    item that is a list for the @code{(index x y)} glyph values}
+  @argument[index]{an unsigned integer for the glyph index in the font}
+  @argument[x]{a number coerced to a double float for the offset in the x
     direction between the origin used for drawing the string and the
     orgin of this glyph}
-  @argument[y]{a number coerced to a double float with the y direction between
+  @argument[y]{a number coerced to a double float for the y direction between
     the orgin used for drawing the string and the origin of this glyph}
   @begin{short}
     A drawing operator that generates the shape from a list of glyphs,
@@ -557,7 +561,7 @@
 (export 'show-glyphs)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_show_text_glyphs ()                              not exported
+;;; cairo_show_text_glyphs                                  not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_show_text_glyphs" show-text-glyphs) :void
@@ -610,7 +614,7 @@
   (flags text-cluster-flags-t))
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_font_extents ()
+;;; cairo_font_extents
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_font_extents" %font-extents) :void
@@ -619,12 +623,11 @@
 
 (defun font-extents (cr)
  #+liber-documentation
- "@version{2024-2-8}
+ "@version{2025-1-29}
   @syntax{(cairo:font-extents cr) => ascent, descent, height, max-xadvance,
     max-yadvance}
   @argument[cr]{a @symbol{cairo:context-t} instance}
-  @return{The double float values of the @symbol{cairo:font-extents-t}
-    instance.}
+  @return{The double floats of the @symbol{cairo:font-extents-t} instance.}
   @begin{short}
     Gets the font extents for the currently selected font.
   @end{short}
@@ -642,7 +645,7 @@
 (export 'font-extents)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_text_extents ()
+;;; cairo_text_extents
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_text_extents" %text-extents) :void
@@ -652,13 +655,13 @@
 
 (defun text-extents (cr utf8)
  #+liber-documentation
- "@version{2024-2-8}
+ "@version{2025-1-29}
   @syntax{(cairo:text-extents cr utf8) => xbearing, ybearing, width, height
     xadvance, yadvance}
   @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[utf8]{a string of text encoded in UTF-8}
   @begin{return}
-    The double float values of the @symbol{cairo:text-extents-t} instance with
+    The double floats of the @symbol{cairo:text-extents-t} instance with
     the extents of @arg{utf8}.
   @end{return}
   @begin{short}
@@ -692,7 +695,7 @@
 (export 'text-extents)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_glyph_extents ()
+;;; cairo_glyph_extents
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_glyph_extents" %glyph-extents) :void
@@ -703,20 +706,20 @@
 
 (defun glyph-extents (cr glyphs)
  #+liber-documentation
- "@version{2024-2-8}
+ "@version{2025-1-29}
   @syntax{(cairo:glyph-extents cr glyphs) => xbearing, ybearing, width, height,
     xadvance, yadvance}
   @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[glyphs]{a list of glyphs, each glyph is represented by an item that
-    is a list with the @code{(index x y)} glyph values}
-  @argument[index]{an unsigned integer with the glyph index in the font}
-  @argument[x]{a number coerced to a double float with the offset in the x
+    is a list for the @code{(index x y)} glyph values}
+  @argument[index]{an unsigned integer for the glyph index in the font}
+  @argument[x]{a number coerced to a double float for the offset in the x
     direction between the origin used for drawing the string and the
     orgin of this glyph}
-  @argument[y]{a number coerced to a double float with the y direction between
+  @argument[y]{a number coerced to a double float for the y direction between
     the orgin used for drawing the string and the origin of this glyph}
   @begin{return}
-    The double float values of the @symbol{cairo:text-extents-t} instance with
+    The double floats of the @symbol{cairo:text-extents-t} instance with
     the extents of @arg{glyphs}.
   @end{return}
   @begin{short}
@@ -763,13 +766,13 @@
 
 (defmacro with-toy-font-face ((face &rest args) &body body)
  #+liber-documentation
- "@version{2024-2-6}
+ "@version{2025-1-29}
   @syntax{(cairo:with-toy-font-face (face family slant weight) body) => result}
   @argument[face]{a newly allocated @symbol{cairo:font-face-t} instance}
-  @argument[familiy]{a string with the font family name, encoded in UTF-8}
-  @argument[slant]{a @symbol{cairo:font-slant-t} value with the slant for the
+  @argument[familiy]{a string for the font family name, encoded in UTF-8}
+  @argument[slant]{a @symbol{cairo:font-slant-t} value for the slant for the
     font}
-  @argument[weight]{a @symbol{cairo:font-weight-t} value with the weight for
+  @argument[weight]{a @symbol{cairo:font-weight-t} value for the weight for
     the font}
   @begin{short}
     The @fun{cairo:with-toy-font-face} macro allocates a new
@@ -791,18 +794,18 @@
 (export 'with-toy-font-face)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_toy_font_face_create ()
+;;; cairo_toy_font_face_create
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_toy_font_face_create" toy-font-face-create)
     (:pointer (:struct font-face-t))
  #+liber-documentation
- "@version{2024-2-6}
-  @argument[familiy]{a string with the font family name, encoded in UTF-8}
+ "@version{2025-1-29}
+  @argument[familiy]{a string for the font family name, encoded in UTF-8}
   @argument[slant]{a @symbol{cairo:font-slant-t} slant for the font}
-  @argument[weight]{a @symbol{cairo:font-weight-t}weight for the font}
+  @argument[weight]{a @symbol{cairo:font-weight-t} weight for the font}
   @begin{return}
-    A newly created @symbol{cairo:font-face-t} instance. Free with the
+    The newly created @symbol{cairo:font-face-t} instance. Free with the
     @fun{cairo:font-face-destroy} function when you are done using it.
   @end{return}
   @begin{short}
@@ -829,12 +832,12 @@
 (export 'toy-font-face-create)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_toy_font_face_get_family ()
+;;; cairo_toy_font_face_get_family
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_toy_font_face_get_family" toy-font-face-family) :string
  #+liber-documentation
- "@version{2024-2-6}
+ "@version{2025-1-29}
   @argument[face]{a @symbol{cairo:font-face-t} instance}
   @return{The string with the family name.}
   @begin{short}
@@ -846,12 +849,12 @@
 (export 'toy-font-face-family)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_toy_font_face_get_slant ()
+;;; cairo_toy_font_face_get_slant
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_toy_font_face_get_slant" toy-font-face-slant) font-slant-t
  #+liber-documentation
- "@version{2024-2-6}
+ "@version{2025-1-29}
   @argument[face]{a @symbol{cairo:font-face-t} instance}
   @return{The @symbol{cairo:font-slant-t} slant value.}
   @short{Gets the slant of a toy font face.}
@@ -862,13 +865,13 @@
 (export 'toy-font-face-slant)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_toy_font_face_get_weight ()
+;;; cairo_toy_font_face_get_weight
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_toy_font_face_get_weight" toy-font-face-weight)
     font-weight-t
  #+liber-documentation
- "@version{2024-2-6}
+ "@version{2025-1-29}
   @argument[face]{a @symbol{cairo:font-face-t} instance}
   @return{The @symbol{cairo:font-weight-t} weight value.}
   @short{Gets the weight of a toy font face.}
@@ -879,7 +882,7 @@
 (export 'toy-font-face-weight)
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_glyph_allocate ()                                not exported
+;;; cairo_glyph_allocate                                    not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_glyph_allocate" glyph-allocate)
@@ -907,7 +910,7 @@
   (num :int))
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_glyph_free ()                                    not exported
+;;; cairo_glyph_free                                        not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_glyph_free" glyph-free) :void
@@ -928,7 +931,7 @@
   (glyphs (:pointer (:struct glyph-t))))
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_text_cluster_allocate ()                         not exported
+;;; cairo_text_cluster_allocate                             not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_text_cluster_allocate" text-cluster-allocate)
@@ -956,7 +959,7 @@
   (num :int))
 
 ;;; ----------------------------------------------------------------------------
-;;; cairo_text_cluster_free ()                             not exported
+;;; cairo_text_cluster_free                                 not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("cairo_text_cluster_free" text-cluster-free) :void

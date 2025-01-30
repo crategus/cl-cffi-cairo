@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; cairo.package.lisp
 ;;;
-;;; The documentation of this file is taken from the Cairo Reference Manual
-;;; Version 1.18 and modified to document the Lisp binding to the Cairo
-;;; library. See <http://cairographics.org>. The API documentation of the Lisp
-;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the Cairo Reference Manual
+;;; Version 1.18 and modified to document the Lisp binding to the Cairo library,
+;;; see <http://cairographics.org>. The API documentation of the Lisp binding
+;;; is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2012 - 2024 Dieter Kaiser
+;;; Copyright (C) 2012 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -20,8 +20,8 @@
 ;;;
 ;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 ;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-;;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 ;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
@@ -63,6 +63,8 @@
       @fun{cairo:save} function. They may then safely be changed, without
       losing the current state. Use the @fun{cairo:restore} function to restore
       to the saved state.
+    @end{subsection}
+    @begin[Types and functions for Cairo drawing]{subsection}
       @about-symbol{antialias-t}
       @about-symbol{fill-rule-t}
       @about-symbol{line-cap-t}
@@ -122,8 +124,6 @@
       @about-function{user-data}
     @end{subsection}
     @begin[Paths]{subsection}
-      Creating paths and manipulating path data. Paths are the most basic
-      drawing tools and are primarily used to implicitly generate simple masks.
       @about-symbol{path-data-type-t}
       @about-symbol{path-data-t}
       @about-symbol{path-t}
@@ -153,13 +153,15 @@
       @about-function{glyph-path}
       @about-function{text-path}
     @end{subsection}
-    @begin[Pattern]{subsection}
+    @begin[Introduction to pattern]{subsection}
       The @symbol{cairo:pattern-t} structure is the paint with which Cairo
       draws. The primary use of patterns is as the source for all Cairo drawing
       operations, although they can also be used as masks, that is, as the brush
       too. A Cairo pattern is created by using one of the many constructors, of
       the form @sym{cairo:pattern-create-type} or implicitly through the
       @sym{cairo:set-source-type} functions.
+    @end{subsection}
+    @begin[Types and functions for pattern]{subsection}
       @about-symbol{extend-t}
       @about-symbol{filter-t}
       @about-symbol{pattern-type-t}
@@ -200,10 +202,12 @@
       @about-function{mesh-pattern-path}
       @about-function{pattern-user-data}
     @end{subsection}
-    @begin[Regions]{subsection}
+    @begin[Indroduction to Regions]{subsection}
       Regions are a simple graphical data type representing an area of
-      integer-aligned rectangles. They are often used on raster surfaces to
+      integer aligned rectangles. They are often used on raster surfaces to
       track areas of interest, such as change or clip areas.
+    @end{subsection}
+    @begin[Types and functions for Regions]{subsection}
       @about-symbol{region-overlap-t}
       @about-symbol{region-t}
       @about-function{region-create}
@@ -230,11 +234,13 @@
       @about-function{region-xor}
       @about-function{region-xor-rectangle}
     @end{subsection}
-    @begin[Transformations]{subsection}
-      Manipulating the current transformation matrix. The current transformation
-      matrix, CTM, is a two-dimensional affine transformation that maps all
-      coordinates and other drawing instruments from the user space into the
-      surface's canonical coordinate system, also known as the device space.
+    @begin[Introduction to Transformations]{subsection}
+      The current transformation matrix, CTM, is a two-dimensional affine
+      transformation that maps all coordinates and other drawing instruments
+      from the user space into the surface's canonical coordinate system, also
+      known as the device space.
+    @end{subsection}
+    @begin[Functions for Transformations]{subsection}
       @about-function{translate}
       @about-function{scale}
       @about-function{rotate}
@@ -246,7 +252,7 @@
       @about-function{device-to-user}
       @about-function{device-to-user-distance}
     @end{subsection}
-    @begin[Text]{subsection}
+    @begin[Introduction to Text]{subsection}
       The functions with text in their name form Cairo's toy text API. The toy
       API takes UTF-8 encoded text and is limited in its functionality to
       rendering simple left-to-right text with no advanced features. That means
@@ -264,11 +270,13 @@
       external libraries, like the @code{pangocairo} library that is part of
       the Pango text layout and rendering library. Pango is available from the
       @url[http://www.pango.org/]{Pango library}.
-      @about-symbol{glyph-t}
+    @end{subsection}
+    @begin[Types and functions for Text]{subsection}
       @about-symbol{font-slant-t}
       @about-symbol{font-weight-t}
       @about-symbol{text-cluster-t}
       @about-symbol{text-cluster-flags-t}
+      @about-symbol{glyph-t}
       @about-function{select-font-face}
       @about-function{set-font-size}
       @about-function{font-matrix}
@@ -293,7 +301,7 @@
     @end{subsection}
   @end{section}
   @begin[Fonts]{section}
-    @begin[Font Faces]{subsection}
+    @begin[Indroduction to Font Faces]{subsection}
       Base class for font faces. The @symbol{cairo:font-face-t} structure
       represents a particular font at a particular weight, slant, and other
       characteristic but no size, transformation, or size.
@@ -302,19 +310,23 @@
       of the form @code{cairo:backend-font-face-create}, or implicitly using the
       toy text API by way of the @fun{cairo:select-font-face} function. The
       resulting face can be accessed using the @fun{cairo:font-face} function.
+    @end{subsection}
+    @begin[Type and functions for Font Faces]{subsection}
       @about-symbol{font-type-t}
       @about-symbol{font-face-t}
       @about-function{font-face-reference}
-     @about-function{font-face-reference-count}
+      @about-function{font-face-reference-count}
       @about-function{font-face-destroy}
       @about-function{font-face-status}
       @about-function{font-face-type}
       @about-function{font-face-user-data}
     @end{subsection}
-    @begin[Scaled Fonts]{subsection}
+    @begin[Indroduction to Scaled Fonts]{subsection}
       The @symbol{cairo:scaled-font-t} structure represents a realization of a
       font face at a particular size and transformation and a certain set of
       font options.
+    @end{subsection}
+    @begin[Types and functions for Scaled Fonts]{subsection}
       @about-symbol{font-extents-t}
       @about-symbol{text-extents-t}
       @about-symbol{scaled-font-t}
@@ -336,11 +348,13 @@
       @about-function{scaled-font-text-to-glyphs}
       @about-function{scaled-font-user-data}
     @end{subsection}
-    @begin[Font Options]{subsection}
+    @begin[Introduction to Font Options]{subsection}
       The font options specify how fonts should be rendered. Most of the time
       the font options implied by a surface are just right and do not need any
       changes, but for pixel-based targets tweaking font options may result in
       superior output on a particular display.
+    @end{subsection}
+    @begin[Types and functions for Font Options]{subsection}
       @about-symbol{subpixel-order-t}
       @about-symbol{hint-style-t}
       @about-symbol{hint-metrics-t}
@@ -364,7 +378,7 @@
     @end{subsection}
   @end{section}
   @begin[Surfaces]{section}
-    @begin[Cairo Devices]{subsection}
+    @begin[Introduction to Cairo Devices]{subsection}
       Devices are the abstraction Cairo employs for the rendering system used by
       a @symbol{cairo:surface-t} instance. You can get the device of a surface
       using the @fun{cairo:surface-device} function.
@@ -407,6 +421,8 @@
       @b{Note:} Please refer to the documentation of each backend for additional
       usage requirements, guarantees provided, and interactions with existing
       surface API of the device functions for surfaces of that type.
+    @end{subsection}
+    @begin[Types and functions for Cairo Devices]{subsection}
       @about-symbol{device-type-t}
       @about-symbol{device-t}
       @about-function{device-reference}
@@ -427,7 +443,7 @@
       @about-function{device-observer-print}
       @about-function{device-observer-stroke-elapsed}
     @end{subsection}
-    @begin[Cairo Surfaces]{subsection}
+    @begin[Introduction to Cairo Surfaces]{subsection}
       The @symbol{cairo:surface-t} structure is the abstract type representing
       all different drawing targets that cairo can render to. The actual
       drawings are performed using a Cairo context. A Cairo surface is created
@@ -460,12 +476,8 @@
       Note that for other surface types it might be necessary to acquire the
       device of the surface first. See the @fun{cairo:device-acquire} function
       for a discussion of devices.
-      @about-symbol{CAIRO_HAS_MIME_SURFACE}
-      @about-symbol{CAIRO_MIME_TYPE_JP2}
-      @about-symbol{CAIRO_MIME_TYPE_JPEG}
-      @about-symbol{CAIRO_MIME_TYPE_PNG}
-      @about-symbol{CAIRO_MIME_TYPE_URI}
-      @about-symbol{CAIRO_MIME_TYPE_UNIQUE_ID}
+    @end{subsection}
+    @begin[Functions and types for Cairo Surfaces]{subsection}
       @about-symbol{content-t}
       @about-symbol{surface-type-t}
       @about-symbol{surface-t}
@@ -498,10 +510,12 @@
       @about-function{surface-map-to-image}
       @about-function{surface-unmap-image}
     @end{subsection}
-    @begin[Image Surfaces]{subsection}
+    @begin[Introduction to Image Surfaces]{subsection}
       Image surfaces provide the ability to render to memory buffers either
       allocated by Cairo or by the calling code. The supported image formats
       are those defined in the @symbol{cairo:format-t} enumeration.
+    @end{subsection}
+    @begin[Types and functions for Image Surfaces]{subsection}
       @about-symbol{format-t}
       @about-macro{with-image-surface}
       @about-macro{with-context-for-image-surface}
@@ -514,7 +528,7 @@
       @about-function{image-surface-stride}
       @about-function{format-stride-for-width}
     @end{subsection}
-    @begin[PDF Surfaces]{subsection}
+    @begin[Introduction to PDF Surfaces]{subsection}
       The PDF surface is used to render Cairo graphics to Adobe PDF files and
       is a multi-page vector surface backend.
 
@@ -524,8 +538,7 @@
       @code{CAIRO_MIME_TYPE_JBIG2_GLOBAL_ID}, @code{CAIRO_MIME_TYPE_CCITT_FAX},
       @code{CAIRO_MIME_TYPE_CCITT_FAX_PARAMS}.
 
-      JBIG2 Images
-
+      @subheading{JBIG2 Images}
       JBIG2 data in PDF must be in the embedded format as described in ISO/IEC
       11544. Image specific JBIG2 data must be in @code{CAIRO_MIME_TYPE_JBIG2}.
       Any global segments in the JBIG2 data (segments with page association
@@ -537,66 +550,62 @@
       once and shared by all JBIG2 images with the same
       @code{CAIRO_MIME_TYPE_JBIG2_GLOBAL_ID}.
 
-      CCITT Fax Images
-
+      @subheading{CCITT Fax Images}
       The @code{CAIRO_MIME_TYPE_CCITT_FAX} mime data requires a number of
       decoding parameters These parameters are specified using
       @code{CAIRO_MIME_TYPE_CCITT_FAX_PARAMS}.
-
-      @code{CAIRO_MIME_TYPE_CCITT_FAX_PARAMS} mime data must contain a string of
-      the form \"param1=value1 param2=value2 ...\".
-
-      Columns : [required] An integer specifying the width of the image in
-      pixels.
-
-      Rows : [required] An integer specifying the height of the image in scan
-      lines.
-
-      K : [optional] An integer identifying the encoding scheme used. < 0 is 2
-      dimensional Group 4, = 0 is Group3 1 dimensional, > 0 is mixed 1 and 2
-      dimensional encoding. Default is 0.
-
-      EndOfLine : [optional] If true end-of-line bit patterns are present.
-      Default is false.
-
-      EncodedByteAlign : [optional] If true the end of line is padded with 0
-      bits so the next line begins on a byte boundary. Default is false.
-
-      EndOfBlock : [optional] If true the data contains an end-of-block pattern.
-      Default is true.
-
-      BlackIs1 : [optional] If true 1 bits are black pixels. Default is false.
-
-      DamagedRowsBeforeError : [optional] An integer specifying the number of
-      damages rows tolerated before an error occurs. Default is 0.
-
-      Boolean values may be \"true\" or \"false\", or 1 or 0.
+      @code{CAIRO_MIME_TYPE_CCITT_FAX_PARAMS} mime data must contain a string
+      of the form @code{\"param1=value1 param2=value2 ...\"}.
+      @begin[code]{table}
+        @entry[Columns]{An integer specifying the width of the image
+          in pixels. [required]}
+        @entry[Rows]{An integer specifying the height of the image in scan
+          lines. [required]}
+        @entry[K]{An integer identifying the encoding scheme used. < 0 is 2
+          dimensional Group 4, = 0 is Group 3 1 dimensional, > 0 is mixed 1
+          and 2 dimensional encoding. Default is 0. [optional]}
+        @entry[EndOfLine]{If true end-of-line bit patterns are present. Default
+          is false. [optional]}
+        @entry[EncodedByteAlign]{If true the end of line is padded with 0 bits
+          so the next line begins on a byte boundary. Default is false.
+          [optional]}
+        @entry[EndOfBlock]{If true the data contains an end-of-block pattern.
+          Default is true. [optional]}
+        @entry[BlackIs1]{If true 1 bits are black pixels. Default is false.
+           [optional]}
+        @entry[DamagedRowsBeforeError]{An integer specifying the number of
+          damages rows tolerated before an error occurs. Default is 0.
+           [optional]}
+      @end{table}
+      Boolean values may be @code{\"true\"} or @code{\"false\"}, or 1 or 0.
 
       These parameters are the same as the CCITTFaxDecode parameters in the
       PostScript Language Reference and Portable Document Format (PDF). Refer
       to these documents for further details.
 
       An example @code{CAIRO_MIME_TYPE_CCITT_FAX_PARAMS} string is:
-      \"Columns=10230 Rows=40000 K=1 EndOfLine=true EncodedByteAlign=1
-      BlackIs1=false\"
-      @about-symbol{CAIRO_HAS_PDF_SURFACE}
-      @about-symbol{CAIRO_PDF_OUTLINE_ROOT}
+      @begin{pre}
+\"Columns=10230 Rows=40000 K=1 EndOfLine=true EncodedByteAlign=1 BlackIs1=false\"
+      @end{pre}
+    @end{subsection}
+    @begin[Types and functions for PDF surfaces]{subsection}
       @about-symbol{pdf-outline-flags-t}
       @about-symbol{pdf-metadata-t}
       @about-symbol{pdf-version-t}
       @about-macro{with-pdf-surface}
+      @about-macro{with-context-for-pdf-surface}
       @about-function{pdf-surface-create}
-      @about-function{pdf-surface-create-for-stream}
       @about-function{pdf-surface-restrict-to-version}
       @about-function{pdf-versions}
       @about-function{pdf-version-to-string}
       @about-function{pdf-surface-set-size}
       @about-function{pdf-surface-add-outline}
       @about-function{pdf-surface-set-metadata}
+      @about-function{pdf-surface-set-custom-metadata}
       @about-function{pdf-surface-set-page-label}
       @about-function{pdf-surface-set-thumbnail-size}
     @end{subsection}
-    @begin[PNG Support]{subsection}
+    @begin[Introduction to PNG Support]{subsection}
       The PNG functions allow reading PNG images into image surfaces, and
       writing any surface to a PNG file.
 
@@ -605,15 +614,16 @@
       purposes. Applications which need more control over the generated PNG
       file should access the pixel data directly, using the
       @fun{cairo:image-surface-data} function or a backend-specific access
-      function, and process it with another library, e.g. GdkPixbuf or
+      function, and process it with another library, for example GdkPixbuf or
       @code{libpng}.
-      @about-symbol{CAIRO_HAS_PNG_FUNCTIONS}
+    @end{subsection}
+    @begin[Functions for PNG support]{subsection}
       @about-function{image-surface-create-from-png}
       @about-function{image-surface-create-from-png-stream}
       @about-function{surface-write-to-png}
       @about-function{surface-write-to-png-stream}
     @end{subsection}
-    @begin[PostScript Surfaces]{subsection}
+    @begin[Indroduction to PostScript Surfaces]{subsection}
       The PostScript surface is used to render Cairo graphics to Adobe
       PostScript files and is a multi-page vector surface backend.
 
@@ -648,6 +658,8 @@
       @code{lower left y}, @code{upper right x}, @code{upper right y}. Normally
       the @code{bbox} data is identical to the @code{%%BoundingBox} data in
       the EPS file.
+    @end{subsection}
+    @begin[Type and functions for PostScript Surfaces]{subsection}
       @about-symbol{ps-level-t}
       @about-macro{with-ps-surface}
       @about-function{ps-surface-create}
@@ -661,7 +673,7 @@
       @about-function{ps-surface-dsc-begin-page-setup}
       @about-function{ps-surface-dsc-comment}
     @end{subsection}
-    @begin[Recording Surfaces]{subsection}
+    @begin[Indroduction to Recording Surfaces]{subsection}
       A recording surface is a surface that records all drawing operations at
       the highest level of the surface backend interface, that is, the level
       of paint, mask, stroke, fill, and text glyphs. The recording surface can
@@ -678,7 +690,7 @@
   (cairo:paint context)
   ...)
       @end{pre}
-      A recording surface is logically unbounded, i.e. it has no implicit
+      A recording surface is logically unbounded, that is, it has no implicit
       constraint on the size of the drawing surface. However, in practice this
       is rarely useful as you wish to replay against a particular target surface
       with known bounds. For this case, it is more efficient to specify the
@@ -687,15 +699,19 @@
       The recording phase of the recording surface is careful to snapshot all
       necessary objects, paths, patterns, etc., in order to achieve accurate
       replay.
+    @end{subsection}
+    @begin[Functions for Recording Surfaces]{subsection}
       @about-macro{with-recording-surface}
       @about-macro{with-context-for-recording-surface}
       @about-function{recording-surface-create}
       @about-function{recording-surface-ink-extents}
       @about-function{recording-surface-extents}
     @end{subsection}
-    @begin[SVG Surfaces]{subsection}
+    @begin[Introduction to SVG Surfaces]{subsection}
       The SVG surface is used to render Cairo graphics to SVG files and is a
       multi-page vector surface backend.
+    @end{subsection}
+    @begin[Types and functions for SVG surfaces]{subsection}
       @about-symbol{svg-version-t}
       @about-symbol{svg-unit-t}
       @about-function{svg-surface-create}
@@ -705,11 +721,13 @@
       @about-function{svg-versions}
       @about-function{svg-version-to-string}
     @end{subsection}
-    @begin[Script Surfaces]{subsection}
+    @begin[Indroduction to Script Surfaces]{subsection}
       The script surface provides the ability to render to a native script that
       matches the Cairo drawing model. The scripts can be replayed using tools
       under the @file{util/cairo-script} directory, or with the
       @code{cairo-perf-trace} utility.
+    @end{subsection}
+    @begin[Types and functions for Script Surfaces]{subsection}
       @about-symbol{script-mode-t}
       @about-macro{with-script-surface}
       @about-function{script-create}
@@ -723,7 +741,6 @@
   @end{section}
   @begin[Utilities]{section}
     @begin[Generic matrix operations]{subsection}
-      Generic matrix operations.
       @about-symbol{matrix-t}
       @about-macro{with-matrix}
       @about-macro{with-matrices}
@@ -741,7 +758,7 @@
       @about-function{matrix-transform-distance}
       @about-function{matrix-transform-point}
     @end{subsection}
-    @begin[Error handling]{subsection}
+    @begin[Introduction to Error handling]{subsection}
       Cairo uses a single status type to represent all kinds of errors. A
       status value of @code{:success} represents no error and has an integer
       value of zero. All other status values represent an error.
@@ -752,15 +769,18 @@
       it is safe to call all Cairo functions normally even if the underlying
       object is in an error status. This means that no error handling code is
       required before or after each individual Cairo function call.
+    @end{subsection}
+    @begin[Types and functions for Error handling]{subsection}
       @about-symbol{status-t}
       @about-function{status-to-string}
-      @about-function{debug-reset-static-data}
     @end{subsection}
-    @begin[Version Information]{subsection}
+    @begin[Introduction to Version Information]{subsection}
       Cairo provides the ability to examine the version at either compile-time
       or run-time and in both a human readable form as well as an encoded form
       suitable for direct comparison. Cairo also provides the
       @fun{cairo:version-encode} function to perform the encoding.
+    @end{subsection}
+    @begin[Functions for Version Information]{subsection}
       @about-function{version-encode}
       @about-function{version}
       @about-function{version-string}

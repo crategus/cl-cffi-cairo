@@ -30,7 +30,7 @@
 (in-package :cairo)
 
 ;;; ----------------------------------------------------------------------------
-;;; enum cairo_antialias_t
+;;; cairo_antialias_t
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcenum antialias-t
@@ -46,7 +46,34 @@
 (setf (liber:alias-for-symbol 'antialias-t)
       "CEnum"
       (liber:symbol-documentation 'antialias-t)
- "@version{2024-2-13}
+ "@version{2025-1-2}
+  @begin{declaration}
+(cffi:defcenum antialias-t
+  :default
+  :none
+  :gray
+  :subpixel
+  :fast
+  :good
+  :best)
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:default]{Use the default antialiasing for the subsystem and target
+        device.}
+      @entry[:none]{Use a bilevel alpha mask.}
+      @entry[:gray]{Perform single-color antialiasing, using shades of gray for
+        black text on a white background, for example.}
+      @entry[:subpixel]{Perform antialiasing by taking advantage of the order
+        of subpixel elements on devices such as LCD panels.}
+      @entry[:fast]{Hint that the backend should perform some antialiasing but
+        prefer speed over quality.}
+      @entry[:good]{Hint that the backend should balance quality against
+        performance.}
+      @entry[:best]{Hint that the backend should render at the highest quality,
+        sacrificing speed if necessary.}
+    @end{table}
+  @end{values}
   @begin{short}
     The @symbol{cairo:antialias-t} enumeration specifies the type of
     antialiasing to do when rendering text or shapes.
@@ -63,31 +90,6 @@
   @code{:subpixel} value. The interpretation of the @code{:default} value is
   left entirely up to the backend, typically this will be similar to the
   @code{:good} value.
-  @begin{pre}
-(cffi:defcenum antialias-t
-  :default
-  :none
-  :gray
-  :subpixel
-  :fast
-  :good
-  :best)
-  @end{pre}
-  @begin[code]{table}
-    @entry[:default]{Use the default antialiasing for the subsystem and target
-      device.}
-    @entry[:none]{Use a bilevel alpha mask.}
-    @entry[:gray]{Perform single-color antialiasing, using shades of gray for
-      black text on a white background, for example.}
-    @entry[:subpixel]{Perform antialiasing by taking advantage of the order of
-      subpixel elements on devices such as LCD panels.}
-    @entry[:fast]{Hint that the backend should perform some antialiasing but
-      prefer speed over quality.}
-    @entry[:good]{Hint that the backend should balance quality against
-      performance.}
-    @entry[:best]{Hint that the backend should render at the highest quality,
-      sacrificing speed if necessary.}
-  @end{table}
   @see-symbol{cairo:context-t}
   @see-function{cairo:antialias}")
 

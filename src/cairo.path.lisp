@@ -223,7 +223,8 @@
       @entry[status]{The current @symbol{cairo:status-t} value with the
         error status.}
       @entry[data]{The @symbol{cairo:path-data-t} instances in the path.}
-      @entry[numdata]{The integer with the number of elements in the data array.}
+      @entry[numdata]{The integer with the number of elements in the data
+        array.}
     @end{table}
   @end{values}
   @begin{short}
@@ -1183,7 +1184,7 @@ fill     stroke
   @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[glyphs]{a list of glyphs, each glyph is represented by an item that
     is a list with the @code{(index x y)} glyph values}
-  @argument[index]{an unsigned integer with the glyph index in the font}
+  @argument[index]{an unsigned integer for the glyph index in the font}
   @argument[x]{a number coerced to a double float for the offset in the x
     direction between the origin used for drawing the string and the
     orgin of this glyph}

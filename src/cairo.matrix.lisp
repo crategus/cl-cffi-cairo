@@ -118,18 +118,18 @@ ynew = yx * x + yy * y + y0
   @syntax{(cairo:with-matrix (matrix :scale sx sy) body) => result}
   @syntax{(cairo:with-matrix (matrix xx yx xy yy x0 y0) body) => result}
   @argument[matrix]{a @symbol{cairo:matrix-t} instance to create and initialize}
-  @argument[rad]{a number coerced to a double float with the angle of rotation,
+  @argument[rad]{a number coerced to a double float for the angle of rotation,
     in radians}
-  @argument[tx]{a number with the amount to tanslate in the x direction}
-  @argument[ty]{a number with the amount to tanslate in the y direction}
-  @argument[sx]{a number with the scale factor in the x direction}
-  @argument[sy]{a number with the scale factor in the y direction}
-  @argument[xx]{a number with the xx component of the transformation}
-  @argument[yx]{a number with the yx component of the transformation}
-  @argument[xy]{a number with the xy component of the transformation}
-  @argument[yy]{a number with the yy component of the transformation}
-  @argument[x0]{a number with the x translation component of the transformation}
-  @argument[y0]{a number with the y translation component of the transformation}
+  @argument[tx]{a number for the amount to tanslate in the x direction}
+  @argument[ty]{a number for the amount to tanslate in the y direction}
+  @argument[sx]{a number for the scale factor in the x direction}
+  @argument[sy]{a number for the scale factor in the y direction}
+  @argument[xx]{a number for the xx component of the transformation}
+  @argument[yx]{a number for the yx component of the transformation}
+  @argument[xy]{a number for the xy component of the transformation}
+  @argument[yy]{a number for the yy component of the transformation}
+  @argument[x0]{a number for the x translation component of the transformation}
+  @argument[y0]{a number for the y translation component of the transformation}
   @begin{short}
     The @fun{cairo:with-matrix} macro allocates a new @symbol{cairo:matrix-t}
     instance, initializes the matrix with the given values and executes the
@@ -597,9 +597,9 @@ ynew = yx * x + yy * y + y0
     a distance vector}
   @argument[dy]{a number coerced to a double float for the y component of
     a distance vector}
-  @argument[tdx]{a double float with the transformed x component of a
+  @argument[tdx]{a double float for the transformed x component of a
     distance vector}
-  @argument[tdy]{a double float with the transformed y component of a
+  @argument[tdy]{a double float for the transformed y component of a
     distance vector}
   @begin{short}
     Transforms the distance vector @code{(dx,dy)} by @arg{matrix}.
@@ -640,8 +640,8 @@ tdy = dx * b + dy * d
   @argument[matrix]{a @symbol{cairo:matrix-t} instance}
   @argument[x]{a number coerced to a double float for the x position}
   @argument[y]{a number coerced to a double float for the y position}
-  @argument[tx]{a double float with the transformed x position}
-  @argument[ty]{a double float with the transformed y position}
+  @argument[tx]{a double float for the transformed x position}
+  @argument[ty]{a double float for the transformed y position}
   @begin{short}
     Transforms the point @code{(dx,dy)} by @arg{matrix}.
   @end{short}

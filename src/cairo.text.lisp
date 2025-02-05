@@ -569,14 +569,14 @@
  "@version{#2021-12-12}
   @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[utf8]{a string of text encoded in UTF-8}
-  @argument[len]{an integer with the length of @arg{utf8} in bytes, or -1 if it
+  @argument[len]{an integer for the length of @arg{utf8} in bytes, or -1 if it
     is NUL-terminated}
   @argument[glyphs]{a list of glyphs to show, each glyph is represented by an
     item that is a list with the @code{(index x y)} glyph values}
-  @argument[num-glyphs]{an integer with the number of glyphs to show}
+  @argument[num-glyphs]{an integer for the number of glyphs to show}
   @argument[clusters]{array of @symbol{cairo:text-cluster-t} cluster mapping
     information}
-  @argument[num-clusters]{an integer with the number of clusters in the mapping}
+  @argument[num-clusters]{an integer for the number of clusters in the mapping}
   @argument[flags]{@symbol{cairo:text-cluster-flags-t} cluster mapping flags}
   @begin{short}
     This operation has rendering effects similar to the @fun{cairo:show-glyphs}
@@ -661,7 +661,7 @@
   @argument[cr]{a @symbol{cairo:context-t} instance}
   @argument[utf8]{a string of text encoded in UTF-8}
   @begin{return}
-    The double floats of the @symbol{cairo:text-extents-t} instance with
+    The double floats of the @symbol{cairo:text-extents-t} instance for
     the extents of @arg{utf8}.
   @end{return}
   @begin{short}
@@ -719,7 +719,7 @@
   @argument[y]{a number coerced to a double float for the y direction between
     the orgin used for drawing the string and the origin of this glyph}
   @begin{return}
-    The double floats of the @symbol{cairo:text-extents-t} instance with
+    The double floats of the @symbol{cairo:text-extents-t} instance for
     the extents of @arg{glyphs}.
   @end{return}
   @begin{short}
@@ -889,7 +889,7 @@
     (:pointer (:struct glyph-t))
  #+liber-documentation
  "@version{#2023-1-15}
-  @argument[num]{an integer with the number of glyphs to allocate}
+  @argument[num]{an integer for the number of glyphs to allocate}
   @begin{return}
     The newly allocated array of @symbol{cairo:glyph-t} glyphs that should be
     freed using the @fun{cairo:glyph-free} function.
@@ -938,7 +938,7 @@
     (:pointer (:struct text-cluster-t))
  #+liber-documentation
  "@version{#2023-1-15}
-  @argument[num]{an integer with the number of text clusters to allocate}
+  @argument[num]{an integer for the number of text clusters to allocate}
   @begin{return}
     The newly allocated array of @symbol{cairo:text-cluster-t} text clusters
     that should be freed using the @fun{cairo:text-cluster-free} function.

@@ -351,12 +351,11 @@
  "@version{2025-1-26}
   @syntax{(cairo:region-extents region) => (list x y width height)}
   @argument[region]{a @symbol{cairo:region-t} instance}
-  @argument[x]{an integer with the x coordinate of the left side of the
+  @argument[x]{an integer for the x coordinate of the left side of the
     rectangle}
-  @argument[y]{an integer with the y coordinate of the top side of the
-    rectangle}
-  @argument[width]{an integer with the width of the rectangle}
-  @argument[height]{an integer with the height of the rectangle}
+  @argument[y]{an integer for the y coordinate of the top side of the rectangle}
+  @argument[width]{an integer for the width of the rectangle}
+  @argument[height]{an integer for the height of the rectangle}
   @return{The @code{(x y width height)} list with the coordinates of the
     bounding rectangle.}
   @begin{short}
@@ -403,12 +402,11 @@
   @syntax{(cairo:region-rectangle region nth) => (list x y width height)}
   @argument[region]{a @symbol{cairo:region-t} instance}
   @argument[nth]{an integer indicating which rectangle should be returned}
-  @argument[x]{an integer with the x coordinate of the left side of the
+  @argument[x]{an integer for the x coordinate of the left side of the
     rectangle}
-  @argument[y]{an integer with the y coordinate of the top side of the
-    rectangle}
-  @argument[width]{an integer with the width of the rectangle}
-  @argument[height]{an integer with the height of the rectangle}
+  @argument[y]{an integer for the y coordinate of the top side of the rectangle}
+  @argument[width]{an integer for the width of the rectangle}
+  @argument[height]{an integer for the height of the rectangle}
   @return{The @code{(x y width height)} list with the coordinates of the
     @arg{nth} rectangle.}
   @begin{short}

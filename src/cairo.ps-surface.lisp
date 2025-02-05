@@ -104,8 +104,9 @@
     surface, in points (1 point == 1/72 inch)}
   @begin{short}
     The @symbol{cairo:with-ps-surface} macro allocates a new PostScript
-    @symbol{cairo:surface-t} instance with the given @arg{path}, @arg{width},
-    and @arg{height} and executes the body that uses the PostScript surface.
+    @symbol{cairo:surface-t} instance for the given @arg{path}, @arg{width},
+    and @arg{height} values and executes the body that uses the PostScript
+    surface.
   @end{short}
   After execution of the body the allocated memory for the PostScript surface
   is released.
@@ -226,7 +227,7 @@
 (cffi:defcfun ("cairo_ps_level_to_string" ps-level-to-string) :string
  #+liber-documentation
  "@version{2025-1-29}
-  @argument[level]{an integer with the level ID}
+  @argument[level]{an integer for the level ID}
   @return{The string associated to the given @arg{level}.}
   @begin{short}
     Get the string representation of the given level ID.

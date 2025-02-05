@@ -183,7 +183,7 @@
  "@version{2025-1-18}
   @argument[device]{a @symbol{cairo:device-t} instance}
   @begin{return}
-    An unsigned integer with the current reference count of @arg{device}.
+    The unsigned integer with the current reference count of @arg{device}.
     If the instance is a \"nil\" instance, 0 will be returned.
   @end{return}
   @begin{short}

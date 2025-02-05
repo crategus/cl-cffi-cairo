@@ -201,7 +201,7 @@
     the surface, in points (1 point == 1/72 inch)}
   @begin{short}
     The @symbol{cairo:with-pdf-surface} macro allocates a new PDF
-    @symbol{cairo:surface-t} instance with the given @arg{path}, @arg{width},
+    @symbol{cairo:surface-t} instance for the given @arg{path}, @arg{width},
     and @arg{height} values and executes the body that uses the PDF surface.
   @end{short}
   After execution of the body the allocated memory for the PDF surface

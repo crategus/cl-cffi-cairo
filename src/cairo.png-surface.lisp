@@ -94,7 +94,7 @@
 (defun surface-write-to-png (surface path)
  #+liber-documentation
  "@version{2025-1-13}
-  @argument[surface]{a @symbol{cairo:surface-t} instance with pixel contents}
+  @argument[surface]{a @symbol{cairo:surface-t} instance for pixel contents}
   @argument[path]{a namestring or pathname for the path of a file to write to}
   @begin{return}
     @code{:success} if the PNG file was written successfully. Otherwise,

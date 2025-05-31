@@ -111,7 +111,7 @@ ynew = yx * x + yy * y + y0
 
 (defmacro with-matrix ((var &rest args) &body body)
  #+liber-documentation
- "@version{2025-1-18}
+ "@version{2025-05-09}
   @syntax{(cairo:with-matrix (matrix) body) => result}
   @syntax{(cairo:with-matrix (matrix rad) body) => result}
   @syntax{(cairo:with-matrix (matrix :translate tx ty) body) => result}
@@ -137,7 +137,7 @@ ynew = yx * x + yy * y + y0
   @end{short}
   After execution of the body the allocated memory for the matrix is released.
 
-  When no argument is given the matrix is initialized to the identity
+  If no argument is given, the matrix is initialized to the identity
   transformation with the @fun{cairo:matrix-init-identity} function. The
   initialization with one argument initializes a rotation with the
   @fun{cairo:matrix-init-rotate} function. The initialization with three

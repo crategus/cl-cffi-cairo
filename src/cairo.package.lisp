@@ -51,15 +51,14 @@
   documentation of a Lisp binding to Cairo.
   @begin[Drawing]{section}
     @begin[The Cairo drawing context]{subsection}
-      The @symbol{cairo:context-t} structure is the main object used when
-      drawing with Cairo. To draw with Cairo, you create a
-      @symbol{cairo:context-t} instance, set the target surface, and drawing
-      options for the @symbol{cairo:context-t} instance, create shapes with
-      functions like the @fun{cairo:move-to} and @fun{cairo:line-to} functions,
-      and then draw shapes with the @fun{cairo:stroke} or @fun{cairo:fill}
-      functions.
+      The @sym{cairo:context-t} structure is the main object used when drawing
+      with Cairo. To draw with Cairo, you create a @sym{cairo:context-t}
+      instance, set the target surface, and drawing options for the
+      @sym{cairo:context-t} instance, create shapes with functions like the
+      @fun{cairo:move-to} and @fun{cairo:line-to} functions, and then draw
+      shapes with the @fun{cairo:stroke} or @fun{cairo:fill} functions.
 
-      The @symbol{cairo:context-t} instance can be pushed to a stack via the
+      The @sym{cairo:context-t} instance can be pushed to a stack via the
       @fun{cairo:save} function. They may then safely be changed, without
       losing the current state. Use the @fun{cairo:restore} function to restore
       to the saved state.
@@ -154,8 +153,8 @@
       @about-function{text-path}
     @end{subsection}
     @begin[Introduction to pattern]{subsection}
-      The @symbol{cairo:pattern-t} structure is the paint with which Cairo
-      draws. The primary use of patterns is as the source for all Cairo drawing
+      The @sym{cairo:pattern-t} structure is the paint with which Cairo draws.
+      The primary use of patterns is as the source for all Cairo drawing
       operations, although they can also be used as masks, that is, as the brush
       too. A Cairo pattern is created by using one of the many constructors, of
       the form @sym{cairo:pattern-create-type} or implicitly through the
@@ -302,7 +301,7 @@
   @end{section}
   @begin[Fonts]{section}
     @begin[Indroduction to Font Faces]{subsection}
-      Base class for font faces. The @symbol{cairo:font-face-t} structure
+      Base class for font faces. The @sym{cairo:font-face-t} structure
       represents a particular font at a particular weight, slant, and other
       characteristic but no size, transformation, or size.
 
@@ -322,9 +321,9 @@
       @about-function{font-face-user-data}
     @end{subsection}
     @begin[Indroduction to Scaled Fonts]{subsection}
-      The @symbol{cairo:scaled-font-t} structure represents a realization of a
-      font face at a particular size and transformation and a certain set of
-      font options.
+      The @sym{cairo:scaled-font-t} structure represents a realization of a font
+      face at a particular size and transformation and a certain set of font
+      options.
     @end{subsection}
     @begin[Types and functions for Scaled Fonts]{subsection}
       @about-symbol{font-extents-t}
@@ -380,7 +379,7 @@
   @begin[Surfaces]{section}
     @begin[Introduction to Cairo Devices]{subsection}
       Devices are the abstraction Cairo employs for the rendering system used by
-      a @symbol{cairo:surface-t} instance. You can get the device of a surface
+      a @sym{cairo:surface-t} instance. You can get the device of a surface
       using the @fun{cairo:surface-device} function.
 
       Devices are created using custom functions specific to the rendering
@@ -444,10 +443,10 @@
       @about-function{device-observer-stroke-elapsed}
     @end{subsection}
     @begin[Introduction to Cairo Surfaces]{subsection}
-      The @symbol{cairo:surface-t} structure is the abstract type representing
-      all different drawing targets that cairo can render to. The actual
-      drawings are performed using a Cairo context. A Cairo surface is created
-      by using backend-specific constructors, typically of the form
+      The @sym{cairo:surface-t} structure is the abstract type representing all
+      different drawing targets that cairo can render to. The actual drawings
+      are performed using a Cairo context. A Cairo surface is created by using
+      backend-specific constructors, typically of the form
       @code{cairo:backend-surface-create}.
 
       Most surface types allow accessing the surface without using Cairo
@@ -513,7 +512,7 @@
     @begin[Introduction to Image Surfaces]{subsection}
       Image surfaces provide the ability to render to memory buffers either
       allocated by Cairo or by the calling code. The supported image formats
-      are those defined in the @symbol{cairo:format-t} enumeration.
+      are those defined in the @sym{cairo:format-t} enumeration.
     @end{subsection}
     @begin[Types and functions for Image Surfaces]{subsection}
       @about-symbol{format-t}

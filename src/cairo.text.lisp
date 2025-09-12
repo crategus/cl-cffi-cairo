@@ -84,7 +84,7 @@
 (setf (liber:alias-for-symbol 'font-slant-t)
       "CEnum"
       (liber:symbol-documentation 'font-slant-t)
- "@version{2025-1-29}
+ "@version{2025-09-01}
   @begin{declaration}
 (cffi:defcenum font-slant-t
   :normal
@@ -92,11 +92,11 @@
   :oblique)
   @end{declaration}
   @begin{values}
-    @begin[code]{table}
+    @begin[code]{simple-table}
       @entry[:normal]{Upright font style.}
       @entry[:italic]{Italic font style.}
       @entry[:oblique]{Oblique font style.}
-    @end{table}
+    @end{simple-table}
   @end{values}
   @short{Specifies variants of a font face based on their slant.}
   @see-symbol{cairo:font-weight-t}
@@ -116,17 +116,17 @@
 (setf (liber:alias-for-symbol 'font-weight-t)
       "CEnum"
       (liber:symbol-documentation 'font-weight-t)
- "@version{2025-1-29}
+ "@version{2025-09-01}
   @begin{declaration}
 (cffi:defcenum font-slant-t
   :normal
   :bold)
   @end{declaration}
   @begin{values}
-    @begin[code]{table}
+    @begin[code]{simple-table}
       @entry[:normal]{Normal font weight.}
       @entry[:bold]{Bold font weight.}
-    @end{table}
+    @end{simple-table}
   @end{values}
   @short{Specifies variants of a font face based on their weight.}
   @see-symbol{cairo:font-slant-t}
@@ -146,9 +146,20 @@
 (setf (liber:alias-for-symbol 'text-cluster-t)
       "CStruct"
       (liber:symbol-documentation 'text-cluster-t)
- "@version{#2021-12-12}
+ "@version{#2025-09-01}
+  @begin{declaration}
+(cffi:defcstruct text-cluster-t
+  (num-bytes :int)
+  (num-glyphs :int))
+  @end{declaration}
+  @begin{values}
+    @begin[code]{simple-table}
+      @entry[num-bytes]{The number of bytes of UTF-8 text covered by cluster.}
+      @entry[num-glyphs]{The number of glyphs covered by cluster.}
+    @end{simple-table}
+  @end{values}
   @begin{short}
-    The @symbol{cairo:text-cluster-t} structure holds information about a single
+    The @sym{cairo:text-cluster-t} structure holds information about a single
     text cluster.
   @end{short}
   A text cluster is a minimal mapping of some glyphs corresponding to some
@@ -162,15 +173,7 @@
 
   See the @fun{cairo:show-text-glyphs} function for how clusters are used in
   advanced text operations.
-  @begin{pre}
-(cffi:defcstruct text-cluster-t
-  (num-bytes :int)
-  (num-glyphs :int))
-  @end{pre}
-  @begin[code]{table}
-    @entry[num-bytes]{The number of bytes of UTF-8 text covered by cluster.}
-    @entry[num-glyphs]{The number of glyphs covered by cluster.}
-  @end{table}
+
   @see-symbol{cairo:text-cluster-flags-t}
   @see-function{cairo:show-text-glyphs}")
 
@@ -185,16 +188,18 @@
 (setf (liber:alias-for-symbol 'text-cluster-flags-t)
       "CEnum"
       (liber:symbol-documentation 'text-cluster-flags-t)
- "@version{#2021-12-12}
-  @short{Specifies properties of a text cluster mapping.}
-  @begin{pre}
+ "@version{#2025-09-01}
+  @begin{declaration}
 (cffi:defcenum text-cluster-flags-t
   (:backward 1))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:backward]{The clusters in the cluster array map to glyphs in the
-      glyph array from end to start.}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{simple-table}
+      @entry[:backward]{The clusters in the cluster array map to glyphs in the
+        glyph array from end to start.}
+    @end{simple-table}
+  @end{values}
+  @short{Specifies properties of a text cluster mapping.}
   @see-symbol{cairo:text-cluster-t}")
 
 ;;; ----------------------------------------------------------------------------
@@ -209,13 +214,13 @@
 
 (defun select-font-face (cr family &key (slant :normal) (weight :normal))
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[cr]{a @symbol{cairo:context-t} instance}
+ "@version{2025-09-02}
+  @argument[cr]{a @sym{cairo:context-t} instance}
   @argument[family]{a string for the font family name, encoded in UTF-8}
-  @argument[slant]{a @symbol{cairo:font-slant-t} value for the slant, default
+  @argument[slant]{a @sym{cairo:font-slant-t} value for the slant, default value
+    is @code{:normal}}
+  @argument[weight]{a @sym{cairo:font-weight-t} value for the  weight, default
     value is @code{:normal}}
-  @argument[weight]{a @symbol{cairo:font-weight-t} value for the  weight,
-    default value is @code{:normal}}
   @begin{short}
     Selects a family and style of font from a simplified description as a
     family name, slant and weight.
@@ -269,8 +274,8 @@
 
 (defun set-font-size (cr size)
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[cr]{a @symbol{cairo:context-t} instance}
+ "@version{2025-09-02}
+  @argument[cr]{a @sym{cairo:context-t} instance}
   @argument[size]{a number coerced to a double float for the new font size,
     in user space units}
   @begin{short}
@@ -283,8 +288,8 @@
   @arg{size} square in user space.
 
   If text is drawn without a call to the @fun{cairo:set-font-size} function,
-  nor the @fun{cairo:font-matrix} or @symbol{cairo:scaled-font-t} functions,
-  the default font size is 10.0.
+  nor the @fun{cairo:font-matrix} or @sym{cairo:scaled-font-t} functions, the
+  default font size is 10.0.
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:scaled-font-t}
   @see-function{cairo:font-matrix}"
@@ -310,15 +315,15 @@
 
 (defun font-matrix (cr matrix)
  #+liber-documentation
- "@version{2025-1-29}
+ "@version{2025-09-02}
   @syntax{(cairo:font-matrix cr matrix) => matrix}
   @syntax{(setf (cairo:font-matrix cr) matrix)}
-  @argument[cr]{a @symbol{cairo:context-t} instance}
-  @argument[matrix]{a @symbol{cairo:matrix-t} instance for the values of the
+  @argument[cr]{a @sym{cairo:context-t} instance}
+  @argument[matrix]{a @sym{cairo:matrix-t} instance for the values of the
     matrix}
   @begin{short}
     The @fun{cairo:font-matrix} function stores the current font matrix into
-    @arg{matrix} and returns the @symbol{cairo:matrix-t} instance.
+    @arg{matrix} and returns the @sym{cairo:matrix-t} instance.
   @end{short}
   The @setf{cairo:font-matrix} function sets the current font matrix.
 
@@ -353,11 +358,11 @@
 
 (defun font-options (cr options)
  #+liber-documentation
- "@version{2025-1-29}
+ "@version{2025-09-02}
   @syntax{(cairo:font-options cr options) => options}
   @syntax{(setf (cairo:font-options cr) options)}
-  @argument[cr]{a @symbol{cairo:context-t} instance}
-  @argument[options]{a @symbol{cairo:font-options-t} instance}
+  @argument[cr]{a @sym{cairo:context-t} instance}
+  @argument[options]{a @sym{cairo:font-options-t} instance}
   @begin{short}
     The @fun{cairo:font-options} function retrieves font rendering options for
     the Cairo context.
@@ -394,12 +399,12 @@
 
 (cffi:defcfun ("cairo_get_font_face" font-face) (:pointer (:struct font-face-t))
  #+liber-documentation
- "@version{2025-1-29}
+ "@version{2025-09-02}
   @syntax{(cairo:font-face cr) => face}
   @syntax{(setf (cairo:font-face cr) face)}
-  @argument[cr]{a @symbol{cairo:context-t} instance}
-  @argument[face]{a @symbol{cairo:font-face-t} instance, or @code{nil} to
-    restore to the default font}
+  @argument[cr]{a @sym{cairo:context-t} instance}
+  @argument[face]{a @sym{cairo:font-face-t} instance, or @code{nil} to restore
+    to the default font}
   @begin{short}
     The @fun{cairo:font-face} function gets the current font face for a Cairo
     context.
@@ -410,7 +415,7 @@
 
   This object is owned by Cairo. To keep a reference to it, you must call the
   @fun{cairo:font-face-reference} function. This function always returns a
-  @symbol{cairo:font-face-t} instance. If memory cannot be allocated, a special
+  @sym{cairo:font-face-t} instance. If memory cannot be allocated, a special
   \"nil\" instance will be returned on which the @fun{cairo:font-face-status}
   function returns the @code{:no-memory} value. Using this \"nil\" instance
   will cause its error state to propagate to other objects it is passed to, for
@@ -439,11 +444,11 @@
 (cffi:defcfun ("cairo_get_scaled_font" scaled-font)
     (:pointer (:struct scaled-font-t))
  #+liber-documentation
- "@version{2025-1-29}
+ "@version{2025-09-02}
   @syntax{(cairo:scaled-font cr) => font}
   @syntax{(setf (cairo:scaled-font cr) font)}
-  @argument[cr]{a @symbol{cairo:context-t} instance}
-  @argument[font]{a @symbol{cairo:scaled-font-t} instance}
+  @argument[cr]{a @sym{cairo:context-t} instance}
+  @argument[font]{a @sym{cairo:scaled-font-t} instance}
   @begin{short}
     The @fun{cairo:scaled-font} function gets the current scaled font for the
     Cairo context.
@@ -452,19 +457,18 @@
   matrix, and font options in the Cairo context.
 
   Except for some translation, the current transformation matrix CTM of the
-  Cairo context should be the same as that of the @symbol{cairo:scaled-font-t}
+  Cairo context should be the same as that of the @sym{cairo:scaled-font-t}
   instance, which can be accessed using the @fun{cairo:scaled-font-ctm}
   function.
 
   This object is owned by Cairo. To keep a reference to it, you must call the
   @fun{cairo:scaled-font-reference} function. This function always returns a
-  @symbol{cairo:scaled-font-t} instance. If memory cannot be allocated, a
-  special \"nil\" instance will be returned on which the
-  @fun{cairo:scaled-font-status} function returns the @code{:no-memory} value.
-  Using this \"nil\" instance will cause its error state to propagate to other
-  objects it is passed to, for example, calling the @fun{cairo:scaled-font}
-  function with a \"nil\" font will trigger an error that will shutdown the
-  Cairo context.
+  @sym{cairo:scaled-font-t} instance. If memory cannot be allocated, a special
+  \"nil\" instance will be returned on which the @fun{cairo:scaled-font-status}
+  function returns the @code{:no-memory} value. Using this \"nil\" instance will
+  cause its error state to propagate to other objects it is passed to, for
+  example, calling the @fun{cairo:scaled-font} function with a \"nil\" font will
+  trigger an error that will shutdown the Cairo context.
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:scaled-font-t}
   @see-function{cairo:scaled-font-reference}
@@ -485,9 +489,9 @@
 
 (defun show-text (cr utf8)
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[cr]{a @symbol{cairo:context-t} instance}
-  @argument[utf8]{a string of text encoded in UTF-8, or @code{nil}}
+ "@version{2025-09-02}
+  @argument[cr]{a @sym{cairo:context-t} instance}
+  @argument[utf8]{a string for text encoded in UTF-8, or @code{nil}}
   @begin{short}
     A drawing operator that generates the shape from a string of UTF-8
     characters, rendered according to the current font face, font size
@@ -528,8 +532,8 @@
 
 (defun show-glyphs (cr glyphs)
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[cr]{a @symbol{cairo:context-t} instance}
+ "@version{2025-09-02}
+  @argument[cr]{a @sym{cairo:context-t} instance}
   @argument[glyphs]{a list of glyphs to show, each glyph is represented by an
     item that is a list for the @code{(index x y)} glyph values}
   @argument[index]{an unsigned integer for the glyph index in the font}
@@ -566,18 +570,18 @@
 
 (cffi:defcfun ("cairo_show_text_glyphs" show-text-glyphs) :void
  #+liber-documentation
- "@version{#2021-12-12}
-  @argument[cr]{a @symbol{cairo:context-t} instance}
-  @argument[utf8]{a string of text encoded in UTF-8}
+ "@version{#2025-09-02}
+  @argument[cr]{a @sym{cairo:context-t} instance}
+  @argument[utf8]{a string for text encoded in UTF-8}
   @argument[len]{an integer for the length of @arg{utf8} in bytes, or -1 if it
     is NUL-terminated}
   @argument[glyphs]{a list of glyphs to show, each glyph is represented by an
     item that is a list with the @code{(index x y)} glyph values}
   @argument[num-glyphs]{an integer for the number of glyphs to show}
-  @argument[clusters]{array of @symbol{cairo:text-cluster-t} cluster mapping
+  @argument[clusters]{array of @sym{cairo:text-cluster-t} cluster mapping
     information}
   @argument[num-clusters]{an integer for the number of clusters in the mapping}
-  @argument[flags]{@symbol{cairo:text-cluster-flags-t} cluster mapping flags}
+  @argument[flags]{@sym{cairo:text-cluster-flags-t} cluster mapping flags}
   @begin{short}
     This operation has rendering effects similar to the @fun{cairo:show-glyphs}
     function but, if the target surface supports it, uses the provided text and
@@ -597,7 +601,7 @@
   covers the beginning of glyphs, otherwise it covers the end of the glyphs
   array and following clusters move backward.
 
-  See the @symbol{cairo:text-cluster-t} structure for constraints on valid
+  See the @sym{cairo:text-cluster-t} structure for constraints on valid
   clusters.
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:glyph-t}
@@ -623,11 +627,11 @@
 
 (defun font-extents (cr)
  #+liber-documentation
- "@version{2025-1-29}
+ "@version{2025-09-02}
   @syntax{(cairo:font-extents cr) => ascent, descent, height, max-xadvance,
     max-yadvance}
-  @argument[cr]{a @symbol{cairo:context-t} instance}
-  @return{The double floats of the @symbol{cairo:font-extents-t} instance.}
+  @argument[cr]{a @sym{cairo:context-t} instance}
+  @return{The double floats for the @sym{cairo:font-extents-t} instance.}
   @begin{short}
     Gets the font extents for the currently selected font.
   @end{short}
@@ -655,14 +659,14 @@
 
 (defun text-extents (cr utf8)
  #+liber-documentation
- "@version{2025-1-29}
+ "@version{2025-09-02}
   @syntax{(cairo:text-extents cr utf8) => xbearing, ybearing, width, height
     xadvance, yadvance}
-  @argument[cr]{a @symbol{cairo:context-t} instance}
-  @argument[utf8]{a string of text encoded in UTF-8}
+  @argument[cr]{a @sym{cairo:context-t} instance}
+  @argument[utf8]{a string for text encoded in UTF-8}
   @begin{return}
-    The double floats of the @symbol{cairo:text-extents-t} instance for
-    the extents of @arg{utf8}.
+    The double floats for the @sym{cairo:text-extents-t} instance for the
+    extents of @arg{utf8}.
   @end{return}
   @begin{short}
     Gets the extents for a string of text.
@@ -706,10 +710,10 @@
 
 (defun glyph-extents (cr glyphs)
  #+liber-documentation
- "@version{2025-1-29}
+ "@version{2025-09-02}
   @syntax{(cairo:glyph-extents cr glyphs) => xbearing, ybearing, width, height,
     xadvance, yadvance}
-  @argument[cr]{a @symbol{cairo:context-t} instance}
+  @argument[cr]{a @sym{cairo:context-t} instance}
   @argument[glyphs]{a list of glyphs, each glyph is represented by an item that
     is a list for the @code{(index x y)} glyph values}
   @argument[index]{an unsigned integer for the glyph index in the font}
@@ -719,8 +723,8 @@
   @argument[y]{a number coerced to a double float for the y direction between
     the orgin used for drawing the string and the origin of this glyph}
   @begin{return}
-    The double floats of the @symbol{cairo:text-extents-t} instance for
-    the extents of @arg{glyphs}.
+    The double floats for the @sym{cairo:text-extents-t} instance for the
+    extents of @arg{glyphs}.
   @end{return}
   @begin{short}
     Gets the extents for a list of glyphs.
@@ -766,18 +770,17 @@
 
 (defmacro with-toy-font-face ((face &rest args) &body body)
  #+liber-documentation
- "@version{2025-1-29}
+ "@version{2025-09-02}
   @syntax{(cairo:with-toy-font-face (face family slant weight) body) => result}
-  @argument[face]{a newly allocated @symbol{cairo:font-face-t} instance}
+  @argument[face]{a newly allocated @sym{cairo:font-face-t} instance}
   @argument[familiy]{a string for the font family name, encoded in UTF-8}
-  @argument[slant]{a @symbol{cairo:font-slant-t} value for the slant for the
+  @argument[slant]{a @sym{cairo:font-slant-t} value for the slant for the font}
+  @argument[weight]{a @sym{cairo:font-weight-t} value for the weight for the
     font}
-  @argument[weight]{a @symbol{cairo:font-weight-t} value for the weight for
-    the font}
   @begin{short}
     The @fun{cairo:with-toy-font-face} macro allocates a new
-    @symbol{cairo:font-face-t} instance and executes the body that uses the
-    toy font face.
+    @sym{cairo:font-face-t} instance and executes the body that uses the toy
+    font face.
   @end{short}
   After execution of the body the allocated memory for the font face is
   released. See the @fun{cairo:toy-font-face-create} function for more
@@ -800,12 +803,12 @@
 (cffi:defcfun ("cairo_toy_font_face_create" toy-font-face-create)
     (:pointer (:struct font-face-t))
  #+liber-documentation
- "@version{2025-1-29}
+ "@version{2025-09-02}
   @argument[familiy]{a string for the font family name, encoded in UTF-8}
-  @argument[slant]{a @symbol{cairo:font-slant-t} slant for the font}
-  @argument[weight]{a @symbol{cairo:font-weight-t} weight for the font}
+  @argument[slant]{a @sym{cairo:font-slant-t} slant for the font}
+  @argument[weight]{a @sym{cairo:font-weight-t} weight for the font}
   @begin{return}
-    The newly created @symbol{cairo:font-face-t} instance. Free with the
+    The newly created @sym{cairo:font-face-t} instance. Free with the
     @fun{cairo:font-face-destroy} function when you are done using it.
   @end{return}
   @begin{short}
@@ -837,9 +840,9 @@
 
 (cffi:defcfun ("cairo_toy_font_face_get_family" toy-font-face-family) :string
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[face]{a @symbol{cairo:font-face-t} instance}
-  @return{The string with the family name.}
+ "@version{2025-09-02}
+  @argument[face]{a @sym{cairo:font-face-t} instance}
+  @return{The string for the family name.}
   @begin{short}
     Gets the family name of a toy font face.
   @end{short}
@@ -854,9 +857,9 @@
 
 (cffi:defcfun ("cairo_toy_font_face_get_slant" toy-font-face-slant) font-slant-t
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[face]{a @symbol{cairo:font-face-t} instance}
-  @return{The @symbol{cairo:font-slant-t} slant value.}
+ "@version{2025-09-02}
+  @argument[face]{a @sym{cairo:font-face-t} instance}
+  @return{The @sym{cairo:font-slant-t} slant value.}
   @short{Gets the slant of a toy font face.}
   @see-symbol{cairo:font-face-t}
   @see-symbol{cairo:font-slant-t}"
@@ -871,9 +874,9 @@
 (cffi:defcfun ("cairo_toy_font_face_get_weight" toy-font-face-weight)
     font-weight-t
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[face]{a @symbol{cairo:font-face-t} instance}
-  @return{The @symbol{cairo:font-weight-t} weight value.}
+ "@version{2025-09-02}
+  @argument[face]{a @sym{cairo:font-face-t} instance}
+  @return{The @sym{cairo:font-weight-t} weight value.}
   @short{Gets the weight of a toy font face.}
   @see-symbol{cairo:font-face-t}
   @see-symbol{cairo:font-weight-t}"
@@ -888,14 +891,14 @@
 (cffi:defcfun ("cairo_glyph_allocate" glyph-allocate)
     (:pointer (:struct glyph-t))
  #+liber-documentation
- "@version{#2023-1-15}
+ "@version{#2025-09-02}
   @argument[num]{an integer for the number of glyphs to allocate}
   @begin{return}
-    The newly allocated array of @symbol{cairo:glyph-t} glyphs that should be
-    freed using the @fun{cairo:glyph-free} function.
+    The newly allocated array of @sym{cairo:glyph-t} glyphs that should be freed
+    using the @fun{cairo:glyph-free} function.
   @end{return}
   @begin{short}
-    Allocates an array of @symbol{cairo:glyph-t} instances.
+    Allocates an array of @sym{cairo:glyph-t} instances.
   @end{short}
   This function is only useful in implementations of
   @code{user-scaled-font-text-to-glyphs-func-t} function where the user needs
@@ -915,10 +918,10 @@
 
 (cffi:defcfun ("cairo_glyph_free" glyph-free) :void
  #+liber-documentation
- "@version{#2021-12-12}
-  @argument[glyphs]{array of @symbol{cairo:glyph-t} glyphs to free, or NULL}
+ "@version{#2025-09-02}
+  @argument[glyphs]{array of @sym{cairo:glyph-t} glyphs to free, or NULL}
   @begin{short}
-    Frees an array of @symbol{cairo:glyph-t} instances allocated using the
+    Frees an array of @sym{cairo:glyph-t} instances allocated using the
     @fun{cairo:glyph-allocate} function.
   @end{short}
   This function is only useful to free glyph array returned by the
@@ -937,14 +940,14 @@
 (cffi:defcfun ("cairo_text_cluster_allocate" text-cluster-allocate)
     (:pointer (:struct text-cluster-t))
  #+liber-documentation
- "@version{#2023-1-15}
+ "@version{#2025-09-02}
   @argument[num]{an integer for the number of text clusters to allocate}
   @begin{return}
-    The newly allocated array of @symbol{cairo:text-cluster-t} text clusters
-    that should be freed using the @fun{cairo:text-cluster-free} function.
+    The newly allocated array of @sym{cairo:text-cluster-t} text clusters that
+    should be freed using the @fun{cairo:text-cluster-free} function.
   @end{return}
   @begin{short}
-    Allocates an array of @symbol{cairo:text-cluster-t} instances.
+    Allocates an array of @sym{cairo:text-cluster-t} instances.
   @end{short}
   This function is only useful in implementations of a
   @code{user-scaled-font-text-to-glyphs-func-t} function where the user needs to
@@ -964,12 +967,12 @@
 
 (cffi:defcfun ("cairo_text_cluster_free" text-cluster-free) :void
  #+liber-documentation
- "@version{#2021-12-12}
-  @argument[clusters]{array of @symbol{cairo:text-cluster-t} text clusters to
-    free, or NULL}
+ "@version{#2025-09-02}
+  @argument[clusters]{array of @sym{cairo:text-cluster-t} text clusters to free,
+    or NULL}
   @begin{short}
-    Frees an array of @symbol{cairo:text-cluster-t} instances allocated using
-    the @fun{cairo:text-cluster-allocate} function.
+    Frees an array of @sym{cairo:text-cluster-t} instances allocated using the
+    @fun{cairo:text-cluster-allocate} function.
   @end{short}
   This function is only useful to free text cluster array returned by the
   @fun{cairo:scaled-font-text-to-glyphs} function where Cairo returns an array

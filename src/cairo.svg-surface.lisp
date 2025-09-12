@@ -61,20 +61,20 @@
 (setf (liber:alias-for-symbol 'svg-version-t)
       "CEnum"
       (liber:symbol-documentation 'svg-version-t)
- "@version{2025-1-13}
+ "@version{2025-09-01}
   @begin{declaration}
 (cffi:defcenum svg-version-t
   :version-1-1
   :version-1-2)
   @end{declaration}
   @begin{values}
-    @begin[code]{table}
+    @begin[code]{simple-table}
       @entry[:version-1-1]{The version 1.1 of the SVG specification.}
       @entry[:version-1-2]{The version 1.2 of the SVG specification.}
-    @end{table}
+    @end{simple-table}
   @end{values}
   @begin{short}
-    The @symbol{cairo:svg-version-t} enumeration is used to describe the version
+    The @sym{cairo:svg-version-t} enumeration is used to describe the version
     number of the SVG specification that a generated SVG file will conform to.
   @end{short}
   @see-function{cairo:svg-version-to-string}")
@@ -101,7 +101,7 @@
 (setf (liber:alias-for-symbol 'svg-unit-t)
       "CEnum"
       (liber:symbol-documentation 'svg-unit-t)
- "@version{2025-1-13}
+ "@version{2025-09-01}
   @begin{declaration}
 (cffi:defcenum svg-unit-t
   :user
@@ -116,7 +116,7 @@
   :percent)
   @end{declaration}
   @begin{values}
-    @begin[code]{table}
+    @begin[code]{simple-table}
       @entry[:user]{User unit, a value in the current coordinate system. If used
         in the root element for the initial coordinate systems it corresponds to
         pixels.}
@@ -130,11 +130,11 @@
       @entry[:pc]{Picas (1pc = 1/6th of 1in).}
       @entry[:percent]{Percent, a value that is some fraction of another
         reference value.}
-    @end{table}
+    @end{simple-table}
   @end{values}
   @begin{short}
-    The @symbol{cairo:svg-unit-t} enumeration is used to describe the units
-    valid for coordinates and lengths in the SVG specification.
+    The @sym{cairo:svg-unit-t} enumeration is used to describe the units valid
+    for coordinates and lengths in the SVG specification.
   @end{short}
 
   Since 1.16
@@ -154,7 +154,7 @@
 
 (defun svg-surface-create (path width height)
  #+liber-documentation
- "@version{2025-1-13}
+ "@version{2025-09-01}
   @argument[path]{a namestring or pathname for a path for the SVG output (must
     be writable), @code{nil} may be used to specify no output, this will
     generate a SVG surface that may be queried and used as a source, without
@@ -163,12 +163,13 @@
     surface, in points (1 point == 1/72.0 inch)}
   @argument[height]{a number coerced to a double float for the height of the
     surface, in points (1 point == 1/72.0 inch)}
-  @return{The newly created @symbol{cairo:surface-t} instance. The caller owns
-    the surface and should call the @fun{cairo:surface-destroy} function when
-    done with it. This function always returns a valid pointer, but it will
-    return a pointer to a \"nil\" surface if an error such as out of memory
-    occurs. You can use the @fun{cairo:surface-status} function to check for
-    this.}
+  @begin{return}
+    The newly created @sym{cairo:surface-t} instance. The caller owns the
+    surface and should call the @fun{cairo:surface-destroy} function when done
+    with it. This function always returns a valid pointer, but it will return a
+    pointer to a \"nil\" surface if an error such as out of memory occurs. You
+    can use the @fun{cairo:surface-status} function to check for this.
+  @end{return}
   @begin{short}
     Creates a SVG surface of the specified size in points to be written to
     @arg{path}.
@@ -222,11 +223,11 @@
 (cffi:defcfun ("cairo_svg_surface_get_document_unit"
                svg-surface-document-unit) svg-unit-t
  #+liber-documentation
- "@version{#2025-1-13}
+ "@version{#2025-09-02}
   @syntax{(cairo:svg-surface-document-unit surface) => unit}
   @syntax{(setf (cairo:svg-surface-document-unit surface) unit)}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
-  @argument[unit]{a @symbol{cairo:svg-unit-t} value}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
+  @argument[unit]{a @sym{cairo:svg-unit-t} value}
   @begin{short}
     The @fun{cairo:svg-surface-document-unit} function gets the unit of the SVG
     surface.
@@ -237,8 +238,8 @@
 
   The @setf{cairo:svg-surface-document-unit} function sets the unit for use
   with the specified width and height of the generated SVG file. See the
-  @symbol{cairo:svg-unit-t} enumeration for a list of available unit values
-  that can be used here.
+  @sym{cairo:svg-unit-t} enumeration for a list of available unit values that
+  can be used here.
 
   This function can be called at any time before generating the SVG file.
 
@@ -263,9 +264,9 @@
 (cffi:defcfun ("cairo_svg_surface_restrict_to_version"
                svg-surface-restrict-to-version) :void
  #+liber-documentation
- "@version{#2025-1-13}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
-  @argument[version]{a @symbol{cairo:svg-version-t} value}
+ "@version{#2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
+  @argument[version]{a @sym{cairo:svg-version-t} value}
   @begin{short}
     Restricts the generated SVG file to @arg{version}.
   @end{short}
@@ -291,9 +292,10 @@
 
 (defun svg-versions ()
  #+liber-documentation
- "@version{#2025-1-13}
-  @return{The list of @symbol{cairo:svg-version-t} values with the supported
-    versions.}
+ "@version{#2025-09-01}
+  @begin{return}
+    The list of @sym{cairo:svg-version-t} values for the supported versions.
+  @end{return}
   @begin{short}
     Used to retrieve the list of supported versions.
   @end{short}
@@ -314,9 +316,9 @@
 
 (cffi:defcfun ("cairo_svg_version_to_string" svg-version-to-string) :string
  #+liber-documentation
- "@version{#2025-1-13}
-  @argument[version]{a @symbol{cairo:svg-version-t} value}
-  @return{The string with the given @arg{version}.}
+ "@version{#2025-09-02}
+  @argument[version]{a @sym{cairo:svg-version-t} value}
+  @return{The string for the given @arg{version}.}
   @begin{short}
     Gets the string representation of the given version ID.
   @end{short}

@@ -69,7 +69,7 @@
 (setf (liber:alias-for-symbol 'pdf-outline-flags-t)
       "Bitfield"
       (liber:symbol-documentation 'pdf-outline-flags-t)
- "@version{2025-1-13}
+ "@version{2025-09-01}
   @begin{declaration}
 (cffi:defbitfield pdf-outline-flags-t
   (:open 1)
@@ -77,14 +77,14 @@
   (:italic 4))
   @end{declaration}
   @begin{values}
-    @begin[code]{table}
+    @begin[code]{simple-table}
       @entry[:open]{The outline item defaults to open in the PDF viewer.}
       @entry[:bold]{The outline item is displayed by the viewer in bold text.}
       @entry[:italic]{The outline item is displayed by the viewer in italic text.}
-    @end{table}
+    @end{simple-table}
   @end{values}
   @begin{short}
-    The @symbol{cairo:pdf-outline-flags-t} flags is used by the
+    The @sym{cairo:pdf-outline-flags-t} flags is used by the
     @fun{cairo:pdf-surface-add-outline} function to specify the attributes of
     an outline item.
   @end{short}
@@ -109,7 +109,7 @@
 (setf (liber:alias-for-symbol 'pdf-metadata-t)
       "CEnum"
       (liber:symbol-documentation 'pdf-metadata-t)
- "@version{2025-1-13}
+ "@version{2025-09-01}
   @begin{declaration}
 (cffi:defcenum pdf-metadata-t
   :title
@@ -121,7 +121,7 @@
   :mod-date)
   @end{declaration}
   @begin{values}
-    @begin[code]{table}
+    @begin[code]{simple-table}
       @entry[:title]{The document title.}
       @entry[:author]{The document author.}
       @entry[:subject]{The document subject.}
@@ -129,10 +129,10 @@
       @entry[:creator]{The document creator.}
       @entry[:create-date]{The document creation date.}
       @entry[:mod-date]{The document modification date.}
-    @end{table}
+    @end{simple-table}
   @end{values}
   @begin{short}
-    The @symbol{cairo:pdf-metadata-t} enumeration is used by the
+    The @sym{cairo:pdf-metadata-t} enumeration is used by the
     @fun{cairo:pdf-surface-set-metadata} function to specify the metadata to
     set.
   @end{short}
@@ -156,7 +156,7 @@
 (setf (liber:alias-for-symbol 'pdf-version-t)
       "CEnum"
       (liber:symbol-documentation 'pdf-version-t)
- "@version{2025-1-13}
+ "@version{2025-09-01}
   @begin{declaration}
 (cffi:defcenum pdf-version-t
   :version-1-4
@@ -167,15 +167,15 @@
   :version-1-7)
   @end{declaration}
   @begin{values}
-    @begin[code]{table}
+    @begin[code]{simple-table}
       @entry[:version-1-4]{The version 1.4 of the PDF specification.}
       @entry[:version-1-5]{The version 1.5 of the PDF specification.}
       @entry[:version-1-6]{The version 1.6 of the PDF specification.}
       @entry[:version-1-7]{The version 1.7 of the PDF specification.}
-    @end{table}
+    @end{simple-table}
   @end{values}
   @begin{short}
-    The @symbol{cairo:pdf-version-t} enumeration is used to describe the version
+    The @sym{cairo:pdf-version-t} enumeration is used to describe the version
     number of the PDF specification that a generated PDF file will conform to.
   @end{short}
   @see-function{cairo:pdf-version-to-string}")
@@ -188,10 +188,10 @@
 
 (defmacro with-pdf-surface ((surface path width height) &body body)
  #+liber-documentation
- "@version{2025-1-13}
+ "@version{2025-09-02}
   @syntax{(cairo:with-pdf-surface (surface path width height) body) => result}
-  @argument[surface]{a PDF @symbol{cairo:surface-t} instance}
-  @argument[path]{a path or namestring with a filename for the PDF output,
+  @argument[surface]{a PDF @sym{cairo:surface-t} instance}
+  @argument[path]{a path or namestring for a filename for the PDF output,
     @code{nil} may be used to specify no output, this will generate a PDF
     surface that may be queried and used as a source, without generating a
     temporary file}
@@ -200,9 +200,9 @@
   @argument[height]{a number coerced to a double float for the height of
     the surface, in points (1 point == 1/72 inch)}
   @begin{short}
-    The @symbol{cairo:with-pdf-surface} macro allocates a new PDF
-    @symbol{cairo:surface-t} instance for the given @arg{path}, @arg{width},
-    and @arg{height} values and executes the body that uses the PDF surface.
+    The @sym{cairo:with-pdf-surface} macro allocates a new PDF
+    @sym{cairo:surface-t} instance for the given @arg{path}, @arg{width}, and
+    @arg{height} values and executes the body that uses the PDF surface.
   @end{short}
   After execution of the body the allocated memory for the PDF surface
   is released.
@@ -220,12 +220,11 @@
 
 (defmacro with-context-for-pdf-surface ((context path width height) &body body)
  #+liber-documentation
- "@version{2025-1-13}
+ "@version{2025-09-02}
   @syntax{(cairo:with-context-for-pdf-surface (context format width height)
     body) => result}
-  @argument[context]{a @symbol{cairo:context-t} instance to create and
-    initialize}
-  @argument[path]{a path or namestring with a filename for the PDF output,
+  @argument[context]{a @sym{cairo:context-t} instance to create and initialize}
+  @argument[path]{a path or namestring for a filename for the PDF output,
     @code{nil} may be used to specify no output, this will generate a PDF
     surface that may be queried and used as a source, without generating a
     temporary file}
@@ -235,9 +234,9 @@
     the surface, in points (1 point == 1/72 inch)}
   @begin{short}
     The @fun{cairo:with-context-for-pdf-surface} macro allocates a new
-    @symbol{cairo:context-t} instance for a PDF surface, initializes the
-    Cairo context with the @arg{path}, @arg{width}, and @arg{height} values
-    and executes the body that uses the Cairo context.
+    @sym{cairo:context-t} instance for a PDF surface, initializes the Cairo
+    context with the @arg{path}, @arg{width}, and @arg{height} values and
+    executes the body that uses the Cairo context.
   @end{short}
   After execution of the body the allocated memory for the Cairo context is
   released. See the documentation of the @fun{cairo:pdf-surface-create} and
@@ -267,7 +266,7 @@
 
 (defun pdf-surface-create (path width height)
  #+liber-documentation
- "@version{2025-1-13}
+ "@version{2025-09-02}
   @argument[path]{a namestring or pathname with a path for the PDF output
     (must be writable), @code{nil} may be used to specify no output, this will
     generate a PDF surface that may be queried and used as a source, without
@@ -277,7 +276,7 @@
   @argument[height]{a double float for the height of the surface, in
     points (1 point == 1/72.0 inch)}
   @begin{return}
-    The newly created @symbol{cairo:surface-t} instance. The caller owns the
+    The newly created @sym{cairo:surface-t} instance. The caller owns the
     surface and should call the @fun{cairo:surface-destroy} function when done
     with it. This function always returns a valid pointer, but it will return a
     pointer to a \"nil\" surface if an error such as out of memory occurs. You
@@ -310,9 +309,9 @@
 (cffi:defcfun ("cairo_pdf_surface_restrict_to_version"
                pdf-surface-restrict-to-version) :void
  #+liber-documentation
- "@version{2025-1-13}
-  @argument[surface]{a PDF @symbol{cairo:surface-t} instance}
-  @argument[version]{a @symbol{cairo:pdf-version-t} value}
+ "@version{2025-09-02}
+  @argument[surface]{a PDF @sym{cairo:surface-t} instance}
+  @argument[version]{a @sym{cairo:pdf-version-t} value}
   @begin{short}
     Restricts the generated PDF file to the given @arg{version}.
   @end{short}
@@ -337,9 +336,10 @@
 
 (defun pdf-versions ()
  #+liber-documentation
- "@version{2025-1-13}
-  @return{The list of @symbol{cairo:pdf-version-t} values with the supported
-    versions.}
+ "@version{2025-09-01}
+  @begin{return}
+    The list of @sym{cairo:pdf-version-t} values for the supported versions.
+  @end{return}
   @begin{short}
     Used to retrieve the list of supported versions.
   @end{short}
@@ -360,9 +360,9 @@
 
 (cffi:defcfun ("cairo_pdf_version_to_string" pdf-version-to-string) :string
  #+liber-documentation
- "@version{2025-1-13}
-  @argument[version]{a @symbol{cairo:pdf-version-t} value}
-  @return{The string with the given @arg{version}.}
+ "@version{2025-09-02}
+  @argument[version]{a @sym{cairo:pdf-version-t} value}
+  @return{The string for the given @arg{version}.}
   @begin{short}
     Gets the string representation of the given version ID.
   @end{short}
@@ -381,8 +381,8 @@
 
 (defun pdf-surface-set-size (surface width height)
  #+liber-documentation
- "@version{2025-1-13}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
+ "@version{2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
   @argument[width]{a number coerced to a double float for the new surface
     width, in points (1 point == 1/72.0 inch)}
   @argument[height]{a number coerced to a double float for the new surface
@@ -412,16 +412,16 @@
 
 (cffi:defcfun ("cairo_pdf_surface_add_outline" pdf-surface-add-outline) :int
  #+liber-documentation
- "@version{2025-1-13}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
+ "@version{2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
   @argument[parent]{an integer for the ID of the parent item of 0 if this is a
     top level item}
   @argument[utf8]{a string for the name of the outline}
   @argument[link]{a string for the link attributes specifying where this
     outline links to}
-  @argument[flags]{a @symbol{cairo:pdf-outline-flags-t} value for the outline
+  @argument[flags]{a @sym{cairo:pdf-outline-flags-t} value for the outline
     flags}
-  @return{The integer with the ID for the added item.}
+  @return{The integer for the ID for the added item.}
   @begin{short}
     Add an item to the document outline hierarchy with the name @arg{utf8}
     that links to the location specified by @arg{link}.
@@ -445,10 +445,10 @@
 
 (cffi:defcfun ("cairo_pdf_surface_set_metadata" pdf-surface-set-metadata) :void
  #+liber-documentation
- "@version{2025-1-13}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
-  @argument[metadata]{a @symbol{cairo:pdf-metadata-t} value with the metadata
-    item to set}
+ "@version{2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
+  @argument[metadata]{a @sym{cairo:pdf-metadata-t} value for the metadata item
+    to set}
   @argument[utf8]{a string for the metadata}
   @begin{short}
     Set document metadata.
@@ -479,8 +479,8 @@
 (cffi:defcfun ("cairo_pdf_surface_set_custom_metadata"
                pdf-surface-set-custom-metadata) :void
  #+liber-documentation
- "@version{#2025-1-13}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
+ "@version{#2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
   @argument[name]{a string for the name of the custom metadata item to set
     (UTF8)}
   @argument[value]{a string for the value of the metadata (UTF8)}
@@ -514,8 +514,8 @@
 (cffi:defcfun ("cairo_pdf_surface_set_page_label" pdf-surface-set-page-label)
     :void
  #+liber-documentation
- "@version{2025-1-13}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
+ "@version{2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
   @argument[utf8]{a string for the page label}
   @begin{short}
     Sets the page label for the current page.
@@ -533,8 +533,8 @@
 (cffi:defcfun ("cairo_pdf_surface_set_thumbnail_size"
                pdf-surface-set-thumbnail-size) :void
  #+liber-documentation
- "@version{2025-1-13}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
+ "@version{2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
   @argument[width]{an integer for the thumbnail width}
   @argument[height]{an integer for the thumbnail height}
   @begin{short}

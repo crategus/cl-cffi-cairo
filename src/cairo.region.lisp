@@ -79,7 +79,7 @@
 (setf (liber:alias-for-symbol 'region-overlap-t)
       "Enum"
       (liber:symbol-documentation 'region-overlap-t)
- "@version{2025-1-26}
+ "@version{2025-09-01}
   @begin{declaration}
 (cffi:defcenum region-overlap-t
   :in
@@ -87,12 +87,12 @@
   :part)
   @end{declaration}
   @begin{values}
-    @begin[code]{table}
+    @begin[code]{simple-table}
       @entry[:in]{The contents are entirely inside the region.}
       @entry[:out]{The contents are entirely outside the region.}
       @entry[:part]{The contents are partially inside and partially outside the
         region.}
-    @end{table}
+    @end{simple-table}
   @end{values}
   @begin{short}
     Used as the return value for the @fun{cairo:region-contains-rectangle}
@@ -113,15 +113,15 @@
 (setf (liber:alias-for-symbol 'region-t)
       "CStruct"
       (liber:symbol-documentation 'region-t)
- "@version{2025-1-26}
+ "@version{2025-09-02}
   @begin{short}
-    The @symbol{cairo:region-t} structure represents a set of integer aligned
+    The @sym{cairo:region-t} structure represents a set of integer aligned
     rectangles.
   @end{short}
   It allows operations like the @fun{cairo:region-union} and
   @fun{cairo:region-intersect} functions to be performed on them.
 
-  Memory management of the @symbol{cairo:region-t} structure is done with the
+  Memory management of the @sym{cairo:region-t} structure is done with the
   @fun{cairo:region-reference} and @fun{cairo:region-destroy} functions.
   @see-constructor{cairo:region-create}
   @see-constructor{cairo:region-create-rectangle}
@@ -141,8 +141,8 @@
 (cffi:defcfun ("cairo_region_create" region-create)
     (:pointer (:struct region-t))
  #+liber-documentation
- "@version{2025-1-26}
-  @return{The newly allocated @symbol{cairo:region-t} instance.}
+ "@version{2025-09-02}
+  @return{The newly allocated @sym{cairo:region-t} instance.}
   @begin{short}
     Allocates a new empty region instance.
   @end{short}
@@ -166,16 +166,16 @@
 
 (defun region-create-rectangle (x y width height)
  #+liber-documentation
- "@version{2025-1-26}
+ "@version{2025-09-02}
   @argument[x]{an integer for the x coordinate of the left side of the
     rectangle}
   @argument[y]{an integer for the y coordinate of the top side of the
     rectangle}
   @argument[width]{an integer for the width of the rectangle}
   @argument[height]{an integer for the height of the rectangle}
-  @return{The newly allocated @symbol{cairo:region-t} instance.}
+  @return{The newly allocated @sym{cairo:region-t} instance.}
   @begin{short}
-    Allocates a new @symbol{cairo:region-t} instance containing the given
+    Allocates a new @sym{cairo:region-t} instance containing the given
     rectangle.
   @end{short}
   Free with the @fun{cairo:region-destroy} function. This function always
@@ -217,15 +217,15 @@
 
 (defun region-create-rectangles (&rest rects)
  #+liber-documentation
- "@version{2025-1-26}
+ "@version{2025-09-02}
   @argument[rects]{rectangles, each rectangle is represented as a
     @code{(x y width height)} list with the values for the rectangle}
   @begin{return}
-    The newly allocated @symbol{cairo:region-t} instance.
+    The newly allocated @sym{cairo:region-t} instance.
   @end{return}
   @begin{short}
-    Allocates a new @symbol{cairo:region-t} instance containing the union of
-    all given rectangles.
+    Allocates a new @sym{cairo:region-t} instance containing the union of all
+    given rectangles.
   @end{short}
   Free with the @fun{cairo:region-destroy} function. This function always
   returns a valid instance. If memory cannot be allocated, then a special error
@@ -266,9 +266,9 @@
 
 (cffi:defcfun ("cairo_region_copy" region-copy) (:pointer (:struct region-t))
  #+liber-documentation
- "@version{2025-1-26}
-  @argument[region]{a @symbol{cairo:region-t} instance}
-  @return{The newly allocated @symbol{cairo:region-t} instance.}
+ "@version{2025-09-02}
+  @argument[region]{a @sym{cairo:region-t} instance}
+  @return{The newly allocated @sym{cairo:region-t} instance.}
   @begin{short}
     Allocates a new region instance copying the area from @arg{region}.
   @end{short}
@@ -290,9 +290,9 @@
 (cffi:defcfun ("cairo_region_reference" region-reference)
     (:pointer (:struct region-t))
  #+liber-documentation
- "@version{2025-1-26}
-  @argument[region]{a @symbol{cairo:region-t} instance}
-  @return{The referenced @symbol{cairo:region-t} instance.}
+ "@version{2025-09-02}
+  @argument[region]{a @sym{cairo:region-t} instance}
+  @return{The referenced @sym{cairo:region-t} instance.}
   @begin{short}
     Increases the reference count on @arg{region} by one.
   @end{short}
@@ -310,9 +310,9 @@
 
 (cffi:defcfun ("cairo_region_destroy" region-destroy) :void
  #+liber-documentation
- "@version{2025-1-26}
-  @argument[region]{a @symbol{cairo:region-t} instance}
-  @short{Destroys a @symbol{cairo:region-t} instance.}
+ "@version{2025-09-02}
+  @argument[region]{a @sym{cairo:region-t} instance}
+  @short{Destroys a @sym{cairo:region-t} instance.}
   @see-symbol{cairo:region-t}
   @see-function{cairo:region-reference}"
   (region (:pointer (:struct region-t))))
@@ -325,10 +325,11 @@
 
 (cffi:defcfun ("cairo_region_status" region-status) status-t
  #+liber-documentation
- "@version{2025-1-26}
-  @argument[region]{a @symbol{cairo:region-t} instance}
-  @return{The @symbol{cairo:status-t} value that is @code{:success} or
-    @code{:no-memory}.}
+ "@version{2025-09-01}
+  @argument[region]{a @sym{cairo:region-t} instance}
+  @begin{return}
+    The @sym{cairo:status-t} value that is @code{:success} or @code{:no-memory}.
+  @end{return}
   @begin{short}
     Checks whether an error has previous occurred for this region instance.
   @end{short}
@@ -348,16 +349,18 @@
 
 (defun region-extents (region)
  #+liber-documentation
- "@version{2025-1-26}
+ "@version{2025-09-01}
   @syntax{(cairo:region-extents region) => (list x y width height)}
-  @argument[region]{a @symbol{cairo:region-t} instance}
+  @argument[region]{a @sym{cairo:region-t} instance}
   @argument[x]{an integer for the x coordinate of the left side of the
     rectangle}
   @argument[y]{an integer for the y coordinate of the top side of the rectangle}
   @argument[width]{an integer for the width of the rectangle}
   @argument[height]{an integer for the height of the rectangle}
-  @return{The @code{(x y width height)} list with the coordinates of the
-    bounding rectangle.}
+  @begin{return}
+    The @code{(x y width height)} list with the coordinates of the bounding
+    rectangle.
+  @end{return}
   @begin{short}
     Gets the bounding rectangle of @arg{region} as a list of the coordinates.
   @end{short}
@@ -376,9 +379,9 @@
 
 (cffi:defcfun ("cairo_region_num_rectangles" region-num-rectangles) :int
  #+liber-documentation
- "@version{2025-1-26}
-  @argument[region]{a @symbol{cairo:region-t} instance}
-  @return{The integer with the number of rectangles contained in @arg{region}.}
+ "@version{2025-09-02}
+  @argument[region]{a @sym{cairo:region-t} instance}
+  @return{The integer for the number of rectangles contained in @arg{region}.}
   @begin{short}
     Returns the number of rectangles contained in @arg{region}.
   @end{short}
@@ -398,17 +401,19 @@
 
 (defun region-rectangle (region nth)
  #+liber-documentation
- "@version{2025-1-26}
+ "@version{2025-09-01}
   @syntax{(cairo:region-rectangle region nth) => (list x y width height)}
-  @argument[region]{a @symbol{cairo:region-t} instance}
+  @argument[region]{a @sym{cairo:region-t} instance}
   @argument[nth]{an integer indicating which rectangle should be returned}
   @argument[x]{an integer for the x coordinate of the left side of the
     rectangle}
   @argument[y]{an integer for the y coordinate of the top side of the rectangle}
   @argument[width]{an integer for the width of the rectangle}
   @argument[height]{an integer for the height of the rectangle}
-  @return{The @code{(x y width height)} list with the coordinates of the
-    @arg{nth} rectangle.}
+  @begin{return}
+    The @code{(x y width height)} list with the coordinates of the @arg{nth}
+    rectangle.
+  @end{return}
   @begin{short}
     Returns the @arg{nth} rectangle from the region as a list with the
     coordinates of the rectangle.
@@ -428,8 +433,8 @@
 
 (cffi:defcfun ("cairo_region_is_empty" region-is-empty) :bool
  #+liber-documentation
- "@version{2025-1-26}
-  @argument[region]{a @symbol{cairo:region-t} instance}
+ "@version{2025-09-02}
+  @argument[region]{a @sym{cairo:region-t} instance}
   @return{@em{True} if @arg{region} is empty, @em{false} if it is not.}
   @short{Checks whether @arg{region} is empty.}
   @see-symbol{cairo:region-t}"
@@ -443,8 +448,8 @@
 
 (cffi:defcfun ("cairo_region_contains_point" region-contains-point) :bool
  #+liber-documentation
- "@version{2025-1-26}
-  @argument[region]{a @symbol{cairo:region-t} instance}
+ "@version{2025-09-02}
+  @argument[region]{a @sym{cairo:region-t} instance}
   @argument[x]{an integer for the x coordinate of a point}
   @argument[y]{an integer for the y coordinate of a point}
   @begin{return}
@@ -470,8 +475,8 @@
 
 (defun region-contains-rectangle (region x y width height)
  #+liber-documentation
- "@version{2025-1-26}
-  @argument[region]{a @symbol{cairo:region-t} instance}
+ "@version{2025-09-02}
+  @argument[region]{a @sym{cairo:region-t} instance}
   @argument[x]{an integer for the x coordinate of the left side of the
     rectangle}
   @argument[y]{an integer for the y coordinate of the top side of the
@@ -479,7 +484,7 @@
   @argument[width]{an integer for the width of the rectangle}
   @argument[height]{an integer for the height of the rectangle}
   @begin{return}
-    The @symbol{cairo:region-overlap-t} value.
+    The @sym{cairo:region-overlap-t} value.
   @end{return}
   @begin{short}
     Checks whether the given rectangle is inside, outside or partially contained
@@ -508,9 +513,9 @@
 
 (cffi:defcfun ("cairo_region_equal" region-equal) :bool
  #+liber-documentation
- "@version{2025-1-26}
-  @argument[region1]{a @symbol{cairo:region-t} instance}
-  @argument[region2]{a @symbol{cairo:region-t} instance}
+ "@version{2025-09-02}
+  @argument[region1]{a @sym{cairo:region-t} instance}
+  @argument[region2]{a @sym{cairo:region-t} instance}
   @begin{return}
     @em{True} if both regions contained the same coverage, @em{false} if it is
     not or any region is in an error status.
@@ -530,8 +535,8 @@
 
 (cffi:defcfun ("cairo_region_translate" region-translate) :void
  #+liber-documentation
- "@version{2025-1-26}
-  @argument[region]{a @symbol{cairo:region-t} instance}
+ "@version{2025-09-02}
+  @argument[region]{a @sym{cairo:region-t} instance}
   @argument[dx]{an integer for the amount to translate in the x direction}
   @argument[dy]{an integer for the amount to translate in the y direction}
   @short{Translates the region by @code{(dx, dy)}.}
@@ -552,11 +557,13 @@
 
 (defun region-intersect (region other)
  #+liber-documentation
- "@version{2025-1-26}
-  @argument[region]{a @symbol{cairo:region-t} instance}
-  @argument[other]{another @symbol{cairo:region-t} instance}
-  @return{The passed in @symbol{cairo:region-t} instance with the intersection
-    or @code{nil} if an error occured.}
+ "@version{2025-09-01}
+  @argument[region]{a @sym{cairo:region-t} instance}
+  @argument[other]{another @sym{cairo:region-t} instance}
+  @begin{return}
+    The passed in @sym{cairo:region-t} instance for the intersection or
+    @code{nil} if an error occured.
+  @end{return}
   @begin{short}
     Computes the intersection of @arg{region} with @arg{other} and places the
     result in @arg{region}.
@@ -579,16 +586,18 @@
 
 (defun region-intersect-rectangle (region x y width height)
  #+liber-documentation
- "@version{2025-1-26}
-  @argument[region]{a @symbol{cairo:region-t} instance}
+ "@version{2025-09-01}
+  @argument[region]{a @sym{cairo:region-t} instance}
   @argument[x]{an integer for the x coordinate with the left side of the
     rectangle}
   @argument[y]{an integer for the y coordinate with the top side of the
     rectangle}
   @argument[width]{an integer for the width of the rectangle}
   @argument[height]{an integer for the height of the rectangle}
-  @return{The passed in @symbol{cairo:region-t} instance with the intersection
-    or @code{nil} if an error occured.}
+  @begin{return}
+    The passed in @sym{cairo:region-t} instance for the intersection or
+    @code{nil} if an error occured.
+  @end{return}
   @begin{short}
     Computes the intersection of @arg{region} with the given rectangle and
     places the result in @arg{region}.
@@ -617,11 +626,13 @@
 
 (defun region-subtract (region other)
  #+liber-documentation
- "@version{2025-1-26}
-  @argument[region]{a @symbol{cairo:region-t} instance}
-  @argument[other]{another @symbol{cairo:region-t} instance}
-  @return{The passed in @symbol{cairo:region-t} instance with the result or
-    @code{nil} if an error occured.}
+ "@version{2025-09-01}
+  @argument[region]{a @sym{cairo:region-t} instance}
+  @argument[other]{another @sym{cairo:region-t} instance}
+  @begin{return}
+    The passed in @sym{cairo:region-t} instance for the result or @code{nil}
+    if an error occured.
+  @end{return}
   @begin{short}
     Subtracts @arg{other} from @arg{region} and places the result in
     @arg{region.}
@@ -644,14 +655,16 @@
 
 (defun region-subtract-rectangle (region x y width height)
  #+liber-documentation
- "@version{2025-1-26}
-  @argument[region]{a @symbol{cairo:region-t} instance}
+ "@version{2025-09-01}
+  @argument[region]{a @sym{cairo:region-t} instance}
   @argument[x]{an integer for the x coordinate}
   @argument[y]{an integer for the y coordinate}
   @argument[width]{an integer for the width of the rectangle}
   @argument[height]{an integer for the height of the rectangle}
-  @return{The passed in @symbol{cairo:region-t} instance with the result or
-    @code{nil} if an error occured.}
+  @begin{return}
+    The passed in @sym{cairo:region-t} instance for the result or @code{nil}
+    if an error occured.
+  @end{return}
   @begin{short}
     Subtracts @arg{rectangle} from @arg{region} and places the result in
     @arg{region}.
@@ -680,11 +693,13 @@
 
 (defun region-union (region other)
  #+liber-documentation
- "@version{2025-1-26}
-  @argument[region]{a @symbol{cairo:region-t} instance}
-  @argument[other]{another @symbol{cairo:region-t} instance}
-  @return{The passed in @symbol{cairo:region-t} instance with the result or
-    @code{nil} if an error occured.}
+ "@version{2025-09-01}
+  @argument[region]{a @sym{cairo:region-t} instance}
+  @argument[other]{another @sym{cairo:region-t} instance}
+  @begin{return}
+    The passed in @sym{cairo:region-t} instance for the result or @code{nil}
+    if an error occured.
+  @end{return}
   @begin{short}
     Computes the union of @arg{region} with @arg{other} and places the result
     in @arg{region}.
@@ -706,14 +721,16 @@
 
 (defun region-union-rectangle (region x y width height)
  #+liber-documentation
- "@version{2025-1-26}
-  @argument[region]{a @symbol{cairo:region-t} instance}
+ "@version{2025-09-01}
+  @argument[region]{a @sym{cairo:region-t} instance}
   @argument[x]{an integer for the x coordinate}
   @argument[y]{an integer for the y coordinate}
   @argument[width]{an integer for the width of the rectangle}
   @argument[height]{an integer for the height of the rectangle}
-  @return{The passed in @symbol{cairo:region-t} instance with the result or
-    @code{nil} if an error occured.}
+  @begin{return}
+    The passed in @sym{cairo:region-t} instance for the result or @code{nil}
+    if an error occured.
+  @end{return}
   @begin{short}
     Computes the union of @arg{region} with @arg{rectangle} and places the
     result in @arg{region}.
@@ -742,11 +759,13 @@
 
 (defun region-xor (region other)
  #+liber-documentation
- "@version{2025-1-26}
-  @argument[region]{a @symbol{cairo:region-t} instance}
-  @argument[other]{another @symbol{cairo:region-t} instance}
-  @return{The passed in @symbol{cairo:region-t} instance with the result or
-    @code{nil} if an error occured.}
+ "@version{2025-09-01}
+  @argument[region]{a @sym{cairo:region-t} instance}
+  @argument[other]{another @sym{cairo:region-t} instance}
+  @begin{return}
+    The passed in @sym{cairo:region-t} instance for the result or @code{nil}
+    if an error occured.
+  @end{return}
   @begin{short}
     Computes the exclusive difference of @arg{region} with @arg{other} and
     places the result in @arg{region}.
@@ -770,14 +789,16 @@
 
 (defun region-xor-rectangle (region x y width height)
  #+liber-documentation
- "@version{2025-1-26}
-  @argument[region]{a @symbol{cairo:region-t} instance}
+ "@version{2025-09-01}
+  @argument[region]{a @sym{cairo:region-t} instance}
   @argument[x]{an integer for the x coordinate}
   @argument[y]{an integer for the y coordinate}
   @argument[width]{an integer for the width of the rectangle}
   @argument[height]{an integer for the height of the rectangle}
-  @return{The passed in @symbol{cairo:region-t} instance with the result or
-    @code{nil} if an error occured.}
+  @begin{return}
+    The passed in @sym{cairo:region-t} instance for the result or @code{nil}
+    if an error occured.
+  @end{return}
   @begin{short}
     Computes the exclusive difference of @arg{region} with @arg{rectangle} and
     places the result in @arg{region}.

@@ -64,20 +64,20 @@
 (setf (liber:alias-for-symbol 'ps-level-t)
       "CEnum"
       (liber:symbol-documentation 'ps-level-t)
- "@version{2025-1-29}
+ "@version{2025-09-01}
   @begin{declaration}
 (cffi:defcenum ps-level-t
   :level-2
   :level-3)
   @end{declaration}
   @begin{values}
-    @begin[code]{table}
+    @begin[code]{simple-table}
       @entry[:level-2]{The language level 2 of the PostScript specification.}
       @entry[:level-3]{The language level 3 of the PostScript specification.}
-    @end{table}
+    @end{simple-table}
   @end{values}
   @begin{short}
-    The @symbol{cairo:ps-level-t} enumeration is used to describe the language
+    The @sym{cairo:ps-level-t} enumeration is used to describe the language
     level of the PostScript Language Reference that a generated PostScript file
     will conform to.
   @end{short}
@@ -91,9 +91,9 @@
 
 (defmacro with-ps-surface ((surface path width height) &body body)
  #+liber-documentation
- "@version{2025-1-29}
+ "@version{2025-09-02}
   @syntax{(cairo:with-ps-surface (surface path width height) body) => result}
-  @argument[surface]{a PostScript @symbol{cairo:surface-t} instance}
+  @argument[surface]{a PostScript @sym{cairo:surface-t} instance}
   @argument[path]{a path or namestring for a filename for the PS output,
     @code{nil} may be used to specify no output, this will generate a PS surface
     that may be queried and used as a source, without generating a temporary
@@ -103,10 +103,9 @@
   @argument[height]{a number coerced to a double float for the height of the
     surface, in points (1 point == 1/72 inch)}
   @begin{short}
-    The @symbol{cairo:with-ps-surface} macro allocates a new PostScript
-    @symbol{cairo:surface-t} instance for the given @arg{path}, @arg{width},
-    and @arg{height} values and executes the body that uses the PostScript
-    surface.
+    The @sym{cairo:with-ps-surface} macro allocates a new PostScript
+    @sym{cairo:surface-t} instance for the given @arg{path}, @arg{width}, and
+    @arg{height} values and executes the body that uses the PostScript surface.
   @end{short}
   After execution of the body the allocated memory for the PostScript surface
   is released.
@@ -124,7 +123,7 @@
 
 (defun ps-surface-create (path width height)
  #+liber-documentation
- "@version{2025-1-29}
+ "@version{2025-09-02}
   @argument[path]{a path or namestring for a filename for the PS output,
     @code{nil} may be used to specify no output, this will generate a PS surface
     that may be queried and used as a source, without generating a temporary
@@ -133,7 +132,7 @@
     surface, in points (1 point == 1/72 inch)}
   @argument[height]{a number coerced to a double float for the height of the
     surface, in points (1 point == 1/72 inch)}
-  @return{The newly created PostScript @symbol{cairo:surface-t} instance.}
+  @return{The newly created PostScript @sym{cairo:surface-t} instance.}
   @begin{short}
     Creates a PostScript surface of the specified size in points to be written
     to @arg{path}.
@@ -172,9 +171,9 @@
 (cffi:defcfun ("cairo_ps_surface_restrict_to_level"
                ps-surface-restrict-to-level) :void
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[surface]{a PostScript @symbol{cairo:surface-t} instance}
-  @argument[level]{a @symbol{cairo:ps-level-t} value}
+ "@version{2025-09-02}
+  @argument[surface]{a PostScript @sym{cairo:surface-t} instance}
+  @argument[level]{a @sym{cairo:ps-level-t} value}
   @begin{short}
     Restricts the generated PostSript file to @arg{level}.
   @end{short}
@@ -202,9 +201,10 @@
 
 (defun ps-levels ()
  #+liber-documentation
- "@version{2025-1-29}
-  @return{The list of @symbol{cairo:ps-level-t} values with the supported
-    levels.}
+ "@version{2025-09-01}
+  @begin{return}
+    The list of @sym{cairo:ps-level-t} values for the supported levels.
+  @end{return}
   @begin{short}
     Used to retrieve the list of supported levels.
   @end{short}
@@ -226,7 +226,7 @@
 
 (cffi:defcfun ("cairo_ps_level_to_string" ps-level-to-string) :string
  #+liber-documentation
- "@version{2025-1-29}
+ "@version{2025-01-29}
   @argument[level]{an integer for the level ID}
   @return{The string associated to the given @arg{level}.}
   @begin{short}
@@ -261,10 +261,10 @@
 
 (cffi:defcfun ("cairo_ps_surface_get_eps" ps-surface-eps) :bool
  #+liber-documentation
- "@version{2025-1-29}
+ "@version{2025-09-02}
   @syntax{(cairo:ps-surface-eps surface) => eps}
   @syntax{(setf (cairo:ps-surface-eps surface) eps)}
-  @argument[surface]{a PostScript @symbol{cairo:surface-t} instance}
+  @argument[surface]{a PostScript @sym{cairo:surface-t} instance}
   @argument[eps]{@em{true} if the surface will output Encasulated PostScript}
   @begin{short}
     The @fun{cairo:ps-surface-eps} function checks whether the PostScript
@@ -289,8 +289,8 @@
 
 (defun ps-surface-set-size (surface width height)
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[surface]{a PostScript @symbol{cairo:surface-t} instance}
+ "@version{2025-09-02}
+  @argument[surface]{a PostScript @sym{cairo:surface-t} instance}
   @argument[width]{a number coerced to a double float for the surface width,
     in points (1 point == 1/72 inch}
   @argument[height]{a number coerced to a double float for the surface height,
@@ -323,8 +323,8 @@
 (cffi:defcfun ("cairo_ps_surface_dsc_begin_setup" ps-surface-dsc-begin-setup)
     :void
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[surface]{a PostScript @symbol{cairo:surface-t} instance}
+ "@version{2025-09-02}
+  @argument[surface]{a PostScript @sym{cairo:surface-t} instance}
   @begin{short}
     This function indicates that subsequent calls to the
     @fun{cairo:ps-surface-dsc-comment} function should direct comments to the
@@ -349,8 +349,8 @@
 (cffi:defcfun ("cairo_ps_surface_dsc_begin_page_setup"
                ps-surface-dsc-begin-page-setup) :void
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[surface]{a PostScript @symbol{cairo:surface-t} instance}
+ "@version{2025-09-02}
+  @argument[surface]{a PostScript @sym{cairo:surface-t} instance}
   @begin{short}
     This function indicates that subsequent calls to the
     @fun{cairo:ps-surface-dsc-comment} function should direct comments to the
@@ -375,8 +375,8 @@
 
 (cffi:defcfun ("cairo_ps_surface_dsc_comment" ps-surface-dsc-comment) :void
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[surface]{a PostScript @symbol{cairo:surface-t} instance}
+ "@version{2025-09-02}
+  @argument[surface]{a PostScript @sym{cairo:surface-t} instance}
   @argument[comment]{a comment string to be emitted into the PostScript output}
   @begin{short}
     Emit a comment into the PostScript output for the given surface.

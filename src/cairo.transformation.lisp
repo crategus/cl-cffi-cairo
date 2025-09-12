@@ -54,8 +54,8 @@
 
 (defun translate (cr tx ty)
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[cr]{a @symbol{cairo:context-t} instance}
+ "@version{2025-09-02}
+  @argument[cr]{a @sym{cairo:context-t} instance}
   @argument[tx]{a number coerced to a double float for the amount to translate
     in the x direction}
   @argument[ty]{a number coerced to a double float for the amount to translate
@@ -88,8 +88,8 @@
 
 (defun scale (cr sx sy)
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[cr]{a @symbol{cairo:context-t} instance}
+ "@version{2025-09-02}
+  @argument[cr]{a @sym{cairo:context-t} instance}
   @argument[sx]{a number coerced to a double float for the scale factor for
     the x dimension}
   @argument[sy]{a number coerced to a double float for the scale factor for
@@ -115,8 +115,8 @@
 
 (defun rotate (cr angle)
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[cr]{a @symbol{cairo:context-t} instance}
+ "@version{2025-09-02}
+  @argument[cr]{a @sym{cairo:context-t} instance}
   @argument[angle]{a number coerced to a double float for an angle in radians
     by which the user-space axes will be rotated}
   @begin{short}
@@ -137,10 +137,10 @@
 
 (cffi:defcfun ("cairo_transform" transform) :void
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[cr]{a @symbol{cairo:context-t} instance}
-  @argument[matrix]{a @symbol{cairo:matrix-t} instance  for the transformation
-    to be applied to the user-space axes}
+ "@version{2025-09-02}
+  @argument[cr]{a @sym{cairo:context-t} instance}
+  @argument[matrix]{a @sym{cairo:matrix-t} instance for the transformation to
+    be applied to the user-space axes}
   @begin{short}
     Modifies the current transformation matrix (CTM) by applying @arg{matrix}
     as an additional transformation.
@@ -168,12 +168,12 @@
 
 (defun matrix (cr matrix)
  #+liber-documentation
- "@version{2025-1-29}
+ "@version{2025-09-02}
   @syntax{(cairo:matrix cr matrix) => matrix}
   @syntax{(setf (cairo:matrix cr) matrix)}
-  @argument[cr]{a @symbol{cairo:context-t} instance}
-  @argument[matrix]{a @symbol{cairo:matrix-t} transformation matrix from user
-    space to device space}
+  @argument[cr]{a @sym{cairo:context-t} instance}
+  @argument[matrix]{a @sym{cairo:matrix-t} transformation matrix from user space
+    to device space}
   @begin{short}
     The @fun{cairo:matrix} function gets the current transformation matrix
     (CTM).
@@ -181,10 +181,9 @@
   The @setf{cairo:matrix} function modifies the current transformation matrix
   (CTM) by setting it equal to @arg{matrix}.
   @begin[Notes]{dictionary}
-    The @symbol{cairo:matrix-t} structure is a foreign CFFI structure,
-    therefore we pass in a valid @symbol{cairo:matrix-t} instance to the
-    @fun{cairo:matrix} function which is filled with the current transformation
-    matrix.
+    The @sym{cairo:matrix-t} structure is a foreign CFFI structure, therefore
+    we pass in a valid @sym{cairo:matrix-t} instance to the @fun{cairo:matrix}
+    function which is filled with the current transformation matrix.
   @end{dictionary}
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:matrix-t}"
@@ -202,8 +201,8 @@
 
 (cffi:defcfun ("cairo_identity_matrix" identity-matrix) :void
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[cr]{a @symbol{cairo:context-t} instance}
+ "@version{2025-09-02}
+  @argument[cr]{a @sym{cairo:context-t} instance}
   @begin{short}
     Resets the current transformation matrix (CTM) by setting it equal to the
     identity matrix.
@@ -226,11 +225,11 @@
 
 (defun user-to-device (cr x y)
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[cr]{a @symbol{cairo:context-t} instance}
+ "@version{2025-09-02}
+  @argument[cr]{a @sym{cairo:context-t} instance}
   @begin{return}
-    @arg{x} -- a double float with the x value of the coordinate @br{}
-    @arg{y} -- a double float with the y value of the coordinate
+    @arg{x} -- a double float for the x value of the coordinate @br{}
+    @arg{y} -- a double float for the y value of the coordinate
   @end{return}
   @begin{short}
     Transform a coordinate from user space to device space by multiplying the
@@ -260,11 +259,11 @@
 
 (defun user-to-device-distance (cr dx dy)
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[cr]{a @symbol{cairo:context-t} instance}
+ "@version{2025-09-02}
+  @argument[cr]{a @sym{cairo:context-t} instance}
   @begin{return}
-    @arg{dx} -- a double float with the x component of a distance vector @br{}
-    @arg{dy} -- a double float with the y component of a distance vector
+    @arg{dx} -- a double float for the x component of a distance vector @br{}
+    @arg{dy} -- a double float for the y component of a distance vector
   @end{return}
   @begin{short}
     Transform a distance vector from user space to device space.
@@ -296,11 +295,11 @@
 
 (defun device-to-user (cr x y)
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[cr]{a @symbol{cairo:context-t} instance}
+ "@version{2025-09-02}
+  @argument[cr]{a @sym{cairo:context-t} instance}
   @begin{return}
-    @arg{x} -- a double float with the x value of the coordinate @br{}
-    @arg{y} -- a double float with the y value of the coordinate
+    @arg{x} -- a double float for the x value of the coordinate @br{}
+    @arg{y} -- a double float for the y value of the coordinate
   @end{return}
   @begin{short}
     Transform a coordinate from device space to user space by multiplying the
@@ -330,11 +329,11 @@
 
 (defun device-to-user-distance (cr dx dy)
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[cr]{a @symbol{cairo:context-t} instance}
+ "@version{2025-09-02}
+  @argument[cr]{a @sym{cairo:context-t} instance}
   @begin{return}
-    @arg{dx} -- a double float with the x component of the distance vector @br{}
-    @arg{dy} -- a double float with the y component of the distance vector
+    @arg{dx} -- a double float for the x component of the distance vector @br{}
+    @arg{dy} -- a double float for the y component of the distance vector
   @end{return}
   @begin{short}
     Transform a distance vector from device space to user space.

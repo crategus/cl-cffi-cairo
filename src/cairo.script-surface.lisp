@@ -61,17 +61,17 @@
 (setf (liber:alias-for-symbol 'script-mode-t)
       "CEnum"
       (liber:symbol-documentation 'script-mode-t)
- "@version{2025-1-29}
+ "@version{2025-09-01}
   @begin{declaration}
 (cffi:defcenum script-mode-t
   :ascii
   :binary)
   @end{declaration}
   @begin{values}
-    @begin[code]{table}
+    @begin[code]{simple-table}
       @entry[:ascii]{The output will be in readable text (default).}
       @entry[:binary]{The output will use byte codes.}
-    @end{table}
+    @end{simple-table}
   @end{values}
   @short{A set of script output variants.}
   @see-function{cairo:script-mode}")
@@ -84,19 +84,19 @@
 
 (defmacro with-script-surface ((surface path content width height) &body body)
  #+liber-documentation
- "@version{2025-1-29}
+ "@version{2025-09-02}
   @syntax{(cairo:with-script-surface (surface path content width height) body)
     => result}
-  @argument[surface]{a newly allocated @symbol{cairo:surface-t} instance}
+  @argument[surface]{a newly allocated @sym{cairo:surface-t} instance}
   @argument[path]{a path or namestring for the file to write the script to}
-  @argument[content]{a @symbol{cairo:content-t} value}
+  @argument[content]{a @sym{cairo:content-t} value}
   @argument[width]{a number coerced to a double float for the width in pixels}
   @argument[height]{a number coerced to a double float for the height in pixels}
   @begin{short}
     The @fun{cairo:with-script-surface} macro allocates a new
-    @symbol{cairo:surface-t} instance for a newly created
-    @symbol{cairo:device-t} instance of @code{:script} type and executes the
-    body that uses the Cairo script surface.
+    @sym{cairo:surface-t} instance for a newly created @sym{cairo:device-t}
+    instance of @code{:script} type and executes the body that uses the Cairo
+    script surface.
   @end{short}
   After execution of the body the allocated memory for the Cairo surface and the
   Cairo device is released. This macro calls the @fun{cairo:script-create}
@@ -174,9 +174,9 @@ pop
 
 (defun script-create (path)
  #+liber-documentation
- "@version{2025-1-29}
+ "@version{2025-09-02}
   @argument[path]{a path or namestring for the file to write the script to}
-  @return{The newly created @symbol{cairo:device-t} instance.}
+  @return{The newly created @sym{cairo:device-t} instance.}
   @begin{short}
     Creates an output device for emitting the script, used when creating the
     individual surfaces.
@@ -212,10 +212,10 @@ pop
 (cffi:defcfun ("cairo_script_from_recording_surface"
                script-from-recording-surface) status-t
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[script]{a @symbol{cairo:device-t} instance}
-  @argument[surface]{a @symbol{cairo:surface-t} instance for the recording
-    surface to replay}
+ "@version{2025-09-02}
+  @argument[script]{a @sym{cairo:device-t} instance}
+  @argument[surface]{a @sym{cairo:surface-t} instance for the recording surface
+    to replay}
   @return{The @code{:success} value on successful completion or an error code.}
   @short{Converts the recorded operations in @arg{surface} into a script.}
   @see-symbol{cairo:device-t}
@@ -239,11 +239,11 @@ pop
 
 (cffi:defcfun ("cairo_script_get_mode" script-mode) script-mode-t
  #+liber-documentation
- "@version{2025-1-29}
+ "@version{2025-09-02}
   @syntax{(cairo:script-mode script) => mode}
   @syntax{(setf (cairo:script-mode script) mode)}
-  @argument[script]{a @symbol{cairo:device-t} instance}
-  @argument[mode]{a @symbol{cairo:script-mode-t} value}
+  @argument[script]{a @sym{cairo:device-t} instance}
+  @argument[mode]{a @sym{cairo:script-mode-t} value}
   @begin{short}
     The @fun{cairo:script-mode} function queries the script for its current
     output mode.
@@ -261,12 +261,12 @@ pop
 
 (defun script-surface-create (script content width height)
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[script]{a @symbol{cairo:device-t} instance}
-  @argument[content]{a @symbol{cairo:content-t} value}
+ "@version{2025-09-02}
+  @argument[script]{a @sym{cairo:device-t} instance}
+  @argument[content]{a @sym{cairo:content-t} value}
   @argument[width]{a number coerced to a double float for the width in pixels}
   @argument[height]{a number coerced to a double float for the height in pixels}
-  @return{The newly created @symbol{cairo:surface-t} instance.}
+  @return{The newly created @sym{cairo:surface-t} instance.}
   @begin{short}
     Creates a new surface that will emit its rendering through @arg{script}.
   @end{short}
@@ -296,10 +296,10 @@ pop
 (cffi:defcfun ("cairo_script_surface_create_for_target"
                script-surface-create-for-target) (:pointer (:struct surface-t))
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[script]{a @symbol{cairo:device-t} instance}
-  @argument[target]{a @symbol{cairo:surface-t} instance}
-  @return{The newly created @symbol{cairo:surface-t} instance.}
+ "@version{2025-09-02}
+  @argument[script]{a @sym{cairo:device-t} instance}
+  @argument[target]{a @sym{cairo:surface-t} instance}
+  @return{The newly created @sym{cairo:surface-t} instance.}
   @begin{short}
     Creates a proxy surface that will render to @arg{target} and record the
     operations to @arg{script}.
@@ -324,9 +324,9 @@ pop
 
 (defun script-write-comment (script comment)
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[script]{a @symbol{cairo:device-t} instance}
-  @argument[comment]{a string with the comment to emit}
+ "@version{2025-09-02}
+  @argument[script]{a @sym{cairo:device-t} instance}
+  @argument[comment]{a string for the comment to emit}
   @short{Emit a string verbatim into the script.}
   @see-symbol{cairo:device-t}"
   (cffi:foreign-funcall "cairo_script_write_comment"

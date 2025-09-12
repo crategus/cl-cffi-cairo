@@ -69,7 +69,7 @@
 (setf (liber:alias-for-symbol 'matrix-t)
       "CStruct"
       (liber:symbol-documentation 'matrix-t)
- "@version{2025-1-18}
+ "@version{2025-09-02}
   @begin{declaration}
 (cffi:defcstruct matrix-t
   (xx :double)
@@ -80,28 +80,28 @@
   (y0 :double))
   @end{declaration}
   @begin{values}
-    @begin[code]{table}
-      @entry[xx]{The double float with the xx component.}
-      @entry[yx]{The double float with the yx component.}
-      @entry[xy]{The double float with the xy component.}
-      @entry[yy]{The double float with the yy component.}
-      @entry[x0]{The double float with the x translation component.}
-      @entry[y0]{The double float with the y translation component.}
-    @end{table}
+    @begin[code]{simple-table}
+      @entry[xx]{The double float for the xx component.}
+      @entry[yx]{The double float for the yx component.}
+      @entry[xy]{The double float for the xy component.}
+      @entry[yy]{The double float for the yy component.}
+      @entry[x0]{The double float for the x translation component.}
+      @entry[y0]{The double float for the y translation component.}
+    @end{simple-table}
   @end{values}
   @begin{short}
-    The @symbol{cairo:matrix-t} structure holds an affine transformation, such
-    as a scale, rotation, shear, or a combination of those.
+    The @sym{cairo:matrix-t} structure holds an affine transformation, such as
+    a scale, rotation, shear, or a combination of those.
   @end{short}
   The transformation of a point @code{(x,y)} is given by:
   @begin{pre}
 xnew = xx * x + xy * y + x0
 ynew = yx * x + yy * y + y0
   @end{pre}
-  The current transformation matrix (CTM) of a @symbol{cairo:context-t}
-  instance, represented as a @symbol{cairo:matrix-t} structure, defines the
-  transformation from user space coordinates to device space coordinates. See
-  also the @fun{cairo:matrix} function.
+  The current transformation matrix (CTM) of a @sym{cairo:context-t} instance,
+  represented as a @sym{cairo:matrix-t} structure, defines the transformation
+  from user space coordinates to device space coordinates. See also the
+  @fun{cairo:matrix} function.
   @see-symbol{cairo:context-t}
   @see-function{cairo:matrix}")
 
@@ -111,13 +111,13 @@ ynew = yx * x + yy * y + y0
 
 (defmacro with-matrix ((var &rest args) &body body)
  #+liber-documentation
- "@version{2025-05-09}
+ "@version{2025-09-02}
   @syntax{(cairo:with-matrix (matrix) body) => result}
   @syntax{(cairo:with-matrix (matrix rad) body) => result}
   @syntax{(cairo:with-matrix (matrix :translate tx ty) body) => result}
   @syntax{(cairo:with-matrix (matrix :scale sx sy) body) => result}
   @syntax{(cairo:with-matrix (matrix xx yx xy yy x0 y0) body) => result}
-  @argument[matrix]{a @symbol{cairo:matrix-t} instance to create and initialize}
+  @argument[matrix]{a @sym{cairo:matrix-t} instance to create and initialize}
   @argument[rad]{a number coerced to a double float for the angle of rotation,
     in radians}
   @argument[tx]{a number for the amount to tanslate in the x direction}
@@ -131,7 +131,7 @@ ynew = yx * x + yy * y + y0
   @argument[x0]{a number for the x translation component of the transformation}
   @argument[y0]{a number for the y translation component of the transformation}
   @begin{short}
-    The @fun{cairo:with-matrix} macro allocates a new @symbol{cairo:matrix-t}
+    The @fun{cairo:with-matrix} macro allocates a new @sym{cairo:matrix-t}
     instance, initializes the matrix with the given values and executes the
     body that uses the matrix.
   @end{short}
@@ -191,10 +191,9 @@ ynew = yx * x + yy * y + y0
 
 (defmacro with-matrices (vars &body body)
  #+liber-documentation
- "@version{2025-1-18}
+ "@version{2025-09-02}
   @syntax{(cairo:with-matrices (matrix1 ... matrixn) body) => result}
-  @argument[matrix1 ... matrixn]{newly created @symbol{cairo:matrix-t}
-    instances}
+  @argument[matrix1 ... matrixn]{newly created @sym{cairo:matrix-t} instances}
   @argument[body]{a body that uses the bindings @arg{matrix1 ... matrixn}}
   @begin{short}
     The @fun{cairo:with-matrices} macro creates new variable bindings and
@@ -222,15 +221,15 @@ ynew = yx * x + yy * y + y0
 
 (defun matrix-init (matrix xx yx xy yy x0 y0)
  #+liber-documentation
- "@version{2025-1-18}
-  @argument[matrix]{a @symbol{cairo:matrix-t} instance to initialize}
-  @argument[xx]{a number with the xx component of the transformation}
-  @argument[yx]{a number with the yx component of the transformation}
-  @argument[xy]{a number with the xy component of the transformation}
-  @argument[yy]{a number with the yy component of the transformation}
-  @argument[x0]{a number with the x translation component of the transformation}
-  @argument[y0]{a number with the y translation component of the transformation}
-  @return{The initialized @symbol{cairo:matrix-t} instance.}
+ "@version{2025-01-18}
+  @argument[matrix]{a @sym{cairo:matrix-t} instance to initialize}
+  @argument[xx]{a number for the xx component of the transformation}
+  @argument[yx]{a number for the yx component of the transformation}
+  @argument[xy]{a number for the xy component of the transformation}
+  @argument[yy]{a number for the yy component of the transformation}
+  @argument[x0]{a number for the x translation component of the transformation}
+  @argument[y0]{a number for the y translation component of the transformation}
+  @return{The initialized @sym{cairo:matrix-t} instance.}
   @begin{short}
     Sets the matrix to be the affine transformation given by the @arg{xx},
     @arg{yx}, @arg{xy}, @arg{yy}, @arg{x0}, @arg{y0} arguments.
@@ -243,7 +242,7 @@ ynew = yx * x + yy * y + y0
   The @fun{cairo:with-matrix} and @fun{cairo:with-matrices} macros are more
   convenient for defining and initialising a matrix in one step.
   @begin[Examples]{dictionary}
-    The @symbol{cairo:matrix-t} structure is a foreign CFFI type. Therefore, to
+    The @sym{cairo:matrix-t} structure is a foreign CFFI type. Therefore, to
     create a matrix, we must define a foreign object:
     @begin{pre}
 (cffi:with-foreign-object (matrix '(:struct cairo:matrix-t))
@@ -284,10 +283,11 @@ ynew = yx * x + yy * y + y0
 
 (defun matrix-init-identity (matrix)
  #+liber-documentation
- "@version{2025-1-18}
-  @argument[matrix]{a @symbol{cairo:matrix-t} instance to initialize}
-  @return{The @symbol{cairo:matrix-t} instance set to be an identity
-    transformation.}
+ "@version{2025-09-01}
+  @argument[matrix]{a @sym{cairo:matrix-t} instance to initialize}
+  @begin{return}
+    The @sym{cairo:matrix-t} instance set to be an identity transformation.
+  @end{return}
   @begin{short}
     Modifies the matrix to be an identity transformation.
   @end{short}
@@ -315,13 +315,13 @@ ynew = yx * x + yy * y + y0
 
 (defun matrix-init-translate (matrix tx ty)
  #+liber-documentation
- "@version{2025-1-18}
-  @argument[matrix]{a @symbol{cairo:matrix-t} instance to initialize}
+ "@version{2025-09-02}
+  @argument[matrix]{a @sym{cairo:matrix-t} instance to initialize}
   @argument[tx]{a number coerced to a double float for the amount to
     tanslate in the x direction}
   @argument[ty]{a number coerced to a double float for the amount to
     tanslate in the y direction}
-  @return{The initialized @symbol{cairo:matrix-t} instance.}
+  @return{The initialized @sym{cairo:matrix-t} instance.}
   @begin{short}
     Initializes the matrix to a transformation that translates by @arg{tx}
     and @arg{ty} in the x and y dimensions, respectively.
@@ -352,13 +352,13 @@ ynew = yx * x + yy * y + y0
 
 (defun matrix-init-scale (matrix sx sy)
  #+liber-documentation
- "@version{2025-1-18}
-  @argument[matrix]{a @symbol{cairo:matrix-t} instance to initialize}
+ "@version{2025-09-02}
+  @argument[matrix]{a @sym{cairo:matrix-t} instance to initialize}
   @argument[sx]{a number coerced to a double float for the scale factor
     in the x direction}
   @argument[sy]{a number coerced to a double float for the scale factor
     in the y direction}
-  @return{The initialized @symbol{cairo:matrix-t} instance.}
+  @return{The initialized @sym{cairo:matrix-t} instance.}
   @begin{short}
     Initializes the matrix to a transformation that scales by @arg{sx} and
     @arg{sy} in the x and y dimensions, respectively.
@@ -388,11 +388,11 @@ ynew = yx * x + yy * y + y0
 
 (defun matrix-init-rotate (matrix angle)
  #+liber-documentation
- "@version{2025-1-18}
-  @argument[matrix]{a @symbol{cairo:matrix-t} instance to initialize}
+ "@version{2025-09-02}
+  @argument[matrix]{a @sym{cairo:matrix-t} instance to initialize}
   @argument[angle]{a number coerced to a double float for the angle of rotation,
     in radians}
-  @return{The initialized @symbol{cairo:matrix-t} instance.}
+  @return{The initialized @sym{cairo:matrix-t} instance.}
   @begin{short}
     Initializes the matrix to a transformation that rotates by @arg{angle}.
   @end{short}
@@ -425,8 +425,8 @@ ynew = yx * x + yy * y + y0
 
 (defun matrix-to-float (matrix)
  #+liber-documentation
- "@version{2025-1-18}
-  @argument[matrix]{a @symbol{cairo:matrix-t} instance}
+ "@version{2025-09-02}
+  @argument[matrix]{a @sym{cairo:matrix-t} instance}
   @return{The list with double floats for the components of the matrix.}
   @begin{short}
     Converts the matrix to a list of double floats.
@@ -446,13 +446,13 @@ ynew = yx * x + yy * y + y0
 
 (defun matrix-translate (matrix tx ty)
  #+liber-documentation
- "@version{2025-1-18}
-  @argument[matrix]{a @symbol{cairo:matrix-t} instance}
+ "@version{2025-09-02}
+  @argument[matrix]{a @sym{cairo:matrix-t} instance}
   @argument[tx]{a number coerced to a double float for the amount to
     tanslate in the x direction}
   @argument[ty]{a number coerced to a double float for the amount to
     tanslate in the y direction}
-  @return{The @symbol{cairo:matrix-t} instance with the applied translation.}
+  @return{The @sym{cairo:matrix-t} instance for the applied translation.}
   @begin{short}
     Applies a translation by @arg{tx}, @arg{ty} to the transformation in
     the matrix.
@@ -476,13 +476,13 @@ ynew = yx * x + yy * y + y0
 
 (defun matrix-scale (matrix sx sy)
  #+liber-documentation
- "@version{2025-1-18}
-  @argument[matrix]{a @symbol{cairo:matrix-t} instance}
+ "@version{2025-0ß9-02}
+  @argument[matrix]{a @sym{cairo:matrix-t} instance}
   @argument[sx]{a number coerced to a double float for the scale factor
     in the x direction}
   @argument[sy]{a number coerced to a double float for the scale factor
     in the y direction}
-  @return{The @symbol{cairo:matrix-t} instance with the applied scaling.}
+  @return{The @sym{cairo:matrix-t} instance for the applied scaling.}
   @begin{short}
     Applies scaling by @arg{sx} and @arg{sy} to the transformation in the
     matrix.
@@ -506,11 +506,11 @@ ynew = yx * x + yy * y + y0
 
 (defun matrix-rotate (matrix angle)
  #+liber-documentation
- "@version{2025-1-18}
-  @argument[matrix]{a @symbol{cairo:matrix-t} instance}
+ "@version{2025-09-02}
+  @argument[matrix]{a @sym{cairo:matrix-t} instance}
   @argument[angle]{a number coerced to a double float for the angle of rotation,
     in radians}
-  @return{The @symbol{cairo:matrix-t} instance with the applied rotation.}
+  @return{The @sym{cairo:matrix-t} instance for the applied rotation.}
   @begin{short}
     Applies rotation by @arg{angle} to the transformation in the matrix.
   @end{short}
@@ -536,10 +536,12 @@ ynew = yx * x + yy * y + y0
 
 (defun matrix-invert (matrix)
  #+liber-documentation
- "@version{2025-1-18}
-  @argument[matrix]{a @symbol{cairo:matrix-t} instance}
-  @return{The inversed @symbol{cairo:matrix-t} instance if @arg{matrix} has an
-    inverse, otherwise @code{nil}.}
+ "@version{2025-09-01}
+  @argument[matrix]{a @sym{cairo:matrix-t} instance}
+  @begin{return}
+    The inversed @sym{cairo:matrix-t} instance if @arg{matrix} has an inverse,
+    otherwise @code{nil}.
+  @end{return}
   @begin{short}
     Changes the matrix to be the inverse of its original value.
   @end{short}
@@ -561,11 +563,11 @@ ynew = yx * x + yy * y + y0
 
 (defun matrix-multiply (matrix a b)
  #+liber-documentation
- "@version{2025-1-18}
-  @argument[matrix]{a @symbol{cairo:matrix-t} instance for the result}
-  @argument[a]{a @symbol{cairo:matrix-t} instance}
-  @argument[b]{a @symbol{cairo:matrix-t} instance}
-  @return{The @symbol{cairo:matrix-t} instance with the result.}
+ "@version{2025-09-02}
+  @argument[matrix]{a @sym{cairo:matrix-t} instance for the result}
+  @argument[a]{a @sym{cairo:matrix-t} instance}
+  @argument[b]{a @sym{cairo:matrix-t} instance}
+  @return{The @sym{cairo:matrix-t} instance for the result.}
   @begin{short}
     Multiplies the affine transformations in @arg{a} and @arg{b} together,
   @end{short}
@@ -590,9 +592,9 @@ ynew = yx * x + yy * y + y0
 
 (defun matrix-transform-distance (matrix dx dy)
  #+liber-documentation
- "@version{2025-1-18}
+ "@version{2025-09-02}
   @syntax{(cairo:transform-distance matrix dx dy) => tdx, tdy}
-  @argument[matrix]{a @symbol{cairo:matrix-t} instance}
+  @argument[matrix]{a @sym{cairo:matrix-t} instance}
   @argument[dx]{a number coerced to a double float for the x component of
     a distance vector}
   @argument[dy]{a number coerced to a double float for the y component of
@@ -635,9 +637,9 @@ tdy = dx * b + dy * d
 
 (defun matrix-transform-point (matrix x y)
  #+liber-documentation
- "@version{2025-1-18}
+ "@version{2025-09-02}
   @syntax{(cairo:transform-distance matrix x y) => tx, ty}
-  @argument[matrix]{a @symbol{cairo:matrix-t} instance}
+  @argument[matrix]{a @sym{cairo:matrix-t} instance}
   @argument[x]{a number coerced to a double float for the x position}
   @argument[y]{a number coerced to a double float for the y position}
   @argument[tx]{a double float for the transformed x position}

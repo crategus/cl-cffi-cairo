@@ -67,7 +67,7 @@
 (setf (liber:alias-for-symbol 'font-type-t)
       "CEnum"
       (liber:symbol-documentation 'font-type-t)
- "@version{2025-1-29}
+ "@version{2025-09-02}
   @begin{declaration}
 (cffi:defcenum font-type-t
   :toy
@@ -78,18 +78,18 @@
   :dwrite)
   @end{declaration}
   @begin{values}
-    @begin[code]{table}
+    @begin[code]{simple-table}
       @entry[:toy]{The font was created using Cairo's toy font API.}
       @entry[:ft]{The font is of type FreeType.}
       @entry[:win32]{The font is of type Win32.}
       @entry[:quartz]{The font is of type Quartz.}
       @entry[:user]{The font was created using Cairo's user font API.}
       @entry[:dwrite]{The font is of type Win32 DWrite. Since 1.18}
-    @end{table}
+    @end{simple-table}
   @end{values}
   @begin{short}
-    The @symbol{cairo:font-type-t} enumeration is used to describe the type of
-    a given font face or scaled font.
+    The @sym{cairo:font-type-t} enumeration is used to describe the type of a
+    given font face or scaled font.
   @end{short}
   The font types are also known as \"font backends\" within Cairo.
 
@@ -129,10 +129,10 @@
 (setf (liber:alias-for-symbol 'font-face-t)
       "CStruct"
       (liber:symbol-documentation 'font-face-t)
- "@version{2025-1-29}
+ "@version{2025-09-02}
   @begin{short}
-    The @symbol{cairo:font-face-t} structure specifies all aspects of a font
-    other than the size or font matrix.
+    The @sym{cairo:font-face-t} structure specifies all aspects of a font other
+    than the size or font matrix.
   @end{short}
   A font matrix is used to distort a font by sheering it or scaling it unequally
   in the two directions. A font face can be set on a Cairo context by using the
@@ -143,7 +143,7 @@
   use. The type of a font face can be queried using the
   @fun{cairo:font-face-type} function.
 
-  Memory management of the @symbol{cairo:font-face-t} structure is done with the
+  Memory management of the @sym{cairo:font-face-t} structure is done with the
   @fun{cairo:font-face-reference} and @fun{cairo:font-face-destroy} functions.
   @see-symbol{cairo:context-t}
   @see-fun{cairo:font-face}
@@ -163,17 +163,17 @@
 
 (defun font-face-reference (face)
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[face]{a @symbol{cairo:font-face-t} instance, may be @code{nil} in
-    which case this function does nothing}
-  @return{The referenced @symbol{cairo:font-face-t} instance.}
+ "@version{2025-09-02}
+  @argument[face]{a @sym{cairo:font-face-t} instance, may be @code{nil} in which
+    case this function does nothing}
+  @return{The referenced @sym{cairo:font-face-t} instance.}
   @begin{short}
     Increases the reference count on @arg{face} by one.
   @end{short}
   This prevents the font face from being destroyed until a matching call to the
   @fun{cairo:font-face-destroy} function is made.
 
-  The number of references to a @symbol{cairo:font-face-t} instance can be get
+  The number of references to a @sym{cairo:font-face-t} instance can be get
   using the @fun{cairo:font-face-reference-count} function.
   @see-symbol{cairo:font-face-t}
   @see-function{cairo:font-face-destroy}
@@ -190,10 +190,10 @@
 (cffi:defcfun ("cairo_font_face_get_reference_count" font-face-reference-count)
     :uint
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[face]{a @symbol{cairo:font-face-t} instance}
+ "@version{2025-09-02}
+  @argument[face]{a @sym{cairo:font-face-t} instance}
   @begin{return}
-    The unsigned integer with the current reference count of @arg{face}. If the
+    The unsigned integer for the current reference count of @arg{face}. If the
     object is a \"nil\" object, 0 will be returned.
   @end{return}
   @begin{short}
@@ -210,8 +210,8 @@
 
 (cffi:defcfun ("cairo_font_face_destroy" font-face-destroy) :void
   #+liber-documentation
-  "@version{2025-1-29}
-  @argument[face]{a @symbol{cairo:font-face-t} instance}
+  "@version{2025-09-02}
+  @argument[face]{a @sy{cairo:font-face-t} instance}
   @begin{short}
     Decreases the reference count on @arg{face} by one.
   @end{short}
@@ -229,10 +229,10 @@
 
 (cffi:defcfun ("cairo_font_face_status" font-face-status) status-t
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[face]{a @symbol{cairo:font-face-t} instance}
+ "@version{2025-09-02}
+  @argument[face]{a @sym{cairo:font-face-t} instance}
   @begin{return}
-    The @code{:success} value of the @symbol{cairo:status-t} enumeration or
+    The @code{:success} value of the @sym{cairo:status-t} enumeration or
     another error such as the @code{:no-memory} value.
   @end{return}
   @begin{short}
@@ -250,13 +250,13 @@
 
 (cffi:defcfun ("cairo_font_face_get_type" font-face-type) font-type-t
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[face]{a @symbol{cairo:font-face-t} font face}
-  @return{The @symbol{cairo:font-type-t} value with the type of @arg{face}.}
+ "@version{2025-09-02}
+  @argument[face]{a @sym{cairo:font-face-t} font face}
+  @return{The @sym{cairo:font-type-t} value for the type of @arg{face}.}
   @begin{short}
     This function returns the type of the backend used to create a font face.
   @end{short}
-  See the @symbol{cairo:font-type-t} enumeration for available types.
+  See the @sym{cairo:font-type-t} enumeration for available types.
   @see-symbol{cairo:font-face-t}
   @see-symbol{cairo:font-type-t}"
   (face (:pointer (:struct font-face-t))))

@@ -46,19 +46,19 @@
 
 (defmacro with-recording-surface ((surface content &rest args) &body body)
  #+liber-documentation
- "@version{2025-1-29}
+ "@version{2025-09-02}
   @syntax{(cairo:with-recording-surface (surface content) body) => result}
   @syntax{(cairo:with-recording-surface (surface content x y width height)
     body) => result}
-  @argument[surface]{a newly allocated @symbol{cairo:surface-t} instance}
-  @argument[content]{a @symbol{cairo:content-t} value}
+  @argument[surface]{a newly allocated @sym{cairo:surface-t} instance}
+  @argument[content]{a @sym{cairo:content-t} value}
   @argument[x]{a number coerced to a double float for the x coordinate}
   @argument[y]{a number coerced to a double float for the y coordinate}
   @argument[width]{a number coerced to a double float for the width in pixels}
   @argument[height]{a number coerced to a double float for the height in pixels}
   @begin{short}
     The @fun{cairo:with-recording-surface} macro allocates a new
-    @symbol{cairo:surface-t} instance and executes the body that uses the Cairo
+    @sym{cairo:surface-t} instance and executes the body that uses the Cairo
     surface.
   @end{short}
   After execution of the body the allocated memory for the Cairo surface is
@@ -98,22 +98,21 @@
 
 (defmacro with-context-for-recording-surface ((context &rest args) &body body)
  #+liber-documentation
- "@version{2025-1-29}
+ "@version{2025-09-02}
   @syntax{(cairo:with-context-for-recording-surface (context content) body)
     => result}
   @syntax{(cairo:with-context-for-recording-surface (context content x y
     width height) body) => result}
-  @argument[context]{a @symbol{cairo:context-t} instance to create and
-    initialize}
-  @argument[content]{a @symbol{cairo:content-t} value}
+  @argument[context]{a @sym{cairo:context-t} instance to create and initialize}
+  @argument[content]{a @sym{cairo:content-t} value}
   @argument[x]{a number coerced to a double float for the x coordinate}
   @argument[y]{a number coerced to a double float for the y coordinate}
   @argument[width]{a number coerced to a double float for the width in pixels}
   @argument[height]{a number coerced to a double float for the height in pixels}
   @begin{short}
     The @fun{cairo:with-context-for-recording-surface} macro allocates a new
-    @symbol{cairo:context-t} instance, initializes the Cairo context with the
-    given values and executes the body that uses the Cairo context.
+    @sym{cairo:context-t} instance, initializes the Cairo context with the given
+    values and executes the body that uses the Cairo context.
   @end{short}
   After execution of the body the allocated memory for the Cairo surface is
   released. See the documentation of the @fun{cairo:recording-surface-create}
@@ -144,15 +143,15 @@
                                               (width 0.0d0 width-supplied-p)
                                               (height 0.0d0 height-supplied-p))
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[content]{a @symbol{cairo:content-t} value}
+ "@version{2025-09-02}
+  @argument[content]{a @sym{cairo:content-t} value}
   @argument[x]{a number coerced to a double float for the x coordinate in
     pixels}
   @argument[y]{a number coerced to a double float for the y coordinate in
     pixels}
   @argument[width]{a number coerced to a double float for the width in pixels}
   @argument[height]{a number coerced to a double float for the height in pixels}
-  @return{The newly created @symbol{cairo:surface-t} instance.}
+  @return{The newly created @sym{cairo:surface-t} instance.}
   @begin{short}
     Creates a recording surface which can be used to record all drawing
     operations at the highest level, that is, the level of paint, mask, stroke,
@@ -202,16 +201,16 @@
 
 (defun recording-surface-ink-extents (surface)
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
+ "@version{2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
   @begin{return}
-    @arg{x} -- a double float with the x coordinate of the top-left of the ink
+    @arg{x} -- a double float for the x coordinate of the top-left of the ink
     bounding box @br{}
-    @arg{y} -- a double float with the y coordinate of the top-left of the ink
+    @arg{y} -- a double float for the y coordinate of the top-left of the ink
     bounding box @br{}
-    @arg{width} -- a double float with the width of the the ink bounding box
+    @arg{width} -- a double float for the width of the the ink bounding box
     @br{}
-    @arg{height} -- a double float with the height of the the ink bounding box
+    @arg{height} -- a double float for the height of the the ink bounding box
   @end{return}
   @begin{short}
     Measures the extents of the operations stored within the recording surface.
@@ -240,15 +239,15 @@
 
 (defun recording-surface-extents (surface)
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
+ "@version{2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
   @begin{return}
-    @arg{x} -- a double float with the x coordinate of the top-left of the
+    @arg{x} -- a double float for the x coordinate of the top-left of the
     bounding box @br{}
-    @arg{y} -- a double float with the y coordinate of the top-left of the
+    @arg{y} -- a double float for the y coordinate of the top-left of the
     bounding box @br{}
-    @arg{width} -- a double float with the width of the the bounding box @br{}
-    @arg{height} -- a double float with the height of the the bounding box
+    @arg{width} -- a double float for the width of the the bounding box @br{}
+    @arg{height} -- a double float for the height of the the bounding box
   @end{return}
   @begin{short}
     Get the extents of the recording surface.

@@ -102,7 +102,7 @@
 (setf (liber:alias-for-symbol 'extend-t)
       "CEnum"
       (liber:symbol-documentation 'extend-t)
- "@version{2025-1-14}
+ "@version{2025-09-02}
   @begin{declaration}
 (cffi:defcenum extend-t
   :none
@@ -111,16 +111,16 @@
   :pad)
   @end{declaration}
   @begin{values}
-    @begin[code]{table}
+    @begin[code]{simple-table}
       @entry[:none]{Pixels outside of the source pattern are fully transparent.}
       @entry[:repeat]{The pattern is tiled by repeating.}
       @entry[:reflect]{The pattern is tiled by reflecting at the edges.}
       @entry[:pad]{Pixels outside of the pattern copy the closest pixel from the
         source.}
-    @end{table}
+    @end{simple-table}
   @end{values}
   @begin{short}
-    The @symbol{cairo:extend-t} enumeration is used to describe how pattern
+    The @sym{cairo:extend-t} enumeration is used to describe how pattern
     color/alpha will be determined for areas \"outside\" the natural area, of
     the pattern for example, outside the surface bounds or outside the gradient
     geometry.
@@ -150,7 +150,7 @@
 (setf (liber:alias-for-symbol 'filter-t)
       "CEnum"
       (liber:symbol-documentation 'filter-t)
- "@version{2025-1-14}
+ "@version{2025-09-02}
   @begin{declaration}
 (cffi:defcenum filter-t
   :fast
@@ -161,7 +161,7 @@
   :gaussian)
   @end{declaration}
   @begin{values}
-    @begin[code]{table}
+    @begin[code]{simple-table}
       @entry[:fast]{A high-performance filter, with quality similar to
         @code{:nearest}.}
       @entry[:good]{A reasonable-performance filter, with quality similar to
@@ -172,10 +172,10 @@
       @entry[:bilinear]{Linear interpolation in two dimensions.}
       @entry[:gaussian]{This filter value is currently unimplemented, and
         should not be used in current code.}
-  @end{table}
+  @end{simple-table}
   @end{values}
   @begin{short}
-    The @symbol{cairo:filter-t} enumeration is used to indicate what filtering
+    The @sym{cairo:filter-t} enumeration is used to indicate what filtering
     should be applied when reading pixel values from patterns.
   @end{short}
   See the @fun{cairo:pattern-filter} function for indicating the desired filter
@@ -201,7 +201,7 @@
 (setf (liber:alias-for-symbol 'pattern-type-t)
       "CEnum"
       (liber:symbol-documentation 'pattern-type-t)
- "@version{2025-1-14}
+ "@version{2025-09-02}
   @begin{declaration}
 (cffi:defcenum pattern-type-t
   :solid
@@ -212,7 +212,7 @@
   :raster-source)
   @end{declaration}
   @begin{values}
-    @begin[code]{table}
+    @begin[code]{simple-table}
       @entry[:solid]{The pattern is a solid (uniform) color. It may be opaque
         or translucent.}
       @entry[:surface]{The pattern is a based on a surface (an image).}
@@ -221,11 +221,11 @@
       @entry[:mesh]{The pattern is a mesh.}
       @entry[:raster-source]{The pattern is a user pattern providing raster
         data.}
-  @end{table}
+  @end{simple-table}
   @end{values}
   @begin{short}
-    The @symbol{cairo:pattern-type-t} enumeration is used to describe the type
-    of a given pattern.
+    The @sym{cairo:pattern-type-t} enumeration is used to describe the type of
+    a given pattern.
   @end{short}
   The type of a pattern is determined by the function used to create it. The
   @fun{cairo:pattern-create-rgb} and @fun{cairo:pattern-create-rgba} functions
@@ -258,12 +258,12 @@
 (setf (liber:alias-for-symbol 'pattern-t)
       "CStruct"
       (liber:symbol-documentation 'pattern-t)
- "@version{2025-1-14}
+ "@version{2025-09-02}
   @begin{short}
-    The @symbol{cairo:pattern-t} structure represents a source when drawing onto
+    The @sym{cairo:pattern-t} structure represents a source when drawing onto
     a surface.
   @end{short}
-  There are different subtypes of @symbol{cairo:pattern-t} structures, for
+  There are different subtypes of @sym{cairo:pattern-t} structures, for
   different types of sources, for example, the @fun{cairo:pattern-create-rgb}
   function creates a pattern for a solid opaque color.
 
@@ -275,7 +275,7 @@
   The type of a pattern can be queried with the @fun{cairo:pattern-type}
   function.
 
-  Memory management of the @symbol{cairo:pattern-t} structure is done with the
+  Memory management of the @sym{cairo:pattern-t} structure is done with the
   @fun{cairo:pattern-reference} and @fun{cairo:pattern-destroy} functions.
   @see-function{cairo:pattern-create-rgb}
   @see-function{cairo:set-source-rgb}
@@ -292,16 +292,16 @@
 (cffi:defcfun ("cairo_pattern_reference" pattern-reference)
     (:pointer (:struct pattern-t))
  #+liber-documentation
- "@version{2025-1-14}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
-  @return{The referenced @symbol{cairo:pattern-t} instance.}
+ "@version{2025-09-02}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
+  @return{The referenced @sym{cairo:pattern-t} instance.}
   @begin{short}
     Increases the reference count on @arg{pattern} by one.
   @end{short}
   This prevents @arg{pattern} from being destroyed until a matching call to
   the @fun{cairo:pattern-destroy} function is made.
 
-  The number of references to a @symbol{cairo:pattern-t} can be get using the
+  The number of references to a @sym{cairo:pattern-t} can be get using the
   @fun{cairo:pattern-reference-count} function.
   @see-symbol{cairo:pattern-t}
   @see-function{cairo:pattern-destroy}
@@ -317,10 +317,11 @@
 (cffi:defcfun ("cairo_pattern_get_reference_count" pattern-reference-count)
     :uint
  #+liber-documentation
- "@version{2025-1-14}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
-  @return{The unsigned integer with the current reference count of
-    @arg{pattern}.}
+ "@version{2025-09-01}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
+  @begin{return}
+    The unsigned integer for the current reference count of @arg{pattern}.
+  @end{return}
   @begin{short}
     Returns the current reference count of @arg{pattern}.
   @end{short}
@@ -336,8 +337,8 @@
 
 (cffi:defcfun ("cairo_pattern_destroy" pattern-destroy) :void
  #+liber-documentation
- "@version{2025-1-14}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
+ "@version{2025-09-02}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @begin{short}
     Decreases the reference count on @arg{pattern} by one.
   @end{short}
@@ -355,9 +356,9 @@
 
 (cffi:defcfun ("cairo_pattern_status" pattern-status) status-t
  #+liber-documentation
- "@version{2025-1-14}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
-  @return{The @symbol{cairo:status-t} value.}
+ "@version{2025-09-02}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
+  @return{The @sym{cairo:status-t} value.}
   @begin{short}
     Checks whether an error has previously occurred for this pattern.
   @end{short}
@@ -376,13 +377,13 @@
 
 (cffi:defcfun ("cairo_pattern_get_type" pattern-type) pattern-type-t
  #+liber-documentation
- "@version{2025-1-14}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
-  @return{The @symbol{cairo:pattern-type-t} value.}
+ "@version{2025-09-02}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
+  @return{The @sym{cairo:pattern-type-t} value.}
   @begin{short}
     This function returns the type of a pattern.
   @end{short}
-  See the @symbol{cairo:pattern-type-t} enumeration for available types.
+  See the @sym{cairo:pattern-type-t} enumeration for available types.
   @see-symbol{cairo:pattern-t}
   @see-symbol{cairo:pattern-type-t}"
   (pattern (:pointer (:struct pattern-t))))
@@ -403,18 +404,18 @@
 
 (cffi:defcfun ("cairo_pattern_get_extend" pattern-extend) extend-t
  #+liber-documentation
- "@version{2025-1-14}
+ "@version{2025-09-02}
   @syntax{(cairo:pattern-extend pattern) => extend}
   @syntax{(setf (cairo:pattern-extend pattern) extend)}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
-  @argument[extend]{a @symbol{cairo:extend-t} value describing how the area
-    outside of the pattern will be drawn}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
+  @argument[extend]{a @sym{cairo:extend-t} value describing how the area outside
+    of the pattern will be drawn}
   @begin{short}
     The @fun{cairo:pattern-extend} function gets the current extend mode for a
     pattern.
   @end{short}
   The @setf{cairo:pattern-extend} function sets the mode to be used for drawing
-  outside the area of a pattern. See the @symbol{cairo:extend-t} enumeration for
+  outside the area of a pattern. See the @sym{cairo:extend-t} enumeration for
   details on the semantics of each extend strategy.
 
   The default extend mode is @code{:none} for surface patterns and @code{:pad}
@@ -439,22 +440,22 @@
 
 (cffi:defcfun ("cairo_pattern_get_filter" pattern-filter) filter-t
  #+liber-documentation
- "@version{2025-1-14}
+ "@version{2025-09-02}
   @syntax{(cairo:pattern-filter pattern) => filter}
   @syntax{(setf (cairo:filter-extend pattern) filter)}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
-  @argument[filter]{a @symbol{cairo:filter-t} value describing the filter to
-    use for resizing the pattern}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
+  @argument[filter]{a @sym{cairo:filter-t} value describing the filter to use
+    for resizing the pattern}
   @begin{short}
     The @fun{cairo:pattern-filter} function gets the current filter for
     @arg{pattern}.
   @end{short}
   The @setf{cairo:pattern-filter} function sets the filter to be used for
-  resizing when using the pattern. See the @symbol{cairo:filter-t} enumeration
-  for details on each filter.
+  resizing when using the pattern. See the @sym{cairo:filter-t} enumeration for
+  details on each filter.
 
   Note that you might want to control filtering even when you do not have an
-  explicit @symbol{cairo:pattern-t} instance, for example when using the
+  explicit @sym{cairo:pattern-t} instance, for example when using the
   @fun{cairo:set-source-surface} function. In these cases, it is convenient to
   use the @fun{cairo:source} function to get access to the pattern that Cairo
   creates implicitly. For example:
@@ -482,11 +483,11 @@
 
 (defun pattern-matrix (pattern matrix)
  #+liber-documentation
- "@version{2025-1-14}
+ "@version{2025-09-02}
   @syntax{(cairo:pattern-matrix pattern matrix) => matrix}
   @syntax{(setf (cairo:filter-matrix pattern) matrix)}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
-  @argument[matrix]{a @symbol{cairo:matrix-t} instance}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
+  @argument[matrix]{a @sym{cairo:matrix-t} instance}
   @begin{short}
     The @fun{cairo:pattern-matrix} function gets the transformation matrix of
     the pattern.
@@ -540,8 +541,8 @@
 
 (defun pattern-add-color-stop-rgb (pattern offset red green blue)
  #+liber-documentation
- "@version{2025-1-14}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
+ "@version{2025-09-02}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @argument[offset]{a number for an offset in the range [0.0 .. 1.0]}
   @argument[red]{a number for the red component of the color}
   @argument[green]{a number for the green component of the color}
@@ -595,8 +596,8 @@
 
 (defun pattern-add-color-stop-rgba (pattern offset red green blue alpha)
  #+liber-documentation
- "@version{2025-1-14}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
+ "@version{2025-09-02}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @argument[offset]{a number for an offset in the range [0.0 .. 1.0]}
   @argument[red]{a number for the red component of the color}
   @argument[green]{a number for the green component of the color}
@@ -646,9 +647,9 @@
 
 (defun pattern-color-stop-count (cr)
  #+liber-documentation
- "@version{2025-1-14}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
-  @return{The integer with the number of color stops.}
+ "@version{2025-09-02}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
+  @return{The integer for the number of color stops.}
   @begin{short}
     Gets the number of color stops specified in the given gradient pattern.
   @end{short}
@@ -676,8 +677,8 @@
 
 (defun pattern-color-stop-rgba (pattern index)
  #+liber-documentation
- "@version{2025-1-14}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
+ "@version{2025-09-02}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @argument[index]{an integer for the index of the stop to return data for}
   @begin{return}
     @arg{offset} -- a number for the offset of the stop @br{}
@@ -730,16 +731,16 @@
 
 (defun pattern-create-rgb (red green blue)
  #+liber-documentation
- "@version{2025-1-14}
+ "@version{2025-09-02}
   @argument[red]{a number for the red component of the color}
   @argument[green]{a number for the green component of the color}
   @argument[blue]{a number for the blue component of the color}
   @begin{return}
-    The newly created @symbol{cairo:pattern-t} instance if successful, or an
-    error pattern in case of no memory.
+    The newly created @sym{cairo:pattern-t} instance if successful, or an error
+    pattern in case of no memory.
   @end{return}
   @begin{short}
-    Creates a new @symbol{cairo:pattern-t} instance corresponding to an opaque
+    Creates a new @sym{cairo:pattern-t} instance corresponding to an opaque
     color.
   @end{short}
   The caller owns the returned object and should call the
@@ -776,18 +777,18 @@
 
 (defun pattern-create-rgba (red green blue alpha)
  #+liber-documentation
- "@version{2025-1-14}
+ "@version{2025-09-02}
   @argument[red]{a number for the red component of the color}
   @argument[green]{a number for the green component of the color}
   @argument[blue]{a number for the blue component of the color}
   @argument[alpha]{a number for the alpha component of the color}
   @begin{return}
-    The newly created @symbol{cairo:pattern-t} instance if successful, or an
-    error pattern in case of no memory.
+    The newly created @sym{cairo:pattern-t} instance if successful, or an error
+    pattern in case of no memory.
   @end{return}
   @begin{short}
-    Creates a new @symbol{cairo:pattern-t} instance corresponding to a
-    translucent color.
+    Creates a new @sym{cairo:pattern-t} instance corresponding to a translucent
+    color.
   @end{short}
   The caller owns the returned object and should call the
   @fun{cairo:pattern-destroy} function when finished with it. This function will
@@ -824,8 +825,8 @@
 
 (defun pattern-rgba (pattern)
  #+liber-documentation
- "@version{2025-1-19}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
+ "@version{2025-09-02}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @begin{return}
     @arg{red} -- a number for the red component of the color @br{}
     @arg{green} -- a number for the green component of the color @br{}
@@ -859,15 +860,15 @@
 (cffi:defcfun ("cairo_pattern_create_for_surface" pattern-create-for-surface)
     (:pointer (:struct pattern-t))
  #+liber-documentation
- "@version{2025-1-19}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
+ "@version{2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
   @begin{return}
-    The newly created @symbol{cairo:pattern-t} instance if successful, or an
-    error pattern in case of no memory. The caller owns the returned object and
-    should call the @fun{cairo:pattern-destroy} function when finished with it.
+    The newly created @sym{cairo:pattern-t} instance if successful, or an error
+    pattern in case of no memory. The caller owns the returned object and should
+    call the @fun{cairo:pattern-destroy} function when finished with it.
   @end{return}
   @begin{short}
-    Create a new @symbol{cairo:pattern-t} instance for the given surface.
+    Create a new @sym{cairo:pattern-t} instance for the given surface.
   @end{short}
   This function will always return a valid pattern, but if an error occurred the
   pattern status will be set to an error. To inspect the status of a pattern use
@@ -890,9 +891,9 @@
 
 (defun pattern-surface (pattern)
  #+liber-documentation
- "@version{2025-1-19}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
-  @return{The @symbol{cairo:surface-t} instance of the pattern.}
+ "@version{2025-09-02}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
+  @return{The @sym{cairo:surface-t} instance for the pattern.}
   @begin{short}
     Gets the surface of a surface pattern.
   @end{short}
@@ -923,20 +924,19 @@
 
 (defun pattern-create-linear (x0 y0 x1 y1)
  #+liber-documentation
- "@version{2025-1-19}
+ "@version{2025-09-02}
   @argument[x0]{a number for the x coordinate of the start point}
   @argument[y0]{a number for the y coordinate of the start point}
   @argument[x1]{a number for the x coordinate of the end point}
   @argument[y1]{a number for the y coordinate of the end point}
   @begin{return}
-    The newly created @symbol{cairo:pattern-t} instance if successful, or an
-    error pattern in case of no memory. The caller owns the returned instance
-    and should call the @fun{cairo:pattern-destroy} function when finished with
-    it.
+    The newly created @sym{cairo:pattern-t} instance if successful, or an error
+    pattern in case of no memory. The caller owns the returned instance and
+    should call the @fun{cairo:pattern-destroy} function when finished with it.
   @end{return}
   @begin{short}
-    Create a new linear gradient @symbol{cairo:pattern-t} instance along the
-    line defined by @code{(x0,y0)} and @code{(x1,y1)}.
+    Create a new linear gradient @sym{cairo:pattern-t} instance along the line
+    defined by @code{(x0,y0)} and @code{(x1,y1)}.
   @end{short}
   This function will always return a valid patttern, but if an error occurred
   the pattern status will be set to an error. To inspect the status of a pattern
@@ -981,8 +981,8 @@
 
 (defun pattern-linear-points (pattern)
  #+liber-documentation
- "@version{2025-1-19}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
+ "@version{2025-09-02}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @begin{return}
     @arg{x0} -- a number for the x coordinate of the first point @br{}
     @arg{y0} -- a number for the y coordinate of the first point @br{}
@@ -1025,7 +1025,7 @@
 
 (defun pattern-create-radial (x0 y0 r0 x1 y1 r1)
  #+liber-documentation
- "@version{2025-1-19}
+ "@version{2025-09-02}
   @argument[x0]{a number for the x coordinate for the center of the start
     circle}
   @argument[y0]{a number for the y coordinate for the center of the start
@@ -1035,13 +1035,13 @@
   @argument[y1]{a number for the y coordinate for the center of the end circle}
   @argument[r1]{a number for the radius of the end circle}
   @begin{return}
-    The newly created @symbol{cairo:pattern-t} instance if successful, or an
-    error pattern in case of no memory. The caller owns the returned object and
-    should call the @fun{cairo:pattern-destroy} function when finished with it.
+    The newly created @sym{cairo:pattern-t} instance if successful, or an error
+    pattern in case of no memory. The caller owns the returned object and should
+    call the @fun{cairo:pattern-destroy} function when finished with it.
   @end{return}
   @begin{short}
-    Creates a new radial gradient @symbol{cairo:pattern-t} instance between the
-    two circles defined by @code{x0,y0,r0)} and @code{(x1,y1,r1)}.
+    Creates a new radial gradient @sym{cairo:pattern-t} instance between the two
+    circles defined by @code{x0,y0,r0)} and @code{(x1,y1,r1)}.
   @end{short}
   This function will always return a valid pattern, but if an error occurred the
   pattern status will be set to an error. To inspect the status of a pattern use
@@ -1090,19 +1090,19 @@
 
 (defun pattern-radial-circles (pattern)
  #+liber-documentation
- "@version{2025-1-19}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
+ "@version{2025-09-02}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @begin{return}
-    @arg{x0} -- a number with the x coordinate for the center of the first
+    @arg{x0} -- a number for the x coordinate for the center of the first
       circle @br{}
-    @arg{y0} -- a number with the y coordinate for the center of the first
+    @arg{y0} -- a number for the y coordinate for the center of the first
       circle @br{}
-    @arg{r0} -- a number with the radius for the first circle  @br{}
-    @arg{x1} -- a number with the x coordinate for the center of the second
+    @arg{r0} -- a number for the radius for the first circle  @br{}
+    @arg{x1} -- a number for the x coordinate for the center of the second
       circle @br{}
-    @arg{y1} -- a numbe with the y coordinate for the center of the second
+    @arg{y1} -- a numbe for the y coordinate for the center of the second
       circle @br{}
-    @arg{r1} -- a number with the radius for the second circle
+    @arg{r1} -- a number for the radius for the second circle
   @end{return}
   @begin{short}
     Gets the gradient endpoint circles for a radial gradient, each specified as
@@ -1133,11 +1133,11 @@
 (cffi:defcfun ("cairo_pattern_create_mesh" pattern-create-mesh)
     (:pointer (:struct pattern-t))
  #+liber-documentation
- "@version{2025-1-19}
+ "@version{2025-09-02}
   @begin{return}
-   The newly created @symbol{cairo:pattern-t} instance if successful, or an
-   error pattern in case of no memory. The caller owns the returned object and
-   should call the @fun{cairo:pattern-destroy} function when finished with it.
+   The newly created @sym{cairo:pattern-t} instance if successful, or an error
+   pattern in case of no memory. The caller owns the returned object and should
+   call the @fun{cairo:pattern-destroy} function when finished with it.
   @end{return}
   @begin{short}
     Create a new mesh pattern.
@@ -1306,8 +1306,8 @@ Side 0 |               | Side 2
 
 (cffi:defcfun ("cairo_mesh_pattern_begin_patch" mesh-pattern-begin-patch) :void
  #+liber-documentation
- "@version{2025-1-19}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
+ "@version{2025-09-02}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @begin{short}
     Begin a patch in a mesh pattern.
   @end{short}
@@ -1338,8 +1338,8 @@ Side 0 |               | Side 2
 
 (cffi:defcfun ("cairo_mesh_pattern_end_patch" mesh-pattern-end-patch) :void
  #+liber-documentation
- "@version{2025-1-19}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
+ "@version{2025-09-02}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @begin{short}
     Indicates the end of the current patch in a mesh pattern.
   @end{short}
@@ -1366,12 +1366,12 @@ Side 0 |               | Side 2
 
 (defun mesh-pattern-move-to (pattern x y)
  #+liber-documentation
- "@version{2025-1-19}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
-  @argument[x]{a number coerced to a double float for the x coordinate of
-    the new position}
-  @argument[y]{a number coerced to a double float for the y coordinate of
-    the new position}
+ "@version{2025-09-02}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
+  @argument[x]{a number coerced to a double float for the x coordinate of the
+    new position}
+  @argument[y]{a number coerced to a double float for the y coordinate of the
+    new position}
   @begin{short}
     Define the first point of the current patch in a mesh pattern.
   @end{short}
@@ -1398,12 +1398,12 @@ Side 0 |               | Side 2
 
 (defun mesh-pattern-line-to (pattern x y)
  #+liber-documentation
- "@version{2025-1-19}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
-  @argument[x]{a number coerced to a double float for the x coordinate of
-    the end of the new line}
-  @argument[y]{a number coerced to a double float for the y coordinate of
-    the end of the new line}
+ "@version{2025-09-02}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
+  @argument[x]{a number coerced to a double float for the x coordinate of the
+    end of the new line}
+  @argument[y]{a number coerced to a double float for the y coordinate of the
+    end of the new line}
   @begin{short}
     Adds a line to the current patch from the current point to position
     @code{(x,y)} in pattern-space coordinates.
@@ -1438,8 +1438,8 @@ Side 0 |               | Side 2
 
 (defun mesh-pattern-curve-to (pattern x1 y1 x2 y2 x3 y3)
  #+liber-documentation
- "@version{2025-1-19}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
+ "@version{2025-09-02}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @argument[x1]{a number for the x coordinate of the first control point}
   @argument[y1]{a number for the y coordinate of the first control point}
   @argument[x2]{a number for the x coordinate of the second control point}
@@ -1498,14 +1498,14 @@ Side 0 |               | Side 2
 
 (defun mesh-pattern-control-point (pattern index point)
  #+liber-documentation
- "@version{2025-1-19}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
+ "@version{2025-09-02}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @argument[index]{an unsigned integer for the patch number to return data for}
   @argument[point]{an unsigned integer for the control point number to return
     data for}
   @begin{return}
-    @arg{x} -- a double float with the x coordinate of the control point @br{}
-    @arg{y} -- a double float with the y coordinate of the control point
+    @arg{x} -- a double float for the x coordinate of the control point @br{}
+    @arg{y} -- a double float for the y coordinate of the control point
   @end{return}
   @begin{short}
     Gets the control point @arg{point} of patch @arg{index} for a mesh pattern.
@@ -1545,8 +1545,8 @@ Side 0 |               | Side 2
 
 (defun mesh-pattern-set-control-point (pattern point x y)
  #+liber-documentation
- "@version{2025-1-19}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
+ "@version{2025-09-02}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @argument[point]{an unsigned integer for the control point to set the
     position for}
   @argument[x]{a number coerced to a double float for the x coordinate
@@ -1591,16 +1591,16 @@ Side 0 |               | Side 2
 
 (defun mesh-pattern-corner-color-rgba (pattern index corner)
  #+liber-documentation
- "@version{2025-1-19}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
+ "@version{2025-09-02}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @argument[index]{an unsigned integer for the patch number to return data for}
   @argument[corner]{an unsigned integer for the corner number to return
     data for}
   @begin{return}
-    @arg{red} -- a number with the red component of the color @br{}
-    @arg{green} -- a number with the green component of the color @br{}
-    @arg{blue} -- a number with the blue component of the color @br{}
-    @arg{alpha} -- a number with the alpha component of the color
+    @arg{red} -- a number for the red component of the color @br{}
+    @arg{green} -- a number for the green component of the color @br{}
+    @arg{blue} -- a number for the blue component of the color @br{}
+    @arg{alpha} -- a number for the alpha component of the color
   @end{return}
   @begin{short}
     Gets the color information in corner @arg{corner} of patch @arg{index} for
@@ -1645,8 +1645,8 @@ Side 0 |               | Side 2
 
 (defun mesh-pattern-set-corner-color-rgb (pattern index red green blue)
  #+liber-documentation
- "@version{2025-1-19}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
+ "@version{2025-09-02}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @argument[corner]{an unsigned integer for the corner to set the color for}
   @argument[red]{a number coerced to a double float for the red component
     of the color}
@@ -1689,8 +1689,8 @@ Side 0 |               | Side 2
 
 (defun mesh-pattern-set-corner-color-rgba (pattern index red green blue alpha)
  #+liber-documentation
- "@version{2025-1-19}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
+ "@version{2025-09-02}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @argument[corner]{an unsigned integer for the corner to set the color for}
   @argument[red]{a number for the red component of the color}
   @argument[green]{a number for the green component of the color}
@@ -1741,9 +1741,9 @@ Side 0 |               | Side 2
 
 (defun mesh-pattern-patch-count (pattern)
  #+liber-documentation
- "@version{2025-1-19}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
-  @return{The unsigned integer with the number of patches.}
+ "@version{2025-09-02}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
+  @return{The unsigned integer for the number of patches.}
   @begin{short}
     Gets the number of patches specified in the given mesh pattern.
   @end{short}
@@ -1770,8 +1770,8 @@ Side 0 |               | Side 2
 
 (defun mesh-pattern-path (pattern index)
  #+liber-documentation
- "@version{2025-1-19}
-  @argument[pattern]{a @symbol{cairo:pattern-t} instance}
+ "@version{2025-09-02}
+  @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @argument[index]{an unsigned integer for the patch number to return data for}
   @return{The path defining the patch as a list.}
   @begin{short}

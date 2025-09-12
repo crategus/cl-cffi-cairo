@@ -100,7 +100,7 @@
 (setf (liber:alias-for-symbol 'format-t)
       "CEnum"
       (liber:symbol-documentation 'format-t)
- "@version{2025-1-18}
+ "@version{2025-09-02}
   @begin{declaration}
 (cffi:defcenum format-t
   (:invalid -1)
@@ -114,7 +114,7 @@
   (:rgba128f 7))
   @end{declaration}
   @begin{values}
-    @begin[code]{table}
+    @begin[code]{simple-table}
       @entry[:invalid]{No such format exists or is supported.}
       @entry[:argb32]{Each pixel is a 32-bit quantity, with alpha in the upper
         8 bits, then red, then green, then blue. The 32-bit quantities are
@@ -134,11 +134,11 @@
       @entry[:rgb30]{Like @code{:rgb24} but with 10 bpc.}
       @entry[:rgb96f]{3 floats, R, G, B. Since 1.18}
       @entry[:rgba128f]{4 floats, R, G, B, A. Since 1.18}
-    @end{table}
+    @end{simple-table}
   @end{values}
   @begin{short}
-    The @symbol{cairo:format-t} enumeration is used to identify the memory
-    format of image data.
+    The @sym{cairo:format-t} enumeration is used to identify the memory format
+    of image data.
   @end{short}
   @see-symbol{cairo:surface-t}")
 
@@ -157,7 +157,7 @@
 (setf (liber:alias-for-symbol 'content-t)
       "CEnum"
       (liber:symbol-documentation 'content-t)
- "@version{2025-1-18}
+ "@version{2025-09-02}
   @begin{declaration}
 (cffi:defcenum content-t
   (:color #x1000)
@@ -165,20 +165,20 @@
   (:color-alpha #x3000))
   @end{declaration}
   @begin{values}
-    @begin[code]{table}
+    @begin[code]{simple-table}
       @entry[:color]{The surface will hold color content only.}
       @entry[:alpha]{The surface will hold alpha content only.}
       @entry[:color-alpha]{The surface will hold color and alpha content.}
-    @end{table}
+    @end{simple-table}
   @end{values}
   @begin{short}
-    The @symbol{cairo:content-t} enumeration is used to describe the content
-    that a surface will contain, whether color information, alpha information
+    The @sym{cairo:content-t} enumeration is used to describe the content that
+    a surface will contain, whether color information, alpha information
     (translucence vs. opacity), or both.
   @end{short}
   @begin[Notes]{dictionary}
-    The large values here are designed to keep @symbol{cairo:content-t} values
-    distinct from @symbol{cairo:format-t} values so that the implementation can
+    The large values here are designed to keep @sym{cairo:content-t} values
+    distinct from @sym{cairo:format-t} values so that the implementation can
     detect the error if users confuse the two types.
   @end{dictionary}
   @see-symbol{cairo:surface-t}
@@ -221,7 +221,7 @@
 (setf (liber:alias-for-symbol 'surface-type-t)
       "CEnum"
       (liber:symbol-documentation 'surface-type-t)
- "@version{2025-1-18}
+ "@version{2025-09-02}
   @begin{declaration}
 (cffi:defcenum surface-type-t
   :image
@@ -251,7 +251,7 @@
   :cogl)
   @end{declaration}
   @begin{values}
-    @begin[code]{table}
+    @begin[code]{simple-table}
       @entry[:image]{The surface is of type image.}
       @entry[:pdf]{The surface is of type pdf.}
       @entry[:ps]{The surface is of type ps.}
@@ -292,11 +292,11 @@
         @fun{cairo:surface-create-for-rectangle} function.}
       @entry[:cogl]{This surface is of type Cogl. Deprecated 1.18: Cogl support
         have been removed, this surface type will never be set by Cairo.}
-    @end{table}
+    @end{simple-table}
   @end{values}
   @begin{short}
-    The @symbol{cairo:surface-type-t} enumeration is used to describe the type
-    of a given surface.
+    The @sym{cairo:surface-type-t} enumeration is used to describe the type of
+    a given surface.
   @end{short}
   The surface types are also known as \"backends\" or \"surface backends\"
   within Cairo. The type of a surface is determined by the function used to
@@ -305,10 +305,10 @@
   @fun{cairo:surface-create-similar} function as well. The surface type can be
   queried with the @fun{cairo:surface-type} function.
 
-  The various @symbol{cairo:surface-t} functions can be used with surfaces of
-  any type, but some backends also provide type-specific functions that must
-  only be called with a surface of the appropriate type. These functions have
-  names that begin with @code{cairo:type-surface} such as the
+  The various @sym{cairo:surface-t} functions can be used with surfaces of any
+  type, but some backends also provide type-specific functions that must only be
+  called with a surface of the appropriate type. These functions have names that
+  begin with @code{cairo:type-surface} such as the
   @fun{cairo:image-surface-width} function.
 
   The behavior of calling a type-specific function with a surface of the wrong
@@ -336,16 +336,16 @@
 (setf (liber:alias-for-symbol 'surface-t)
       "CStruct"
       (liber:symbol-documentation 'surface-t)
- "@version{2025-1-18}
+ "@version{2025-09-02}
   @begin{short}
-    The @symbol{cairo:surface-t} structure represents an image, either as the
+    The @sym{cairo:surface-t} structure represents an image, either as the
     destination of a drawing operation or as source when drawing onto another
     surface.
   @end{short}
-  To draw to a @symbol{cairo:surface-t} instance, create a Cairo context with
-  the surface as the target, using the @fun{cairo:create} function.
+  To draw to a @sym{cairo:surface-t} instance, create a Cairo context with the
+  surface as the target, using the @fun{cairo:create} function.
 
-  There are different subtypes of a @symbol{cairo:surface-t} structure for
+  There are different subtypes of a @sym{cairo:surface-t} structure for
   different drawing backends. For example, the
   @fun{cairo:image-surface-create} function creates a bitmap image in memory.
   The type of a surface can be queried with the @fun{cairo:surface-type}
@@ -356,11 +356,11 @@
   it will be initially cleared, for example, the
   @fun{cairo:image-surface-create} and @fun{cairo:surface-create-similar}
   functions. Alternatively, if the user passes in a reference to some backing
-  storage and asks Cairo to wrap that in a @symbol{cairo:surface-t} structure,
-  then the contents are not modified, for example, the
+  storage and asks Cairo to wrap that in a @sym{cairo:surface-t} structure, then
+  the contents are not modified, for example, the
   @fun{cairo:image-surface-create-for-data} function.
 
-  Memory management of a @symbol{cairo:surface-t} structure is done with the
+  Memory management of a @sym{cairo:surface-t} structure is done with the
   @fun{cairo:surface-reference} and @fun{cairo:surface-destroy} functions.
   @see-constructor{cairo:surface-create-similar}
   @see-constructor{cairo:surface-create-similar-image}
@@ -380,20 +380,19 @@
 
 (defmacro with-surface ((surface &rest args) &body body)
  #+liber-documentation
- "@version{2025-1-18}
+ "@version{2025-09-02}
   @syntax{(cairo:with-surface (surface target content width height) body) =>
     result}
   @syntax{(cairo:with-surface (surface target format width height) body) =>
     result}
   @syntax{(cairo:with-surface (surface target x y width height) body) => result}
-  @argument[surface]{a @symbol{cairo:surface-t} instance to create and
-    initialize}
-  @argument[target]{an existing @symbol{cairo:surface-t} instance used to
-    select the backend of the new surface}
-  @argument[content]{a @symbol{cairo:content-t} value for the content for the
-    new surface}
-  @argument[format]{a @symbol{cairo:format-t} value for the format of pixels
-    in the surface to create}
+  @argument[surface]{a @sym{cairo:surface-t} instance to create and initialize}
+  @argument[target]{an existing @sym{cairo:surface-t} instance used to select
+    the backend of the new surface}
+  @argument[content]{a @sym{cairo:content-t} value for the content for the new
+    surface}
+  @argument[format]{a @sym{cairo:format-t} value for the format of pixels in the
+    surface to create}
   @argument[x]{a number coerced to a double float for the x origin of the
     subsurface from the top-left of the target surface, in device-space units}
   @argument[y]{a number coerced to a double float for the y origin of the
@@ -403,7 +402,7 @@
   @argument[height]{a number coerced to a double float for the height of
     the subsurface, in device-space units}
   @begin{short}
-    The @fun{cairo:with-surface} macro allocates a new @symbol{cairo:surface-t}
+    The @fun{cairo:with-surface} macro allocates a new @sym{cairo:surface-t}
     instance, initializes the Cairo surface with the given values and executes
     the body that uses the Cairo surface.
   @end{short}
@@ -444,23 +443,21 @@
 
 (defmacro with-context-for-surface ((context &rest args) &body body)
  #+liber-documentation
- "@version{2025-1-18}
+ "@version{2025-09-02}
   @syntax{(cairo:with-context-for-surface (context target content width height)
     body) => result}
   @syntax{(cairo:with-context-for-surface (context target format width height)
     body) => result}
   @syntax{(cairo:with-context-for-surface (context target x y width height)
     body) => result}
-  @argument[context]{a @symbol{cairo:context-t} instance to create and
-    initialize}
-  @argument[surface]{a @symbol{cairo:surface-t} instance to create and
-    initialize}
-  @argument[target]{an existing @symbol{cairo:surface-t} instance used to select
+  @argument[context]{a @sym{cairo:context-t} instance to create and initialize}
+  @argument[surface]{a @sym{cairo:surface-t} instance to create and initialize}
+  @argument[target]{an existing @sym{cairo:surface-t} instance used to select
     the backend of the new surface}
-  @argument[content]{a @symbol{cairo:content-t} value for the content for the
-    new surface}
-  @argument[format]{a @symbol{cairo:format-t} value for the format of pixels
-    in the surface to create}
+  @argument[content]{a @sym{cairo:content-t} value for the content for the new
+    surface}
+  @argument[format]{a @sym{cairo:format-t} value for the format of pixels in the
+    surface to create}
   @argument[x]{a number coerced to a double float for the x origin of the
     subsurface from the top-left of the target surface, in device-space units}
   @argument[y]{a number coerced to a double float for the y origin of
@@ -472,9 +469,8 @@
     the subsurface, in device-space units}
   @begin{short}
     The @fun{cairo:with-context-for-surface} macro allocates a new
-    @symbol{cairo:context-t} instance for a surface, initializes the
-    Cairo context with the given values and executes the body that uses the
-    Cairo context.
+    @sym{cairo:context-t} instance for a surface, initializes the Cairo context
+    with the given values and executes the body that uses the Cairo context.
   @end{short}
   After execution of the body the allocated memory for the Cairo context is
   released.
@@ -484,7 +480,7 @@
   created with one of the @fun{cairo:surface-create-similar},
   @fun{cairo:surface-create-similar-image}, or
   @fun{cairo:surface-create-for-rectangle} functions. You can access the
-  @symbol{cairo:surface-t} instance for the created context with the
+  @sym{cairo:surface-t} instance for the created context with the
   @fun{cairo:target} function. See also the @macro{cairo:with-surface} macro.
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:content-t}
@@ -508,17 +504,17 @@
 (cffi:defcfun ("cairo_surface_create_similar" surface-create-similar)
     (:pointer (:struct surface-t))
  #+liber-documentation
- "@version{2025-1-18}
-  @argument[target]{an existing @symbol{cairo:surface-t} instance used to select
+ "@version{2025-09-02}
+  @argument[target]{an existing @sym{cairo:surface-t} instance used to select
     the backend of the new surface}
-  @argument[content]{a @symbol{cairo:content-t} value for the content for the
-    new surface}
+  @argument[content]{a @sym{cairo:content-t} value for the content for the new
+    surface}
   @argument[width]{an integer for the width of the new surface, in
     device-space units}
   @argument[height]{an integer for the height of the new surface, in
     device-space units}
   @begin{return}
-    The newly allocated @symbol{cairo:surface-t} instance. The caller owns the
+    The newly allocated @sym{cairo:surface-t} instance. The caller owns the
     surface and should call the @fun{cairo:surface-destroy} function when done
     with it. This function always returns a valid surface, but it will return
     a \"nil\" surface if @arg{target} is already in an error state or any other
@@ -557,16 +553,16 @@
 (cffi:defcfun ("cairo_surface_create_similar_image"
                surface-create-similar-image) (:pointer (:struct surface-t))
  #+liber-documentation
- "@version{2025-1-18}
-  @argument[target]{an existing @symbol{cairo:surface-t} instance used to select
+ "@version{2025-09-02}
+  @argument[target]{an existing @sym{cairo:surface-t} instance used to select
     the preference of the new surface}
-  @argument[format]{a @symbol{cairo:format-t} value for the new surface}
+  @argument[format]{a @sym{cairo:format-t} value for the new surface}
   @argument[width]{an integer for the width of the new surface, in
     device-space units}
   @argument[height]{an integer for the height of the new surface, in
     device-space units}
   @begin{return}
-    The newly allocated image @symbol{cairo:surface-t} instance. The caller owns
+    The newly allocated image @sym{cairo:surface-t} instance. The caller owns
     the surface and should call the @fun{cairo:surface-destroy} function when
     done with it. This function always returns a valid surface, but it will
     return a \"nil\" surface if @arg{target} is already in an error state or
@@ -608,9 +604,9 @@
 
 (defun surface-create-for-rectangle (target x y width height)
  #+liber-documentation
- "@version{2025-1-18}
-  @argument[target]{an existing @symbol{cairo:surface-t} instance for which
-    the subsurface will point to}
+ "@version{2025-09-02}
+  @argument[target]{an existing @sym{cairo:surface-t} instance for which the
+    subsurface will point to}
   @argument[x]{a number coerced to a double float for the x origin of the
     subsurface from the top-left of the target surface, in device-space units}
   @argument[y]{a number coerced to a double float for the y origin of
@@ -621,7 +617,7 @@
   @argument[height]{a number coerced to a double float for the height of
     the subsurface, in device-space units}
   @begin{return}
-    The newly allocated @symbol{cairo:surface-t} instance. The caller owns the
+    The newly allocated @sym{cairo:surface-t} instance. The caller owns the
     surface and should call the @fun{cairo:surface-destroy} function when done
     with it. This function always returns a valid surface, but it will return
     \"nil\" surface if @arg{target} is already in an error state or any other
@@ -659,17 +655,17 @@
 (cffi:defcfun ("cairo_surface_reference" surface-reference)
     (:pointer (:struct surface-t))
  #+liber-documentation
- "@version{2025-1-18}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
-  @return{The referenced @symbol{cairo:surface-t} instance.}
+ "@version{2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
+  @return{The referenced @sym{cairo:surface-t} instance.}
   @begin{short}
     Increases the reference count on @arg{surface} by one.
   @end{short}
   This prevents @arg{surface} from being destroyed until a matching call to
   the @fun{cairo:surface-destroy} function is made.
 
-  The number of references to a @symbol{cairo:surface-t} instance can be get
-  using the @fun{cairo:surface-reference-count} function.
+  The number of references to a @sym{cairo:surface-t} instance can be get using
+  the @fun{cairo:surface-reference-count} function.
   @see-symbol{cairo:surface-t}
   @see-function{cairo:surface-destroy}
   @see-function{cairo:surface-reference-count}"
@@ -684,8 +680,8 @@
 (cffi:defcfun ("cairo_surface_get_reference_count" surface-reference-count)
     :uint
  #+liber-documentation
- "@version{2025-1-18}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
+ "@version{2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
   @begin{return}
     The current reference count of @arg{surface}. If the instance is a
     \"nil\" surface, 0 will be returned.
@@ -705,8 +701,8 @@
 
 (cffi:defcfun ("cairo_surface_destroy" surface-destroy) :void
  #+liber-documentation
- "@version{2025-1-18}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
+ "@version{2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
   @begin{short}
     Decreases the reference count on @arg{surface} by one.
   @end{short}
@@ -724,9 +720,9 @@
 
 (cffi:defcfun ("cairo_surface_status" surface-status) status-t
  #+liber-documentation
- "@version{2025-1-18}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
-  @return{The @symbol{cairo:status-t} value for @arg{surface}.}
+ "@version{2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
+  @return{The @sym{cairo:status-t} value for @arg{surface}.}
   @begin{short}
     Checks whether an error has previously occurred for this surface.
   @end{short}
@@ -745,13 +741,13 @@
 
 (cffi:defcfun ("cairo_surface_get_type" surface-type) surface-type-t
  #+liber-documentation
- "@version{2025-1-18}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
-  @return{The @symbol{cairo:surface-type-t} value for @arg{surface}.}
+ "@version{2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
+  @return{The @sym{cairo:surface-type-t} value for @arg{surface}.}
   @begin{short}
     This function returns the type of the backend used to create the surface.
   @end{short}
-  See the @symbol{cairo:surface-type-t} enumeration for available types.
+  See the @sym{cairo:surface-type-t} enumeration for available types.
   @see-symbol{cairo:surface-t}
   @see-symbol{cairo:surface-type-t}"
   (surface (:pointer (:struct surface-t))))
@@ -764,8 +760,8 @@
 
 (cffi:defcfun ("cairo_surface_finish" surface-finish) :void
  #+liber-documentation
- "@version{#2025-1-18}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
+ "@version{#2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
   @begin{short}
     This function finishes the surface and drops all references to external
     resources.
@@ -794,8 +790,8 @@
 
 (cffi:defcfun ("cairo_surface_flush" surface-flush) :void
  #+liber-documentation
- "@version{2025-1-18}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
+ "@version{2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
   @begin{short}
     Do any pending drawing for the surface and also restore any temporary
     modifications Cairo has made to the state of the surface.
@@ -818,14 +814,16 @@
 
 (defun surface-device (surface)
  #+liber-documentation
- "@version{2025-1-18}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
-  @return{The @symbol{cairo:device-t} instance with the device for @arg{surface}
-    or @code{nil} if the surface does not have an associated device.}
+ "@version{2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
+  @begin{return}
+    The @sym{cairo:device-t} instance for the device for @arg{surface} or
+    @code{nil} if the surface does not have an associated device.
+  @end{return}
   @begin{short}
     This function returns the device for a surface.
   @end{short}
-  See the @symbol{cairo:device-t} documentation.
+  See the @sym{cairo:device-t} documentation.
   @see-symbol{cairo:surface-t}
   @see-symbol{cairo:device-t}"
   (let (device)
@@ -844,12 +842,13 @@
 
 (defun surface-font-options (surface options)
  #+liber-documentation
- "@version{2025-1-18}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
-  @argument[options]{a @symbol{cairo:font-options-t} instance into which to
+ "@version{2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
+  @argument[options]{a @sym{cairo:font-options-t} instance into which to
     store the retrieved options, all existing values are overwritten}
-  @return{The @symbol{cairo:font-options-t} instance with the retrieved
-    options.}
+  @begin{return}
+    The @sym{cairo:font-options-t} instance for the retrieved options.
+  @end{return}
   @begin{short}
     Retrieves the default font rendering options for the surface.
   @end{short}
@@ -870,15 +869,16 @@
 
 (cffi:defcfun ("cairo_surface_get_content" surface-content) content-t
  #+liber-documentation
- "@version{2025-1-18}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
-  @return{The @symbol{cairo:content-t} value with the content type of
-    @arg{surface}.}
+ "@version{2025-09-01}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
+  @begin{return}
+    The @sym{cairo:content-t} value for the content type of @arg{surface}.
+  @end{return}
   @begin{short}
     This function returns the content type of @arg{surface} which indicates
     whether the surface contains color and/or alpha information.
   @end{short}
-  See the @symbol{cairo:content-t} enumeration.
+  See the @sym{cairo:content-t} enumeration.
   @see-symbol{cairo:surface-t}
   @see-symbol{cairo:content-t}"
   (surface (:pointer (:struct surface-t))))
@@ -891,8 +891,8 @@
 
 (cffi:defcfun ("cairo_surface_mark_dirty" surface-mark-dirty) :void
  #+liber-documentation
- "@version{#2025-1-18}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
+ "@version{#2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
   @begin{short}
     Tells Cairo that drawing has been done to @arg{surface} using means other
     than Cairo, and that Cairo should reread any cached areas.
@@ -912,8 +912,8 @@
 (cffi:defcfun ("cairo_surface_mark_dirty_rectangle"
                surface-mark-dirty-rectangle) :void
  #+liber-documentation
- "@version{#2025-1-18}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
+ "@version{#2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
   @argument[x]{an integerfor the x coordinate of dirty rectangle}
   @argument[y]{an integer for the y coordinate of dirty rectangle}
   @argument[width]{an integer for the width of dirty rectangle}
@@ -958,10 +958,10 @@
 
 (defun surface-device-offset (surface)
  #+liber-documentation
- "@version{2025-1-18}
+ "@version{2025-09-02}
   @syntax{(cairo:surface-device-offset surface) => xoffset, yoffset}
   @syntax{(setf (cairo:surface-device-offset surface) (list xoffset yoffset))}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
   @argument[xoffset]{a number coerced to a double float for the offset in
     the x direction, in device units}
   @argument[yoffset]{a number coerced to a double float for the offset in
@@ -974,7 +974,7 @@
   when drawing to @arg{surface}.
 
   One use case for this function is when we want to create a
-  @symbol{cairo:surface-t} instance that redirects drawing for a portion of an
+  @sym{cairo:surface-t} instance that redirects drawing for a portion of an
   onscreen surface to an offscreen surface in a way that is completely
   invisible to the user of the Cairo API. Setting a transformation via the
   @fun{cairo:translate} function is not sufficient to do this, since functions
@@ -1015,10 +1015,10 @@
 
 (defun surface-device-scale (surface)
  #+liber-documentation
- "@version{2025-1-18}
+ "@version{2025-09-02}
   @syntax{(cairo:surface-device-scale surface) => xscale, yscale}
   @syntax{(setf (cairo:surface-device-scale surface) (list xscale yscale))}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
   @argument[xscale]{a number coerced to a double float for the scale in
     the x direction, in device units}
   @argument[yscale]{a number coerced to a double float for the scale in
@@ -1072,11 +1072,11 @@
 
 (defun surface-fallback-resolution (surface)
  #+liber-documentation
- "@version{2025-1-18}
+ "@version{2025-09-02}
   @syntax{(cairo:surface-fallback-resolution surface) => xpixels, ypixels}
   @syntax{(setf (cairo:surface-fallback-resolution surface)
     (list xpixels ypixels))}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
   @argument[xpixels]{a number coerced to a double float for the horizontal
     pixels per inch}
   @argument[ypixels]{a number coerced to a double float for the vertical
@@ -1136,8 +1136,8 @@
 
 (cffi:defcfun ("cairo_surface_copy_page" surface-copy-page) :void
  #+liber-documentation
- "@version{#2025-1-18}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
+ "@version{#2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
   @begin{short}
     Emits the current page for backends that support multiple pages, but does
     not clear it, so that the contents of the current page will be retained for
@@ -1146,7 +1146,7 @@
   Use the @fun{cairo:surface-show-page} function if you want to get an empty
   page after the emission.
 
-  There is a convenience function for this that takes a @symbol{cairo:context-t}
+  There is a convenience function for this that takes a @sym{cairo:context-t}
   context, namely the @fun{cairo:copy-page} function.
   @see-symbol{cairo:surface-t}
   @see-symbol{cairo:context-t}
@@ -1162,16 +1162,16 @@
 
 (cffi:defcfun ("cairo_surface_show_page" surface-show-page) :void
  #+liber-documentation
- "@version{2025-1-18}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
+ "@version{2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
   @begin{short}
     Emits and clears the current page for backends that support multiple pages.
   @end{short}
   Use the @fun{cairo:surface-copy-page} function if you do not want to clear
   the page.
 
-  There is a convenience function that takes a @symbol{cairo:context-t}
-  instance, namely the @fun{cairo:show-page} function.
+  There is a convenience function that takes a @sym{cairo:context-t} instance,
+  namely the @fun{cairo:show-page} function.
   @see-symbol{cairo:surface-t}
   @see-function{cairo:surface-copy-page}
   @see-function{cairo:show-page}"

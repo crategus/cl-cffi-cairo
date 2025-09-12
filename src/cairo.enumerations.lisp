@@ -46,7 +46,7 @@
 (setf (liber:alias-for-symbol 'antialias-t)
       "CEnum"
       (liber:symbol-documentation 'antialias-t)
- "@version{2025-1-2}
+ "@version{2025-09-02}
   @begin{declaration}
 (cffi:defcenum antialias-t
   :default
@@ -58,7 +58,7 @@
   :best)
   @end{declaration}
   @begin{values}
-    @begin[code]{table}
+    @begin[code]{simple-table}
       @entry[:default]{Use the default antialiasing for the subsystem and target
         device.}
       @entry[:none]{Use a bilevel alpha mask.}
@@ -72,11 +72,11 @@
         performance.}
       @entry[:best]{Hint that the backend should render at the highest quality,
         sacrificing speed if necessary.}
-    @end{table}
+    @end{simple-table}
   @end{values}
   @begin{short}
-    The @symbol{cairo:antialias-t} enumeration specifies the type of
-    antialiasing to do when rendering text or shapes.
+    The @sym{cairo:antialias-t} enumeration specifies the type of antialiasing
+    to do when rendering text or shapes.
   @end{short}
   As it is not necessarily clear from the above what advantages a particular
   antialias method provides, there is also a set of hints that have the

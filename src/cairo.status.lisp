@@ -100,7 +100,7 @@
 (setf (liber:alias-for-symbol 'status-t)
       "CEnum"
       (liber:symbol-documentation 'status-t)
- "@version{2025-1-18}
+ "@version{2025-09-02}
   @begin{declaration}
 (cffi:defcenum status-t
   :success
@@ -153,7 +153,7 @@
   :last-status)
   @end{declaration}
   @begin{values}
-    @begin[code]{table}
+    @begin[code]{simple-table}
       @entry[:success]{No error has occurred.}
       @entry[:no-memory]{Out of memory.}
       @entry[:invalid-restore]{The @fun{cairo:restore} function called without
@@ -163,8 +163,7 @@
         function.}
       @entry[:no-current-point]{No current point defined.}
       @entry[:invalid-matrix]{Invalid matrix (not invertible).}
-      @entry[:invalid-status]{Invalid @symbol{cairo:status-t} value for an
-        input.}
+      @entry[:invalid-status]{Invalid @sym{cairo:status-t} value for an input.}
       @entry[:null-pointer]{@code{NULL} pointer.}
       @entry[:invalid-string]{Input string not valid UTF-8.}
       @entry[:path-data]{Input path data not valid.}
@@ -175,10 +174,9 @@
         the operation.}
       @entry[:pattern-type-mismatch]{The pattern type is not appropriate for
         the operation.}
-      @entry[:invalid-content]{Invalid @symbol{cairo:content-t} value for an
+      @entry[:invalid-content]{Invalid @sym{cairo:content-t} value for an
         input.}
-      @entry[:invalid-format]{Invalid @symbol{cairo:format-t} value for an
-        input.}
+      @entry[:invalid-format]{Invalid @sym{cairo:format-t} value for an input.}
       @entry[:invalid-visual]{Invalid value for an input Visual.}
       @entry[:file-not-found]{File not found.}
       @entry[:invalid-dash]{Invalid value for a dash setting.}
@@ -195,9 +193,9 @@
       @entry[:negative-count]{Negative number used where it is not allowed.}
       @entry[:invalid-clusters]{Input clusters do not represent the accompanying
         text and glyph array.}
-      @entry[:invalid-slant]{Invalid @symbol{cairo:font-slant-t} value for an
+      @entry[:invalid-slant]{Invalid @sym{cairo:font-slant-t} value for an
         input.}
-      @entry[:invalid-weight]{Invalid @symbol{cairo:font-weight-t} value for an
+      @entry[:invalid-weight]{Invalid @sym{cairo:font-weight-t} value for an
         input.}
       @entry[:invalid-size]{Invalid value (typically too big) for the size of
         the input (surface, pattern, etc.).}
@@ -227,14 +225,14 @@
         status values defined in this enumeration. When using this value, note
         that the version of Cairo at run-time may have additional status values
         defined than the value of this symbol at compile-time.}
-    @end{table}
+    @end{simple-table}
   @end{values}
   @begin{short}
-    The @symbol{cairo:status-t} enumeration is used to indicate errors that can
+    The @sym{cairo:status-t} enumeration is used to indicate errors that can
     occur when using Cairo.
   @end{short}
   In some cases it is returned directly by functions. but when using a
-  @symbol{cairo:context-t} instance, the last error, if any, is stored in the
+  @sym{cairo:context-t} instance, the last error, if any, is stored in the
   context and can be retrieved with the @fun{cairo:status} function.
 
   Use the @fun{cairo:status-to-string} function to get a human readable
@@ -264,8 +262,8 @@
 
 (defun status-to-string (status)
  #+liber-documentation
- "@version{2025-1-18}
-  @argument[status]{a @symbol{cairo:status-t} value}
+ "@version{2025-09-02}
+  @argument[status]{a @sym{cairo:status-t} value}
   @return{The string representation of the Cario status.}
   @begin{short}
     Provides a human readable description of a Cairo status value.

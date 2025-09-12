@@ -49,11 +49,11 @@
 
 (defun image-surface-create-from-png (path)
  #+liber-documentation
- "@version{2025-1-13}
+ "@version{2025-09-02}
   @argument[path]{a namestring or pathname for the path of the PNG file to load}
   @begin{return}
-    The new @symbol{cairo:surface-t} instance initialized with the contents of
-    the PNG file, or a \"nil\" surface if any error occurred.
+    The new @sym{cairo:surface-t} instance initialized with the contents of the
+    PNG file, or a \"nil\" surface if any error occurred.
   @end{return}
   @begin{short}
     Creates a new image surface and initializes the contents to the given PNG
@@ -93,8 +93,8 @@
 
 (defun surface-write-to-png (surface path)
  #+liber-documentation
- "@version{2025-1-13}
-  @argument[surface]{a @symbol{cairo:surface-t} instance for pixel contents}
+ "@version{2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance for pixel contents}
   @argument[path]{a namestring or pathname for the path of a file to write to}
   @begin{return}
     @code{:success} if the PNG file was written successfully. Otherwise,

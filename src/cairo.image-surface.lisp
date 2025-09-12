@@ -52,18 +52,17 @@
 
 (defmacro with-image-surface ((surface &rest args) &body body)
  #+liber-documentation
- "@version{2025-1-29}
+ "@version{2025-09-02}
   @syntax{(cairo:with-image-surface (surface format width height) body) =>
     result}
-  @argument[surface]{a @symbol{cairo:surface-t} instance to create and
-    initialize}
-  @argument[format]{a @symbol{cairo:format-t} value for the format of pixels
-    in the surface to create}
+  @argument[surface]{a @sym{cairo:surface-t} instance to create and initialize}
+  @argument[format]{a @sym{cairo:format-t} value for the format of pixels in
+    the surface to create}
   @argument[width]{an integer for the width of the surface, in pixels}
   @argument[height]{an integer for the height of the surface, in pixels}
   @begin{short}
     The @fun{cairo:with-image-surface} macro allocates a new
-    @symbol{cairo:surface-t} instance, initializes the Cairo surface with the
+    @sym{cairo:surface-t} instance, initializes the Cairo surface with the
     @arg{format}, @arg{width}, and @arg{height} values and executes the body
     that uses the Cairo surface.
   @end{short}
@@ -85,20 +84,19 @@
 
 (defmacro with-context-for-image-surface ((context &rest args) &body body)
  #+liber-documentation
- "@version{2025-1-29}
+ "@version{2025-09-02}
   @syntax{(cairo:with-context-for-image-surface (context format width height)
     body) => result}
-  @argument[context]{a @symbol{cairo:context-t} instance to create and
-    initialize}
-  @argument[format]{a @symbol{cairo:format-t} value for the format of pixels
-    in the surface to create}
+  @argument[context]{a @sym{cairo:context-t} instance to create and initialize}
+  @argument[format]{a @sym{cairo:format-t} value for the format of pixels in the
+    surface to create}
   @argument[width]{an integer for the width of the surface, in pixels}
   @argument[height]{an integer for the height of the surface, in pixels}
   @begin{short}
     The @fun{cairo:with-context-for-image-surface} macro allocates a new
-    @symbol{cairo:context-t} instance for an image surface, initializes the
-    Cairo context with the @arg{format}, @arg{width}, and @arg{height} values
-    and executes the body that uses the Cairo context.
+    @sym{cairo:context-t} instance for an image surface, initializes the Cairo
+    context with the @arg{format}, @arg{width}, and @arg{height} values and
+    executes the body that uses the Cairo context.
   @end{short}
   After execution of the body the allocated memory for the Cairo surface is
   released. See the documentation of the @fun{cairo:image-surface-create} and
@@ -122,13 +120,13 @@
 (cffi:defcfun ("cairo_image_surface_create" image-surface-create)
     (:pointer (:struct surface-t))
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[format]{a @symbol{cairo:format-t} value with the format of pixels
-    in the surface to create}
+ "@version{2025-09-02}
+  @argument[format]{a @sym{cairo:format-t} value for the format of pixels in the
+    surface to create}
   @argument[width]{an integer for the width of the surface, in pixels}
   @argument[height]{an integer for the height of the surface, in pixels}
   @begin{return}
-    The newly created @symbol{cairo:surface-t} instance. The caller owns the
+    The newly created @sym{cairo:surface-t} instance. The caller owns the
     surface and should call the @fun{cairo:surface-destroy} function when done
     with it.
   @end{return}
@@ -159,12 +157,12 @@
 (cffi:defcfun ("cairo_image_surface_create_for_data"
                image-surface-create-for-data) (:pointer (:struct surface-t))
  #+liber-documentation
- "@version{2025-1-29}
+ "@version{2025-09-02}
   @argument[data]{a pointer to a buffer supplied by the application in which to
     write contents, this pointer must be suitably aligned for any kind of
     variable, for example, a pointer returned by @code{malloc()}}
-  @argument[format]{a @symbol{cairo:format-t} value for the format of pixels
-    in the surface to create}
+  @argument[format]{a @sym{cairo:format-t} value for the format of pixels in
+    the surface to create}
   @argument[width]{an integer for the width of the image to be stored in the
     buffer}
   @argument[height]{an integer for the height of the image to be stored in the
@@ -174,7 +172,7 @@
     the @fun{cairo:format-stride-for-width} function before allocating the data
     buffer}
   @begin{return}
-    The newly created @symbol{cairo:surface-t} instance. The caller owns the
+    The newly created @sym{cairo:surface-t} instance. The caller owns the
     surface and should call the @fun{cairo:surface-destroy} function when done
     with it. This function always returns a valid surface, but it will return
     a \"nil\" surface in the case of an error such as out of memory or an
@@ -222,8 +220,8 @@
 
 (defun image-surface-data (surface)
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
+ "@version{2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
   @begin{return}
     The pointer to the image data of this surface or @code{nil} if @arg{surface}
     is not an image surface, or if the @fun{cairo:surface-finish} function has
@@ -254,9 +252,9 @@
 (cffi:defcfun ("cairo_image_surface_get_format" image-surface-format)
     format-t
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
-  @return{The @symbol{cairo:format-t} value with the format of the surface.}
+ "@version{2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
+  @return{The @sym{cairo:format-t} value for the format of the surface.}
   @begin{short}
     Get the format of the image surface.
   @end{short}
@@ -272,9 +270,9 @@
 
 (cffi:defcfun ("cairo_image_surface_get_width" image-surface-width) :int
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
-  @return{The integer with the width of the surface in pixels.}
+ "@version{2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
+  @return{The integer for the width of the surface in pixels.}
   @begin{short}
     Gets the width of the image surface in pixels.
   @end{short}
@@ -290,9 +288,9 @@
 
 (cffi:defcfun ("cairo_image_surface_get_height" image-surface-height) :int
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
-  @return{The integer with the height of the surface in pixels.}
+ "@version{2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
+  @return{The integer for the height of the surface in pixels.}
   @begin{short}
     Gets the height of the image surface in pixels.
   @end{short}
@@ -308,10 +306,10 @@
 
 (cffi:defcfun ("cairo_image_surface_get_stride" image-surface-stride) :int
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[surface]{a @symbol{cairo:surface-t} instance}
+ "@version{2025-09-02}
+  @argument[surface]{a @sym{cairo:surface-t} instance}
   @begin{return}
-    The integer with the stride of the image surface in bytes, or 0 if
+    The integer for the stride of the image surface in bytes, or 0 if
     @arg{surface} is not an image surface.
   @end{return}
   @begin{short}
@@ -331,12 +329,12 @@
 
 (cffi:defcfun ("cairo_format_stride_for_width" format-stride-for-width) :int
  #+liber-documentation
- "@version{2025-1-29}
-  @argument[format]{a @symbol{cairo:format-t} value}
+ "@version{2025-09-02}
+  @argument[format]{a @sym{cairo:format-t} value}
   @argument[width]{an integer for the desired width of an image surface to
     be created.}
   @begin{return}
-    The integer with the appropriate stride to use given the desired format and
+    The integer for the appropriate stride to use given the desired format and
     width, or -1 if either the format is invalid or the width too large.
   @end{return}
   @begin{short}

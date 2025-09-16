@@ -1,7 +1,7 @@
 ;;; ----------------------------------------------------------------------------
-;;; liber.lisp
+;;; generate-html.lisp
 ;;;
-;;; Copyright (C) 2022 - 2025 Dieter Kaiser
+;;; Copyright (C) 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -25,52 +25,53 @@
 #-liber-documentation
 (push :liber-documentation *features*)
 
-(asdf:load-system :liber)
+(asdf:load-system :liber/generate)
 (asdf:load-system :cl-cffi-cairo :force t)
 
-(defpackage :liber-cairo
+(defpackage :cairo-documentation
   (:use :common-lisp)
   (:export :generate-html
            :generate-html-single-page))
 
-(in-package :liber-cairo)
-
-;;; ---------------------------------------------------------------------------
+(in-package :cairo-documentation)
 
 (defun generate-html ()
   (let* ((base (asdf:component-pathname (asdf:find-system :cl-cffi-cairo)))
-         (output-directory (merge-pathnames "../books/cl-cffi-cairo/" base)))
-    (format t "Generate HTML to ~a~%" output-directory)
-    (ensure-directories-exist output-directory)
+         (output (merge-pathnames "doc/" base)))
     (liber:generate-html-documentation
       '(:cairo)
-      output-directory
+      base
+      output
       :author "Crategus"
       :author-url "http://www.crategus.com"
       :index-title "cl-cffi-cairo API documentation"
       :heading "cl-cffi-cairo"
       :css "crategus.css"
+      :icon "lambda.icon"
       :single-page-p nil
       :paginate-section-p nil
       :include-slot-definitions-p t
-      :include-internal-symbols-p nil)))
+      :include-internal-symbols-p nil
+      :delete-tmp-files-p t
+      :verbose t)))
 
 (defun generate-html-single-page ()
   (let* ((base (asdf:component-pathname (asdf:find-system :cl-cffi-cairo)))
-         (output-directory
-             (merge-pathnames "../books/cl-cffi-cairo/single-page/" base)))
-    (format t "Generate Single PAGE HTML to ~a~%" output-directory)
-    (ensure-directories-exist output-directory)
+         (output (merge-pathnames "doc/single-page/" base)))
     (liber:generate-html-documentation
       '(:cairo)
-      output-directory
+      base
+      output
       :author "Crategus"
       :author-url "http://www.crategus.com"
       :index-title "cl-cffi-cairo API documentation (single page)"
       :heading "cl-cffi-cairo"
       :css "crategus.css"
+      :icon "lambda.icon"
       :single-page-p t
       :include-slot-definitions-p t
-      :include-internal-symbols-p nil)))
+      :include-internal-symbols-p nil
+      :delete-tmp-files-p t
+      :verbose t)))
 
-;;; --- End of file liber.lisp -------------------------------------------------
+;;; --- End of file generate-html.lisp -----------------------------------------

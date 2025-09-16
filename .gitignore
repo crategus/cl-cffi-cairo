@@ -1,9 +1,10 @@
 test/out/*
 example/out/*
 *.tmp
-*.png
-*.svg
-*.pdf
-*.script
 *.gresource
 TODO
+doc/pages/*
+doc/single-page/*
+doc/index*
+doc/lambda.icon
+generate-book.lisp

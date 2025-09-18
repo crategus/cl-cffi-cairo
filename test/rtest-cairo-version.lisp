@@ -14,7 +14,7 @@
 
 #-windows
 (test cairo-version
-  (is (= 11802 (cairo:version))))
+  (is (= 11804 (cairo:version))))
 
 #+windows
 (test cairo-version
@@ -24,10 +24,10 @@
 
 #-windows
 (test cairo-version-string
-  (is (string= "1.18.2" (cairo:version-string))))
+  (is (string= "1.18.4" (cairo:version-string))))
 
 #+windows
 (test cairo-version-string
   (is (string= "1.18.4" (cairo:version-string))))
 
-;;; 2025-3-28
+;;; 2025-09-17

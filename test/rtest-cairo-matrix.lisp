@@ -9,8 +9,9 @@
 
 (test cairo-matrix-t
   (is (= 48 (cffi:foreign-type-size '(:struct cairo:matrix-t))))
-  (is (equal '(CAIRO::XX CAIRO::YX CAIRO::XY CAIRO::YY CAIRO::X0 CAIRO::Y0)
-             (cffi:foreign-slot-names '(:struct cairo:matrix-t)))))
+  (is (equal '(CAIRO::X0 CAIRO::XX CAIRO::XY CAIRO::Y0 CAIRO::YX CAIRO::YY)
+             (sort (cffi:foreign-slot-names '(:struct cairo:matrix-t))
+                   #'string<))))
 
 ;;; --- Functions --------------------------------------------------------------
 
@@ -189,4 +190,4 @@
                (multiple-value-list
                    (cairo:matrix-transform-point matrix 1.0 2.0))))))
 
-;;; 2024-1-27
+;;; 2025-09-17

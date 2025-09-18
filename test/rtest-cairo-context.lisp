@@ -345,7 +345,7 @@
                  (multiple-value-list (cairo:clip-extents context))))
       (is (equal '((10.0d0 10.0d0 70.0d0 70.0d0))
                  (cairo:copy-clip-rectangle-list context)))
-      (cffi:with-foreign-object (rectlist '(:struct cairo::rectangle-list-t))
+      (let (rectlist)
         (is (cffi:pointerp (setf rectlist
                                  (cairo::%copy-clip-rectangle-list context))))
         (is (eq :success
@@ -360,7 +360,7 @@
                (cffi:foreign-slot-value rectlist
                                         '(:struct cairo::rectangle-list-t)
                                         'cairo::num-rectangles)))
-        (cffi:with-foreign-object (rect '(:struct cairo::rectangle-t))
+        (let (rect)
           (setf rect (cffi:foreign-slot-value rectlist
                                               '(:struct cairo::rectangle-list-t)
                                               'cairo::rectangles))

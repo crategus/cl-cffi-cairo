@@ -6,8 +6,50 @@
 ;;; --- Types and Values -------------------------------------------------------
 
 ;;;     cairo_pdf_outline_flags_t
+
+(test cairo-pdf-outline-flags-t
+  ;; Check values
+  (is (= 1 (cffi:foreign-bitfield-value 'cairo:pdf-outline-flags-t :open)))
+  (is (= 2 (cffi:foreign-bitfield-value 'cairo:pdf-outline-flags-t :bold)))
+  (is (= 4 (cffi:foreign-bitfield-value 'cairo:pdf-outline-flags-t :italic)))
+  ;; Check symbols
+  (is (equal '(:OPEN :BOLD :ITALIC)
+             (cffi:foreign-bitfield-symbols 'cairo:pdf-outline-flags-t
+                                            (+ 1 2 4)))))
+
 ;;;     cairo_pdf_metadata_t
+
+(test cairo-pdf-metadata-t
+  ;; Check values
+  (is (= 0 (cffi:foreign-enum-value 'cairo:pdf-metadata-t :title)))
+  (is (= 1 (cffi:foreign-enum-value 'cairo:pdf-metadata-t :author)))
+  (is (= 2 (cffi:foreign-enum-value 'cairo:pdf-metadata-t :subject)))
+  (is (= 3 (cffi:foreign-enum-value 'cairo:pdf-metadata-t :keywords)))
+  (is (= 4 (cffi:foreign-enum-value 'cairo:pdf-metadata-t :creator)))
+  (is (= 5 (cffi:foreign-enum-value 'cairo:pdf-metadata-t :create-date)))
+  (is (= 6 (cffi:foreign-enum-value 'cairo:pdf-metadata-t :mod-date)))
+  ;; Check keywords
+  (is (eq :title (cffi:foreign-enum-keyword 'cairo:pdf-metadata-t 0)))
+  (is (eq :author (cffi:foreign-enum-keyword 'cairo:pdf-metadata-t 1)))
+  (is (eq :subject (cffi:foreign-enum-keyword 'cairo:pdf-metadata-t 2)))
+  (is (eq :keywords (cffi:foreign-enum-keyword 'cairo:pdf-metadata-t 3)))
+  (is (eq :creator (cffi:foreign-enum-keyword 'cairo:pdf-metadata-t 4)))
+  (is (eq :create-date (cffi:foreign-enum-keyword 'cairo:pdf-metadata-t 5)))
+  (is (eq :mod-date (cffi:foreign-enum-keyword 'cairo:pdf-metadata-t 6))))
+
 ;;;     cairo_pdf_version_t
+
+(test cairo-pdf-version-t
+  ;; Check values
+  (is (= 0 (cffi:foreign-enum-value 'cairo:pdf-version-t :version-1-4)))
+  (is (= 1 (cffi:foreign-enum-value 'cairo:pdf-version-t :version-1-5)))
+  (is (= 2 (cffi:foreign-enum-value 'cairo:pdf-version-t :version-1-6)))
+  (is (= 3 (cffi:foreign-enum-value 'cairo:pdf-version-t :version-1-7)))
+  ;; Check keywords
+  (is (eq :version-1-4 (cffi:foreign-enum-keyword 'cairo:pdf-version-t 0)))
+  (is (eq :version-1-5 (cffi:foreign-enum-keyword 'cairo:pdf-version-t 1)))
+  (is (eq :version-1-6 (cffi:foreign-enum-keyword 'cairo:pdf-version-t 2)))
+  (is (eq :version-1-7 (cffi:foreign-enum-keyword 'cairo:pdf-version-t 3))))
 
 ;;; --- Functions --------------------------------------------------------------
 

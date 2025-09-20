@@ -1,10 +1,8 @@
-test/out/*
-example/out/*
-*.tmp
-*.gresource
 TODO
-doc/pages/*
-doc/single-page/*
-doc/index*
+test/out/
+example/out/
+doc/pages/
+doc/single-page/
+doc/index.*
 doc/lambda.icon
 generate-book.lisp

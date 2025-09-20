@@ -1,6 +1,10 @@
+;;;; Cairo drawing Text Soulmate
+;;;;
+;;;; Last update: 2025-09-20
+
 (in-package :cairo-example)
 
-(defun cairo-draw-text-soulmate (context width height)
+(defun draw-text-soulmate (context width height)
   (declare (ignore width height))
   ;; Paint a white background
   (cairo:set-source-rgb context 1.0 1.0 1.0)
@@ -26,5 +30,3 @@
   (cairo:show-text context "Somebody tell me why I'm on my own")
   (cairo:move-to context 20 210)
   (cairo:show-text context "If there's a soulmate for everyone"))
-
-;;; --- 2023-2-12 --------------------------------------------------------------

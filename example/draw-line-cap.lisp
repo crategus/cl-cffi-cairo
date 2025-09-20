@@ -1,3 +1,7 @@
+;;;; Cairo Drawing Line Caps
+;;;;
+;;;; Last update: 2025-09-20
+
 (in-package :cairo-example)
 
 (defun draw-line-cap (context width height)

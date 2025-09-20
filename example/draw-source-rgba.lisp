@@ -5,11 +5,11 @@
 ;;;; entire source. You can select these without any preparation with the
 ;;;; <tt>cairo:set-source-rgb</tt> and <tt>cairo:set-source-rgba</tt> functions.
 ;;;;
-;;;; 2025-1-16
+;;;; Last update: 2025-09-20
 
 (in-package :cairo-example)
 
-(defun cairo-draw-source-rgba (context width height)
+(defun draw-source-rgba (context width height)
   (cairo:save context)
   ;; Clear surface
   (cairo:set-source-rgb context 1.0 1.0 1.0)

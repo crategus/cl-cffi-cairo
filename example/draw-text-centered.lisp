@@ -1,3 +1,7 @@
+;;;; Cairo drawing centered Text
+;;;;
+;;;; Last update: 2025-09-20
+
 (in-package :cairo-example)
 
 (defun cairo-draw-text-centered (context width height)
@@ -16,5 +20,3 @@
     ;; Display text on the drawing area
     (cairo:move-to context (- (/ width 2) (/ twidth 2)) (/ height 2))
     (cairo:show-text context "Crategus")))
-
-;;; --- 2023-2-12 --------------------------------------------------------------

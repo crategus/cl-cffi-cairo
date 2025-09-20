@@ -8,11 +8,11 @@
 ;;;; half of the line width on each side of the path, filling a path fills
 ;;;; directly up to the edge of the path and no further.
 ;;;;
-;;;; 2024-1-16
+;;;; Last update: 2025-09-20
 
 (in-package :cairo-example)
 
-(defun cairo-draw-fill (context width height)
+(defun draw-fill (context width height)
   (cairo:save context)
   ;; Clear surface
   (cairo:set-source-rgb context 1.0 1.0 1.0)

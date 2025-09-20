@@ -5,11 +5,11 @@
 ;;;; around the path, according to the pen's line width, dash style, and line
 ;;;; caps.
 ;;;;
-;;;; 2025-1-16
+;;;; 2025-09-20
 
 (in-package :cairo-example)
 
-(defun cairo-draw-stroke (context width height)
+(defun draw-stroke (context width height)
   (cairo:save context)
   ;; Clear surface
   (cairo:set-source-rgb context 1.0 1.0 1.0)

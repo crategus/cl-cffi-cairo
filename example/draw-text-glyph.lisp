@@ -1,6 +1,10 @@
+;;;; Cairo drawing Text Glyph
+;;;;
+;;;; Last update: 2025-09-20
+
 (in-package :cairo-example)
 
-(defun cairo-draw-text-glyph (context width height)
+(defun draw-text-glyph (context width height)
   (let* ((font-size (min (truncate (- (/ height 20) 5))
                          (truncate (- (/ width 36) 5))))
          (glyphs nil))
@@ -29,5 +33,3 @@
       (format t "~&advance ~a ~a~%" xadvance yadvance))
     ;; Show the list of glyphs
     (cairo:show-glyphs context glyphs)))
-
-;;; --- 2023-2-17 --------------------------------------------------------------

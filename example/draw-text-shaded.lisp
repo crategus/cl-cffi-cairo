@@ -1,6 +1,10 @@
+;;;; Cairo drawing shaded Text
+;;;;
+;;;; Last update: 2025-09-20
+
 (in-package :cairo-example)
 
-(defun cairo-draw-text-shaded (context width height)
+(defun draw-text-shaded (context width height)
   ;; Paint a white background
   (cairo:set-source-rgb context 1.0 1.0 1.0)
   (cairo:paint context)
@@ -20,5 +24,3 @@
     (cairo:move-to context (+ 3 (- (/ width 2) (/ twidth 2)))
                            (+ 3 (/ height 2)))
     (cairo:show-text context "Crategus")))
-
-;;; --- 2023-2-12 --------------------------------------------------------------

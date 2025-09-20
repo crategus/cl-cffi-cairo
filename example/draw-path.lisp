@@ -56,11 +56,11 @@
 ;;;; and has no start or end. A closed path has no line caps for there is no
 ;;;; place to put them.
 ;;;;
-;;;; 2025-1-16
+;;;; 2025-09-20
 
 (in-package :cairo-example)
 
-(defun cairo-draw-path (context width height)
+(defun draw-path (context width height)
   (cairo:save context)
   ;; Clear surface
   (cairo:set-source-rgb context 1.0d0 1.0d0 1.0d0)

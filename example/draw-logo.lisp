@@ -1,3 +1,7 @@
+;;;; Cairo drawing Logo and translated Logo
+;;;;
+;;;; Last update: 2025-09-20
+
 (in-package :cairo-example)
 
 (defun draw-logo1 (context)
@@ -31,7 +35,7 @@
         (cairo:show-text context text)))
     (cairo:restore context)))
 
-(defun cairo-draw-logo (context width height)
+(defun draw-logo (context width height)
   (let ((xcenter (/ width 2)) (ycenter (/ height 2))
         (scale (min (/ width 2) (/ height 2))))
     ;; Clear surface
@@ -42,7 +46,7 @@
     (cairo:scale context scale scale)
     (draw-logo1 context)))
 
-(defun cairo-draw-logo-translate (context width height)
+(defun draw-logo-translate (context width height)
   (let ((xcenter (/ width 2)) (ycenter (/ height 2)) (shift 2)
         (scale (/ (min (/ width 2) (/ height 2)) 2)))
     ;; Clear surface
@@ -55,5 +59,3 @@
       (draw-logo1 context)
       (cairo:translate context shift 0)
       (cairo:rotate context (/ pi 2)))))
-
-;;; 2025-1-27

@@ -52,20 +52,20 @@
                ;; More draw functions
                (:file "draw-path-glyph")
 
-               (:file "png-image")
-               (:file "png-image-draw")
-               (:file "png-image-for-data")
-               (:file "png-image-from-png")
+               (:file "demo-png-image")
+               (:file "demo-png-image-draw")
+               (:file "demo-png-image-for-data")
+               (:file "demo-png-image-from-png")
 
-               (:file "svg-simple")
-               (:file "svg-draw")
+               (:file "demo-svg-simple")
+               (:file "demo-svg-draw")
 
-               (:file "pdf-simple")
-               (:file "pdf-draw")
-               (:file "pdf-draw-multipage")
+               (:file "demo-pdf-simple")
+               (:file "demo-pdf-draw")
+               (:file "demo-pdf-draw-multipage")
 
-               (:file "script-draw")
-               (:file "ps-draw")
+               (:file "demo-script-draw")
+               (:file "demo-ps-draw")
                ))
 
-;;; --- 2023-7-21 --------------------------------------------------------------
+;;; 2025-09-20

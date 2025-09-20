@@ -1,7 +1,7 @@
 (in-package :cairo-example)
 
-(defun demo-svg-draw (&optional (drawfunc #'cairo-draw-stroke))
-  (let* (;; Create a SVG surface and a Cairo context.
+(defun demo-svg-draw (&optional (drawfunc #'draw-stroke))
+  (let* (;; Create a SVG surface and a Cairo context
          (path (sys-path "out/svg-draw.svg"))
          (width 400)
          (height 400)
@@ -13,4 +13,4 @@
     (cairo:surface-destroy surface)
     (cairo:destroy context)))
 
-;;; --- 2023-2-12 --------------------------------------------------------------
+;;; 2025-09-20

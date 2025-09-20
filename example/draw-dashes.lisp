@@ -8,10 +8,12 @@
 ;;;; the dashing is disabled. If it is 1, a symmetric pattern is asumed with
 ;;;; alternating on and off portions of the size specified by the single value
 ;;;; in dashes.
+;;;;
+;;;; Last update: 2025-09-20
 
 (in-package :cairo-example)
 
-(defun cairo-draw-dashes (context width height)
+(defun draw-dashes (context width height)
   (let* ((offset (truncate (/ height 4)))
          (border (truncate (/ width 10))))
     ;; Paint a white background
@@ -36,5 +38,3 @@
     (cairo:move-to context border (* 3 offset))
     (cairo:line-to context (- width border) (* 3 offset))
     (cairo:stroke context)))
-
-;;; --- 2023-2-12 --------------------------------------------------------------

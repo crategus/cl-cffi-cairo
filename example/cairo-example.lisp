@@ -1,9 +1,7 @@
 (defpackage :cairo-example
   (:use :common-lisp)
   (:import-from :cairo)
-  (:export #:run-example
-
-           #:draw-arc
+  (:export #:draw-arc
            #:draw-arc-negative
            #:draw-clip
            #:draw-clip-image
@@ -25,26 +23,26 @@
            #:draw-mesh-coons-patch
            #:draw-mesh-gouraud-triangle-patch
 
-           #:cairo-draw-caps
-           #:cairo-draw-dashes
-           #:cairo-draw-joins
+           #:draw-caps
+           #:draw-dashes
+           #:draw-joins
 
-           #:cairo-draw-stroke
-           #:cairo-draw-fill
-           #:cairo-draw-text-letter
-           #:cairo-draw-paint
-           #:cairo-draw-mask
-           #:cairo-draw-source-rgba
-           #:cairo-draw-source-gradient
-           #:cairo-draw-path
-           #:cairo-draw-logo
-           #:cairo-draw-logo-translate
+           #:draw-stroke
+           #:draw-fill
+           #:draw-text-letter
+           #:draw-paint
+           #:draw-mask
+           #:draw-source-rgba
+           #:draw-source-gradient
+           #:draw-path
+           #:draw-logo
+           #:draw-logo-translate
 
-           #:cairo-draw-text-centered
-           #:cairo-draw-text-glyph
-           #:cairo-draw-text-gradient
-           #:cairo-draw-text-shaded
-           #:cairo-draw-text-soulmate
+           #:draw-text-centered
+           #:draw-text-glyph
+           #:draw-text-gradient
+           #:draw-text-shaded
+           #:draw-text-soulmate
 
            ;; More draw functions
            #:draw-path-glyph
@@ -61,19 +59,19 @@
            #:demo-pdf-draw
            #:demo-pdf-draw-multipage
 
-           #:script-draw
-           #:ps-draw
+           #:demo-script-draw
+           #:demo-ps-draw
            ))
 
 (in-package :cairo-example)
 
-;; Ensure directory for the output of test results
+;; Ensure directory for the output of examples
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (ensure-directories-exist
       (asdf:system-relative-pathname :cairo-example "out/")))
 
-;; Get the pathname for a file in the example directory
-(defun sys-path (filename &optional (system :cairo-example))
-  (asdf:system-relative-pathname system filename))
+;; Get pathname for a file in the example directory
+(defun sys-path (file &optional (system :cairo-example))
+  (asdf:system-relative-pathname system file))
 
-;;; --- 2024-1-12 --------------------------------------------------------------
+;;; 2025-09-20

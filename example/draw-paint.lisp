@@ -7,11 +7,11 @@
 ;;;; full source to destination, but it transfers only the provided percentage
 ;;;; of the color.
 ;;;;
-;;;; 2025-1-16
+;;;; Last update: 2025-09-20
 
 (in-package :cairo-example)
 
-(defun cairo-draw-paint (context width height)
+(defun draw-paint (context width height)
   (cairo:save context)
   ;; Clear surface
   (cairo:set-source-rgb context 1.0 1.0 1.0)

@@ -1,8 +1,10 @@
 ;;;; Cairo Drawing Line Caps
+;;;;
+;;;; Last update: 2025-09-20
 
 (in-package :cairo-example)
 
-(defun cairo-draw-caps (context width height)
+(defun draw-caps (context width height)
   (let* ((offset (truncate (/ height 4)))
          (border (truncate (/ width 5)))
          (line-width (truncate (/ height 10))))
@@ -46,5 +48,3 @@
                            (+ (* 3 offset) line-width))
     (cairo:stroke context)
     (cairo:restore context)))
-
-;;; --- 2023-2-12 --------------------------------------------------------------

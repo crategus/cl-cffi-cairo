@@ -7,11 +7,11 @@
 ;;;; <tt>cairo:show-text</tt> function caches glyphs so is much more efficient
 ;;;; if you work with a lot of text.
 ;;;;
-;;;; 2024-4-6
+;;;; Last update: 2025-09-20
 
 (in-package :cairo-example)
 
-(defun cairo-draw-text-letter (context width height)
+(defun draw-text-letter (context width height)
   (cairo:save context)
   ;; Clear surface
   (cairo:set-source-rgb context 1.0 1.0 1.0)

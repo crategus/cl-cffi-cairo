@@ -22,38 +22,38 @@
           (cairo:pdf-surface-add-outline surface id "Cairo Examples" "" :bold))
 
     (cairo:pdf-surface-set-page-label surface "Cairo stroke")
-    (funcall #'cairo-draw-stroke context width height)
+    (funcall #'draw-stroke context width height)
     (cairo:surface-show-page surface)
 
     (cairo:pdf-surface-set-page-label surface "Cairo fill")
-    (funcall #'cairo-draw-fill context width height)
+    (funcall #'draw-fill context width height)
     (cairo:surface-show-page surface)
 
     (cairo:pdf-surface-set-page-label surface "Cairo text letter")
-    (funcall #'cairo-draw-text-letter context width height)
+    (funcall #'draw-text-letter context width height)
     (cairo:show-page context)
 
     (cairo:pdf-surface-set-page-label surface "Cairo paint")
-    (funcall #'cairo-draw-paint context width height)
+    (funcall #'draw-paint context width height)
     (cairo:surface-show-page surface)
 
     (cairo:pdf-surface-set-page-label surface "Cairo mask")
-    (funcall #'cairo-draw-mask context width height)
+    (funcall #'draw-mask context width height)
     (cairo:surface-show-page surface)
 
     (cairo:pdf-surface-set-page-label surface "Cairo RGBA")
-    (funcall #'cairo-draw-source-rgba context width height)
+    (funcall #'draw-source-rgba context width height)
     (cairo:surface-show-page surface)
 
     (cairo:pdf-surface-set-page-label surface "Cairo gradient")
-    (funcall #'cairo-draw-source-gradient context width height)
+    (funcall #'draw-source-gradient context width height)
     (cairo:surface-show-page surface)
 
     (setf id
           (cairo:pdf-surface-add-outline surface id "Cairo Path" "" :bold))
 
     (cairo:pdf-surface-set-page-label surface "Cairo path")
-    (funcall #'cairo-draw-path context width height)
+    (funcall #'draw-path context width height)
     (cairo:surface-show-page surface)
 
     (cairo:pdf-surface-set-page-label surface "Cairo dash")

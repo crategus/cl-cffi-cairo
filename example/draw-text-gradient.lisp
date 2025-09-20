@@ -1,6 +1,10 @@
+;;;; Cairo Text Gradient
+;;;;
+;;;; Last update: 2025-09-20
+
 (in-package :cairo-example)
 
-(defun cairo-draw-text-gradient (context width height)
+(defun draw-text-gradient (context width height)
   (let* ((font-size (truncate (/ height 6)))
          (pattern (cairo:pattern-create-linear 0 15 0 (* 0.8 font-size))))
     ;; Paint a dark background
@@ -23,5 +27,3 @@
       (cairo:text-path context "Crategus")
       (setf (cairo:source context) pattern)
       (cairo:fill context))))
-
-;;; --- 2023-2-12 --------------------------------------------------------------

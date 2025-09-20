@@ -14,11 +14,11 @@
 ;;;; locations can be controlled with the <tt>cairo:pattern-extend</tt>
 ;;;; function.
 ;;;;
-;;;; 2025-1-16
+;;;; 2025-09-20
 
 (in-package :cairo-example)
 
-(defun cairo-draw-source-gradient (context width height)
+(defun draw-source-gradient (context width height)
   (cairo:save context)
   ;; Clear surface
   (cairo:set-source-rgb context 1.0 1.0 1.0)

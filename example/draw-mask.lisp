@@ -6,11 +6,11 @@
 ;;;; transferred to the destination. Where the pattern or surface is
 ;;;; transparent, nothing is transferred.
 ;;;;
-;;;; 2025-1-16
+;;;; 2025-09-20
 
 (in-package :cairo-example)
 
-(defun cairo-draw-mask (context width height)
+(defun draw-mask (context width height)
   (cairo:save context)
   ;; Clear surface
   (cairo:set-source-rgb context 1.0 1.0 1.0)

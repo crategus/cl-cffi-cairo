@@ -126,7 +126,7 @@
 (setf (liber:alias-for-symbol 'fill-rule-t)
       "CEnum"
       (liber:symbol-documentation 'fill-rule-t)
- "@version{2025-09-02}
+ "@version{2025-09-19}
   @begin{declaration}
 (cffi:defcenum fill-rule-t
   :winding
@@ -154,7 +154,8 @@
   does not pass through the end point of a segment or have a tricky
   intersection such as intersecting tangent to the path. Note that filling is
   not actually implemented in this way. This is just a description of the rule
-  that is applied. The default fill rule is the @code{:winding} value.
+  that is applied. The default fill rule is the
+  @val[cairo:fill-rule-t]{:winding} value.
   @see-symbol{cairo:context-t}
   @see-function{cairo:fill-rule}")
 
@@ -173,7 +174,7 @@
 (setf (liber:alias-for-symbol 'line-cap-t)
       "CEnum"
       (liber:symbol-documentation 'line-cap-t)
- "@version{2025-09-02}
+ "@version{2025-09-19}
   @begin{declaration}
 (cffi:defcenum line-cap-t
   :butt
@@ -193,7 +194,7 @@
     The @sym{cairo:line-cap-t} enumeration specifies how to render the endpoints
     of the path when stroking.
   @end{short}
-  The default line cap style is the @code{:butt} value.
+  The default line cap style is the @val[cairo:line-cap-t]{:butt} value.
   @see-symbol{cairo:context-t}
   @see-function{cairo:line-cap}")
 
@@ -212,7 +213,7 @@
 (setf (liber:alias-for-symbol 'line-join-t)
       "CEnum"
       (liber:symbol-documentation 'line-join-t)
- "@version{2025-09-02}
+ "@version{2025-09-19}
   @begin{declaration}
 (cffi:defcenum line-join-t
   :miter
@@ -233,7 +234,7 @@
     The @sym{cairo:line-join-t} enumeration specifies how to render the junction
     of two lines when stroking.
   @end{short}
-  The default line join style is the @code{:miter} value.
+  The default line join style is the @val[cairo:line-join-t]{:miter} value.
   @see-symbol{cairo:context-t}
   @see-function{cairo:miter-limit}
   @see-function{cairo:line-join}")
@@ -279,7 +280,7 @@
 (setf (liber:alias-for-symbol 'operator-t)
       "CEnum"
       (liber:symbol-documentation 'operator-t)
- "@version{2025-09-02}
+ "@version{2025-09-19}
   @begin{declaration}
 (cffi:defcenum operator-t
   :clear
@@ -364,7 +365,7 @@
         color images.}
       @entry[:hsl-luinosity]{Creates a color with the luminosity of the source
         and the hue and saturation of the target. This produces an inverse
-        effect to the @code{:hsl-color} value.}
+        effect to the @val[cairo:operator-t]{:hsl-color} value.}
     @end{simple-table}
   @end{values}
   @begin{short}

@@ -46,7 +46,7 @@
 (setf (liber:alias-for-symbol 'antialias-t)
       "CEnum"
       (liber:symbol-documentation 'antialias-t)
- "@version{2025-09-02}
+ "@version{2025-09-19}
   @begin{declaration}
 (cffi:defcenum antialias-t
   :default
@@ -80,16 +80,19 @@
   @end{short}
   As it is not necessarily clear from the above what advantages a particular
   antialias method provides, there is also a set of hints that have the
-  @code{:fast}, @code{:good}, and @code{:best} values.
+  @val[cairo:antialias-t]{:fast}, @val[cairo:antialias-t]{:good}, and
+  @val[cairo:antialias-t]{:best} values.
 
   These hints make no guarantee on how the backend will perform its
   rasterisation, if it even rasterises, nor that they have any differing effect
   other than to enable some form of antialiasing. In the case of glyph
-  rendering, the @code{:fast} and @code{:good} values will be mapped to the
-  @code{:gray} value, with the @code{:best} value being equivalent to the
-  @code{:subpixel} value. The interpretation of the @code{:default} value is
-  left entirely up to the backend, typically this will be similar to the
-  @code{:good} value.
+  rendering, the @val[cairo:antialias-t]{:fast} and
+  @val[cairo:antialias-t]{:good} values will be mapped to the
+  @val[cairo:antialias-t]{:gray} value, with the @val[cairo:antialias-t]{:best}
+  value being equivalent to the @val[cairo:antialias-t]{:subpixel} value. The
+  interpretation of the @val[cairo:antialias-t]{:default} value is left entirely
+  up to the backend, typically this will be similar to the
+  @val[cairo:antialias-t]{:good} value.
   @see-symbol{cairo:context-t}
   @see-function{cairo:antialias}")
 

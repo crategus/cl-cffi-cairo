@@ -156,7 +156,7 @@
 (setf (liber:alias-for-symbol 'pdf-version-t)
       "CEnum"
       (liber:symbol-documentation 'pdf-version-t)
- "@version{2025-09-01}
+ "@version{2025-09-19}
   @begin{declaration}
 (cffi:defcenum pdf-version-t
   :version-1-4
@@ -170,8 +170,8 @@
     @begin[code]{simple-table}
       @entry[:version-1-4]{The version 1.4 of the PDF specification.}
       @entry[:version-1-5]{The version 1.5 of the PDF specification.}
-      @entry[:version-1-6]{The version 1.6 of the PDF specification.}
-      @entry[:version-1-7]{The version 1.7 of the PDF specification.}
+      @entry[:version-1-6]{The version 1.6 of the PDF specification. Since 1.18}
+      @entry[:version-1-7]{The version 1.7 of the PDF specification. Since 1.18}
     @end{simple-table}
   @end{values}
   @begin{short}
@@ -188,17 +188,17 @@
 
 (defmacro with-pdf-surface ((surface path width height) &body body)
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-19}
   @syntax{(cairo:with-pdf-surface (surface path width height) body) => result}
   @argument[surface]{a PDF @sym{cairo:surface-t} instance}
-  @argument[path]{a path or namestring for a filename for the PDF output,
+  @argument[path]{a pathname or namestring with a path for the PDF output,
     @code{nil} may be used to specify no output, this will generate a PDF
     surface that may be queried and used as a source, without generating a
     temporary file}
   @argument[width]{a number coerced to a double float for the width of
-    the surface, in points (1 point == 1/72 inch)}
+    the surface, in points (1 point equals 1/72 inch)}
   @argument[height]{a number coerced to a double float for the height of
-    the surface, in points (1 point == 1/72 inch)}
+    the surface, in points (1 point equals 1/72 inch)}
   @begin{short}
     The @sym{cairo:with-pdf-surface} macro allocates a new PDF
     @sym{cairo:surface-t} instance for the given @arg{path}, @arg{width}, and
@@ -206,7 +206,13 @@
   @end{short}
   After execution of the body the allocated memory for the PDF surface
   is released.
-  @see-symbol{cairo:surface-t}"
+  @begin[Notes]{dictionary}
+    The PDF surface is created with the @fun{cairo:pdf-surface-create} function
+    and released with the @fun{cairo:surface-destroy} function.
+  @end{dictionary}
+  @see-symbol{cairo:surface-t}
+  @see-function{cairo:pdf-surface-create}
+  @see-function{cairo:surface-destroy}"
   `(let ((,surface (pdf-surface-create ,path ,width ,height)))
      (unwind-protect
        (progn ,@body)
@@ -266,15 +272,15 @@
 
 (defun pdf-surface-create (path width height)
  #+liber-documentation
- "@version{2025-09-02}
-  @argument[path]{a namestring or pathname with a path for the PDF output
+ "@version{2025-09-19}
+  @argument[path]{a pathname or namestring with a path for the PDF output
     (must be writable), @code{nil} may be used to specify no output, this will
     generate a PDF surface that may be queried and used as a source, without
     generating a temporary file}
-  @argument[width]{a double float for the width of the surface, in
-    points (1 point == 1/72.0 inch)}
-  @argument[height]{a double float for the height of the surface, in
-    points (1 point == 1/72.0 inch)}
+  @argument[width]{a number coerced to a double float for the width of the
+    surface, in points (1 point == 1/72.0 inch)}
+  @argument[height]{a number coerced to a double float for the height of the
+    surface, in points (1 point == 1/72.0 inch)}
   @begin{return}
     The newly created @sym{cairo:surface-t} instance. The caller owns the
     surface and should call the @fun{cairo:surface-destroy} function when done
@@ -284,7 +290,7 @@
   @end{return}
   @begin{short}
     Creates a PDF surface of the specified size in points to be written to
-    @arg{filename}.
+    @arg{path}.
   @end{short}
   @see-symbol{cairo:surface-t}
   @see-function{cairo:surface-destroy}

@@ -72,7 +72,7 @@ third argument is omitted, the size of the drawing context is width x width. The
 following is an example of calling the demo function with all three arguments
 set to values different from the defaults:
 ```
-(demo-pdf-draw #draw-mask 350 400)
+(demo-pdf-draw 'draw-mask 350 400)
 =>
 Draw function : DRAW-MASK (350 x 400 size)
 Save PDF to   : .../cairo/example/out/draw-mask.pdf

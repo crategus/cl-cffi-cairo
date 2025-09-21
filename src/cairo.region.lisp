@@ -325,10 +325,11 @@
 
 (cffi:defcfun ("cairo_region_status" region-status) status-t
  #+liber-documentation
- "@version{2025-09-01}
+ "@version{2025-09-20}
   @argument[region]{a @sym{cairo:region-t} instance}
   @begin{return}
-    The @sym{cairo:status-t} value that is @code{:success} or @code{:no-memory}.
+    The @sym{cairo:status-t} value that is @val[cairo:status-t]{:success} or
+    @val[cairo:status-t]{:no-memory}.
   @end{return}
   @begin{short}
     Checks whether an error has previous occurred for this region instance.
@@ -475,7 +476,7 @@
 
 (defun region-contains-rectangle (region x y width height)
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @argument[region]{a @sym{cairo:region-t} instance}
   @argument[x]{an integer for the x coordinate of the left side of the
     rectangle}
@@ -490,10 +491,11 @@
     Checks whether the given rectangle is inside, outside or partially contained
     in @arg{region}.
   @end{short}
-  Returns the @code{:in} value if @arg{rectangle} is entirely inside
-  @arg{region}, the @code{:out} value if @arg{rectangle} is entirely outside
-  @arg{region}, or the @code{:part} value if @arg{rectangle} is partially inside
-  and partially outside @arg{region}.
+  Returns the @val[cairo:region-overlap-t]{:in} value if @arg{rectangle} is
+  entirely inside @arg{region}, the @val[cairo:region-overlap-t]{:out} value if
+  @arg{rectangle} is entirely outside @arg{region}, or the
+  @val[cairo:region-overlap-t]{:part} value if @arg{rectangle} is partially
+  inside and partially outside @arg{region}.
   @see-symbol{cairo:region-t}
   @see-symbol{cairo:region-overlap-t}"
   (cffi:with-foreign-object (rect '(:struct rectangle-int-t))

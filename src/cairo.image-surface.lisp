@@ -157,7 +157,7 @@
 (cffi:defcfun ("cairo_image_surface_create_for_data"
                image-surface-create-for-data) (:pointer (:struct surface-t))
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @argument[data]{a pointer to a buffer supplied by the application in which to
     write contents, this pointer must be suitably aligned for any kind of
     variable, for example, a pointer returned by @code{malloc()}}
@@ -177,8 +177,8 @@
     with it. This function always returns a valid surface, but it will return
     a \"nil\" surface in the case of an error such as out of memory or an
     invalid stride value. In case of invalid stride value the error status of
-    the returned surface will be @code{:invalid-stride}. You can use the
-    @fun{cairo:surface-status} function to check for this.
+    the returned surface will be @val[cairo:status-t]{:invalid-stride}. You can
+    use the @fun{cairo:surface-status} function to check for this.
   @end{return}
   @begin{short}
     Creates an image surface for the provided pixel data.

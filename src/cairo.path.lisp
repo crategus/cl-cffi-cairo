@@ -249,11 +249,11 @@
 
 (defun path-status (path)
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-20}
   @argument[path]{a @sym{cairo:path-t} instance}
   @return{The current @sym{cairo:status-t} value for the error status.}
   @begin{short}
-    Accessor of the @code{status} slot of the @sym{cairo:path-t} structure.
+    The accessor for the @code{status} slot of the @sym{cairo:path-t} structure.
   @end{short}
   @see-symbol{cairo:path-t}
   @see-symbol{cairo:status-t}"
@@ -268,11 +268,11 @@
 
 (defun path-data (path)
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-20}
   @argument[path]{a @sym{cairo:path-t} instance}
   @return{The @sym{cairo:path-data-t} instances in the path.}
   @begin{short}
-    Accessor of the @code{data} slot of the @sym{cairo:path-t} structure.
+    The accessor for the @code{data} slot of the @sym{cairo:path-t} structure.
   @end{short}
   @see-symbol{cairo:path-t}
   @see-symbol{cairo:path-data-t}"
@@ -287,11 +287,12 @@
 
 (defun path-numdata (path)
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-20}
   @argument[path]{a @sym{cairo:path-t} instance}
   @return{The integer for the number of elements in the data array.}
   @begin{short}
-    Accessor of the @code{numdata} slot of the @sym{cairo:path-t} structure.
+    The accessor for the @code{numdata} slot of the @sym{cairo:path-t}
+    structure.
   @end{short}
   @see-symbol{cairo:path-t}"
   (cffi:foreign-slot-value path '(:struct path-t) 'numdata))
@@ -307,7 +308,7 @@
 
 (cffi:defcfun ("cairo_copy_path" copy-path) (:pointer (:struct path-t))
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @argument[cr]{a @sym{cairo:context-t} instance}
   @begin{return}
     The @sym{cairo:path-t} instance for the copy of the  current path. The
@@ -325,7 +326,7 @@
   @begin{itemize}
     @begin{item}
       If there is insufficient memory to copy the path. In this case the status
-      of the path will be set to the @code{:no-memory} value.
+      of the path will be set to the @val[cairo:status-t]{:no-memory} value.
     @end{item}
     @begin{item}
       If @arg{cr} is already in an error state. In this case the
@@ -350,7 +351,7 @@
 (cffi:defcfun ("cairo_copy_path_flat" copy-path-flat)
     (:pointer (:struct path-t))
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @argument[cr]{a @sym{cairo:context-t} instance}
   @begin{return}
     The @sym{cairo:path-t} instance for the copy of the  current path. The
@@ -366,15 +367,16 @@
   This function is like the @fun{cairo:copy-path} function except that any
   curves in the path will be approximated with piecewise-linear approximations,
   accurate to within the current tolerance value. That is, the result is
-  guaranteed to not have any @code{:curve-to} elements which will instead be
-  replaced by a series of @code{:line-to} elements.
+  guaranteed to not have any @val[cairo:path-data-type-t]{:curve-to} elements
+  which will instead be replaced by a series of
+  @val[cairo:path-data-type-t]{:line-to} elements.
 
   This function will always return a valid path, but the result will have
   no data, if either of the following conditions hold:
   @begin{itemize}
     @begin{item}
       If there is insufficient memory to copy the path. In this case the status
-      of the path will be set to the @code{:no-memory} value.
+      of the path will be set to the @val[cairo:status-t]{:no-memory} value.
     @end{item}
     @begin{item}
       If @arg{cr} is already in an error state. In this case the
@@ -667,12 +669,13 @@ fill     stroke
   function, this function will have no effect.
   @begin[Notes]{dictionary}
     Any call to the @fun{cairo:close-path} function will place an explicit
-    @code{:move-to} element into the path immediately after the
-    @code{:close-path} element, which can be seen in the @fun{cairo:copy-path}
-    function for example. This can simplify path processing in some cases as it
-    may not be necessary to save the \"last @code{:move-to} point\" during
-    processing as the @code{:move-to} element immediately after the
-    @code{:close-path} element will provide that point.
+    @val[cairo:path-data-type-t]{:move-to} element into the path immediately
+    after the @val[cairo:path-data-type-t]{:close-path} element, which can be
+    seen in the @fun{cairo:copy-path} function for example. This can simplify
+    path processing in some cases as it may not be necessary to save the \"last
+    @val[cairo:path-data-type-t]{:move-to} point\" during processing as the
+    @val[cairo:path-data-type-t]{:move-to} element immediately after the
+    @val[cairo:path-data-type-t]{:close-path} element will provide that point.
   @end{dictionary}
   @see-symbol{cairo:context-t}
   @see-function{cairo:move-to}
@@ -695,7 +698,7 @@ fill     stroke
 
 (defun path-extents (cr)
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-20}
   @argument[cr]{a @sym{cairo:context-t} instance}
   @begin{return}
     @arg{x1} -- a number for the left of the resulting extents @br{}
@@ -715,9 +718,10 @@ fill     stroke
   by the corresponding drawing operations.
 
   The result of the @fun{cairo:path-extents} function is defined as equivalent
-  to the limit of the @fun{cairo:stroke-extents} function with the @code{:round}
-  value as the line width approaches 0.0, but never reaching the empty-rectangle
-  returned by the @fun{cairo:stroke-extents} function for a line width of 0.0.
+  to the limit of the @fun{cairo:stroke-extents} function with the
+  @val[cairo:line-cap-t]{:round} value as the line width approaches 0.0, but
+  never reaching the empty-rectangle returned by the @fun{cairo:stroke-extents}
+  function for a line width of 0.0.
 
   Specifically, this means that zero-area sub-paths such as @fun{cairo:move-to},
   @fun{cairo:line-to} segments, even degenerate cases where the coordinates to
@@ -785,7 +789,7 @@ fill     stroke
 
 (defun rel-move-to (cr dx dy)
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @argument[cr]{a @sym{cairo:context-t} instance}
   @argument[dx]{a number for the x offset}
   @argument[dy]{a number for the y offset}
@@ -803,7 +807,8 @@ fill     stroke
 (cairo:move-to cr (+ x dx) (+ y dy))
   @end{pre}
   It is an error to call this function with no current point. Doing so will
-  cause @arg{cr} to shutdown with a @code{:no-current-point} status.
+  cause @arg{cr} to shutdown with an @val[cairo:status-t]{:no-current-point}
+  error status.
   @begin[Notes]{dictionary}
     The numbers for the arguments are coerced to double floats before being
     passed to the foreign C function.
@@ -863,7 +868,7 @@ fill     stroke
 
 (defun rel-line-to (cr dx dy)
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @argument[cr]{a @sym{cairo:context-t} instance}
   @argument[dx]{a number for the x offset to the end of the new line}
   @argument[dy]{a number for the y offset to the end of the new line}
@@ -883,7 +888,8 @@ fill     stroke
 (cairo:line-to cr (+ x dx) (+ y dy))
   @end{pre}
   It is an error to call this function with no current point. Doing so will
-  cause @arg{cr} to shutdown with a @code{:no-current-point} status.
+  cause @arg{cr} to shutdown with an @val[cairo:status-t]{:no-current-point}
+  error status.
   @begin[Notes]{dictionary}
     The numbers for the arguments are coerced to double floats before being
     passed to the foreign C function.
@@ -957,7 +963,7 @@ fill     stroke
 
 (defun rel-curve-to (cr dx1 dy1 dx2 dy2 dx3 dy3)
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @argument[cr]{a @sym{cairo:context-t} instance}
   @argument[dx1]{a number for the x offset to the first control point}
   @argument[dy1]{a number for the y offset to the first control point}
@@ -985,7 +991,8 @@ fill     stroke
                    (+ x dx3) (+ y dy3))
   @end{pre}
   It is an error to call this function with no current point. Doing so will
-  cause @arg{cr} to shutdown with a @code{:no-current-point} status.
+  cause @arg{cr} to shutdown with an @val[cairo:status-t]{:no-current-point}
+  error status.
   @begin[Notes]{dictionary}
     The numbers for the arguments are coerced to double floats before being
     passed to the foreign C function.

@@ -201,7 +201,7 @@
       @about-function{mesh-pattern-path}
       @about-function{pattern-user-data}
     @end{subsection}
-    @begin[Indroduction to Regions]{subsection}
+    @begin[Introduction to Regions]{subsection}
       Regions are a simple graphical data type representing an area of
       integer aligned rectangles. They are often used on raster surfaces to
       track areas of interest, such as change or clip areas.
@@ -300,7 +300,7 @@
     @end{subsection}
   @end{section}
   @begin[Fonts]{section}
-    @begin[Indroduction to Font Faces]{subsection}
+    @begin[Introduction to Font Faces]{subsection}
       Base class for font faces. The @sym{cairo:font-face-t} structure
       represents a particular font at a particular weight, slant, and other
       characteristic but no size, transformation, or size.
@@ -320,7 +320,7 @@
       @about-function{font-face-type}
       @about-function{font-face-user-data}
     @end{subsection}
-    @begin[Indroduction to Scaled Fonts]{subsection}
+    @begin[Introduction to Scaled Fonts]{subsection}
       The @sym{cairo:scaled-font-t} structure represents a realization of a font
       face at a particular size and transformation and a certain set of font
       options.
@@ -531,30 +531,35 @@
       The PDF surface is used to render Cairo graphics to Adobe PDF files and
       is a multi-page vector surface backend.
 
-      The following mime types are supported: @code{CAIRO_MIME_TYPE_JPEG},
-      @code{CAIRO_MIME_TYPE_JP2}, @code{CAIRO_MIME_TYPE_UNIQUE_ID},
-      @code{CAIRO_MIME_TYPE_JBIG2}, @code{CAIRO_MIME_TYPE_JBIG2_GLOBAL},
-      @code{CAIRO_MIME_TYPE_JBIG2_GLOBAL_ID}, @code{CAIRO_MIME_TYPE_CCITT_FAX},
-      @code{CAIRO_MIME_TYPE_CCITT_FAX_PARAMS}.
-
+      The following MIME types are supported:
+      @begin{itemize}
+        @item{@code{\"image/jpeg\"},}
+        @item{@code{\"image/jp2\"},}
+        @item{@code{\"application/x-cairo.uuid\"},}
+        @item{@code{\"application/x-cairo.jbig2\"},}
+        @item{@code{\"application/x-cairo.jbig2-global\"},}
+        @item{@code{\"application/x-cairo.jbig2-global-id\"},}
+        @item{@code{\"image/g3fax\"},}
+        @item{@code{\"application/x-cairo.ccitt.params\"}.}
+      @end{itemize}
       @subheading{JBIG2 Images}
       JBIG2 data in PDF must be in the embedded format as described in ISO/IEC
-      11544. Image specific JBIG2 data must be in @code{CAIRO_MIME_TYPE_JBIG2}.
-      Any global segments in the JBIG2 data (segments with page association
-      field set to 0) must be in @code{CAIRO_MIME_TYPE_JBIG2_GLOBAL}. The global
-      data may be shared by multiple images. All images sharing the same global
-      data must set @code{CAIRO_MIME_TYPE_JBIG2_GLOBAL_ID} to a unique
-      identifier. At least one of the images must provide the global data using
-      @code{CAIRO_MIME_TYPE_JBIG2_GLOBAL}. The global data will only be embedded
-      once and shared by all JBIG2 images with the same
-      @code{CAIRO_MIME_TYPE_JBIG2_GLOBAL_ID}.
+      11544. Image specific JBIG2 data must be in
+      @code{\"application/x-cairo.jbig2\"}. Any global segments in the JBIG2
+      data (segments with page association field set to 0) must be in
+      @code{\"application/x-cairo.jbig2-global\"}. The global data may be shared
+      by multiple images. All images sharing the same global data must set
+      @code{\"application/x-cairo.jbig2-global-id\"} to a unique identifier. At
+      least one of the images must provide the global data using
+      @code{\"application/x-cairo.jbig2-global\"}. The global data will only be
+      embedded once and shared by all JBIG2 images with the same
+      @code{\"application/x-cairo.jbig2-global-id\"}.
 
       @subheading{CCITT Fax Images}
-      The @code{CAIRO_MIME_TYPE_CCITT_FAX} mime data requires a number of
-      decoding parameters These parameters are specified using
-      @code{CAIRO_MIME_TYPE_CCITT_FAX_PARAMS}.
-      @code{CAIRO_MIME_TYPE_CCITT_FAX_PARAMS} mime data must contain a string
-      of the form @code{\"param1=value1 param2=value2 ...\"}.
+      The @code{\"image/g3fax\"} MIME data requires a number of decoding
+      parameters These parameters are specified using
+      @code{\"application/x-cairo.ccitt.params\"}. This MIME data must contain
+      a string of the form @code{\"param1=value1 param2=value2 ...\"}.
       @begin[code]{table}
         @entry[Columns]{An integer specifying the width of the image
           in pixels. [required]}
@@ -582,7 +587,7 @@
       PostScript Language Reference and Portable Document Format (PDF). Refer
       to these documents for further details.
 
-      An example @code{CAIRO_MIME_TYPE_CCITT_FAX_PARAMS} string is:
+      An example @code{\"application/x-cairo.ccitt.params\"} string is:
       @begin{pre}
 \"Columns=10230 Rows=40000 K=1 EndOfLine=true EncodedByteAlign=1 BlackIs1=false\"
       @end{pre}
@@ -622,41 +627,43 @@
       @about-function{surface-write-to-png}
       @about-function{surface-write-to-png-stream}
     @end{subsection}
-    @begin[Indroduction to PostScript Surfaces]{subsection}
+    @begin[Introduction to PostScript Surfaces]{subsection}
       The PostScript surface is used to render Cairo graphics to Adobe
       PostScript files and is a multi-page vector surface backend.
 
-      The following mime types are supported: @code{CAIRO_MIME_TYPE_JPEG},
-      @code{CAIRO_MIME_TYPE_UNIQUE_ID}, @code{CAIRO_MIME_TYPE_CCITT_FAX},
-      @code{CAIRO_MIME_TYPE_CCITT_FAX_PARAMS}, @code{CAIRO_MIME_TYPE_CCITT_FAX},
-      @code{CAIRO_MIME_TYPE_CCITT_FAX_PARAMS}, @code{CAIRO_MIME_TYPE_EPS},
-      @code{CAIRO_MIME_TYPE_EPS_PARAMS}.
-
+      The following MIME types are supported:
+      @begin{itemize}
+        @item{@code{\"image/jpeg\"},}
+        @item{@code{\"application/x-cairo.uuid\"},}
+        @item{@code{\"image/g3fax\"},}
+        @item{@code{\"application/x-cairo.ccitt.params\"},}
+        @item{@code{\"application/postscript\"},}
+        @item{@code{\"application/x-cairo.eps.params\"}.}
+      @end{itemize}
       Source surfaces used by the PostScript surface that have a
-      @code{CAIRO_MIME_TYPE_UNIQUE_ID} mime type will be stored in PostScript
+      @code{\"application/x-cairo.uuid\"} MIME type will be stored in PostScript
       printer memory for the duration of the print job. The
-      @code{CAIRO_MIME_TYPE_UNIQUE_ID} mime type should only be used for small
-      frequently used sources.
+      @code{\"application/x-cairo.uuid\"} MIME type should only be used for
+      small frequently used sources.
 
-      The @code{CAIRO_MIME_TYPE_CCITT_FAX} and
-      @code{CAIRO_MIME_TYPE_CCITT_FAX_PARAMS} mime types are documented in
-      CCITT Fax Images.
+      The @code{\"image/g3fax\"} and @code{\"application/x-cairo.ccitt.params\"}
+      MIME types are documented in CCITT Fax Images.
 
       @subheading{Embedding EPS files}
       Encapsulated PostScript files can be embedded in the PS output by setting
-      the @code{CAIRO_MIME_TYPE_EPS} mime data on a surface to the EPS data and
-      painting the surface. The EPS will be scaled and translated to the extents
-      of the surface the EPS data is attached to.
+      the @code{\"application/postscript\"} MIME data on a surface to the EPS
+      data and painting the surface. The EPS will be scaled and translated to
+      the extents of the surface the EPS data is attached to.
 
-      The @code{CAIRO_MIME_TYPE_EPS} mime type requires the
-      @code{CAIRO_MIME_TYPE_EPS_PARAMS} mime data to also be provided in order
-      to specify the embeddding parameters. @code{CAIRO_MIME_TYPE_EPS_PARAMS}
-      mime data must contain a string of the form
-      @code{\"bbox=[llx lly urx ury]\"} that specifies the bounding box (in PS
-      coordinates) of the EPS graphics. The parameters are: @code{lower left x},
-      @code{lower left y}, @code{upper right x}, @code{upper right y}. Normally
-      the @code{bbox} data is identical to the @code{%%BoundingBox} data in
-      the EPS file.
+      The @code{\"application/postscript\"} MIME type requires the
+      @code{\"application/x-cairo.eps.params\"} MIME data to also be provided in
+      order to specify the embeddding parameters.
+      @code{\"application/x-cairo.eps.params\"} MIME data must contain a string
+      of the form @code{\"bbox=[llx lly urx ury]\"} that specifies the bounding
+      box (in PS coordinates) of the EPS graphics. The parameters are:
+      @code{lower left x}, @code{lower left y}, @code{upper right x},
+      @code{upper right y}. Normally the @code{bbox} data is identical to the
+      @code{%%BoundingBox} data in the EPS file.
     @end{subsection}
     @begin[Type and functions for PostScript Surfaces]{subsection}
       @about-symbol{ps-level-t}
@@ -672,7 +679,7 @@
       @about-function{ps-surface-dsc-begin-page-setup}
       @about-function{ps-surface-dsc-comment}
     @end{subsection}
-    @begin[Indroduction to Recording Surfaces]{subsection}
+    @begin[Introduction to Recording Surfaces]{subsection}
       A recording surface is a surface that records all drawing operations at
       the highest level of the surface backend interface, that is, the level
       of paint, mask, stroke, fill, and text glyphs. The recording surface can
@@ -720,7 +727,7 @@
       @about-function{svg-versions}
       @about-function{svg-version-to-string}
     @end{subsection}
-    @begin[Indroduction to Script Surfaces]{subsection}
+    @begin[Introduction to Script Surfaces]{subsection}
       The script surface provides the ability to render to a native script that
       matches the Cairo drawing model. The scripts can be replayed using tools
       under the @file{util/cairo-script} directory, or with the
@@ -759,8 +766,8 @@
     @end{subsection}
     @begin[Introduction to Error handling]{subsection}
       Cairo uses a single status type to represent all kinds of errors. A
-      status value of @code{:success} represents no error and has an integer
-      value of zero. All other status values represent an error.
+      status value of @val[cairo:status-t]{:success} represents no error and
+      has an integer value of zero. All other status values represent an error.
 
       Cairo's error handling is designed to be easy to use and safe. All major
       Cairo objects retain an error status internally which can be queried

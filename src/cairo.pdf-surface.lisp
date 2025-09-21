@@ -451,7 +451,7 @@
 
 (cffi:defcfun ("cairo_pdf_surface_set_metadata" pdf-surface-set-metadata) :void
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-20}
   @argument[surface]{a @sym{cairo:surface-t} instance}
   @argument[metadata]{a @sym{cairo:pdf-metadata-t} value for the metadata item
     to set}
@@ -459,10 +459,11 @@
   @begin{short}
     Set document metadata.
   @end{short}
-  The @code{:create-date} and @code{:mod-date} values must be in ISO-8601
-  format: @code{YYYY-MM-DDThh:mm:ss}. An optional timezone of the form
-  \"[+/-]hh:mm@}\" or \"Z\" for UTC time can be appended. All other metadata
-  values can be any UTF-8 string.
+  The @val[cairo:pdf-metadata-t]{:create-date} and
+  @val[cairo:pdf-metadata-t]{:mod-date} values must be in ISO-8601 format:
+  @code{YYYY-MM-DDThh:mm:ss}. An optional timezone of the form \"[+/-]hh:mm@}\"
+  or \"Z\" for UTC time can be appended. All other metadata values can be any
+  UTF-8 string.
   @begin[Examples]{dictionary}
      @begin{pre}
 (cairo:pdf-surface-set-metadata surface :title \"My Document\")

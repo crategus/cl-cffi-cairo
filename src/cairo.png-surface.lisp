@@ -49,7 +49,7 @@
 
 (defun image-surface-create-from-png (path)
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @argument[path]{a namestring or pathname for the path of the PNG file to load}
   @begin{return}
     The new @sym{cairo:surface-t} instance initialized with the contents of the
@@ -60,10 +60,11 @@
     file.
   @end{short}
   A \"nil\" surface can be checked for with the @fun{cairo:surface-status}
-  function which may return one of the following values: @code{:no-memory},
-  @code{:file-not-found}, or @code{:read-error}. Alternatively, you can allow
-  errors to propagate through the drawing operations and check the status on
-  the context upon completion using the @fun{cairo:status} function.
+  function which may return one of the following values:
+  @val[cairo:status-t]{:no-memory}, @val[cairo:status-t]{:file-not-found}, or
+  @val[cairo:status-t]{:read-error}. Alternatively, you can allow errors to
+  propagate through the drawing operations and check the status on the context
+  upon completion using the @fun{cairo:status} function.
   @see-symbol{cairo:surface-t}
   @see-function{cairo:status}
   @see-function{cairo:surface-status}"
@@ -93,15 +94,15 @@
 
 (defun surface-write-to-png (surface path)
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-20}
   @argument[surface]{a @sym{cairo:surface-t} instance for pixel contents}
   @argument[path]{a namestring or pathname for the path of a file to write to}
   @begin{return}
-    @code{:success} if the PNG file was written successfully. Otherwise,
-    @code{:no-memory} if memory could not be allocated for the operation or
-    @code{:surface-type-mismatch} if the surface does not have pixel contents,
-    or @code{:write-error} if an I/O error occurs while attempting to write
-    the file.
+    @val[cairo:status-t]{:success} if the PNG file was written successfully.
+    Otherwise, @val[cairo:status-t]{:no-memory} if memory could not be allocated
+    for the operation or @val[cairo:status-t]{:surface-type-mismatch} if the
+    surface does not have pixel contents, or @val[cairo:status-t]{:write-error}
+    if an I/O error occurs while attempting to write the file.
   @end{return}
   @begin{short}
     Writes the contents of the image surface to a new file as a PNG image.

@@ -84,7 +84,7 @@
 
 (defmacro with-script-surface ((surface path content width height) &body body)
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @syntax{(cairo:with-script-surface (surface path content width height) body)
     => result}
   @argument[surface]{a newly allocated @sym{cairo:surface-t} instance}
@@ -95,8 +95,8 @@
   @begin{short}
     The @fun{cairo:with-script-surface} macro allocates a new
     @sym{cairo:surface-t} instance for a newly created @sym{cairo:device-t}
-    instance of @code{:script} type and executes the body that uses the Cairo
-    script surface.
+    instance of @val[cairo:device-type-t]{:script} type and executes the body
+    that uses the Cairo script surface.
   @end{short}
   After execution of the body the allocated memory for the Cairo surface and the
   Cairo device is released. This macro calls the @fun{cairo:script-create}
@@ -212,11 +212,14 @@ pop
 (cffi:defcfun ("cairo_script_from_recording_surface"
                script-from-recording-surface) status-t
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-20}
   @argument[script]{a @sym{cairo:device-t} instance}
   @argument[surface]{a @sym{cairo:surface-t} instance for the recording surface
     to replay}
-  @return{The @code{:success} value on successful completion or an error code.}
+  @begin{return}
+    The @val[cairo:status-t]{:success} value on successful completion or an
+    error code.
+  @end{return}
   @short{Converts the recorded operations in @arg{surface} into a script.}
   @see-symbol{cairo:device-t}
   @see-symbol{cairo:surface-t}"

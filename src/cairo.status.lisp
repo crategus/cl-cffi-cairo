@@ -100,7 +100,7 @@
 (setf (liber:alias-for-symbol 'status-t)
       "CEnum"
       (liber:symbol-documentation 'status-t)
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @begin{declaration}
 (cffi:defcenum status-t
   :success
@@ -208,9 +208,10 @@
         was used outside of a @fun{cairo:mesh-pattern-begin-patch} and
         @fun{cairo:mesh-pattern-end-patch} pair of functions.}
       @entry[:device-finished]{Target device has been finished.}
-      @entry[:jbig2-global-missing]{@code{CAIRO_MIME_TYPE_JBIG2_GLOBAL_ID} has
-        been used on at least one image but no image provided
-        @code{CAIRO_MIME_TYPE_JBIG2_GLOBAL}.}
+      @entry[:jbig2-global-missing]{The
+        @code{\"application/x-cairo.jbig2-global-id\"} MIME type has been used
+        on at least one image but no image provided the
+        @code{\"application/x-cairo.jbig2-global\"} MIME type.}
       @entry[:png-error]{Error occurred in @code{libpng} while reading from or
         writing to a PNG file.}
       @entry[:freetype-error]{Error occurred in @code{libfreetype}.}
@@ -307,7 +308,7 @@
                 (:device-error . "an operation to the device caused an unspecified error")
                 (:invalid-mesh-construction . "invalid operation during mesh pattern construction")
                 (:device-finished . "the target device has been finished")
-                (:jbig2-global-missing . "CAIRO_MIME_TYPE_JBIG2_GLOBAL_ID used but no CAIRO_MIME_TYPE_JBIG2_GLOBAL data provided")
+                (:jbig2-global-missing . "'application/x-cairo.jbig2-global-id' used but no 'application/x-cairo.jbig2-global' data provided")
                 (:png-error . "error occurred in libpng while reading from or writing to a PNG file")
                 (:freetype-error . "error occurred in libfreetype")
                 (:win32-gdk-error . "error occurred in the Windows Graphics Device Interface")

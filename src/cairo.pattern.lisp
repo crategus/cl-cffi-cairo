@@ -102,7 +102,7 @@
 (setf (liber:alias-for-symbol 'extend-t)
       "CEnum"
       (liber:symbol-documentation 'extend-t)
- "@version{2025-09-02}
+ "@version{2025-09-20}
   @begin{declaration}
 (cffi:defcenum extend-t
   :none
@@ -127,8 +127,8 @@
   @end{short}
   Mesh patterns are not affected by the extend mode.
 
-  The default extend mode is @code{:none} for surface patterns and @code{:pad}
-  for gradient patterns.
+  The default extend mode is @val[cairo:extend-t]{:none} for surface patterns
+  and @val[cairo:extend-t]{:pad} for gradient patterns.
   @see-symbol{cairo:pattern-t}
   @see-function{cairo:pattern-extend}")
 
@@ -150,7 +150,7 @@
 (setf (liber:alias-for-symbol 'filter-t)
       "CEnum"
       (liber:symbol-documentation 'filter-t)
- "@version{2025-09-02}
+ "@version{2025-09-20}
   @begin{declaration}
 (cffi:defcenum filter-t
   :fast
@@ -163,9 +163,9 @@
   @begin{values}
     @begin[code]{simple-table}
       @entry[:fast]{A high-performance filter, with quality similar to
-        @code{:nearest}.}
+        @val[cairo:filter-t]{:nearest}.}
       @entry[:good]{A reasonable-performance filter, with quality similar to
-        @code{:bilinear}.}
+        @val[cairo:filter-t]{:bilinear}.}
       @entry[:best]{The highest-quality available, performance may not be
         suitable for interactive use.}
       @entry[:nearest]{Nearest-neighbor filtering.}
@@ -201,7 +201,7 @@
 (setf (liber:alias-for-symbol 'pattern-type-t)
       "CEnum"
       (liber:symbol-documentation 'pattern-type-t)
- "@version{2025-09-02}
+ "@version{2025-09-20}
   @begin{declaration}
 (cffi:defcenum pattern-type-t
   :solid
@@ -229,16 +229,18 @@
   @end{short}
   The type of a pattern is determined by the function used to create it. The
   @fun{cairo:pattern-create-rgb} and @fun{cairo:pattern-create-rgba} functions
-  create @code{:solid} patterns. The remaining @code{cairo:pattern-create-type}
-  functions map to pattern types in obvious ways. The pattern type can be
-  queried with the @fun{cairo:pattern-type} function.
+  create @val[cairo:pattern-type-t]{:solid} patterns. The remaining
+  @code{cairo:pattern-create-type} functions map to pattern types in obvious
+  ways. The pattern type can be queried with the @fun{cairo:pattern-type}
+  function.
 
   Most Cairo pattern functions can be called with a pattern of any type, though
   trying to change the extend or filter for a solid pattern will have no effect.
   A notable exception are the @fun{cairo:pattern-add-color-stop-rgb} and
   @fun{cairo:pattern-add-color-stop-rgba} functions which must only be called
-  with gradient patterns, either @code{:linear} or @code{:radial}. Otherwise
-  the pattern will be shutdown and put into an error state.
+  with gradient patterns, either @val[cairo:pattern-type-t]{:linear} or
+  @val[cairo:pattern-type-t]{:radial}. Otherwise the pattern will be shutdown
+  and put into an error state.
   @see-symbol{cairo:pattern-t}
   @see-function{cairo:pattern-create-rgb}
   @see-function{cairo:pattern-create-rgba}
@@ -356,15 +358,16 @@
 
 (cffi:defcfun ("cairo_pattern_status" pattern-status) status-t
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-20}
   @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @return{The @sym{cairo:status-t} value.}
   @begin{short}
     Checks whether an error has previously occurred for this pattern.
   @end{short}
-  Possible values are @code{:success}, @code{:no-memory},
-  @code{:invalid-matrix}, @code{:pattern-type-mismatch}, or
-  @code{:invalid-mesh-construction}.
+  Possible values are @val[cairo:status-t]{:success},
+  @val[cairo:status-t]{:no-memory}, @val[cairo:status-t]{:invalid-matrix},
+  @val[cairo:status-t]{:pattern-type-mismatch}, or
+  @val[cairo:status-t]{:invalid-mesh-construction}.
   @see-symbol{cairo:pattern-t}
   @see-symbol{cairo:status-t}"
   (pattern (:pointer (:struct pattern-t))))
@@ -404,7 +407,7 @@
 
 (cffi:defcfun ("cairo_pattern_get_extend" pattern-extend) extend-t
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-20}
   @syntax{(cairo:pattern-extend pattern) => extend}
   @syntax{(setf (cairo:pattern-extend pattern) extend)}
   @argument[pattern]{a @sym{cairo:pattern-t} instance}
@@ -418,8 +421,8 @@
   outside the area of a pattern. See the @sym{cairo:extend-t} enumeration for
   details on the semantics of each extend strategy.
 
-  The default extend mode is @code{:none} for surface patterns and @code{:pad}
-  for gradient patterns.
+  The default extend mode is @val[cairo:extend-t]{:none} for surface patterns
+  and @val[cairo:extend-t]{:pad} for gradient patterns.
   @see-symbol{cairo:pattern-t}
   @see-symbol{cairo:extend-t}"
   (pattern (:pointer (:struct pattern-t))))
@@ -541,7 +544,7 @@
 
 (defun pattern-add-color-stop-rgb (pattern offset red green blue)
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-20}
   @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @argument[offset]{a number for an offset in the range [0.0 .. 1.0]}
   @argument[red]{a number for the red component of the color}
@@ -563,9 +566,9 @@
   earlier will compare less than stops added later. This can be useful for
   reliably making sharp color transitions instead of the typical blend.
   @begin[Notes]{dictionary}
-    If the @arg{pattern} argument is not a gradient pattern, for example a
-    linear or radial pattern, then @arg{pattern} will be put into an error
-    status with a status of @code{:pattern-type-mismatch}.
+    If the @arg{pattern} argument is not a gradient pattern, for example, a
+    linear or radial pattern, then @arg{pattern} will be put into an
+    @val[cairo:status-t]{:pattern-type-mismatch} error status.
   @end{dictionary}
   @begin[Lisp implementation]{dictionary}
     The arguments are coerced to double floats before being passed to the
@@ -596,7 +599,7 @@
 
 (defun pattern-add-color-stop-rgba (pattern offset red green blue alpha)
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-20}
   @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @argument[offset]{a number for an offset in the range [0.0 .. 1.0]}
   @argument[red]{a number for the red component of the color}
@@ -617,9 +620,9 @@
   earlier will compare less than stops added later. This can be useful for
   reliably making sharp color transitions instead of the typical blend.
   @begin[Notes]{dictionary}
-    If the @arg{pattern} argument is not a gradient pattern, for example a
-    linear or radial pattern, then @arg{pattern} will be put into an error
-    status with a @code{:pattern-type-mismatch} status.
+    If the @arg{pattern} argument is not a gradient pattern, for example, a
+    linear or radial pattern, then @arg{pattern} will be put into an
+    @val[cairo:status-t]{:pattern-type-mismatch} error status.
   @end{dictionary}
   @begin[Lisp implementation]{dictionary}
     The arguments are coerced to double floats before being passed to the
@@ -1133,7 +1136,7 @@
 (cffi:defcfun ("cairo_pattern_create_mesh" pattern-create-mesh)
     (:pointer (:struct pattern-t))
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @begin{return}
    The newly created @sym{cairo:pattern-t} instance if successful, or an error
    pattern in case of no memory. The caller owns the returned object and should
@@ -1154,8 +1157,8 @@
 
   Mesh patterns consist of one or more tensor-product patches, which should be
   defined before using the mesh pattern. Using a mesh pattern with a partially
-  defined patch as source or mask will put the context in an error status with
-  a @code{:invalid-mesh-construction} value.
+  defined patch as source or mask will put the context in an
+  @val[cairo:status-t]{:invalid-mesh-construction} error status.
 
   A tensor-product patch is defined by 4 Bézier curves (side 0, 1, 2, 3) and
   by 4 additional control points @code{(P0,P1,P2,P3)} that provide further
@@ -1306,7 +1309,7 @@ Side 0 |               | Side 2
 
 (cffi:defcfun ("cairo_mesh_pattern_begin_patch" mesh-pattern-begin-patch) :void
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @begin{short}
     Begin a patch in a mesh pattern.
@@ -1319,9 +1322,9 @@ Side 0 |               | Side 2
   must be called before using the pattern as a source or mask.
   @begin[Notes]{dictionary}
     If the @arg{pattern} argument is not a mesh pattern then @arg{pattern} will
-    be put into an error status with a @code{:pattern-type-mismatch} value. If
-    @arg{pattern} already has a current patch, it will be put into an error
-    status with a @code{:invalid-mesh-contstruction} value.
+    be put into an @val[cairo:status-t]{:pattern-type-mismatch} error status.
+    If @arg{pattern} already has a current patch, it will be put into an
+    @val[cairo:status-t]{:invalid-mesh-contstruction} error status.
   @end{dictionary}
   @see-symbol{cairo:pattern-t}
   @see-symbol{cairo:status-t}
@@ -1338,7 +1341,7 @@ Side 0 |               | Side 2
 
 (cffi:defcfun ("cairo_mesh_pattern_end_patch" mesh-pattern-end-patch) :void
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @begin{short}
     Indicates the end of the current patch in a mesh pattern.
@@ -1348,10 +1351,10 @@ Side 0 |               | Side 2
   @fun{cairo:mesh-pattern-line-to} function was used.
   @begin[Notes]{dictionary}
     If the @arg{pattern} argument is not a mesh pattern then @arg{pattern} will
-    be put into an error status with a @code{:pattern-type-mismatch} value. If
-    @arg{pattern} has no current patch or the current patch has no current
-    point, @arg{pattern} will be put into an error status with a
-    @code{:invalid-mesh-construction} value.
+    be put into an @val[cairo:status-t]{:pattern-type-mismatch} error status.
+    If @arg{pattern} has no current patch or the current patch has no current
+    point, @arg{pattern} will be put into an
+    @val[cairo:status-t]{:invalid-mesh-construction} error status.
   @end{dictionary}
   @see-symbol{cairo:pattern-t}
   @see-symbol{cairo:status-t}
@@ -1366,7 +1369,7 @@ Side 0 |               | Side 2
 
 (defun mesh-pattern-move-to (pattern x y)
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @argument[x]{a number coerced to a double float for the x coordinate of the
     new position}
@@ -1378,10 +1381,10 @@ Side 0 |               | Side 2
   After this call the current point will be @code{(x,y)}.
   @begin[Notes]{dictionary}
     If the @arg{pattern} argument is not a mesh pattern then @arg{pattern} will
-    be put into an error status with a @code{:pattern-type-mismatch} value. If
-    @arg{pattern} has no current patch or the current patch already has at least
-    one side, @arg{pattern} will be put into an error status with a
-    @code{:invalid-mesh-construction} value.
+    be put into an @val[cairo:status-t]{:pattern-type-mismatch} error status.
+    If @arg{pattern} has no current patch or the current patch already has at
+    least one side, @arg{pattern} will be put into an
+    @val[cairo:status-t]{:invalid-mesh-construction} error status.
   @end{dictionary}
   @see-symbol{cairo:pattern-t}"
   (cffi:foreign-funcall "cairo_mesh_pattern_move_to"
@@ -1398,7 +1401,7 @@ Side 0 |               | Side 2
 
 (defun mesh-pattern-line-to (pattern x y)
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @argument[x]{a number coerced to a double float for the x coordinate of the
     end of the new line}
@@ -1417,10 +1420,10 @@ Side 0 |               | Side 2
   After this call the current point will be @code{(x,y)}.
   @begin[Notes]{dictionary}
     If the @arg{pattern} argument is not a mesh pattern then @arg{pattern} will
-    be put into an error status with a @code{:pattern-type-mismatch} value. If
-    @arg{pattern} has no current patch or the current patch already has 4 sides,
-    @arg{pattern} will be put into an error status with a
-    @code{:invalid-mesh-construction} value.
+    be put into an @val[cairo:status-t]{:pattern-type-mismatch} error status.
+    If @arg{pattern} has no current patch or the current patch already has 4
+    sides, @arg{pattern} will be put into an
+    @val[cairo:status-t]{:invalid-mesh-construction} error status.
   @end{dictionary}
   @see-symbol{cairo:pattern-t}
   @see-function{cairo:mesh-pattern-move-to}"
@@ -1438,7 +1441,7 @@ Side 0 |               | Side 2
 
 (defun mesh-pattern-curve-to (pattern x1 y1 x2 y2 x3 y3)
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @argument[x1]{a number for the x coordinate of the first control point}
   @argument[y1]{a number for the y coordinate of the first control point}
@@ -1461,10 +1464,10 @@ Side 0 |               | Side 2
   After this call the current point will be @code{(x3,y3)}.
   @begin[Notes]{dictionary}
     If the @arg{pattern} argument is not a mesh pattern then @arg{pattern} will
-    be put into an error status with a @code{:pattern-type-mismatch} value. If
-    @arg{pattern} has no current patch or the current patch already has 4 sides,
-    @arg{pattern} will be put into an error status with a
-    @code{:invalid-mesh-construction} value.
+    be put into an @val[cairo:status-t]{:pattern-type-mismatch} error status.
+    If @arg{pattern} has no current patch or the current patch already has four
+    sides, @arg{pattern} will be put into an
+    @val[cairo:status-t]{:invalid-mesh-construction} error status.
   @end{dictionary}
   @begin[Lisp Implementation]{dictionary}
     The arguments are coerced to double floats before being passed to
@@ -1545,7 +1548,7 @@ Side 0 |               | Side 2
 
 (defun mesh-pattern-set-control-point (pattern point x y)
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @argument[point]{an unsigned integer for the control point to set the
     position for}
@@ -1560,11 +1563,11 @@ Side 0 |               | Side 2
   points as explained for the @fun{cairo:pattern-create-mesh} function.
   @begin[Notes]{dictionary}
     If the @arg{pattern} argument is not a mesh pattern then @arg{pattern} will
-    be put into an error status with a status of @code{:pattern-type-mismatch}.
-    If @arg{point} is not valid, @arg{pattern} will be put into an error status
-    with a status of @code{:invalid-index}. If @arg{pattern} has no current
-    patch, @arg{pattern} will be put into an error status with a status of
-    @code{:invalid-mesh-construction}.
+    be put into an @val[cairo:status-t]{:pattern-type-mismatch} error status.
+    If @arg{point} is not valid, @arg{pattern} will be put into an
+    @val[cairo:status-t]{:invalid-index} error status. If @arg{pattern} has no
+    current patch, @arg{pattern} will be put into an
+    @val[cairo:status-t]{:invalid-mesh-construction} error status.
   @end{dictionary}
   @see-symbol{cairo:pattern-t}
   @see-function{cairo:pattern-create-mesh}"
@@ -1645,7 +1648,7 @@ Side 0 |               | Side 2
 
 (defun mesh-pattern-set-corner-color-rgb (pattern index red green blue)
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @argument[corner]{an unsigned integer for the corner to set the color for}
   @argument[red]{a number coerced to a double float for the red component
@@ -1664,11 +1667,11 @@ Side 0 |               | Side 2
   explained for the @fun{cairo:pattern-create-mesh} function.
   @begin[Notes]{dictionary}
     If the @arg{pattern} argument is not a mesh pattern then @arg{pattern} will
-    be put into an error status with a @code{:pattern-type-mismatch} value. If
-    @arg{corner} is not valid, @arg{pattern} will be put into an error status
-    with a @code{:invalid-index} value. If @arg{pattern} has no current patch,
-    @arg{pattern} will be put into an error status with a
-    @code{:invalid-mesh-construction} value.
+    be put into an @val[cairo:status-t]{:pattern-type-mismatch} error status.
+    If @arg{corner} is not valid, @arg{pattern} will be put into an
+    @val[cairo:status-t]{:invalid-index} error status. If @arg{pattern} has no
+    current patch, @arg{pattern} will be put into an
+    @val[cairo:status-t]{:invalid-mesh-construction} error status.
   @end{dictionary}
   @see-symbol{cairo:pattern-t}
   @see-function{cairo:set-source-rgb}
@@ -1689,7 +1692,7 @@ Side 0 |               | Side 2
 
 (defun mesh-pattern-set-corner-color-rgba (pattern index red green blue alpha)
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @argument[pattern]{a @sym{cairo:pattern-t} instance}
   @argument[corner]{an unsigned integer for the corner to set the color for}
   @argument[red]{a number for the red component of the color}
@@ -1706,11 +1709,11 @@ Side 0 |               | Side 2
   explained for the @fun{cairo:pattern-create-mesh} function.
   @begin[Notes]{dictionary}
     If the @arg{pattern} argument is not a mesh pattern then @arg{pattern} will
-    be put into an error status with a @code{:pattern-type-mismatch} value. If
-    @arg{corner} is not valid, @arg{pattern} will be put into an error status
-    with a @code{:invalid-index} value. If @arg{pattern} has no current patch,
-    @arg{pattern} will be put into an error status with a
-    @code{:invalid-mesh-construction} value.
+    be put into an @val[cairo:status-t]{:pattern-type-mismatch} error status.
+    If @arg{corner} is not valid, @arg{pattern} will be put into an
+    @val[cairo:status-t]{:invalid-index} error status. If @arg{pattern} has no
+    current patch, @arg{pattern} will be put into an
+    @val[cairo:status-t]{:invalid-mesh-construction} error status.
   @end{dictionary}
   @begin[Lisp implementation]{dictionary}
     The arguments are coerced to double floats before being passed to the

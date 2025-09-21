@@ -280,7 +280,7 @@
 (setf (liber:alias-for-symbol 'operator-t)
       "CEnum"
       (liber:symbol-documentation 'operator-t)
- "@version{2025-09-19}
+ "@version{2025-09-21}
   @begin{declaration}
 (cffi:defcenum operator-t
   :clear
@@ -372,10 +372,10 @@
     The @sym{cairo:operator-t} enumeration is used to set the compositing
     operator for all Cairo drawing operations.
   @end{short}
-  The default operator is the @code{:over} value. The operators marked as
-  unbounded modify their destination even outside of the mask layer, that is,
-  their effect is not bound by the mask layer. However, their effect can still
-  be limited by way of clipping.
+  The default operator is the @val[cairo:operator-t]{:over} value. The operators
+  marked as unbounded modify their destination even outside of the mask layer,
+  that is, their effect is not bound by the mask layer. However, their effect
+  can still be limited by way of clipping.
 
   To keep things simple, the operator descriptions here document the behavior
   for when both source and destination are either fully transparent or fully
@@ -425,8 +425,8 @@
 
 (defmacro with-context ((context target) &body body)
  #+liber-documentation
- "@version{2025-09-02}
-  @syntax{(cairo:with-context (context surface) body) => result}
+ "@version{2025-09-21}
+  @syntax{(cairo:with-context (context target) body) => result}
   @argument[context]{a newly allocated @sym{cairo:context-t} instance}
   @argument[target]{a @sym{cairo:surface-t} instance for the target surface}
   @begin{short}
@@ -456,7 +456,7 @@
 
 (cffi:defcfun ("cairo_create" create) (:pointer (:struct context-t))
  #+liber-documentation
- "@version{2025-09-01}
+ "@version{2025-09-21}
   @argument[target]{a @sym{cairo:surface-t} instance for the target surface for
     the Cairo context}
   @return{The newly allocated @sym{cairo:context-t} instance.}
@@ -471,9 +471,10 @@
   function when you are done using the Cairo context. This function will always
   return a valid Cairo context. If memory cannot be allocated, a special Cairo
   context will be returned on which the @fun{cairo:status} function returns the
-  @code{:no-memory} value. If you attempt to target a surface which does not
-  support writing, then a @code{:write-error} value will be raised. You can use
-  this object normally, but no drawing will be done.
+  @val[cairo:status-t]{:no-memory} value. If you attempt to target a surface
+  which does not support writing, then a @val[cairo:status-t]{:write-error}
+  value will be raised. You can use this object normally, but no drawing will be
+  done.
 
   This function references @arg{target}, so you can immediately call the
   @fun{cairo:surface-destroy} function on it if you do not need to maintain a
@@ -674,9 +675,10 @@
   that any changes to the graphics state will not be visible outside the group,
   the pop group functions call the @fun{cairo:restore} function.
 
-  By default the intermediate group will have a @code{:color-alpha} value of
-  the @sym{cairo:content-t} enumeration. Other content types can be chosen for
-  the group by using the @fun{cairo:push-group-with-content} function instead.
+  By default the intermediate group will have a
+  @val[cairo:content-t]{:color-alpha} value of the @sym{cairo:content-t}
+  enumeration. Other content types can be chosen for the group by using the
+  @fun{cairo:push-group-with-content} function instead.
   @begin[Examples]{dictionary}
     As an example, here is how one might fill and stroke a path with
     translucence, but without any portion of the fill being visible under the
@@ -828,8 +830,8 @@
 
   This function will always return a valid surface, but the result can be a
   \"nil\" surface if @arg{cr} is already in an error state. A \"nil\" surface
-  is indicated by a value not equal to the @code{:success} value of the
-  @sym{cairo:status-t} enumeration.
+  is indicated by a value not equal to the @val[cairo:status-t]{:success} value
+  of the @sym{cairo:status-t} enumeration.
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:surface-t}
   @see-symbol{cairo:status-t}
@@ -931,24 +933,21 @@
 
 (cffi:defcfun ("cairo_get_source" source) (:pointer (:struct pattern-t))
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-20}
   @syntax{(cairo:source cr) => source}
   @syntax{(setf (cairo:source cr) source)}
   @argument[cr]{a @sym{cairo:context-t} instance}
   @argument[source]{a @sym{cairo:pattern-t} instance to be used as the source
     for subsequent drawing operations}
   @begin{short}
-   The @fun{cairo:source} function gets the current source pattern for @arg{cr}.
+   Gets or sets the source pattern for @arg{cr}.
   @end{short}
-  This object is owned by Cairo. To keep a reference to it, you must call the
-  @fun{cairo:pattern-reference} function.
+  The source pattern is owned by Cairo. To keep a reference to it, you must call
+  the @fun{cairo:pattern-reference} function.
 
-  The @setf{cairo:source} function sets the source pattern within @arg{cr} to
-  @arg{source}. This pattern will then be used for any subsequent drawing
-  operation until a new source pattern is set.
-
-  The default source pattern is a solid pattern that is opaque black, that
-  is, it is equivalent to
+  The source pattern will be used for any subsequent drawing operation until a
+  new source pattern is set. The default source pattern is a solid pattern that
+  is opaque black, that is, it is equivalent to
   @begin{pre}
 (cairo:set-source-rgb cr 0.0 0.0 0.0)
   @end{pre}
@@ -1028,7 +1027,7 @@
 
 (cffi:defcfun ("cairo_get_antialias" antialias) antialias-t
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-20}
   @syntax{(cairo:antialias context) => antialias}
   @syntax{(setf (cairo:antialias context) antialias)}
   @argument[cr]{a @sym{cairo:context-t} instance}
@@ -1039,7 +1038,7 @@
   @end{short}
   This value is a hint, and a particular backend may or may not support a
   particular value. At the current time, no backend supports the
-  @code{:subpixel} mode when drawing shapes.
+  @val[cairo:antialias-t]{:subpixel} mode when drawing shapes.
   @begin[Notes]{dictionary}
     This option does not affect text rendering, instead see the
     @fun{cairo:font-options-antialias} function.
@@ -1082,7 +1081,7 @@
 
 (defun dash (cr)
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @syntax{(cairo:dash cr) => dashes, offset}
   @syntax{(setf (cairo:dash cr offset) dashes)}
   @argument[cr]{a @sym{cairo:context-t} instance}
@@ -1099,15 +1098,15 @@
 
   Each \"on\" segment will have caps applied as if the segment were a separate
   sub-path. In particular, it is valid to use an \"on\" length of 0.0 with
-  @code{:round} or @code{:square} in order to distributed dots or squares along
-  a path.
+  @val[cairo:line-cap-t]{:round} or @val[cairo:line-cap-t]{:square} in order to
+  distributed dots or squares along a path.
 
   If the @arg{dashes} argument is an empty list dashing is disabled. If the
   @arg{dashes} argument has one list element a symmetric pattern is assumed
   with alternating on and off portions of the size specified by the single
   value in @arg{dashes}. If any value in @arg{dashes} is negative, or if all
   values are 0, then @arg{cr} will be put into an error state with a status of
-  @code{:invalid-dash}.
+  @val[cairo:status-t]{:invalid-dash}.
   @begin[Notes]{dictionary}
     The length values are in user-space units as evaluated at the time of
     stroking. This is not necessarily the same as the user space at the time of
@@ -1174,7 +1173,7 @@
   @sym{cairo:fill-rule-t} enumeration for details on the semantics of each
   available fill rule.
 
-  The default fill rule is the @code{:winding} value.
+  The default fill rule is the @val[cairo:fill-rule-t]{:winding} value.
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:fill-rule-t}
   @see-function{cairo:fill}
@@ -1197,7 +1196,7 @@
 
 (cffi:defcfun ("cairo_get_line_cap" line-cap) line-cap-t
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-20}
   @syntax{(cairo:line-cap cr) => cap}
   @syntax{(setf (cairo:line-cap cr) cap)}
   @argument[cr]{a @sym{cairo:context-t} instance}
@@ -1212,7 +1211,7 @@
   by the @fun{cairo:stroke} and @fun{cairo:stroke-extents} functions, but
   does not have any effect during path construction.
 
-  The default line cap style is the @code{:butt} value.
+  The default line cap style is the @val[cairo:line-cap-t]{:butt} value.
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:line-cap-t}
   @see-function{cairo:stroke}
@@ -1235,7 +1234,7 @@
 
 (cffi:defcfun ("cairo_get_line_join" line-join) line-join-t
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-20}
   @syntax{(cairo:line-join cr) => join}
   @syntax{(setf (cairo:line-join cr) join)}
   @argument[cr]{a @sym{cairo:context-t} instance}
@@ -1250,7 +1249,7 @@
   by the @fun{cairo:stroke} and @fun{cairo:stroke-extents} functions, but
   does not have any effect during path construction.
 
-  The default line join style is the @code{:miter} value.
+  The default line join style is the @val[cairo:line-join-t]{:miter} value.
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:line-join-t}
   @see-function{cairo:stroke}
@@ -1378,7 +1377,7 @@
 
 (cffi:defcfun ("cairo_get_miter_limit" miter-limit) :double
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-20}
   @syntax{(cairo:miter-limit cr) => limit}
   @syntax{(setf (cairo:miter-limit cr) limit)}
   @argument[cr]{a @sym{cairo:context-t} instance}
@@ -1386,11 +1385,11 @@
   @begin{short}
     Gets or sets the miter limit within the Cairo context.
   @end{short}
-  If the current line join style is set to the @code{:miter} value, see the
-  @fun{cairo:line-join} function, the miter limit is used to determine
-  whether the lines should be joined with a bevel instead of a miter. Cairo
-  divides the length of the miter by the line width. If the result is greater
-  than the miter limit, the style is converted to a bevel.
+  If the current line join style is set to the @val[cairo:line-join-t]{:miter}
+  value, see the @fun{cairo:line-join} function, the miter limit is used to
+  determine whether the lines should be joined with a bevel instead of a miter.
+  Cairo divides the length of the miter by the line width. If the result is
+  greater than the miter limit, the style is converted to a bevel.
 
   As with the other stroke parameters, the current line miter limit is examined
   by the @fun{cairo:stroke} and @fun{cairo:stroke-extents} functions, but does
@@ -1427,7 +1426,7 @@
 
 (cffi:defcfun ("cairo_get_operator" operator) operator-t
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-20}
   @syntax{(cairo:operator cr) => op}
   @syntax{(setf (cairo:operator cr) op)}
   @argument[cr]{a @sym{cairo:context-t} instance}
@@ -1440,7 +1439,7 @@
   See the @sym{cairo:operator-t} enumeration for details on the semantics of
   each available compositing operator.
 
-  The default operator is the @code{:over} value.
+  The default operator is the @val[cairo:operator-t]{:over} value.
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:operator-t}"
   (cr (:pointer (:struct context-t))))
@@ -1986,7 +1985,7 @@
 
 (cffi:defcfun ("cairo_stroke" stroke) :void
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-20}
   @argument[cr]{a @sym{cairo:context-t} instance}
   @begin{short}
     A drawing operator that strokes the current path according to the current
@@ -2002,23 +2001,26 @@
     @begin{enumerate}
       @begin{item}
         Zero-length \"on\" segments set in the @fun{cairo:dash} function.
-        If the @sym{cairo:line-cap-t} style is @code{:round} or @code{:square}
-        then these segments will be drawn as circular dots or squares
-        respectively. In the case of @code{:square}, the orientation of the
-        squares is determined by the direction of the underlying path.
+        If the @sym{cairo:line-cap-t} style is @val[cairo:line-cap-t]{:round} or
+        @val[cairo:line-cap-t]{:square} then these segments will be drawn as
+        circular dots or squares respectively. In the case of
+        @val[cairo:line-cap-t]{:square}, the orientation of the squares is
+        determined by the direction of the underlying path.
       @end{item}
       @begin{item}
         A sub-path created by the @fun{cairo:move-to} function followed by
         either a call to the @fun{cairo:close-path} function or one or more
         calls to the @fun{cairo:line-to} function to the same coordinate as the
         the @fun{cairo:move-to} function. If the @sym{cairo:line-cap-t} style
-        is @code{:round} then these sub-paths will be drawn as circular dots.
-        Note that in the case of @code{:square} a degenerate sub-path will not
-        be drawn at all, since the correct orientation is indeterminate.
+        is @val[cairo:line-cap-t]{:round} then these sub-paths will be drawn as
+        circular dots. Note that in the case of @val[cairo:line-cap-t]{:square}
+        a degenerate sub-path will not be drawn at all, since the correct
+        orientation is indeterminate.
       @end{item}
     @end{enumerate}
-    In no case will a @sym{cairo:line-cap-t} style of @code{:butt} cause
-    anything to be drawn in the case of either degenerate segments or sub-paths.
+    In no case will a @sym{cairo:line-cap-t} style of
+    @val[cairo:line-cap-t]{:butt} cause anything to be drawn in the case of
+    either degenerate segments or sub-paths.
   @end{dictionary}
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:line-cap-t}

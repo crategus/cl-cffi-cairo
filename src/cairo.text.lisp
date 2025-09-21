@@ -214,13 +214,13 @@
 
 (defun select-font-face (cr family &key (slant :normal) (weight :normal))
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @argument[cr]{a @sym{cairo:context-t} instance}
   @argument[family]{a string for the font family name, encoded in UTF-8}
   @argument[slant]{a @sym{cairo:font-slant-t} value for the slant, default value
-    is @code{:normal}}
+    is @val[cairo:font-slant-t]{:normal}}
   @argument[weight]{a @sym{cairo:font-weight-t} value for the  weight, default
-    value is @code{:normal}}
+    value is @val[cairo:font-weight-t]{:normal}}
   @begin{short}
     Selects a family and style of font from a simplified description as a
     family name, slant and weight.
@@ -240,8 +240,8 @@
   If text is drawn without a call to the @fun{cairo:select-font-face} function,
   nor the @fun{cairo:font-face} function nor the @fun{cairo:scaled-font}
   function, the default family is platform-specific, but is essentially
-  \"sans-serif\". Default slant is @code{:normal}, and default weight is
-  @code{:normal}.
+  \"sans-serif\". Default slant is @val[cairo:font-slant-t]{:normal}, and
+  default weight is @val[cairo:font-weight-t]{:normal}.
 
   This function is equivalent to a call to the @fun{cairo:toy-font-face-create}
   function followed by the @fun{cairo:font-face} function.
@@ -358,25 +358,22 @@
 
 (defun font-options (cr options)
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @syntax{(cairo:font-options cr options) => options}
   @syntax{(setf (cairo:font-options cr) options)}
   @argument[cr]{a @sym{cairo:context-t} instance}
   @argument[options]{a @sym{cairo:font-options-t} instance}
   @begin{short}
-    The @fun{cairo:font-options} function retrieves font rendering options for
-    the Cairo context.
+    Gets or sets font rendering options for the Cairo context.
   @end{short}
-  The @setf{cairo:font-options} function sets a set of custom font rendering
-  options.
-
   Note that the returned font options do not include any font options derived
   from the underlying surface. They are literally the font options passed to
   the @setf{cairo:font-options} function.
 
   Rendering font options are derived by merging @arg{options} with the options
   derived from underlying surface. If the value in @arg{options} has a default
-  value, like @code{:default}, then the value from the surface is used.
+  value, like @val[cairo:antialias-t]{:default}, then the value from the surface
+  is used.
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:font-options-t}"
   (%get-font-options cr options)
@@ -399,7 +396,7 @@
 
 (cffi:defcfun ("cairo_get_font_face" font-face) (:pointer (:struct font-face-t))
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @syntax{(cairo:font-face cr) => face}
   @syntax{(setf (cairo:font-face cr) face)}
   @argument[cr]{a @sym{cairo:context-t} instance}
@@ -417,10 +414,10 @@
   @fun{cairo:font-face-reference} function. This function always returns a
   @sym{cairo:font-face-t} instance. If memory cannot be allocated, a special
   \"nil\" instance will be returned on which the @fun{cairo:font-face-status}
-  function returns the @code{:no-memory} value. Using this \"nil\" instance
-  will cause its error state to propagate to other objects it is passed to, for
-  example, calling the @fun{cairo:font-face} function with a \"nil\" font will
-  trigger an error that will shutdown the Cairo context.
+  function returns the @val[cairo:status-t]{:no-memory} value. Using this
+  \"nil\" instance will cause its error state to propagate to other objects it
+  is passed to, for example, calling the @fun{cairo:font-face} function with a
+  \"nil\" font will trigger an error that will shutdown the Cairo context.
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:font-face-t}
   @see-function{cairo:font-face-reference}
@@ -444,7 +441,7 @@
 (cffi:defcfun ("cairo_get_scaled_font" scaled-font)
     (:pointer (:struct scaled-font-t))
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @syntax{(cairo:scaled-font cr) => font}
   @syntax{(setf (cairo:scaled-font cr) font)}
   @argument[cr]{a @sym{cairo:context-t} instance}
@@ -465,10 +462,10 @@
   @fun{cairo:scaled-font-reference} function. This function always returns a
   @sym{cairo:scaled-font-t} instance. If memory cannot be allocated, a special
   \"nil\" instance will be returned on which the @fun{cairo:scaled-font-status}
-  function returns the @code{:no-memory} value. Using this \"nil\" instance will
-  cause its error state to propagate to other objects it is passed to, for
-  example, calling the @fun{cairo:scaled-font} function with a \"nil\" font will
-  trigger an error that will shutdown the Cairo context.
+  function returns the @val[cairo:status-t]{:no-memory} value. Using this
+  \"nil\" instance will cause its error state to propagate to other objects it
+  is passed to, for example, calling the @fun{cairo:scaled-font} function with
+  a \"nil\" font will trigger an error that will shutdown the Cairo context.
   @see-symbol{cairo:context-t}
   @see-symbol{cairo:scaled-font-t}
   @see-function{cairo:scaled-font-reference}

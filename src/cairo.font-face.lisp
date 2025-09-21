@@ -229,11 +229,12 @@
 
 (cffi:defcfun ("cairo_font_face_status" font-face-status) status-t
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-20}
   @argument[face]{a @sym{cairo:font-face-t} instance}
   @begin{return}
-    The @code{:success} value of the @sym{cairo:status-t} enumeration or
-    another error such as the @code{:no-memory} value.
+    The @val[cairo:status-t]{:success} value of the @sym{cairo:status-t}
+    enumeration or another error such as the @val[cairo:status-t]{:no-memory}
+    value.
   @end{return}
   @begin{short}
     Checks whether an error has previously occurred for this font face.

@@ -73,7 +73,7 @@
 (setf (liber:alias-for-symbol 'device-type-t)
       "CEnum"
       (liber:symbol-documentation 'device-type-t)
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @begin{declaration}
 (cffi:defcenum device-type-t
   :drm
@@ -111,9 +111,10 @@
   be called with a device of the appropriate type. The behavior of calling a
   type specific function with a device of the wrong type is undefined.
   @begin[Notes]{dictionary}
-    The only device type implemented in the Lisp API is the @code{:script}
-    device type. See the @fun{cairo:with-script-surface} documentation for an
-    example that uses a script surface.
+    The only device type implemented in the Lisp API is the
+    @val[cairo:device-type-t]{:script} device type. See the
+    @fun{cairo:with-script-surface} documentation for an example that uses a
+    script surface.
   @end{dictionary}
   @see-symbol{cairo:device-t}
   @see-function{cairo:device-type}
@@ -261,7 +262,7 @@
 
 (cffi:defcfun ("cairo_device_finish" device-finish) :void
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @argument[device]{a @sym{cairo:device-t} instance to finish}
   @begin{short}
     This function finishes the device and drops all references to external
@@ -269,7 +270,7 @@
   @end{short}
   All surfaces, fonts and other objects created for this device will be
   finished, too. Further operations on the device will not affect the device
-  but will instead trigger a @code{:device-finished} error.
+  but will instead trigger a @val[cairo:status-t]{:device-finished} error.
 
   When the last call to the @fun{cairo:device-destroy} function decreases the
   reference count to zero, Cairo will call the @fun{cairo:device-finish}
@@ -323,11 +324,12 @@
 
 (cffi:defcfun ("cairo_device_acquire" device-acquire) status-t
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @argument[device]{a @sym{cairo:device-t} instance}
   @begin{return}
-    The @sym{cairo:status-t} value that is @code{:success} on success or an
-    error code if the device is in an error state and could not be acquired.
+    The @sym{cairo:status-t} value that is @val[cairo:status-t]{:success} on
+    success or an error code if the device is in an error state and could not
+    be acquired.
   @end{return}
   @begin{short}
     Acquires the device for the current thread.
@@ -336,11 +338,11 @@
   a successful call to the @fun{cairo:device-acquire} function, a matching call
   to the @fun{cairo:device-release} function is required.
 
-  If the return value is @code{:sucess}, you successfully acquired the device.
-  From now on your thread owns the device and no other thread will be able to
-  acquire it until a matching call to the @fun{cairo:device-release} function.
-  It is allowed to recursively acquire the device multiple times from the same
-  thread.
+  If the return value is @val[cairo:status-t]{:sucess}, you successfully
+  acquired the device. From now on your thread owns the device and no other
+  thread will be able to acquire it until a matching call to the
+  @fun{cairo:device-release} function. It is allowed to recursively acquire the
+  device multiple times from the same thread.
   @begin[Notes]{dictionary}
     You must never acquire two different devices at the same time unless this
     is explicitly allowed. Otherwise the possibility of deadlocks exist.

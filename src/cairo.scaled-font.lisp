@@ -438,11 +438,11 @@
 
 (cffi:defcfun ("cairo_scaled_font_status" scaled-font-status) status-t
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-20}
   @argument[font]{a @sym{cairo:scaled-font-t} instance}
   @begin{return}
-    The @code{:success} value of the @sym{cairo:status-t} enumeration or another
-    error such as @code{:no-memory}.
+    The @val[cairo:status-t]{:success} value of the @sym{cairo:status-t}
+    enumeration or another error such as @val[cairo:status-t]{:no-memory}.
   @end{return}
   @begin{short}
     Checks whether an error has previously occurred for this scaled font.
@@ -466,7 +466,7 @@
     This function returns the type of the backend used to create a scaled font.
   @end{short}
   See the @sym{cairo:font-type-t} enumeration for available types. However, this
-  function never returns the @code{:toy} value.
+  function never returns the @val[cairo:font-type-t]{:toy} value.
   @see-symbol{cairo:scaled-font-t}
   @see-symbol{cairo:font-type-t}"
   (font (:pointer (:struct scaled-font-t))))

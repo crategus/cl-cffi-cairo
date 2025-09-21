@@ -84,7 +84,7 @@
 (setf (liber:alias-for-symbol 'subpixel-order-t)
       "CEnum"
       (liber:symbol-documentation 'subpixel-order-t)
- "@version{2025-09-01}
+ "@version{2025-09-21}
   @begin{declaration}
 (cffi:defcenum subpixel-order-t
   :default
@@ -109,7 +109,7 @@
   @begin{short}
     The subpixel order specifies the order of color elements within each pixel
     on the display device when rendering with an antialiasing mode of
-    @code{:subpixel}.
+    @val[cairo:antialias-t]{:subpixel}.
   @end{short}
 
   @see-symbol{cairo:font-options-t}
@@ -359,11 +359,11 @@
 
 (cffi:defcfun ("cairo_font_options_status" font-options-status) status-t
  #+liber-documentation
- "@version{2025-09-01}
+ "@version{2025-09-20}
   @argument[options]{a @sym{cairo:font-options-t} instance}
   @begin{return}
-    The @code{:success} or @code{:no-memory} values of the @sym{cairo:status-t}
-    enumeration.
+    The @val[cairo:status-t]{:success} or @val[cairo:status-t]{:no-memory}
+    values of the @sym{cairo:status-t} enumeration.
   @end{return}
   @begin{short}
     Checks whether an error has previously occurred for this font options
@@ -381,7 +381,7 @@
 
 (cffi:defcfun ("cairo_font_options_merge" font-options-merge) :void
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @argument[options]{a @sym{cairo:font-options-t} instance}
   @argument[other]{another @sym{cairo:font-options-t} instance}
   @begin{short}
@@ -389,7 +389,8 @@
     existing values.
   @end{short}
   This operation can be thought of as somewhat similar to compositing
-  @arg{other} onto @arg{options} with the operation of @code{:over}.
+  @arg{other} onto @arg{options} with the operation of
+  @val[cairo:operator-t]{:over}.
   @see-symbol{cairo:font-options-t}
   @see-symbol{cairo:operator-t}"
   (options (:pointer (:struct font-options-t)))
@@ -488,7 +489,7 @@
 (cffi:defcfun ("cairo_font_options_get_subpixel_order"
                font-options-subpixel-order) subpixel-order-t
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @syntax{(cairo:font-options-subpixel-order options) => order}
   @syntax{(setf (cairo:font-options-subpixel-order options) order)}
   @argument[options]{a @sym{cairo:font-options-t} instance}
@@ -500,8 +501,8 @@
   The @setf{cairo:font-options-subpixel-order} function sets the subpixel order.
   The subpixel order specifies the order of color elements within each pixel on
   the display device when rendering with an antialiasing mode of
-  @code{:subpixel}. See the documentation for the @sym{cairo:subpixel-order-t}
-  enumeration for full details.
+  @val[cairo:antialias-t]{:subpixel}. See the documentation for the
+  @sym{cairo:subpixel-order-t} enumeration for full details.
   @see-symbol{cairo:font-options-t}
   @see-symbol{cairo:subpixel-order-t}"
   (options (:pointer (:struct font-options-t))))

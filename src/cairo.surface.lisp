@@ -100,7 +100,7 @@
 (setf (liber:alias-for-symbol 'format-t)
       "CEnum"
       (liber:symbol-documentation 'format-t)
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @begin{declaration}
 (cffi:defcenum format-t
   (:invalid -1)
@@ -131,7 +131,7 @@
         first pixel is in the least-significant bit.}
       @entry[:rgb16-565]{Each pixel is a 16-bit quantity with red in the upper
         5 bits, then green in the middle 6 bits, and blue in the lower 5 bits.}
-      @entry[:rgb30]{Like @code{:rgb24} but with 10 bpc.}
+      @entry[:rgb30]{Like @val[cairo:format-t]{:rgb24} but with 10 bpc.}
       @entry[:rgb96f]{3 floats, R, G, B. Since 1.18}
       @entry[:rgba128f]{4 floats, R, G, B, A. Since 1.18}
     @end{simple-table}
@@ -221,7 +221,7 @@
 (setf (liber:alias-for-symbol 'surface-type-t)
       "CEnum"
       (liber:symbol-documentation 'surface-type-t)
- "@version{2025-09-02}
+ "@version{2025-09-21}
   @begin{declaration}
 (cffi:defcenum surface-type-t
   :image
@@ -314,9 +314,14 @@
   The behavior of calling a type-specific function with a surface of the wrong
   type is undefined.
   @begin[Notes]{dictionary}
-    In the Lisp API support for the following surface types is currently
-    available: @code{:image}, @code{:pdf}, @code{:ps}, @code{:svg},
-    @code{:script}, @code{:recording}, and @code{:subsurface}.
+    The following surface types are currently supported in the Lisp API:
+    @val[cairo:surface-type-t]{:image},
+    @val[cairo:surface-type-t]{:pdf},
+    @val[cairo:surface-type-t]{:ps},
+    @val[cairo:surface-type-t]{:svg},
+    @val[cairo:surface-type-t]{:script},
+    @val[cairo:surface-type-t]{:recording}, and
+    @val[cairo:surface-type-t]{:subsurface}.
   @end{dictionary}
   @see-symbol{cairo:surface-t}
   @see-function{cairo:surface-create-similar}
@@ -720,15 +725,17 @@
 
 (cffi:defcfun ("cairo_surface_status" surface-status) status-t
  #+liber-documentation
- "@version{2025-09-02}
+ "@version{2025-09-20}
   @argument[surface]{a @sym{cairo:surface-t} instance}
   @return{The @sym{cairo:status-t} value for @arg{surface}.}
   @begin{short}
     Checks whether an error has previously occurred for this surface.
   @end{short}
-  Possible values are @code{:success}, @code{:null-pointer}, @code{:no-memory},
-    @code{:read-error}, @code{:invalid-content}, @code{:invalid-format}, or
-    @code{:invalid-visual}.
+  Possible values are @val[cairo:status-t]{:success},
+  @val[cairo:status-t]{:null-pointer}, @val[cairo:status-t]{:no-memory},
+  @val[cairo:status-t]{:read-error}, @val[cairo:status-t]{:invalid-content},
+  @val[cairo:status-t]{:invalid-format}, or
+  @val[cairo:status-t]{:invalid-visual}.
   @see-symbol{cairo:surface-t}
   @see-symbol{cairo:status-t}"
   (surface (:pointer (:struct surface-t))))
@@ -760,7 +767,7 @@
 
 (cffi:defcfun ("cairo_surface_finish" surface-finish) :void
  #+liber-documentation
- "@version{#2025-09-02}
+ "@version{#2025-09-21}
   @argument[surface]{a @sym{cairo:surface-t} instance}
   @begin{short}
     This function finishes the surface and drops all references to external
@@ -771,7 +778,7 @@
   function the only valid operations on a surface are getting and setting user,
   referencing and destroying, and flushing and finishing it. Further drawing to
   the surface will not affect the surface but will instead trigger a
-  @code{:surface-finished} error.
+  @val[cairo:status-t]{:surface-finished} error.
 
   When the last call to the @fun{cairo:surface-destroy} function decreases the
   reference count to zero, Cairo will call the @fun{cairo:surface-finish}

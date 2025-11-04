@@ -1,10 +1,10 @@
-Cairo 1.18
+Content from the Cairo 1.18 Reference Manual
 
-    *   : needs update
-    +   : needs work
-    -   : deprecated
-    %   : not or not fully implemented
-    &   : objects and structures are implemented, some functions are missing
+    .   needs proofreading
+    *   needs update
+    +   needs work
+    %   not fully implemented
+    &   objects and structures are implemented, but functions are missing
 
 Drawing
 
@@ -15,8 +15,8 @@ Drawing
   cairo.transformation.lisp        Transformations                  Cairo 1.18
   cairo.text.lisp                  Text                             Cairo 1.18
 
-  cairo.raster-source.lisp         Raster Sources                not implemented
-  cairo.tag.lisp                   Tags and Links                not implemented
+  not implemented                  Raster Sources
+  not implemented                  Tags and Links
 
 Fonts
 
@@ -24,11 +24,11 @@ Fonts
   cairo.scaled-font.lisp           cairo_scaled_font_t              Cairo 1.18
   cairo.font-options.lisp          cairo_font_options_t             Cairo 1.18
 
-  cairo.freetype-font.lisp         FreeType Fonts                not implemented
-  cairo.win32-font.lisp            Win32 Fonts                   not implemented
-  cairo.dwrite-font.lisp           DWrite Fonts                  not implemented
-  cairo.quartz-font.lisp           Quartz (CGFont) Fonts         not implemented
-  cairo.user-font.lisp             User Fonts                    not implemented
+  not implemented                  FreeType Fonts
+  not implemented                  Win32 Fonts
+  not implemented                  DWrite Fonts
+  not implemented                  Quartz (CGFont) Fonts
+  not implemented                  User Fonts
 
 Surfaces
 
@@ -42,13 +42,13 @@ Surfaces
   cairo.svg-surface.lisp           SVG Surfaces                     Cairo 1.18
   cairo.script-surface.lisp        Script Surfaces                  Cairo 1.18
 
-  cairo.win32-surface.lisp         Win32 Surfaces                not implemented
-  cairo.quartz-surface.lisp        Quartz Surfaces               not implemented
-  cairo.xcb-surface.lisp           XCB Surfaces                  not implemented
-  cairo.xlib-surface.lisp          XLib Surfaces                 not implemented
-  cairo.xlib-xrender-surface.lisp  XLib-XRender Backend          not implemented
-  cairo.surface-oberserver.lisp    Surface Observer              not implemented
-  cairo.tee-surface.lisp           Tee surface                   not implemented
+  not implemented                  Win32 Surfaces
+  not implemented                  Quartz Surfaces
+  not implemented                  XCB Surfaces
+  not implemented                  XLib Surfaces
+  not implemented                  XLib-XRender Backend
+  not implemented                  Surface Observer
+  not implemented                  Tee surface
 
 Utilities
 
@@ -57,4 +57,4 @@ Utilities
   cairo.version.lisp               Version Information              Cairo 1.18
   cairo.types.lisp                 Types                            Cairo 1.18
 
-2025-1-29
+2025-11-02
